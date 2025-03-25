@@ -15,7 +15,7 @@
     "bundleWP": "webpack --config webpack.config.js",
     "bundleWPR": "webpack --config webpackr.config.js",
     "bundleDTS": "npx dts-bundle-generator -o dist/C5Ren.d.ts index.ts",
-    "pack": "copy package.pack.json dist\\package.json && copy README.md dist\\README.md && copy LICENSE.txt dist\\LICENSE.txt && cd dist && del index.* && del tsconfig.tsbuildinfo && rd /s /q src && npm pack"
+    "pack": "copy package.pack.json dist\\package.json && copy README.md dist\\README.md && copy LICENSE dist\\LICENSE && cd dist && del index.* && del tsconfig.tsbuildinfo && rd /s /q src && npm pack"
   },
   "author": "C5ISR ESI",
   "license": "GPL-3.0",
