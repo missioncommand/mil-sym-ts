@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Meta line required for IE-->
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
+<!-- <script src="dist/C5RenDebug.js" type="text/javascript" ></script> -->
+<script src="../dist/C5Ren.js" type="text/javascript" ></script>
+<!-- <script src="armyc2\c2sd\renderer\utilities\RendererUtilities.js" type="text/javascript" ></script> -->
+
+
+
+
+ <script type = "text/javascript">
+ 
+ var start = null;
+ var stop = null;
+
+var worker;
+try
+{
+    worker = new Worker('SPWorker.js');
+}
+catch(e)
+{
+    console.log("SPWorker-postMessage");
+    console.log(e);
+    console.log(e.stack);
+}
+
+function setup()
+{
+    document.getElementById("testRender").disabled = true; 
+    C5Ren.initialize('/dist/').then(function(results){document.getElementById("testRender").disabled = false;}).catch(error => {throw error;});
+}
+ 
+function formatKMLForHTML(kml)
+{
+	var formattedKML = "";
+	var tempString = kml;
+	
+	var index = 0;
+	var start = 0;
+
+	var index = tempString.indexOf("<");
+	while(index >=0)
+	{
+		tempString = tempString.replace("<","&lt;");
+		start = index+1;
+		index = tempString.indexOf("<", start);
+	}
+	var index = tempString.indexOf(">");
+	while(index >=0)
+	{
+		tempString = tempString.replace(">","&gt;");
+		start = index+1;
+		index = tempString.indexOf(">", start);
+	}
+
+	formattedKML = tempString;
+	
+	return formattedKML;
+}
+function cleartext()
+{
+	//alert('clr');
+	document.getElementById("contentSpan").innerHTML = "";
+	return;
+}
+
+
+function populateAttributes()
+{
+    var attributes = new Map();
+    attributes.set(C5Ren.MilStdAttributes.PixelSize,"60");
+
+
+//modifiers.set(C5Ren.MilStdAttributes.LineColor,"#FF00FF";
+//modifiers.set(C5Ren.MilStdAttributes.FillColor,"#00FF00";
+
+//modifiers.set(C5Ren.MilStdAttributes.TextColor,"#FF00FF";
+//modifiers.set(C5Ren.MilStdAttributes.TextBackgroundColor,"#00FF00";
+    return attributes;
+}
+
+ function populateModifiers()
+{
+    var modifiers = new Map();
+    
+    
+    
+    modifiers.set(C5Ren.Modifiers.C_QUANTITY,10);
+    modifiers.set(C5Ren.Modifiers.H_ADDITIONAL_INFO_1,"H");
+    modifiers.set(C5Ren.Modifiers.H1_ADDITIONAL_INFO_2,"H1");
+    modifiers.set(C5Ren.Modifiers.H2_ADDITIONAL_INFO_3,"H2");
+    modifiers.set(C5Ren.Modifiers.X_ALTITUDE_DEPTH,"X");//X
+    modifiers.set(C5Ren.Modifiers.K_COMBAT_EFFECTIVENESS,"K");//K
+    modifiers.set(C5Ren.Modifiers.Q_DIRECTION_OF_MOVEMENT,"45");//Q
+
+    modifiers.set(C5Ren.Modifiers.W_DTG_1,C5Ren.SymbolUtilities.getDateLabel(new Date()));//W
+    modifiers.set(C5Ren.Modifiers.W1_DTG_2,C5Ren.SymbolUtilities.getDateLabel(new Date()));//W1
+    modifiers.set(C5Ren.Modifiers.J_EVALUATION_RATING,"J");
+    modifiers.set(C5Ren.Modifiers.M_HIGHER_FORMATION,"M");
+    modifiers.set(C5Ren.Modifiers.N_HOSTILE,"ENY");
+    modifiers.set(C5Ren.Modifiers.P_IFF_SIF,"P");
+    modifiers.set(C5Ren.Modifiers.Y_LOCATION,"Y");
+    
+    //if(symbol.getSymbolID().startsWith("G"))
+        modifiers.set(C5Ren.Modifiers.C_QUANTITY,"C");
+    
+    modifiers.set(C5Ren.Modifiers.F_REINFORCED_REDUCED,"(+)");//"RD";
+    modifiers.set(C5Ren.Modifiers.L_SIGNATURE_EQUIP,"!");
+    //modifiers.set(C5Ren.Modifiers.AA_SPECIAL_C2_HQ,"AA";
+    modifiers.set(C5Ren.Modifiers.SCC_SONAR_CLASSIFICATION_CONFIDENCE,"5");
+    modifiers.set(C5Ren.Modifiers.G_STAFF_COMMENTS,"G");
+    //symbol.symbolicon A
+    modifiers.set(C5Ren.Modifiers.V_EQUIP_TYPE,"V");
+    modifiers.set(C5Ren.Modifiers.T_UNIQUE_DESIGNATION_1,"T");
+    modifiers.set(C5Ren.Modifiers.T1_UNIQUE_DESIGNATION_2,"T1");
+    modifiers.set(C5Ren.Modifiers.Z_SPEED,"999");//Z
+    //*/
+    //modifiers.set(C5Ren.Modifiers.CN_CPOF_NAME_LABEL,"CPOF'D";//Z
+    
+
+    
+    return modifiers;
+}
+function speedTest(modifiersOn)
+{
+    //var rendererMP = document.getElementById("SECRenderApplet");
+	//var rendererMP = new sec.web.renderer.SECWebRenderer();
+        //var rendererMP = sec.web.renderer.SECWebRenderer;
+
+        //var rendererSPSVG = armyc2.c2sd.renderer.MilStdSVGRenderer;//.Render(symbolID,modifiers);
+
+		var start = null;
+
+		
+
+        
+		//UNIT RANGE FAN EXAMPLE
+
+		var symbolCode = "110301000013010000000000000000"; //bomb
+
+        var modifiers = null;
+        if(modifiersOn)
+            modifiers = populateModifiers();
+
+        var attributes = populateAttributes();
+		//webworker sector range fan test
+		//web worker assumes defaults.  you must pass any relevant overrides like symstd.
+		var json5;
+		var data = {};
+		data.id = "ID";
+		data.symbolID = symbolCode;
+		data.modifiers = modifiers;
+        data.attributes = attributes;
+		
+		
+		
+		worker.onerror = function(error)
+		{
+            console.log("SPWorker-postMessage");
+            console.log(error);
+            console.log(error.stack);
+		};
+		worker.onmessage = function(e)
+		{
+            cleartext();
+            stop = new Date().getTime();
+            var time = stop - start;
+            //alert('Render 1k symbols: ' + (time/1000));//*/
+            document.getElementById("contentSpan").innerHTML += 'Render 1k symbols: ' + (time/1000);
+            
+			document.getElementById("contentSpan").innerHTML += "<br/><br/>Unit via Web Worker:   <br/>";
+
+			if(e.data.format == "ERROR")
+			{
+				document.getElementById("contentSpan").innerHTML += e.data.result;
+				if(e.data.stack !== null)
+				{
+					document.getElementById("contentSpan").innerHTML += ("<br/>at " + e.data.stack);
+				}
+			}
+			else
+			{
+                
+                //document.getElementById("contentSpan").innerHTML += "<br/>"
+                var total = "";
+                start = new Date().getTime();
+                for(var j = 0; j < e.data.length; j++)
+                {
+                    
+                    var svg = e.data[j].svg;
+                    if(svg != null)
+                        total += svg;
+                    
+                    //for testing
+                    //total +=  batch[j].symbolID + "<br/>"  
+                    if(j % 10 === 0 && j !== 0)
+                        total +=  "<br/>"  
+                }
+                document.getElementById("contentSpan").innerHTML += total;
+                stop = new Date().getTime();
+                time = stop - start;
+                
+                
+                var svgImage = document.getElementById("SVGTest");
+                svgImage.width = e.data[0].bounds.width;
+                svgImage.height = e.data[0].bounds.height;
+                if(e.data[0].base64)
+                    svgImage.src = e.data[0].base64;
+                else
+                    svgImage.src = "data:image/svg+xml;base64," + btoa(e.data[0].svg);
+                    
+                document.getElementById("contentSpan").innerHTML += 'Add 1k symbols to the dom: ' + (time/1000);
+                
+			}
+			
+			
+		};//*/
+		
+		//send batch data to web renderer
+        var batch = [];
+        var version = 13;
+        var symbolsSIDC = C5Ren.MSLookup.getInstance().getIDList(version);
+        var context = "0";//reality
+        var affiliation = "3";//friend
+        var status = "0"; //present
+
+        var MSL = C5Ren.MSLookup.getInstance();
+        for(var i = 0; i < 1000; i++)
+        {
+            var sidc = symbolsSIDC[Math.floor(symbolsSIDC.length*Math.random())];
+            sidc = "" + version + context + affiliation + sidc.substring(0,2) + status + 
+            "000" + sidc.substring(2) + "0000" + "0000000000";
+            var msi = MSL.getMSLInfo(sidc);
+            if(msi == null || msi.getDrawRule()===0)
+                i--;
+            else
+                batch.push({id:"ID",symbolID:sidc,modifiers:modifiers,attributes:attributes})
+            //console.log("" + i + ": " + sidc);
+        }
+
+
+        var mir = C5Ren.MilStdIconRenderer.getInstance();
+        var startMain = new Date().getTime();
+        for(var j = 0; j < 1000; j++)
+        {
+            var item = batch[j];
+            mir.RenderSVG(item.symbolID, item.modifiers, item.attributes);
+        }
+        var stopMain = new Date().getTime();
+        console.log("Time to generate on main thread: " + (stopMain - startMain)/1000);
+
+
+        start = new Date().getTime();
+        //format can be svg, base64, or both.
+		worker.postMessage({format:"svg",batch:batch});
+		
+ /*
+		try
+		{
+			C5Ren.ErrorLogger.LogException("SPWorker","postMessage",new Error("error test"));
+		}
+		catch(error)
+		{
+			C5Ren.ErrorLogger.LogException("SPWorker","postMessage",error);
+		}
+		
+    } //end if//*/
+}
+
+function testRender()
+{
+    //var rendererMP = document.getElementById("SECRenderApplet");
+	//var rendererMP = new sec.web.renderer.SECWebRenderer();
+        //var rendererMP = sec.web.renderer.SECWebRenderer;
+
+        //var rendererSPSVG = armyc2.c2sd.renderer.MilStdSVGRenderer;//.Render(symbolID,modifiers);
+
+console.log("SVGWW.html-testRender-Unit");
+
+		//UNIT RANGE FAN EXAMPLE
+
+		var symbolCode = "110301000013010000000000000000"; //Bomb
+
+		var attributes =  populateAttributes();
+
+		//webworker sector range fan test
+		//web worker assumes defaults.  you must pass any relevant overrides like symstd.
+		var json5;
+		var data = {};
+		data.id = "ID";
+		data.symbolID = symbolCode;
+		data.modifiers = {};
+        data.attributes = attributes;
+	
+		
+
+		
+		worker.onerror = function(error)
+		{
+			console.log("SPWorker-postMessage");
+            console.log(error);
+            console.log(error.stack);
+		};
+		worker.onmessage = function(e)
+		{
+			document.getElementById("contentSpan").innerHTML += "<br/><br/>Unit via Web Worker:   <br/>";
+
+			if(e.data.error)
+			{
+				document.getElementById("contentSpan").innerHTML += e.data.result;
+				if(e.data.stack !== null)
+				{
+					document.getElementById("contentSpan").innerHTML += ("<br/>at " + e.data.stack);
+				}
+			}
+			else
+			{
+                var svg = e.data.svg;
+                document.getElementById("contentSpan").innerHTML += svg;
+			}
+			
+			
+		};//*/
+		
+		//send data to web renderer
+		worker.postMessage(data);
+		
+ /*
+		try
+		{
+			C5Ren.ErrorLogger.LogException("SPWorker","postMessage",new Error("error test"));
+		}
+		catch(error)
+		{
+			C5Ren.ErrorLogger.LogException("SPWorker","postMessage",error);
+		}
+		
+    } //end if//*/
+}
+
+	</script>
+</head>
+<body onload="setup();">
+
+    <button id="testRender" type='button' onclick='testRender()'>Test Single Point SVG</button>
+    <button type='button' onclick='speedTest(false)'>Speed test 1k SVG batch</button>
+    <button type='button' onclick='speedTest(true)'>Speed test 1k SVG batch with all modifiers</button>
+	<button type='button' onclick='cleartext()'>Clear</button>
+    <br/>
+    <img id="SVGTest" src="" alt="svg from datauri" height="100" width="100">
+	
+   <span id='contentSpan'/>
+   
+   
+   
+
+</body>
+
+</html>

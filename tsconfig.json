@@ -1,0 +1,54 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    /*"paths": {
+            "*": ["types/*"]
+        },*/
+    //"outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "resolveJsonModule": false,
+    "esModuleInterop": true,
+    "target": "es2022",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ESNext"
+    ],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "module": "CommonJS",
+    //"moduleResolution": "bundler",
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+  },
+    //"include": ["./src/**/*"],
+  "exclude": [
+      //"./plugins/**/*",
+      //"./typings/**/*",
+      //"test.ts",
+      "node_modules",
+      "./dist/**/*" // This is what fixed it!
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "node16"
+    }
+  }
+}
