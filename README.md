@@ -4,6 +4,10 @@
 
 [Wiki](https://github.com/missioncommand/mil-sym-ts/wiki)
 
+Old 2525C libraries available here:
+[mil-sym-js.release.v0.3.37](https://missioncommand.github.io/oldReleases/mil-sym-js.release.v0.3.37.zip)  
+[mil-sym-js.release.v0.3.39](https://missioncommand.github.io/oldReleases/mil-sym-js.release_candidate.v0.3.39.zip)  
+
 Usage:
 
 Renderer must be initialized first.
