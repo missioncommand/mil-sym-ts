@@ -2,6 +2,8 @@
 [Multipoint Web Worker Example](https://missioncommand.github.io/js-samples/MPWW.html)  
 [SinglePoint Web Worker Example](https://missioncommand.github.io/js-samples/SVGWW.html)  
 
+[Wiki](https://github.com/missioncommand/mil-sym-ts/wiki)
+
 Usage:
 
 Renderer must be initialized first.
