@@ -1,4 +1,6 @@
 [Simple Interactive Tester](https://missioncommand.github.io/js-samples/singlePointTester3.html)
+[Multipoint Web Worker Example](https://missioncommand.github.io/js-samples/MPWW.html)
+[SinglePoint Web Worker Example](https://missioncommand.github.io/js-samples/SVGWW.html)
 
 Usage:
 
