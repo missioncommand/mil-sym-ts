@@ -1,3 +1,5 @@
+[Simple Interactive Tester](https://missioncommand.github.io/js-samples/singlePointTester3.html)
+
 Usage:
 
 Renderer must be initialized first.
