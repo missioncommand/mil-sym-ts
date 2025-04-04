@@ -2,7 +2,8 @@
 [Multipoint Web Worker Example](https://missioncommand.github.io/js-samples/MPWW.html)  
 [SinglePoint Web Worker Example](https://missioncommand.github.io/js-samples/SVGWW.html)  
 
-[Wiki](https://github.com/missioncommand/mil-sym-ts/wiki)
+[Wiki](https://github.com/missioncommand/mil-sym-ts/wiki)  
+[JavaDocs](https://missioncommand.github.io/javadoc/2525D/typescript/index.html)  
 
 The old 2525C renderer has been retired but the libraries and usage information are still available here:  
 [2525C Renderer Overview](https://github.com/missioncommand/mil-sym-ts/wiki/2525C-Renderer-Overview)
