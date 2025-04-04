@@ -2,11 +2,11 @@
 [Multipoint Web Worker Example](https://missioncommand.github.io/js-samples/MPWW.html)  
 [SinglePoint Web Worker Example](https://missioncommand.github.io/js-samples/SVGWW.html)  
 
-[Wiki](https://github.com/missioncommand/mil-sym-ts/wiki)
+[Wiki](https://github.com/missioncommand/mil-sym-ts/wiki)  
+[JavaDocs](https://missioncommand.github.io/javadoc/2525D/typescript/index.html)  
 
-Old 2525C libraries available here:  
-[mil-sym-js.release.v0.3.37](https://missioncommand.github.io/oldReleases/mil-sym-js.release.v0.3.37.zip)  
-[mil-sym-js.release.v0.3.39](https://missioncommand.github.io/oldReleases/mil-sym-js.release_candidate.v0.3.39.zip)  
+The old 2525C renderer has been retired but the libraries and usage information are still available here:  
+[2525C Renderer Overview](https://github.com/missioncommand/mil-sym-ts/wiki/2525C-Renderer-Overview)
 
 Usage:
 
