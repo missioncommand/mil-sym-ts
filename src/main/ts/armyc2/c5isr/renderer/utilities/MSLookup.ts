@@ -298,6 +298,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.W_DTG_1);
                             modifiers.push(Modifiers.X_ALTITUDE_DEPTH);
                             modifiers.push(Modifiers.Y_LOCATION);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AF_COMMON_IDENTIFIER);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             modifiers.push(Modifiers.AV_LEADERSHIP);
@@ -314,6 +315,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.X_ALTITUDE_DEPTH);
                             modifiers.push(Modifiers.Z_SPEED);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AS_COUNTRY);
@@ -330,6 +332,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.X_ALTITUDE_DEPTH);
                             modifiers.push(Modifiers.Z_SPEED);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AF_COMMON_IDENTIFIER);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
@@ -347,6 +350,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.Y_LOCATION);
                             modifiers.push(Modifiers.Z_SPEED);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AQ_GUARDED_UNIT);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
@@ -367,6 +371,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.X_ALTITUDE_DEPTH);
                             modifiers.push(Modifiers.Y_LOCATION);
                             modifiers.push(Modifiers.Z_SPEED);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AQ_GUARDED_UNIT);
@@ -384,6 +389,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.T_UNIQUE_DESIGNATION_1);
                             modifiers.push(Modifiers.W_DTG_1);
                             modifiers.push(Modifiers.Y_LOCATION);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
@@ -403,6 +409,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.W_DTG_1);
                             modifiers.push(Modifiers.Y_LOCATION);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             break;
@@ -491,6 +498,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.AI_DEAD_RECKONING_TRAILER);
                             modifiers.push(Modifiers.AJ_SPEED_LEADER);
                             modifiers.push(Modifiers.AK_PAIRING_LINE);
+                            modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             break;
@@ -527,6 +535,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AQ_GUARDED_UNIT);
                             modifiers.push(Modifiers.AR_SPECIAL_DESIGNATOR);
+                            modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
 
@@ -549,6 +558,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.AK_PAIRING_LINE);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
+                            modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
 
@@ -563,8 +573,10 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.X_ALTITUDE_DEPTH);
                             modifiers.push(Modifiers.Z_SPEED);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
+                            modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
 
@@ -580,8 +592,10 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.X_ALTITUDE_DEPTH);
                             modifiers.push(Modifiers.Z_SPEED);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
+                            modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
 
@@ -596,10 +610,12 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.Y_LOCATION);
                             modifiers.push(Modifiers.Z_SPEED);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AQ_GUARDED_UNIT);
                             modifiers.push(Modifiers.AR_SPECIAL_DESIGNATOR);
+                            modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
 
@@ -616,6 +632,8 @@ export class MSLookup {
                             modifiers.push(Modifiers.T_UNIQUE_DESIGNATION_1);
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.X_ALTITUDE_DEPTH);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
+                            modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
 
@@ -627,6 +645,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.Q_DIRECTION_OF_MOVEMENT);
                             modifiers.push(Modifiers.W_DTG_1);
                             modifiers.push(Modifiers.Y_LOCATION);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
@@ -646,6 +665,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.W_DTG_1);
                             modifiers.push(Modifiers.Y_LOCATION);
+                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             break;

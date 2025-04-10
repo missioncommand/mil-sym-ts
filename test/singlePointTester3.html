@@ -83,7 +83,7 @@
             modifiers.set(C5Ren.Modifiers.AO_ENGAGEMENT_BAR, "AO:AOA-AO");
             modifiers.set(C5Ren.Modifiers.AR_SPECIAL_DESIGNATOR, "AR");
             modifiers.set(C5Ren.Modifiers.AQ_GUARDED_UNIT, "AQ");
-            modifiers.set(C5Ren.Modifiers.AS_COUNTRY, "USA");
+            //modifiers.set(C5Ren.Modifiers.AS_COUNTRY, "USA");
             //*/
             //modifiers.set(C5Ren.Modifiers.CN_CPOF_NAME_LABEL,"~`"; //\"CPOF'D";//Z
 			
@@ -237,7 +237,10 @@
 			else
 				id += "00000";//2525D has 5 reserved positions
 
-			id += "000";//country code
+			if(document.getElementById("cbLabels").checked)
+				id += "840";//country code USA
+			else
+				id += "000";//country code
 
             document.getElementById("tbSymbolID").value = id;
 
@@ -586,15 +589,15 @@
 </script>
 </head>
    
-<BODY bgcolor="Cyan" onload="setup();">
-<select id="lbTG" size="10">
-    <option>Single Point Tactical</option>
-    <option>Populating Values...</option>
-</select>        
-<select id="lbU" size="10">
-    <option>Single Point Warfighting</option>
-    <option>Populating Values...</option>
-</select>     
+<BODY bgcolor="#5f95e9" onload="setup();">
+    <select id="lbTG" size="10" style="width: 300px;" >
+        <option>Single Point Tactical</option>
+        <option>Populating Values...</option>
+    </select>        
+    <select id="lbU" size="10" style="width: 300px;" >
+        <option>Single Point Warfighting</option>
+        <option>Populating Values...</option>
+    </select>       
 <br/>
 SVG Rendered to HTML5 Canvas:<br/>
 <canvas id="preview" width="650" height="300"></canvas>

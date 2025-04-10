@@ -23,6 +23,12 @@ export { SymbolUtilities } from "./src/main/ts/armyc2/c5isr/renderer/utilities/S
 export { RendererSettings } from "./src/main/ts/armyc2/c5isr/renderer/utilities/RendererSettings";
 export { SymbolID } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SymbolID";
 export { MilStdSymbol } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MilStdSymbol";
+
+export type { IPointConversion } from "./src/main/ts/armyc2/c5isr/renderer/utilities/IPointConversion";
+export { PointConverter3D } from "./src/main/ts/armyc2/c5isr/renderer/utilities/PointConverter3D";
+export { clsRenderer } from "./src/main/ts/armyc2/c5isr/RenderMultipoints/clsRenderer";
+export { RendererUtilities } from "./src/main/ts/armyc2/c5isr/renderer/utilities/RendererUtilities";
+
 export { MilStdIconRenderer } from "./src/main/ts/armyc2/c5isr/renderer/MilStdIconRenderer";
 export { WebRenderer } from "./src/main/ts/armyc2/c5isr/web/render/WebRenderer";
 

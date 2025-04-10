@@ -3112,7 +3112,11 @@ export class ModifierRenderer implements SettingsEventListener {
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
 
-
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //            int y0 = 0;//             T
         //            int y1 = 0;//             P
@@ -3252,10 +3256,23 @@ export class ModifierRenderer implements SettingsEventListener {
                 }
             }
 
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                modifierValue = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
+            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) || modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    modifierValue = null;
+                    modifierValue = "";
+                    let em: string = "";
+                    let asm: string = "";
+        
+                    if(modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER))
+                        em = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
+        
+                    if(modifiers.has(Modifiers.AS_COUNTRY))
+                        asm = modifiers.get(Modifiers.AS_COUNTRY);
+        
+                    modifierValue = em + " " + asm;
+                    modifierValue = modifierValue.trim();
 
-                if (modifierValue != null && modifierValue !== "") {
+                if (modifierValue !== "") {
                     tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
                     labelBounds = tiTemp.getTextBounds();
                     labelWidth = labelBounds.getWidth() as int;
@@ -3292,10 +3309,23 @@ export class ModifierRenderer implements SettingsEventListener {
                 }
             }
 
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                modifierValue = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
+            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) || modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    modifierValue = null;
+                    modifierValue = "";
+                    let em: string = "";
+                    let asm: string = "";
+        
+                    if(modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER))
+                        em = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
+        
+                    if(modifiers.has(Modifiers.AS_COUNTRY))
+                        asm = modifiers.get(Modifiers.AS_COUNTRY);
+        
+                    modifierValue = em + " " + asm;
+                    modifierValue = modifierValue.trim();
 
-                if (modifierValue != null && modifierValue !== "") {
+                if (modifierValue !== "") {
                     tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
                     labelBounds = tiTemp.getTextBounds();
                     labelWidth = labelBounds.getWidth() as int;
@@ -3393,7 +3423,11 @@ export class ModifierRenderer implements SettingsEventListener {
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
 
-
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //            int y0 = 0;//             AS
         //            int y1 = 0;//             T
@@ -3647,6 +3681,11 @@ export class ModifierRenderer implements SettingsEventListener {
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
 
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //                                 C
         //            int y0 = 0;//W/AR         AS
@@ -3947,20 +3986,32 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
 
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-            modifierValue = null;
+        if (modifiers.has(Modifiers.AS_COUNTRY) ||
+            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
+            modifierValue = "";
             let E: string;
+            let
+                AS: string;
 
             if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
                 E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
                 modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
             }
-
-            if (E != null && E !== "") {
-                modifierValue = E;
+            if (modifiers.has(Modifiers.AS_COUNTRY)) {
+                AS = modifiers.get(Modifiers.AS_COUNTRY);
             }
 
-            if (modifierValue != null) {
+            if (E != null && E !== "") {
+                modifierValue += E;
+            }
+
+            if (AS != null && AS !== "") {
+                modifierValue = modifierValue + " " + AS;
+            }
+
+            modifierValue = modifierValue.trim();
+
+            if (modifierValue !== "") {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
                 labelBounds = tiTemp.getTextBounds();
                 labelWidth = labelBounds.getWidth() as int;
@@ -4112,6 +4163,11 @@ export class ModifierRenderer implements SettingsEventListener {
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
 
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //                                 C
         //            int y0 = 0;//W/           AS
@@ -4497,7 +4553,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
             modifierValue = modifierValue.trim();
 
-            if (modifierValue != null) {
+            if (modifierValue !== "") {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
                 labelBounds = tiTemp.getTextBounds();
                 labelWidth = labelBounds.getWidth() as int;
@@ -4597,6 +4653,12 @@ export class ModifierRenderer implements SettingsEventListener {
             modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
+
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //
         //            int y0 = 0;//
@@ -4772,20 +4834,22 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
 
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-            modifierValue = null;
-            let E: string;
+        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) || modifiers.has(Modifiers.AS_COUNTRY))
+            {
+                modifierValue = "";
+                let em: string = "";
+                let asm: string = "";
+    
+                if(modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER))
+                    em = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
+    
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                    asm = modifiers.get(Modifiers.AS_COUNTRY);
+    
+                modifierValue = em + " " + asm;
+                modifierValue = modifierValue.trim();
 
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue = E;
-            }
-
-            if (modifierValue != null) {
+            if (modifierValue !== "") {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
                 labelBounds = tiTemp.getTextBounds();
                 labelWidth = labelBounds.getWidth() as int;
@@ -4928,6 +4992,12 @@ export class ModifierRenderer implements SettingsEventListener {
             modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
+
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //
         //            int y0 = 0;// W            AS
@@ -5319,6 +5389,11 @@ export class ModifierRenderer implements SettingsEventListener {
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
 
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //
         //            int y0 = 0;//W/           AS
@@ -5763,6 +5838,12 @@ export class ModifierRenderer implements SettingsEventListener {
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
 
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
+
         //            int y0 = 0;//AQ/AR        E/T
         //            int y1 = 0;//              V
         //            int y2 =                   P
@@ -5955,11 +6036,12 @@ export class ModifierRenderer implements SettingsEventListener {
         }
 
         if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+            modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) ||
+            modifiers.has(Modifiers.AS_COUNTRY)) {
             modifierValue = null;
-            let E: string;
-            let
-                T: string;
+            let E: string = "";
+            let T: string = "";
+            let AS: string = "";
 
             if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
                 E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
@@ -5968,22 +6050,16 @@ export class ModifierRenderer implements SettingsEventListener {
             if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
                 T = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
             }
-
-
-            if (E != null && E !== "") {
-                modifierValue = E;
+            if (modifiers.has(Modifiers.AS_COUNTRY)) {
+                AS = modifiers.get(Modifiers.AS_COUNTRY);
             }
 
-            if (T != null && T !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + T;
-                }
-                else {
-                    modifierValue = T;
-                }
-            }
+            modifierValue = E + " " + T;
+            modifierValue = modifierValue.trim() + " " + AS;
+            modifierValue = modifierValue.trim();
 
-            if (modifierValue != null) {
+
+            if ( modifierValue !== "") {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
                 labelBounds = tiTemp.getTextBounds();
                 labelWidth = labelBounds.getWidth() as int;
@@ -6086,6 +6162,12 @@ export class ModifierRenderer implements SettingsEventListener {
             modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
+        
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //                                      E/AS
         //            int y0 = 0;//AQ/AR        T
@@ -6268,8 +6350,7 @@ export class ModifierRenderer implements SettingsEventListener {
             modifiers.has(Modifiers.AS_COUNTRY)) {
             modifierValue = null;
             let E: string;
-            let
-                AS: string;
+            let AS: string;
 
             if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
                 E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
@@ -6422,6 +6503,12 @@ export class ModifierRenderer implements SettingsEventListener {
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
 
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
+
         //            int y0 = 0;//AR           T
         //            int y1 = 0;//             V
         //            int y2 =                  X
@@ -6434,26 +6521,29 @@ export class ModifierRenderer implements SettingsEventListener {
         let tiTemp: TextInfo;
 
         if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+            modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) ||
+            modifiers.has(Modifiers.AS_COUNTRY)) {
+            modifierValue = null;
+            let E: string = "";
+            let T: string = "";
+            let AS: string = "";
 
-            let em: string = "";
-            let tm: string = "";
             if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-
-                em = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
+                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
+                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
             }
-
-
             if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-
-                tm = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                T = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+            }
+            if (modifiers.has(Modifiers.AS_COUNTRY)) {
+                AS = modifiers.get(Modifiers.AS_COUNTRY);
             }
 
-
-            modifierValue = em + " " + tm;
+            modifierValue = E + " " + T;
+            modifierValue = modifierValue.trim() + " " + AS;
             modifierValue = modifierValue.trim();
 
-            if (modifierValue != null && modifierValue !== "") {
+            if (modifierValue !== "") {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
                 labelBounds = tiTemp.getTextBounds();
                 labelWidth = labelBounds.getWidth() as int;
@@ -6657,6 +6747,12 @@ export class ModifierRenderer implements SettingsEventListener {
             modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
             //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
         }//*/
+
+        //Check for Valid Country Code
+        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
+        if (cc != null && cc !== "") {
+            modifiers.set(Modifiers.AS_COUNTRY, cc);
+        }
 
         //                                      E/AS
         //            int y0 = 0;//AQ/AR        T
@@ -6998,7 +7094,6 @@ export class ModifierRenderer implements SettingsEventListener {
         let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
         if (cc != null && cc !== "") {
             modifiers.set(Modifiers.AS_COUNTRY, cc);
-            //modifiers[Modifiers.CC_COUNTRY_CODE] = symbolID.substring(12,14);
         }
 
         //            int y0 = 0;//W            E/AS
@@ -7241,7 +7336,6 @@ export class ModifierRenderer implements SettingsEventListener {
         let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
         if (cc != null && cc !== "") {
             modifiers.set(Modifiers.AS_COUNTRY, cc);
-            //modifiers[Modifiers.CC_COUNTRY_CODE] = symbolID.substring(12,14);
         }
 
         //            int y0 = 0;//W            E/AS
@@ -7516,7 +7610,6 @@ export class ModifierRenderer implements SettingsEventListener {
         let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
         if (cc != null && cc !== "") {
             modifiers.set(Modifiers.AS_COUNTRY, cc);
-            //modifiers[Modifiers.CC_COUNTRY_CODE] = symbolID.substring(12,14);
         }
 
         //            int y0 = 0;//             E/F/AS
