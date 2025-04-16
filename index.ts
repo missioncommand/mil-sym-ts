@@ -22,6 +22,7 @@ export { SVGSymbolInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SVG
 export { SymbolUtilities } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SymbolUtilities";
 export { RendererSettings } from "./src/main/ts/armyc2/c5isr/renderer/utilities/RendererSettings";
 export { SymbolID } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SymbolID";
+export { ShapeInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ShapeInfo";
 export { MilStdSymbol } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MilStdSymbol";
 
 export type { IPointConversion } from "./src/main/ts/armyc2/c5isr/renderer/utilities/IPointConversion";
