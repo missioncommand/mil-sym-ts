@@ -8,6 +8,7 @@ import { SymbolID } from "../../renderer/utilities/SymbolID"
 import { SymbolUtilities } from "../../renderer/utilities/SymbolUtilities"
 import { LogLevel } from "./LogLevel";
 import { Rectangle2D } from "../../graphics2d/Rectangle2D";
+import { Point2D } from "../../graphics2d/Point2D";
 
 
 export class RendererUtilities {
@@ -530,6 +531,13 @@ export class RendererUtilities {
         }
         return largest * RendererUtilities.OUTLINE_SCALING_FACTOR;
     }
+
+    public static getDistanceBetweenPoints(pt1:Point2D, pt2:Point2D):int
+    {
+        let distance:int = (Math.sqrt(Math.pow((pt2.getX() - pt1.getX()) ,2) + Math.pow((pt2.getY() - pt1.getY()) ,2))) as int;
+        return distance;
+    }
+
 
     public static async getData(path:string):Promise<any> {
         const url = path;

@@ -10,6 +10,8 @@ import { Modifiers } from "../../renderer/utilities/Modifiers"
 import { RendererSettings } from "../../renderer/utilities/RendererSettings"
 import { ShapeInfo } from "../../renderer/utilities/ShapeInfo"
 import { SymbolUtilities } from "../../renderer/utilities/SymbolUtilities"
+import { AffiliationColors } from "./AffiliationColors";
+import { RendererUtilities } from "./RendererUtilities";
 
 
 /**
@@ -558,6 +560,11 @@ export class MilStdSymbol {
     */
     public setTextColor(value: Color): void {
         this._TextColor = value;
+        if(RendererSettings.getInstance().getTextBackgroundMethod() != RendererSettings.TextBackgroundMethod_NONE && this._TextBackgroundColor == null)
+        {
+            //If text background enabled and a background color has not been set yet:
+            this._TextBackgroundColor = new Color(RendererUtilities.getIdealOutlineColor(this._TextColor));
+        }
     }
 
     /**
@@ -607,7 +614,7 @@ export class MilStdSymbol {
      */
     public setLineColor(value: Color | null): void {
         if (SymbolUtilities.isGreenProtectionGraphic(this.getSymbolID())) {
-            this._LineColor = new Color(0, 166, 81); // Green from SymbolUtilities.getLineColorOfAffiliation()
+            this._LineColor = AffiliationColors.ObstacleGreen;//new Color(0, 166, 81); // Green from SymbolUtilities.getLineColorOfAffiliation()
         } else if (value != null) {
                 this._LineColor = value;
         }

@@ -89,6 +89,9 @@ export abstract class AffiliationColors {
 
 	public static SuspectGraphicLineColor: Color = new Color(255, 188, 1);
 
+	public static ObstacleGreenDark: Color = new Color(0,166,81);
+	public static ObstacleGreen: Color = new Color(0,255,0);
+
 	public static WeatherRed: Color = new Color(198, 16, 33);//0xC61021;// 198,16,33
 	public static WeatherBlue: Color = new Color(0, 0, 255);//0x0000FF;// 0,0,255
 

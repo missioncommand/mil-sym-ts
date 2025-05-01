@@ -877,7 +877,7 @@ export class ModifierRenderer implements SettingsEventListener {
                 ociShape = ModifierRenderer.processOperationalConditionIndicator(symbolID, symbolBounds, ociOffset);
                 if (ociShape != null) {
                     let temp: Rectangle2D = ociShape.clone() as Rectangle2D;
-                    ShapeUtilities.grow(temp, 1);
+                    ShapeUtilities.grow(temp, 2);
                     ociBounds = temp;
                     imageBounds = imageBounds.createUnion(ociBounds);
                 }
@@ -944,6 +944,15 @@ export class ModifierRenderer implements SettingsEventListener {
                 if (symbolBounds.getHeight() < 20) {
                     svgFDIDashArray = "5 3";
                 }
+
+                /// ///////////////////////////////////
+                //Divide line in 14 parts. line is 3 parts to 2 parts gap
+                let distance:int = RendererUtilities.getDistanceBetweenPoints(fdiTop,fdiLeft);
+                //distance = distance / 14f;
+                dashArray[1] = ((distance / 14) * 2);
+                dashArray[0] = ((distance / 14) * 3);//*/
+                svgFDIDashArray = "" + dashArray[0] + " " + dashArray[1];
+                /// //////////////////////////////////
 
                 let fdiPath: Path = new Path();
                 fdiPath.moveTo(fdiTop.getX(), fdiTop.getY());
@@ -8187,6 +8196,17 @@ export class ModifierRenderer implements SettingsEventListener {
                                         if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) &&
                                             (ec === 160300 || ec === 132000)) {
                                             strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                                            if (strText != null) {
+                                                ti = new TextInfo(strText, 0, 0, ModifierRenderer._modifierFont, frc);
+    
+                                                x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
+                                                //                  x = x - (labelbounds.getWidth * 0.5);
+                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.25)) as int;
+                                                y = y + (labelHeight * 0.5) as int;
+    
+                                                ti.setLocation(Math.round(x), Math.round(y));
+                                                arrMods.push(ti);
+                                            }
                                         }
                                         if (ec === 240601 || ec === 240602) {
                                             if (modifiers.has(Modifiers.AP_TARGET_NUMBER)) {
@@ -8202,24 +8222,19 @@ export class ModifierRenderer implements SettingsEventListener {
 
                                                     strText = modifiers.get(Modifiers.AP1_TARGET_NUMBER_EXTENSION);
                                                 }
-
+                                            }
+                                            if (strText != null) {
+                                                ti = new TextInfo(strText, 0, 0, ModifierRenderer._modifierFont, frc);
+    
+                                                x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
+                                                //                  x = x - (labelbounds.getWidth * 0.5);
+                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.25)) as int;
+                                                y = y + (labelHeight * 0.5) as int;
+    
+                                                ti.setLocation(Math.round(x), Math.round(y));
+                                                arrMods.push(ti);
                                             }
                                         }
-
-
-                                        if (strText != null) {
-                                            ti = new TextInfo(strText, 0, 0, ModifierRenderer._modifierFont, frc);
-
-                                            x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
-                                            //                  x = x - (labelbounds.getWidth * 0.5);
-                                            y = (bounds.getMinY() + (bounds.getHeight() * 0.25)) as int;
-                                            y = y + (labelHeight * 0.5) as int;
-
-                                            ti.setLocation(Math.round(x), Math.round(y));
-                                            arrMods.push(ti);
-                                        }
-
-
                                     }
                                     else {
                                         if (ec === 132100)  //Key Terrain
@@ -8990,6 +9005,15 @@ export class ModifierRenderer implements SettingsEventListener {
                         svgFDIDashArray = "5 3";
                     }
 
+                    /// ///////////////////////////////////
+                    //Divide line in 14 parts. line is 3 parts to 2 parts gap
+                    let distance:int = RendererUtilities.getDistanceBetweenPoints(fdiTop,fdiLeft);
+                    //distance = distance / 14f;
+                    dashArray[1] = ((distance / 14) * 2);
+                    dashArray[0] = ((distance / 14) * 3);//*/
+                    svgFDIDashArray = "" + dashArray[0] + " " + dashArray[1];
+                    /// //////////////////////////////////
+
                     let fdiPath: Path = new Path();
                     fdiPath.moveTo(fdiTop.getX(), fdiTop.getY());
                     fdiPath.lineTo(fdiLeft.getX(), fdiLeft.getY());
@@ -9369,6 +9393,15 @@ export class ModifierRenderer implements SettingsEventListener {
                     if (symbolBounds.getHeight() < 20) {
                         svgFDIDashArray = "5 3";
                     }
+
+                    /// ///////////////////////////////////
+                    //Divide line in 14 parts. line is 3 parts to 2 parts gap
+                    let distance:int = RendererUtilities.getDistanceBetweenPoints(fdiTop,fdiLeft);
+                    //distance = distance / 14f;
+                    dashArray[1] = ((distance / 14) * 2);
+                    dashArray[0] = ((distance / 14) * 3);//*/
+                    svgFDIDashArray = "" + dashArray[0] + " " + dashArray[1];
+                    /// //////////////////////////////////
 
                     let fdiPath: Path = new Path();
                     fdiPath.moveTo(fdiTop.getX(), fdiTop.getY());

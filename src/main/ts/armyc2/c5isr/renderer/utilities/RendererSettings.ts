@@ -75,6 +75,8 @@ export class RendererSettings {
 
     private static _OutlineSPControlMeasures: boolean = true;
 
+    private static _ActionPointDefaultFill: boolean = true;
+
 
 
     /**
@@ -467,6 +469,14 @@ export class RendererSettings {
 
     public getOutlineSPControlMeasures(): boolean {
         return RendererSettings._OutlineSPControlMeasures;
+    }
+
+    public setActionPointDefaultFill(value: boolean): void {
+        RendererSettings._ActionPointDefaultFill = value;
+    }
+
+    public getActionPointDefaultFill(): boolean {
+        return RendererSettings._ActionPointDefaultFill;
     }
 
     /**

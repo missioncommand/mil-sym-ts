@@ -490,7 +490,7 @@ export class SymbolUtilities {
                 if (SymbolUtilities.isGreenProtectionGraphic(entity, entityType, entitySubtype)) {
                     //Obstacles/Protection Graphics, some are green obstacles and we need to
                     //check for those.
-                    retColor = new Color(0, 166, 81);//Color.GREEN;
+                    retColor = AffiliationColors.ObstacleGreen;//new Color(0,255,0);//Color.GREEN;
                 }
                 //just do color by affiliation if no other color has been set yet.
                 if (retColor == null) {

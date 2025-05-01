@@ -409,7 +409,7 @@ export class Path
     /**
      * Arc and ArcTo do not covert currently
      */
-    toSVGElement(stroke:string | null, strokeWidth:number, fill:string | null, strokeOpacity:number=1, fillOpacity:number=1, svgFormat:number=0)
+    toSVGElement(stroke:string | null, strokeWidth:number, fill:string | null, strokeOpacity:number=1, fillOpacity:number=1, lineCap: string | null = null, svgFormat:number=0)
     {
         var format = 1;
         if(svgFormat)
@@ -506,9 +506,15 @@ export class Path
                 line += ' stroke-opacity="' + strokeOpacity + '"';
             }
             
-            //line += ' stroke-linejoin="round"';
-            line += ' stroke-linecap="round"';
-            //line += ' stroke-linecap="square"';
+            if(lineCap != null &&
+                (lineCap.toLowerCase()==="butt" ||
+                        lineCap.toLowerCase()==="round" ||
+                        lineCap.toLowerCase()==="square"))
+            {
+                line += ' stroke-linecap="' + lineCap + '"';
+            }
+            else
+                line += ' stroke-linecap="round"';
         }
             
         if(this._dashArray != null)

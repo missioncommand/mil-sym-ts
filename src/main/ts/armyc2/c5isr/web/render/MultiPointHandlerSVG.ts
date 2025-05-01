@@ -405,7 +405,7 @@ export class MultiPointHandlerSVG {
         }
         if (fillPattern)
             fillColor = "url(#fillPattern)";
-        let svgElement = path.toSVGElement(lineColor, lineWidth, fillColor, lineAlpha, fillAlpha);
+        let svgElement = path.toSVGElement(lineColor, lineWidth, fillColor, lineAlpha, fillAlpha,"round");
         let svgInfo = { svg: svgElement, bounds: path.getBounds(), fillPattern: fillPattern };
         return svgInfo;
     }

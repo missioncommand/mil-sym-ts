@@ -670,18 +670,21 @@ export class SinglePointSVGRenderer {
             
             let hasAPFill: boolean = false;
             if (msi != null) { drawRule = msi.getDrawRule(); }
-            if (SymbolUtilities.isActionPoint(symbolID) || //action points
-                drawRule === DrawRules.POINT10 || //Sonobuoy
-                ec === 180100 || ec === 180200 || ec === 180400) //ACP, CCP, PUP
+            if(RendererSettings.getInstance().getActionPointDefaultFill()) 
             {
-                if (SymbolID.getSymbolSet(symbolID) === SymbolID.SymbolSet_ControlMeasure) {
-                    lineColor = "#000000";
-                    hasAPFill = true;
+                if (SymbolUtilities.isActionPoint(symbolID) || //action points
+                    drawRule === DrawRules.POINT10 || //Sonobuoy
+                    ec === 180100 || ec === 180200 || ec === 180400) //ACP, CCP, PUP
+                {
+                    if (SymbolID.getSymbolSet(symbolID) === SymbolID.SymbolSet_ControlMeasure) {
+                        lineColor = "#000000";
+                        hasAPFill = true;
+                    }
                 }
-            }
-            if (lineColor == null) {
+                if (lineColor == null) {
 
-                lineColor = RendererUtilities.colorToHexString(SymbolUtilities.getDefaultLineColor(symbolID), false);
+                    lineColor = RendererUtilities.colorToHexString(SymbolUtilities.getDefaultLineColor(symbolID), false);
+                }
             }
 
 
@@ -744,7 +747,10 @@ export class SinglePointSVGRenderer {
             }
 
             if (keepUnitRatio) {
-                pixelSize = Math.ceil((pixelSize / 1.5) * 1.75) as int;
+                if(msi.getDrawRule() == DrawRules.POINT1)//Action Points
+                    pixelSize = Math.ceil((pixelSize/1.5) * 1.5);
+                else
+                    pixelSize = Math.ceil((pixelSize/1.5) * 1.2);
             }
 
 
@@ -792,10 +798,6 @@ export class SinglePointSVGRenderer {
                 let strSVGIcon: string;
 
 
-                if (drawRule === DrawRules.POINT1) //action points and a few others
-                {//TODO: move this stroke width adjustment to the external tool that makes 2525D.SVG & 2525E.SVG
-                    siIcon = new SVGInfo(siIcon.getID(), siIcon.getBbox(), siIcon.getSVG().replaceAll("stroke-width=\"4\"", "stroke-width=\"6\""));
-                }
                 if (hasAPFill) //Action Point(s), Sonobuoys, ACP, CCP, PUP
                 {
                     let apFill: string;
