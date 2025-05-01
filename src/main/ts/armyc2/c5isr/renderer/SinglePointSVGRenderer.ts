@@ -724,7 +724,7 @@ export class SinglePointSVGRenderer {
                 }
 
 
-                if (asIcon === false)//don't outline icons because they're not going on the map
+                if (!(asIcon === true || hasAPFill === true))//don't outline icons because they're not going on the map
                 {
                     if (attributes.has(MilStdAttributes.OutlineSymbol)) {
 
@@ -1083,7 +1083,7 @@ export class SinglePointSVGRenderer {
 
             }
 
-            if(drawAsIcon==false)//don't outline icons because they're not going on the map
+            if(drawAsIcon===false)//don't outline icons because they're not going on the map
             {
                 if(attributes.has(MilStdAttributes.OutlineSymbol))
                     drawCustomOutline = (attributes.get(MilStdAttributes.OutlineSymbol).toLowerCase()==='true');
