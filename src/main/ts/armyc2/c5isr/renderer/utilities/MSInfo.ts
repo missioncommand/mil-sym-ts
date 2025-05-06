@@ -792,7 +792,6 @@ export class MSInfo {
             case DrawRules.AREA7:
             case DrawRules.AREA11:
             case DrawRules.AREA12:
-            case DrawRules.AREA14:
             case DrawRules.AREA17:
             case DrawRules.AREA21:
             case DrawRules.AREA24:
@@ -847,6 +846,15 @@ export class MSInfo {
             case DrawRules.AREA10: {
                 points[0] = 3;
                 points[1] = 6;
+                break;
+            }
+
+            case DrawRules.AREA14: {
+                points[0] = 3;
+                if (version == SymbolID.Version_2525D)
+                    points[1] = 4;
+                else
+                    points[1] = 3;
                 break;
             }
 
