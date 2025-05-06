@@ -257,6 +257,9 @@ export class SinglePointSVGRenderer {
                     //question mark
                 }
 
+                if(RendererSettings.getInstance().getScaleMainIcon())
+                    siIcon = RendererUtilities.scaleIcon(symbolID,siIcon);
+
                 siMod1 = SVGLookup.getInstance().getSVGLInfo(mod1ID, version);
                 siMod2 = SVGLookup.getInstance().getSVGLInfo(mod2ID, version);
                 top = Math.round(siFrame.getBbox().getY());

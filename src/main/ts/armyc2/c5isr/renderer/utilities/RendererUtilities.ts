@@ -9,6 +9,7 @@ import { SymbolUtilities } from "../../renderer/utilities/SymbolUtilities"
 import { LogLevel } from "./LogLevel";
 import { Rectangle2D } from "../../graphics2d/Rectangle2D";
 import { Point2D } from "../../graphics2d/Point2D";
+import { SVGInfo } from "./SVGInfo";
 
 
 export class RendererUtilities {
@@ -536,6 +537,31 @@ export class RendererUtilities {
     {
         let distance:int = (Math.sqrt(Math.pow((pt2.getX() - pt1.getX()) ,2) + Math.pow((pt2.getY() - pt1.getY()) ,2))) as int;
         return distance;
+    }
+
+    public static scaleIcon(symbolID:string, icon:SVGInfo):SVGInfo
+    {
+        let retVal:SVGInfo = icon;
+        //safe square inside octagon:  <rect x="220" y="310" width="170" height="170"/>
+        let maxSize:number = 170;
+        let bbox:Rectangle2D =  icon.getBbox();
+        let length:number = Math.max(bbox.getWidth(),bbox.getHeight());
+        if(length < 100 &&
+                SymbolID.getCommonModifier1(symbolID)==0 &&
+                SymbolID.getCommonModifier2(symbolID)==0 &&
+                SymbolID.getModifier1(symbolID)==0 &&
+                SymbolID.getModifier2(symbolID)==0)//if largest side smaller than 100 and there are no section mods, make it bigger
+        {
+            let ratio:number = maxSize / length;
+            let transx:number = ((bbox.getX() + (bbox.getWidth()/2)) * ratio) - (bbox.getX() + (bbox.getWidth()/2));
+            let transy:number = ((bbox.getY() + (bbox.getHeight()/2)) * ratio) - (bbox.getY() + (bbox.getHeight()/2));
+            let transform:string = " transform=\"translate(-" + transx + ",-" + transy + ") scale(" + ratio + " " + ratio + ")\">";
+            let svg:string = icon.getSVG();
+            svg = svg.replace(">",transform);
+            let newBbox:Rectangle2D = new Rectangle2D(bbox.getX() - transx,bbox.getY() - transy,bbox.getWidth() * ratio, bbox.getHeight() * ratio);
+            retVal = new SVGInfo(icon.getID(),newBbox,svg);
+        }
+        return retVal;
     }
 
 
