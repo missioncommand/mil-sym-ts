@@ -1236,14 +1236,22 @@ export class DISMSupport {
 
                 try {
                     // Extend ptA and ptC .25w
-                    let w: double = lineutility.CalcDistanceDouble(ptA, ptC);
-                    ptC = lineutility.ExtendLineDouble(ptA, ptC, w * .25);
-                    ptA = lineutility.ExtendLineDouble(ptC, ptA, w * .25);
+                    let w: double = lineutility.CalcDistanceDouble(ptA, ptC) * 0.25;
+                    if (w < tg.get_LineThickness() * 1.5) {
+                        // lineThickness * 1.5 is minimum distance between arrow and dummy modifier
+                        w = tg.get_LineThickness() * 1.5;
+                    }
+                    ptC = lineutility.ExtendLineDouble(ptA, ptC, w);
+                    ptA = lineutility.ExtendLineDouble(ptC, ptA, w);
 
                     // Extend ptB .5w
                     let midPt: POINT2 = lineutility.MidPointDouble(ptA, ptC, 0);
-                    w = lineutility.CalcDistanceDouble(midPt, ptB);
-                    ptB = lineutility.ExtendLineDouble(midPt, ptB, w * .5);
+                    w = lineutility.CalcDistanceDouble(midPt, ptB) * 0.5;
+                    if (w < tg.get_LineThickness() * 1.5) {
+                        // lineThickness * 1.5 is minimum distance between arrow and dummy modifier
+                        w = tg.get_LineThickness() * 1.5;
+                    }
+                    ptB = lineutility.ExtendLineDouble(midPt, ptB, w);
 
                     let shape: Shape2 = new Shape2(Shape2.SHAPE_TYPE_POLYLINE);
                     shape.moveTo(ptA);
