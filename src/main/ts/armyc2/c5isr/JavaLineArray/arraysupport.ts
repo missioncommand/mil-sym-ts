@@ -3159,6 +3159,18 @@ export class arraysupport {
                     }
                     pLinePoints[199].style = 5;
                     //dRadius = lineutility.CalcDistanceDouble(pt0, pt3);
+                    if (vblSaveCounter == 4) {
+                        if (converter == null) {
+                            dRadius = lineutility.CalcDistanceDouble(pt0, pt3);
+                            lineutility.CalcCircleDouble(pt0, dRadius, 100,
+                                    circlePoints, 0);
+                        } else
+                            lineutility.CalcCircleDouble2(pt0, pt3, 100,
+                                    circlePoints, converter);
+                        for (j = 0; j < 100; j++) {
+                            pLinePoints[200 + j] = new POINT2(circlePoints[j]);
+                        }
+                    }
                     acCounter = vblCounter;
                     //FillPoints(pLinePoints,acCounter,points);
                     break;
