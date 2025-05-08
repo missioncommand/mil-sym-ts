@@ -35,6 +35,7 @@ import { ref } from "../../JavaLineArray/ref"
 export class WebRenderer /* extends Applet */ {
     // private static readonly serialVersionUID: long = -2691218568602318366n;
 
+    public static readonly OUTPUT_FORMAT_KML = 0;
     /**
      * @deprecated
      */

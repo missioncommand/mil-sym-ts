@@ -764,6 +764,13 @@ export class MultiPointHandler {
                 jsonContent = MultiPointHandler.JSONize(shapes, modifiers, ipc, true, normalize);
                 jsonOutput += (jsonContent);
                 jsonOutput += ("}");
+            } else if (format === WebRenderer.OUTPUT_FORMAT_KML) {
+                var textColor = mSymbol.getTextColor();
+                if(textColor==null)
+                    textColor=mSymbol.getLineColor();
+
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 /*
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
@@ -1357,6 +1364,13 @@ export class MultiPointHandler {
                 //jsonContent = JSONize(shapes, modifiers, ipc, normalize);
                 jsonOutput += (jsonContent);
                 jsonOutput += ("}");
+            } else if (format === WebRenderer.OUTPUT_FORMAT_KML) {
+                var textColor = mSymbol.getTextColor();
+                if(textColor==null)
+                    textColor=mSymbol.getLineColor();
+
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
                 jsonContent = MultiPointHandler.GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
