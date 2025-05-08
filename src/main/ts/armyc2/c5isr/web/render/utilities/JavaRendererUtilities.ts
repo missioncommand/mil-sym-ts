@@ -37,7 +37,7 @@ export class JavaRendererUtilities {
             c[3] = c[7];
             c[6] = temp1;
             c[7] = temp2;
-            bgrString = c.join();
+            bgrString = c.join("");
         }
         else {
             if (rgbString.length === 6) {
@@ -48,7 +48,7 @@ export class JavaRendererUtilities {
                 c[1] = c[5];
                 c[4] = temp1;
                 c[5] = temp2;
-                bgrString = "FF" + c.join();
+                bgrString = "FF" + c.join("");
                 //bgrString = "FF" + bgrString;
             }
             else {

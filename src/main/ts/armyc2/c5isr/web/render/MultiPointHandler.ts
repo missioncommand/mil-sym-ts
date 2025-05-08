@@ -2517,7 +2517,7 @@ export class MultiPointHandler {
 
         lineColor = shapeInfo.getLineColor();
         if (lineColor != null) {
-            googleLineColor = RendererUtilities.colorToHexString(shapeInfo.getLineColor(), false);
+            googleLineColor = RendererUtilities.colorToHexString(shapeInfo.getLineColor(), false).substring(1);
 
             stroke = shapeInfo.getStroke();
 
@@ -2540,7 +2540,7 @@ export class MultiPointHandler {
             kml += ("<PolyStyle>");
 
             if (fillColor != null) {
-                googleFillColor = RendererUtilities.colorToHexString(shapeInfo.getFillColor(), false);
+                googleFillColor = RendererUtilities.colorToHexString(shapeInfo.getFillColor(), false).substring(1);
                 googleFillColor = JavaRendererUtilities.ARGBtoABGR(googleFillColor);
                 kml += ("<color>" + googleFillColor + "</color>");
                 kml += ("<colorMode>normal</colorMode>");
@@ -2915,7 +2915,7 @@ export class MultiPointHandler {
         let cdataStart: string = "<![CDATA[";
         let cdataEnd: string = "]]>";
 
-        let color: string = RendererUtilities.colorToHexString(textColor, false);
+        let color: string = RendererUtilities.colorToHexString(textColor, false).substring(1);
         color = JavaRendererUtilities.ARGBtoABGR(color);
         let kmlScale: double = RendererSettings.getInstance().getKMLLabelScale();
 
