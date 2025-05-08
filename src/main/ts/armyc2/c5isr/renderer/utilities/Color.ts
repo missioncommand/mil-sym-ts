@@ -236,7 +236,7 @@ export class Color {
 		{
 			case 1: 
 			{
-				if(typeof args[0] === 'number')
+				if(args[0] instanceof Color)
 				{
 					const [color] = args as [Color];
 
@@ -278,7 +278,7 @@ export class Color {
 						
 					}
 				}
-				else if(args[0] instanceof Color)
+				else if(typeof args[0] === 'number')
 				{
 					const [color] = args as [number];
 
