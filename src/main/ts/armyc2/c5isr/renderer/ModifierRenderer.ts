@@ -1258,7 +1258,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
         pt1 = new Point2D(x1, y1);
 
-        if (SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.Q_DIRECTION_OF_MOVEMENT) &&
+        if (SymbolUtilities.hasModifier(symbolID, Modifiers.Q_DIRECTION_OF_MOVEMENT) &&
             SymbolUtilities.isCBRNEvent(symbolID) || SymbolUtilities.isLand(symbolID)) {
             //drawStaff = true;
             if (SymbolUtilities.isHQ(symbolID) === false)//has HQ staff to start from
@@ -1325,65 +1325,80 @@ export class ModifierRenderer implements SettingsEventListener {
         x2 = Math.round(dx2);
         y2 = Math.round(dy2);
 
-        //create arrowhead//////////////////////////////////////////////////////
-        let arrowWidth: float = 10.0;
-        let //8.0f,//6.5f;//7.0f;//6.5f;//10.0f//default
-            theta: float = 0.423;//higher value == shorter arrow head//*/
+        //UPDATED ARROWHEAD CODE
+        let head:Point2D[] = new Array();
+        let endPoint:Point2D = new Point2D(x2, y2);
+        if(pt2 != null)
+            head = this.createDOMArrowHead(pt2, endPoint);//pt3);
+        else
+            head = this.createDOMArrowHead(pt1, endPoint);//pt3);
 
-        if (length < 50) {
-            theta = 0.55;
+        if(head != null)
+        {
+            arrowPoints[0] = pt1;
+            arrowPoints[1] = pt2;
+            arrowPoints[2] = pt3;
+            arrowPoints[3] = head[0];
+            arrowPoints[4] = head[1];
+            arrowPoints[5] = head[2];
+
+            //adjusted endpoint
+            if(head.length >= 4 && head[3] != null)
+            {
+                arrowPoints[2] = head[3];
+            }
         }
-        /*float arrowWidth = length * .09f,// 16.0f,//8.0f,//6.5f;//7.0f;//6.5f;//10.0f//default
-         theta = length * .0025f;//0.423f;//higher value == shorter arrow head
-         if(arrowWidth < 8)
-         arrowWidth = 8f;//*/
 
-        let xPoints: number[] = new Array<number>(3);//3
-        let yPoints: number[] = new Array<number>(3);//3
-        let vecLine: number[] = new Array<number>(2);//2
-        let vecLeft: number[] = new Array<number>(2);//2
-        let fLength: double = 0;
-        let th: double = 0;
-        let ta: double = 0;
-        let baseX: double = 0;
-        let baseY: double = 0;
+        return arrowPoints;
 
-        xPoints[0] = x2;
-        yPoints[0] = y2;
+    }
 
-        //build the line vector
-        vecLine[0] = (xPoints[0] - x1);
-        vecLine[1] = (yPoints[0] - y1);
+    private static createDOMArrowHead(lpt1:Point2D, lpt2:Point2D):Point2D[]
+    {
+        let arrowPoints:Point2D[] = new Array();
+        let pt1:Point2D = null;
+        let pt2:Point2D = null;
+        let pt3:Point2D = null;
 
-        //build the arrow base vector - normal to the line
-        vecLeft[0] = -vecLine[1];
-        vecLeft[1] = vecLine[0];
+        let x1:number = lpt1.getX();
+        let y1:number = lpt1.getY();
+        let x2:number = lpt2.getX();
+        let y2:number = lpt2.getY();
 
-        //setup length parameters
-        fLength = Math.sqrt(vecLine[0] * vecLine[0] + vecLine[1] * vecLine[1]);
-        th = arrowWidth / (2.0 * fLength);
-        ta = arrowWidth / (2.0 * (Math.tan(theta) / 2.0) * fLength);
+        // Compute direction vector
+        let dx:number = x2 - x1;
+        let dy:number = y2 - y1;
+        let length:number = Math.sqrt(dx * dx + dy * dy);
 
-        //find base of the arrow
-        baseX = (xPoints[0] - ta * vecLine[0]);
-        baseY = (yPoints[0] - ta * vecLine[1]);
+        // Scale triangle size
+        let scale:number = length * 0.1;  // Scaling factor for size
+        let offset:number = scale * 1.5;  // Move triangle further down the line
 
-        //build the points on the sides of the arrow
-        xPoints[1] = Math.round(baseX + th * vecLeft[0]) as int;
-        yPoints[1] = Math.round(baseY + th * vecLeft[1]) as int;
-        xPoints[2] = Math.round(baseX - th * vecLeft[0]) as int;
-        yPoints[2] = Math.round(baseY - th * vecLeft[1]) as int;
+        // Normalize direction vector
+        let unitX:number = dx / length;
+        let unitY:number = dy / length;
 
-        //line.lineTo((int)baseX, (int)baseY);
-        pt3 = new Point2D(Math.round(baseX), Math.round(baseY));
+        // Compute perpendicular vector for triangle base
+        let nx:number = -unitY;
+        let ny:number = unitX;
+
+        // Compute adjusted triangle vertices
+        let tipX:number = x2;
+        let tipY:number = y2;
+        let baseX1:number = (x2 - offset * unitX + scale * nx);
+        let baseY1:number = (y2 - offset * unitY + scale * ny);
+        let baseX2:number = (x2 - offset * unitX - scale * nx);
+        let baseY2:number = (y2 - offset * unitY - scale * ny);
+
 
         //arrowHead = new Polygon(xPoints, yPoints, 3);
-        arrowPoints[0] = pt1;//new Point2D(pt1.getX(), pt1.getY());
-        arrowPoints[1] = pt2;//new Point2D(pt2.getX(), pt2.getY());
-        arrowPoints[2] = pt3;//new Point2D(pt3.getX(), pt3.getY());
-        arrowPoints[3] = new Point2D(xPoints[0], yPoints[0]);
-        arrowPoints[4] = new Point2D(xPoints[1], yPoints[1]);
-        arrowPoints[5] = new Point2D(xPoints[2], yPoints[2]);
+        arrowPoints[0] = new Point2D(tipX,tipY);
+        arrowPoints[1] = new Point2D(baseX1,baseY1);
+        arrowPoints[2] = new Point2D(baseX2,baseY2);
+        // Adjust line endpoint to be the middle of the base line of the arrowhead
+        let adjustedX2 = (baseX1 + baseX2) / 2;
+        let adjustedY2 = (baseY1 + baseY2) / 2;
+        arrowPoints[3] = new Point2D(adjustedX2,adjustedY2);
 
         return arrowPoints;
 
