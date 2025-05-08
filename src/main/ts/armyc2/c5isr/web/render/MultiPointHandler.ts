@@ -2808,14 +2808,14 @@ export class MultiPointHandler {
         let lineColor: string;
 
         if (shapeInfo.getLineColor() != null) {
-            lineColor = RendererUtilities.colorToHexString(shapeInfo.getLineColor(), false);
+            lineColor = RendererUtilities.colorToHexString(shapeInfo.getLineColor(), false).substring(1);
             if (geMap) {
                 lineColor = JavaRendererUtilities.ARGBtoABGR(lineColor);
             }
 
         }
         if (shapeInfo.getFillColor() != null) {
-            fillColor = RendererUtilities.colorToHexString(shapeInfo.getFillColor(), false);
+            fillColor = RendererUtilities.colorToHexString(shapeInfo.getFillColor(), false).substring(1);
             if (geMap) {
                 fillColor = JavaRendererUtilities.ARGBtoABGR(fillColor);
             }
