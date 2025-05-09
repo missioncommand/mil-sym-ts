@@ -544,8 +544,12 @@ export class RendererUtilities {
         let retVal:SVGInfo = icon;
         //safe square inside octagon:  <rect x="220" y="310" width="170" height="170"/>
         let maxSize:number = 170;
-        let bbox:Rectangle2D =  icon.getBbox();
-        let length:number = Math.max(bbox.getWidth(),bbox.getHeight());
+        let bbox = null;
+        if(icon !== null)
+            bbox = icon.getBbox();
+        let length:number = 0;
+        if(bbox != null)
+            length = Math.max(bbox.getWidth(),bbox.getHeight());
         if(length < 100 && length > 0 &&
                 SymbolID.getCommonModifier1(symbolID)==0 &&
                 SymbolID.getCommonModifier2(symbolID)==0 &&
