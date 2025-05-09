@@ -1234,10 +1234,9 @@ export class ModifierRenderer implements SettingsEventListener {
                 }
 
             }
-            else {
-                if (bounds.getHeight() >= 100) {
-                    length = Math.round(bounds.getHeight() * 0.7) as int;
-                }
+            else //if (bounds.getHeight() >= 100) 
+            {
+                    length = Math.round(bounds.getHeight() * 0.7) as int;    
             }
 
         }
