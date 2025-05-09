@@ -126,6 +126,7 @@
             var keepUnitRatio = document.getElementById("cbKeepUnitRatio").checked;
             var showLabels = document.getElementById("cbLabels").checked;
 			var drawAsIcon = document.getElementById("cbDrawAsIcon").checked;
+            var scaleMainIcon = document.getElementById("cbScaleMainIcon").checked;
             
             var modifiers = new Map();
             
@@ -139,6 +140,7 @@
             attributes.set(C5Ren.MilStdAttributes.DrawAsIcon,new String(drawAsIcon));
             attributes.set(C5Ren.MilStdAttributes.KeepUnitRatio,new String(keepUnitRatio));
             
+            RendererSettings.getInstance().setScaleMainIcon(scaleMainIcon);
 			
             //font change test
             //RendererSettings.getInstance().setLabelFont("serif","bold",24);
@@ -712,10 +714,11 @@ Frame Shape: <select id = lbFrame>
     <option>8-Activity</option>
     <option>9-Cyber</option>
 </select>
-Size: <input id="tbSize" type="number" value="100" style="width: 4em">
-Keep Unit Ratio: <input id="cbKeepUnitRatio" type="checkbox" checked>
-Labels:  <input id="cbLabels" type="checkbox">
-Draw as Icon:  <input id="cbDrawAsIcon" type="checkbox">
+Size: <input id="tbSize" type="number" value="100" style="width: 4em"><br/>
+Keep Unit Ratio: <input id="cbKeepUnitRatio" type="checkbox" checked><br/>
+Labels:  <input id="cbLabels" type="checkbox"><br/>
+Draw as Icon:  <input id="cbDrawAsIcon" type="checkbox"><br/>
+Scale Internal Symbol:  <input id="cbScaleMainIcon" type="checkbox"><br/>
 <button id="btnClear" type='button' onclick='clearCanvas();' >Clear Canvas</button>
 <br/>
 <!-- <button id="btnRender" type='button' onclick='testRender();' disabled>Loading Page</button>-->
