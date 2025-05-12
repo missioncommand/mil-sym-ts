@@ -2924,7 +2924,7 @@ export class MultiPointHandler {
             kml += ("<name>" + cdataStart + text + cdataEnd + "</name>");
             kml += ("<Style>");
             kml += ("<IconStyle>");
-            kml += ("<scale>.7</scale>");
+            kml += ("<scale>" + kmlScale + "</scale>");
             kml += ("<heading>" + angle + "</heading>");
             kml += ("<Icon>");
             kml += ("<href></href>");
