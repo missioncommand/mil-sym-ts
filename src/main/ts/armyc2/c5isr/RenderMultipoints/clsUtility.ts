@@ -459,6 +459,7 @@ export class clsUtility {
             case TacticalLines.RFL:
             case TacticalLines.NFL:
             case TacticalLines.CFL:
+            case TacticalLines.TRIP:
             case TacticalLines.FSCL:
             case TacticalLines.BCL_REVD:
             case TacticalLines.BCL:

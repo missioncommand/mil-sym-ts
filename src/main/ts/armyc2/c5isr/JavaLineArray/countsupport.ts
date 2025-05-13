@@ -228,11 +228,6 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.TRIP: {
-                    count = 35;
-                    break;
-                }
-
                 case TacticalLines.AMBUSH: {	//extra 3 for open arrow, extra 26 for the tail arc,
                     //and an extra 22 for the tail line segments
                     count = 53;//vblCounter+51;
