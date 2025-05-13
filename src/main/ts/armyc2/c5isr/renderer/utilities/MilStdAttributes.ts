@@ -143,6 +143,14 @@ export class MilStdAttributes {
     public static readonly EngagementBarColor: string = "ENGAGEMENTBARCOLOR";
 
     /**
+     * Multipoint features and patterns scale with line width ({@link MilStdAttributes#LineWidth}).
+     * {@code PatternScale} is the ratio of how much to increase features and patterns by with line width.
+     * default value is {@link RendererSettings#getPatternScale()}
+     */
+    public static readonly PatternScale: string = "PATTERNSCALE";
+
+
+    /**
      * No Longer relevant
      * @return 
      * @deprecated see {@link GetAttributesList()}

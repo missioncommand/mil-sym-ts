@@ -1633,7 +1633,7 @@ export class clsMETOC {
 
 
                         twoSplines = new Array();
-                        twoSplines = clsMETOC.ParallelLines2(pixels, arraysupport.getScaledSize(20, tg.get_LineThickness()) as int);
+                        twoSplines = clsMETOC.ParallelLines2(pixels, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()) as int);
 
                         upperSpline = new Array();
                         lowerSpline = new Array();
@@ -1684,7 +1684,7 @@ export class clsMETOC {
 
 
                         twoSplines = new Array();
-                        twoSplines = clsMETOC.ParallelLines2(pixels, arraysupport.getScaledSize(20, tg.get_LineThickness()) as int);
+                        twoSplines = clsMETOC.ParallelLines2(pixels, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()) as int);
 
                         upperSpline = new Array();
                         lowerSpline = new Array();
@@ -1740,7 +1740,7 @@ export class clsMETOC {
                         }
 
 
-                        twoSplines = clsMETOC.ParallelLines2(pixels, arraysupport.getScaledSize(20, tg.get_LineThickness()) as int);
+                        twoSplines = clsMETOC.ParallelLines2(pixels, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()) as int);
                         upperSpline = new Array();
                         lowerSpline = new Array();
                         u = twoSplines.length;
@@ -2345,7 +2345,7 @@ export class clsMETOC {
                         if (i === array.length - 2) {
                             if (splinePoints.length >= 2) {
 
-                                clsMETOC.DrawArrow(splinePoints[splinePoints.length - 2], tg.Pixels[tg.Pixels.length - 1], arraysupport.getScaledSize(10, tg.get_LineThickness()), lineObject);
+                                clsMETOC.DrawArrow(splinePoints[splinePoints.length - 2], tg.Pixels[tg.Pixels.length - 1], arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), lineObject);
                             }
 
                         }
@@ -2353,7 +2353,7 @@ export class clsMETOC {
                     }
 
                     case TacticalLines.FLOOD_TIDE: {
-                        d = arraysupport.getScaledSize(10, tg.get_LineThickness());
+                        d = arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                         if (i === 0 && splinePoints.length > 1) {
                             //finally get the feather points
                             //must allocate for the feather points, requires 4 additional points
@@ -2385,13 +2385,13 @@ export class clsMETOC {
                     case TacticalLines.STREAM:
                     case TacticalLines.JET: {
                         if (splinePoints.length > i + 1) {
-                            clsMETOC.DrawArrow(splinePoints[i + 1], splinePoints[i], arraysupport.getScaledSize(10, tg.get_LineThickness()), lineObject);
+                            clsMETOC.DrawArrow(splinePoints[i + 1], splinePoints[i], arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), lineObject);
                         }
                         break;
                     }
 
                     case TacticalLines.FLOOD_TIDE_GE: {
-                        d = arraysupport.getScaledSize(10, tg.get_LineThickness());
+                        d = arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                         if (i === 0 && splinePoints.length > 1) {
                             //finally get the feather points
                             //must allocate for the feather points, requires 4 additional points
@@ -2445,7 +2445,7 @@ export class clsMETOC {
 
                             if (splinePoints.length >= 2) {
 
-                                clsMETOC.DrawArrow(splinePoints[splinePoints.length - 2], tg.Pixels[tg.Pixels.length - 1], arraysupport.getScaledSize(10, tg.get_LineThickness()), lineObject);
+                                clsMETOC.DrawArrow(splinePoints[splinePoints.length - 2], tg.Pixels[tg.Pixels.length - 1], arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), lineObject);
                             }
 
                         }
@@ -2455,7 +2455,7 @@ export class clsMETOC {
                     case TacticalLines.JET_GE:
                     case TacticalLines.STREAM_GE: {
                         if (splinePoints.length > i + 1) {
-                            clsMETOC.DrawArrow(splinePoints[i + 1], splinePoints[i], arraysupport.getScaledSize(10, tg.get_LineThickness()), lineObject);
+                            clsMETOC.DrawArrow(splinePoints[i + 1], splinePoints[i], arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), lineObject);
                         }
                         if (i === array.length - 2)//the last point in the array
                         {
@@ -2510,7 +2510,7 @@ export class clsMETOC {
 
                     case TacticalLines.ICE_EDGE_RADAR: {
                         t = splinePoints.length;
-                        d = arraysupport.getScaledSize(5, tg.get_LineThickness());
+                        d = arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
                         //for (j = 0; j < splinePoints.length - 1; j++)
                         for (j = 0; j < t - 1; j++) {
                             pt0 = new POINT2(splinePoints[j].x, splinePoints[j].y);
@@ -2536,7 +2536,7 @@ export class clsMETOC {
 
                     case TacticalLines.ICE_EDGE_RADAR_GE: {
                         t = splinePoints.length;
-                        d = arraysupport.getScaledSize(5, tg.get_LineThickness());
+                        d = arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
                         //for (j = 0; j < splinePoints.length - 1; j++)
                         for (j = 0; j < t - 1; j++) {
                             pt0 = new POINT2(splinePoints[j].x, splinePoints[j].y);
@@ -2573,7 +2573,7 @@ export class clsMETOC {
 
                     case TacticalLines.CRACKS_SPECIFIC_LOCATION: {
                         t = splinePoints.length;
-                        d = arraysupport.getScaledSize(5, tg.get_LineThickness());
+                        d = arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
                         //for (j = 0; j < splinePoints.length - 1; j++)
                         for (j = 0; j < t - 1; j++) {
                             //get perpendicular points (point pair)
@@ -2588,7 +2588,7 @@ export class clsMETOC {
 
                     case TacticalLines.CRACKS_SPECIFIC_LOCATION_GE: {
                         t = splinePoints.length;
-                        d = arraysupport.getScaledSize(5, tg.get_LineThickness());
+                        d = arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
                         //for (j = 0; j < splinePoints.length - 1; j++)
                         for (j = 0; j < t - 1; j++) {
                             //get perpendicular points (point pair)
@@ -2797,7 +2797,7 @@ export class clsMETOC {
             switch (tg.get_LineType()) {
                 case TacticalLines.ICE_EDGE_RADAR:
                 case TacticalLines.ICE_EDGE_RADAR_GE: {
-                    increment = arraysupport.getScaledSize(20, tg.get_LineThickness());
+                    increment = arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
                     break;
                 }
 
@@ -2806,12 +2806,12 @@ export class clsMETOC {
                 case TacticalLines.CRACKS_SPECIFIC_LOCATION:
                 case TacticalLines.CRACKS_SPECIFIC_LOCATION_GE: {
                     //increment = 12.0;
-                    increment = arraysupport.getScaledSize(7, tg.get_LineThickness());
+                    increment = arraysupport.getScaledSize(7, tg.get_LineThickness(), tg.get_patternScale());
                     break;
                 }
 
                 default: {
-                    increment = arraysupport.getScaledSize(10, tg.get_LineThickness());
+                    increment = arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                     break;
                 }
 
