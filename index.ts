@@ -8,6 +8,8 @@ export { Point2D } from "./src/main/ts/armyc2/c5isr/graphics2d/Point2D";
 export { Rectangle2D } from "./src/main/ts/armyc2/c5isr/graphics2d/Rectangle2D";
 export { Font } from "./src/main/ts/armyc2/c5isr/graphics2d/Font";
 export { Color } from "./src/main/ts/armyc2/c5isr/renderer/utilities/Color";
+export { AffiliationColors } from "./src/main/ts/armyc2/c5isr/renderer/utilities/AffiliationColors";
+export { DistanceUnit } from "./src/main/ts/armyc2/c5isr/renderer/utilities/DistanceUnit";
 export { LogLevel } from "./src/main/ts/armyc2/c5isr/renderer/utilities/LogLevel";
 export { ErrorLogger } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ErrorLogger";
 export { MilStdAttributes } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MilStdAttributes";
