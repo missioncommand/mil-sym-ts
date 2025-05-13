@@ -2308,7 +2308,7 @@ export class clsUtility {
      */
     public static SegmentLCPoints(tg: TGLight, converter: IPointConversion): void {
         try {
-            if (tg.get_LineType() !== TacticalLines.LC && tg.get_LineType() !== TacticalLines.LC_HOSTILE) {
+            if (tg.get_LineType() !== TacticalLines.LC) {
 
                 return;
             }

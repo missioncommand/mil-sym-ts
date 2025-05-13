@@ -824,8 +824,7 @@ export class Channels {
 
             channelWidth = vblChannelWidth;
 
-            if (linetype !== TacticalLines.LC &&
-                linetype !== TacticalLines.LC_HOSTILE) {
+            if (linetype !== TacticalLines.LC) {
                 channelWidth /= 2;
             }
 
@@ -1039,7 +1038,6 @@ export class Channels {
             //get the upper or lower channel array for the specified channel type
             switch (vbiDrawThis) {
                 case TacticalLines.LC:
-                case TacticalLines.LC_HOSTILE:
                 case TacticalLines.AIRAOA:
                 case TacticalLines.AAAAA:
                 case TacticalLines.CATK:
@@ -1572,7 +1570,6 @@ export class Channels {
             let shiftLines: boolean = Channels._shiftLines;
             switch (vbiDrawThis) {
                 case TacticalLines.LC:
-                case TacticalLines.LC_HOSTILE:
                 case TacticalLines.UNSP:
                 case TacticalLines.LWFENCE:
                 case TacticalLines.HWFENCE:
@@ -1735,8 +1732,7 @@ export class Channels {
                     break;
                 }
 
-                case TacticalLines.LC:
-                case TacticalLines.LC_HOSTILE: {
+                case TacticalLines.LC: {
                     if (shiftLines) {
                         pOriginalLinePoints = new Array<POINT2>(vblUpperCounter);
                         for (k = 0; k < vblUpperCounter; k++) {
@@ -1749,17 +1745,7 @@ export class Channels {
                     pLowerLinePoints = Channels.GetChannelArray2Double(nPrinter, pLowerLinePoints, 0, vblLowerCounter, vbiDrawThis, vblChannelWidth);
 
                     if (shiftLines) {
-                        //if(_affiliation != null && _affiliation.equalsIgnoreCase("H"))
-                        if (vbiDrawThis === TacticalLines.LC_HOSTILE) {
-
-                            pLowerLinePoints = pOriginalLinePoints;
-                        }
-
-                        else {
-
-                            pUpperLinePoints = pOriginalLinePoints;
-                        }
-
+                        pUpperLinePoints = pOriginalLinePoints;
                     }
 
                     if ((pUpperLinePoints[0].x > pUpperLinePoints[1].x) && (pUpperLinePoints[0].y !== pUpperLinePoints[1].y)) {
@@ -1822,8 +1808,7 @@ export class Channels {
             }	//end get channel array
             //load channel array into pLinePoints
             switch (vbiDrawThis) {
-                case TacticalLines.LC:
-                case TacticalLines.LC_HOSTILE: {
+                case TacticalLines.LC: {
                     lUpperFlotCount = flot.GetFlotCountDouble(pUpperLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblUpperCounter);
                     lLowerFlotCount = flot.GetFlotCountDouble(pLowerLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblLowerCounter);
                     if (lUpperFlotCount <= 0 || lLowerFlotCount <= 0) {
@@ -2590,8 +2575,7 @@ export class Channels {
                 }
 
                 switch (vbiDrawThis) {
-                    case TacticalLines.LC:
-                    case TacticalLines.LC_HOSTILE: {
+                    case TacticalLines.LC: {
                         if (beginPath === false) {
                             if (k > 0) {   //if the linestyle is changes on the next point then this point is end of the current path
                                 //because it's changing between friendly and enemy ellipses
