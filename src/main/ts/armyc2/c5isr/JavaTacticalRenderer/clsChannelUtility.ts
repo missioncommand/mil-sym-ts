@@ -119,7 +119,6 @@ export class clsChannelUtility {
             let channelPixels: number[];
             switch (lineType) {
                 case TacticalLines.LC:
-                case TacticalLines.LC_HOSTILE:
                 case TacticalLines.UNSP:
                 case TacticalLines.DFENCE:
                 case TacticalLines.SFENCE:
@@ -439,11 +438,6 @@ export class clsChannelUtility {
             //anchor point, i.e. the rotary feature can no longer stick out past the anchor point
             //45 pixels shift here matches the 45 pixels shift for catkbyfire found in Channels.GetAXADDouble
             lineutility.adjustCATKBYFIREControlPoint(linetype, pixels, 45);
-            if (tg.get_LineType() === TacticalLines.LC && tg.isHostile()) {
-
-                linetype = TacticalLines.LC_HOSTILE;
-            }
-
 
             let j: int = 0;
             let pixels2: number[] = new Array<number>(pixels.length * 2);
@@ -562,8 +556,7 @@ export class clsChannelUtility {
                     break;
                 }
 
-                case TacticalLines.LC:
-                case TacticalLines.LC_HOSTILE: {
+                case TacticalLines.LC: {
                     channelWidth = arraysupport.getScaledSize(40, tg.get_LineThickness(), tg.get_patternScale()) as int;// was 20;
                     pixels2 = new Array<number>(pixels.length);
                     n = pixels.length;
@@ -611,7 +604,7 @@ export class clsChannelUtility {
             }
 
             // Line of contact looks bad with small channel corners extending out
-            if (linetype === TacticalLines.LC || linetype === TacticalLines.LC_HOSTILE) {
+            if (linetype === TacticalLines.LC) {
                 partitions = new Array();
                 let singleLinePartitions: Array<P1> = new Array();
                 clsUtility.GetLCPartitions(pixels2, arraysupport.getScaledSize(40, tg.get_LineThickness(), tg.get_patternScale()), partitions, singleLinePartitions);

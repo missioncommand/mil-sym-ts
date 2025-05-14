@@ -1261,7 +1261,7 @@ export class clsRenderer {
                     //            }
                     let origFillPixels: Array<POINT2> = lineutility.getDeepCopy(tg.Pixels);
 
-                    if (tg.get_LineType() === TacticalLines.LC || tg.get_LineType() === TacticalLines.LC_HOSTILE) {
+                    if (tg.get_LineType() === TacticalLines.LC) {
 
                         clsUtilityJTR.SegmentLCPoints(tg, converter);
                     }
@@ -1319,7 +1319,6 @@ export class clsRenderer {
                     let isTextFlipped: boolean = false;
                     let shapes: Array<Shape2>;   //use this to collect all the shapes
                     clsUtilityGE.setSplineLinetype(tg);
-                    clsRenderer.setHostileLC(tg);
 
                     clsUtilityCPOF.SegmentGeoPoints(tg, converter, zoomFactor);
                     if (clipBounds != null || clipPoints != null) {
@@ -1631,65 +1630,6 @@ export class clsRenderer {
             }
         }
     }
-    /**
-     * to follow right hand rule for LC when affiliation is hostile. also fixes
-     * MSDZ point order and maybe various other wayward symbols
-     *
-     * @param tg
-     */
-    private static setHostileLC(tg: TGLight): void {
-        try {
-            let usas1314: boolean = true;
-            let pts: Array<POINT2> = new Array();
-            let j: int = 0;
-            switch (tg.get_LineType()) {
-                case TacticalLines.LC: {
-                    //    if (usas1314 === false) {
-                    //       break;
-                    //   }
-                    if (!tg.isHostile()) {
-                        break;
-                    }
-                    pts = [...tg.Pixels];
-                    for (j = 0; j < tg.Pixels.length; j++) {
-                        tg.Pixels[j] = pts[pts.length - j - 1];
-                    }
-                    //reverse the latlongs also
-                    pts = [...tg.LatLongs];
-                    for (j = 0; j < tg.LatLongs.length; j++) {
-                        tg.LatLongs[j] = pts[pts.length - j - 1];
-                    }
-                    break;
-                }
-
-                case TacticalLines.LINE: {    //CPOF client requests reverse orientation
-                    pts = [...tg.Pixels];
-                    for (j = 0; j < tg.Pixels.length; j++) {
-                        tg.Pixels[j] = pts[pts.length - j - 1];
-                    }
-                    //reverse the latlongs also
-                    pts = [...tg.LatLongs];
-                    for (j = 0; j < tg.LatLongs.length; j++) {
-                        tg.LatLongs[j] = pts[pts.length - j - 1];
-                    }
-                    break;
-                }
-
-                default: {
-                    return;
-                }
-
-            }
-        } catch (exc) {
-            if (exc instanceof Error) {
-                ErrorLogger.LogException(clsRenderer._className, "setHostileLC",
-                    new RendererException("Failed inside setHostileLC", exc));
-
-            } else {
-                throw exc;
-            }
-        }
-    }
 
     /**
      * set the clip rectangle as an arraylist or a Rectangle2D depending on the
@@ -1804,8 +1744,6 @@ export class clsRenderer {
                     let linetype: int = tg.get_LineType();
                     //replace calls to MovePixels
                     clsUtility.RemoveDuplicatePoints(tg);
-
-                    clsRenderer.setHostileLC(tg);
 
                     let g2d: Graphics2D = new Graphics2D();
                     g2d.setFont(tg.get_Font());
@@ -3161,7 +3099,8 @@ export class clsRenderer {
                 case TacticalLines.HWFENCE:
                 case TacticalLines.SINGLEC:
                 case TacticalLines.DOUBLEC:
-                case TacticalLines.TRIPLE: {
+                case TacticalLines.TRIPLE:
+                case TacticalLines.LINE: {
                     if (tg.Pixels != null) {
                         tg.Pixels.reverse();
                     }
