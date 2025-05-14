@@ -69,6 +69,8 @@ export class MilStdSymbol {
 
     protected _patternFillType: int = 0;
 
+    private patternScale: double = 1;
+
     private static _AltitudeMode: string = "";
 
     private static _AltitudeUnit: DistanceUnit;
@@ -776,6 +778,20 @@ export class MilStdSymbol {
     }
     public get_WasClipped(): boolean {
         return this._wasClipped;
+    }
+
+    /**
+     * Multipoint features and patterns scale with line width ({@link #getLineWidth()}).
+     * {@link #patternScale} is the ratio of how much to increase features and patterns by with line width.
+     * default value is 1.0. Can be set with {@link RendererSettings#setPatternScale(double)} and {@link MilStdAttributes#PatternScale}
+     * @param scale
+     */
+    public setPatternScale(scale: double): void {
+        this.patternScale = scale;
+    }
+
+    public getPatternScale(): double {
+        return this.patternScale;
     }
 
 }

@@ -101,8 +101,8 @@ export class CELineArray {
                 case TacticalLines.LC: {
                     pUpperLinePoints = Channels.GetChannelArray2Double(1, pUpperLinePoints, 1, lElements, tg.get_LineType(), ChannelWidth);
                     pLowerLinePoints = Channels.GetChannelArray2Double(1, pLowerLinePoints, 0, lElements, tg.get_LineType(), ChannelWidth);
-                    lUpperFlotCount = flot.GetFlotCountDouble(pUpperLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), lElements);
-                    lLowerFlotCount = flot.GetFlotCountDouble(pLowerLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), lElements);
+                    lUpperFlotCount = flot.GetFlotCountDouble(pUpperLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), lElements);
+                    lLowerFlotCount = flot.GetFlotCountDouble(pLowerLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), lElements);
                     lResult = lUpperFlotCount + lLowerFlotCount;
                     break;
                 }

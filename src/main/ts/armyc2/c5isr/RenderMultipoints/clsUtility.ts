@@ -51,7 +51,7 @@ export class clsUtility {
             let hatch2: int = 0;
             let shape2: Shape2;
             let index: int = 0;
-            let hatchLineThickness: double = (tg.get_LineThickness() / 2.0) as double;
+            let hatchLineThickness: double = 1.5 + ((tg.get_LineThickness() / 2) - 1.5) * tg.get_patternScale();
             let hatchColor: Color = tg.get_LineColor();
             let hatchSpacing: int = Math.trunc(hatchLineThickness * 10);
 
@@ -79,7 +79,7 @@ export class clsUtility {
                 case TacticalLines.RAD: {
                     hatchStyle = clsUtility.Hatch_BackwardDiagonal;
                     hatchColor = Color.yellow;
-                    hatchLineThickness = tg.get_LineThickness();
+                    hatchLineThickness = 3 + (tg.get_LineThickness() - 3) * tg.get_patternScale();
                     break;
                 }
 
@@ -459,6 +459,7 @@ export class clsUtility {
             case TacticalLines.RFL:
             case TacticalLines.NFL:
             case TacticalLines.CFL:
+            case TacticalLines.TRIP:
             case TacticalLines.FSCL:
             case TacticalLines.BCL_REVD:
             case TacticalLines.BCL:

@@ -731,7 +731,7 @@ export class lineutility {
             let xPoint1: POINT2;
             let xPoint2: POINT2;
             let n: int = pLinePoints.length;
-            let xSize: double = arraysupport.getScaledSize(5, tg.get_LineThickness());
+            let xSize: double = arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
             let dIncrement: double = xSize * 4;
             //for (j = 0; j < pLinePoints.length - 1; j++) 
             for (j = 0; j < n - 1; j++) {
@@ -2729,12 +2729,6 @@ export class lineutility {
                     break;
                 }
 
-                case TacticalLines.TRIP: {
-                    startangle = M - 45 * Math.PI / 180.0;
-                    endangle = startangle + 2 * 45 * Math.PI / 180.0;
-                    break;
-                }
-
                 case TacticalLines.ISOLATE:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH: {
@@ -2798,12 +2792,6 @@ export class lineutility {
                     case TacticalLines.CLUSTER: {
                         startangle = M - Math.PI + 90 * Math.PI / 180.0;
                         endangle = startangle - 2 * 90 * Math.PI / 180.0;
-                        break;
-                    }
-
-                    case TacticalLines.TRIP: {
-                        startangle = M - Math.PI + 45 * Math.PI / 180.0;
-                        endangle = startangle - 2 * 45 * Math.PI / 180.0;
                         break;
                     }
 
@@ -3686,12 +3674,12 @@ export class lineutility {
 
             lineutility.InitializePOINT2Array(pCirclePoints);
             nSpikeCounter = nOldCounter;
-            let spikeLength: double = arraysupport.getScaledSize(12, tg.get_LineThickness());
+            let spikeLength: double = arraysupport.getScaledSize(12, tg.get_LineThickness(), tg.get_patternScale());
             let spikeHeight: double = spikeLength * 1.25;
             let minLength: double = 2 * spikeLength;
             for (i = 0; i < nOldCounter - 1; i++) {
                 if (linetype === TacticalLines.ATDITCHM && i === 0) {
-                    let radius: double = arraysupport.getScaledSize(4, tg.get_LineThickness());
+                    let radius: double = arraysupport.getScaledSize(4, tg.get_LineThickness(), tg.get_patternScale());
                     minLength = spikeLength * 2.5 + radius * 2;
                 }
 
