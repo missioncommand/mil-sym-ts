@@ -2729,12 +2729,6 @@ export class lineutility {
                     break;
                 }
 
-                case TacticalLines.TRIP: {
-                    startangle = M - 45 * Math.PI / 180.0;
-                    endangle = startangle + 2 * 45 * Math.PI / 180.0;
-                    break;
-                }
-
                 case TacticalLines.ISOLATE:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH: {
@@ -2798,12 +2792,6 @@ export class lineutility {
                     case TacticalLines.CLUSTER: {
                         startangle = M - Math.PI + 90 * Math.PI / 180.0;
                         endangle = startangle - 2 * 90 * Math.PI / 180.0;
-                        break;
-                    }
-
-                    case TacticalLines.TRIP: {
-                        startangle = M - Math.PI + 45 * Math.PI / 180.0;
-                        endangle = startangle - 2 * 45 * Math.PI / 180.0;
                         break;
                     }
 

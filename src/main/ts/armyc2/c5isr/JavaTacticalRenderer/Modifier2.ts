@@ -845,6 +845,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.TRIP: {
+                    label = "t";
+                    break;
+                }
+
                 default: {
                     break;
                 }
@@ -2535,6 +2540,7 @@ export class Modifier2 {
                 case TacticalLines.IFF_ON:
                 case TacticalLines.GENERIC_LINE:
                 case TacticalLines.CFL:
+                case TacticalLines.TRIP:
                 case TacticalLines.RFL:
                 case TacticalLines.FLOT:
                 case TacticalLines.LC:
@@ -3626,6 +3632,12 @@ export class Modifier2 {
                     Modifier2.getPixelsMiddleSegment(tg, stringWidth, pt0, pt1);
                     Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
                     Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0.7 * csFactor, 1.7 * csFactor, pt0, pt1, metrics);
+                    break;
+                }
+
+                case TacticalLines.TRIP: {
+                    midPt = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.7 * csFactor, midPt, midPt, false);
                     break;
                 }
 

@@ -1456,6 +1456,7 @@ export class clsUtilityCPOF {
                 case TacticalLines.IFF_ON:
                 case TacticalLines.GENERIC_LINE:
                 case TacticalLines.CFL:
+                case TacticalLines.TRIP:
                 case TacticalLines.OVERHEAD_WIRE:
                 case TacticalLines.NFL:
                 case TacticalLines.MFP:
@@ -1611,6 +1612,7 @@ export class clsUtilityCPOF {
             case TacticalLines.IFF_ON:
             case TacticalLines.GENERIC_LINE:
             case TacticalLines.CFL:
+            case TacticalLines.TRIP:
             case TacticalLines.NFL:
             case TacticalLines.MFP:
             case TacticalLines.RFL:

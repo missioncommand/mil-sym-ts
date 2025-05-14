@@ -2334,7 +2334,8 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.BOUNDARY: {
+                case TacticalLines.BOUNDARY: 
+                case TacticalLines.TRIP: {
                     acCounter = pLinePoints.length;
                     break;
                 }
@@ -3914,119 +3915,6 @@ export class arraysupport {
                         pLinePoints[2 + j].style = 1;
                     }
                     acCounter = 28;
-                    break;
-                }
-
-                case TacticalLines.TRIP: {
-                    dRadius = lineutility.CalcDistanceToLineDouble(pt0, pt1, pt2);
-                    bolVertical = lineutility.CalcTrueSlopeDouble(pt0, pt1, m);
-                    if (bolVertical !== 0 && m.value[0] !== 0) {
-                        b = pt1.y + 1 / m.value[0] * pt1.x;
-                        b1 = pt2.y - m.value[0] * pt2.x;
-                        calcPoint0 = lineutility.CalcTrueIntersectDouble2(-1 / m.value[0], b, m.value[0], b1, 1, 1, pt0.x, pt0.y);
-                        calcPoint1 = lineutility.ExtendLineDouble(pt0, pt1, dRadius / 2);
-                        calcPoint2 = lineutility.ExtendLineDouble(pt0, pt1, dRadius);
-
-                        b = calcPoint1.y + 1 / m.value[0] * calcPoint1.x;
-                        calcPoint3 = lineutility.CalcTrueIntersectDouble2(-1 / m.value[0], b, m.value[0], b1, 1, 1, pt0.x, pt0.y);
-                        b = calcPoint2.y + 1 / m.value[0] * calcPoint2.x;
-                        calcPoint4 = lineutility.CalcTrueIntersectDouble2(-1 / m.value[0], b, m.value[0], b1, 1, 1, pt0.x, pt0.y);
-                        midpt = lineutility.MidPointDouble(calcPoint1, calcPoint3, 0);
-                        midpt1 = lineutility.MidPointDouble(calcPoint2, calcPoint4, 0);
-
-                        b = pt1.y + 1 / m.value[0] * pt1.x;
-                        calcPoint0 = lineutility.CalcTrueIntersectDouble2(-1 / m.value[0], b, m.value[0], b1, 1, 1, pt0.x, pt0.y);
-                        calcPoint3 = lineutility.ExtendLineDouble(pt0, pt1, dRadius);
-                        d = lineutility.CalcDistanceDouble(calcPoint0, calcPoint3);
-                        calcPoint1 = lineutility.ExtendLineDouble(calcPoint0, calcPoint3, -(d - dRadius));
-                    }
-                    if (bolVertical !== 0 && m.value[0] === 0) {
-                        calcPoint0.x = pt1.x;
-                        calcPoint0.y = pt2.y;
-                        calcPoint1 = lineutility.ExtendLineDouble(pt0, pt1, dRadius / 2);
-                        //calcPoint2 = lineutility.ExtendLineDouble(pt0, pt1, dRadius);
-                        calcPoint2 = pt2;
-
-                        calcPoint3.x = calcPoint0.x + dRadius / 2;
-                        calcPoint3.y = calcPoint0.y;
-                        calcPoint4.x = pt1.x + dRadius;
-                        calcPoint4.y = pt2.y;
-                        midpt = lineutility.MidPointDouble(calcPoint1, calcPoint3, 0);
-                        midpt1 = lineutility.MidPointDouble(calcPoint2, calcPoint4, 0);
-
-                        calcPoint3 = lineutility.ExtendLineDouble(pt0, pt1, dRadius);
-
-                        d = lineutility.CalcDistanceDouble(calcPoint0, calcPoint3);
-                        calcPoint1 = lineutility.ExtendLineDouble(calcPoint0, calcPoint3, -(d - dRadius));
-                    }
-                    if (bolVertical === 0) {
-
-                        calcPoint0.x = pt2.x;
-                        calcPoint0.y = pt1.y;
-                        calcPoint1 = lineutility.ExtendLineDouble(pt0, pt1, dRadius / 2);
-                        //calcPoint2 = lineutility.ExtendLineDouble(pt0, pt1, dRadius);
-                        calcPoint2 = pt2;
-
-                        calcPoint3.y = calcPoint0.y + dRadius / 2;
-                        calcPoint3.x = calcPoint0.x;
-                        calcPoint4.y = pt1.y + dRadius;
-                        calcPoint4.x = pt2.x;
-                        midpt = lineutility.MidPointDouble(calcPoint1, calcPoint3, 0);
-                        midpt1 = lineutility.MidPointDouble(calcPoint2, calcPoint4, 0);
-
-                        calcPoint3 = lineutility.ExtendLineDouble(pt0, pt1, dRadius);
-
-                        d = lineutility.CalcDistanceDouble(calcPoint0, calcPoint3);
-                        calcPoint1 = lineutility.ExtendLineDouble(calcPoint0, calcPoint3, -(d - dRadius));
-                    }
-
-                    arcPts[0] = new POINT2(calcPoint1);
-                    arcPts[1] = new POINT2(calcPoint3);
-                    lineutility.ArcArrayDouble(
-                        arcPts,
-                        0, dRadius,
-                        lineType,
-                        null);
-
-                    pLinePoints[0].style = 5;
-                    pLinePoints[1].style = 5;
-                    for (k = 0; k < 26; k++) {
-                        pLinePoints[k] = new POINT2(arcPts[k]);
-                    }
-                    for (k = 25; k < vblCounter; k++) {
-                        pLinePoints[k].style = 5;
-                    }
-                    pLinePoints[26] = new POINT2(pt1);
-                    dRadius = lineutility.CalcDistanceDouble(pt1, pt0);
-
-                    midpt = lineutility.ExtendLine2Double(pt1, pt0, -dRadius / 2 - 7, 0);
-
-                    pLinePoints[27] = new POINT2(midpt);
-                    pLinePoints[27].style = 0;
-                    midpt = lineutility.ExtendLine2Double(pt1, pt0, -dRadius / 2 + 7, 0);
-                    pLinePoints[28] = new POINT2(midpt);
-                    pLinePoints[29] = new POINT2(pt0);
-                    pLinePoints[29].style = 5;
-                    lineutility.GetArrowHead4Double(pt1, pt0, 15, 15, pArrowPoints, 0);
-
-                    for (k = 0; k < 3; k++) {
-                        pLinePoints[30 + k] = new POINT2(pArrowPoints[k]);
-                    }
-                    for (k = 0; k < 3; k++) {
-                        pLinePoints[30 + k].style = 5;
-                    }
-
-                    midpt = lineutility.MidPointDouble(pt0, pt1, 0);
-                    d = lineutility.CalcDistanceDouble(pt1, calcPoint0);
-
-                    pLinePoints[33] = pt2;
-                    pt3 = lineutility.PointRelativeToLine(pt0, pt1, pt0, pt2);
-                    d = lineutility.CalcDistanceDouble(pt3, pt2);
-                    pt4 = lineutility.ExtendAlongLineDouble(pt0, pt1, d);
-                    d = lineutility.CalcDistanceDouble(pt2, pt4);
-                    pLinePoints[34] = lineutility.ExtendLineDouble(pt2, pt4, d);
-
-                    acCounter = 35;
                     break;
                 }
 
