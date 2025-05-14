@@ -133,7 +133,7 @@ export class arraysupport {
             let k: int = 0;
             let bolVertical: int = 0;
             let lCount: int = 0;
-            let dIncrement: double = arraysupport.getScaledSize(20, tg.get_LineThickness());
+            let dIncrement: double = arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
             let m: ref<number[]> = new ref();
             let pSpikePoints: POINT2[];
             let pt0: POINT2 = new POINT2();
@@ -239,7 +239,7 @@ export class arraysupport {
             pSpikePoints[nCounter++] = new POINT2(pLinePoints[0]);
             for (j = 0; j < vblSaveCounter - 1; j++) {
                 dLengthSegment = lineutility.CalcDistanceDouble(pLinePoints[j], pLinePoints[j + 1]);
-                dSpikeSize = arraysupport.getScaledSize(10, tg.get_LineThickness());
+                dSpikeSize = arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                 dIncrement = 2 * dSpikeSize;
                 //  diagnostic
                 numSpikes = Math.round((dLengthSegment - dSpikeSize) / dIncrement) as int;
@@ -518,7 +518,7 @@ export class arraysupport {
             let pt3: POINT2;
             let pSpikePoints: POINT2[];
             let nDirection: int = 0;
-            let dIncrement: double = arraysupport.getScaledSize(20, tg.get_LineThickness());
+            let dIncrement: double = arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
 
             lCount = countsupport.GetFORTLCountDouble(tg, pLinePoints, vblSaveCounter);
             pSpikePoints = new Array<POINT2>(lCount);
@@ -1009,8 +1009,8 @@ export class arraysupport {
                     case TacticalLines.CF:
                     case TacticalLines.CFG:
                     case TacticalLines.CFY: {
-                        dIncrement = arraysupport.getScaledSize(60, tg.get_LineThickness());
-                        dSpikeSize = arraysupport.getScaledSize(20, tg.get_LineThickness());
+                        dIncrement = arraysupport.getScaledSize(60, tg.get_LineThickness(), tg.get_patternScale());
+                        dSpikeSize = arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
                         dRemainder = dLengthSegment / dIncrement - (Math.trunc(dLengthSegment / dIncrement));
                         if (dRemainder < 0.75) {
                             limit = Math.trunc(dLengthSegment / dIncrement);
@@ -1021,8 +1021,8 @@ export class arraysupport {
                     }
 
                     default: {
-                        dIncrement = arraysupport.getScaledSize(20, tg.get_LineThickness());
-                        dSpikeSize = arraysupport.getScaledSize(10, tg.get_LineThickness());
+                        dIncrement = arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
+                        dSpikeSize = arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                         limit = Math.trunc(dLengthSegment / dIncrement) - 1;
                         break;
                     }
@@ -1040,49 +1040,49 @@ export class arraysupport {
                     switch (lineType) {
                         case TacticalLines.CFG: {	//linebreak for dot
                             if (k > 0) {
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement + arraysupport.getScaledSize(45, tg.get_LineThickness()), 0);
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement + arraysupport.getScaledSize(45, tg.get_LineThickness(), tg.get_patternScale()), 0);
                                 nCounter++;
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement + arraysupport.getScaledSize(4, tg.get_LineThickness()), 5);	//+2
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement + arraysupport.getScaledSize(4, tg.get_LineThickness(), tg.get_patternScale()), 5);	//+2
                                 nCounter++;
                                 //dot
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(1, tg.get_LineThickness()), 20);
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(1, tg.get_LineThickness(), tg.get_patternScale()), 20);
                                 nCounter++;
                                 //remainder of line
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(10, tg.get_LineThickness()), 0);	//-4
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), 0);	//-4
                             } else {
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(45, tg.get_LineThickness()), 0);
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(45, tg.get_LineThickness(), tg.get_patternScale()), 0);
                             }
                             break;
                         }
 
                         case TacticalLines.CFY: {	//linebreak for crossed line
                             if (k > 0) {
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement + arraysupport.getScaledSize(45, tg.get_LineThickness()), 0);
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement + arraysupport.getScaledSize(45, tg.get_LineThickness(), tg.get_patternScale()), 0);
                                 nCounter++;
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement + arraysupport.getScaledSize(10, tg.get_LineThickness()), 5);	//+2
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement + arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), 5);	//+2
                                 nCounter++;
                                 //dot
                                 //replace the dot with crossed line segment
-                                pSpikePoints[nCounter] = lineutility.ExtendAlongLineDouble(pSpikePoints[nCounter - 1], pLinePoints[j + 1], arraysupport.getScaledSize(5, tg.get_LineThickness()), 0);
+                                pSpikePoints[nCounter] = lineutility.ExtendAlongLineDouble(pSpikePoints[nCounter - 1], pLinePoints[j + 1], arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale()), 0);
                                 nCounter++;
-                                pSpikePoints[nCounter] = lineutility.ExtendAlongLineDouble(pSpikePoints[nCounter - 1], pLinePoints[j + 1], arraysupport.getScaledSize(10, tg.get_LineThickness()), 5);
+                                pSpikePoints[nCounter] = lineutility.ExtendAlongLineDouble(pSpikePoints[nCounter - 1], pLinePoints[j + 1], arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), 5);
                                 nCounter++;
-                                crossPt1 = lineutility.ExtendDirectedLine(pSpikePoints[nCounter - 2], pSpikePoints[nCounter - 1], pSpikePoints[nCounter - 1], 3, arraysupport.getScaledSize(5, tg.get_LineThickness()), 0);
-                                crossPt2 = lineutility.ExtendDirectedLine(pSpikePoints[nCounter - 1], pSpikePoints[nCounter - 2], pSpikePoints[nCounter - 2], 2, arraysupport.getScaledSize(5, tg.get_LineThickness()), 5);
+                                crossPt1 = lineutility.ExtendDirectedLine(pSpikePoints[nCounter - 2], pSpikePoints[nCounter - 1], pSpikePoints[nCounter - 1], 3, arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale()), 0);
+                                crossPt2 = lineutility.ExtendDirectedLine(pSpikePoints[nCounter - 1], pSpikePoints[nCounter - 2], pSpikePoints[nCounter - 2], 2, arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale()), 5);
                                 pSpikePoints[nCounter] = crossPt1;
                                 nCounter++;
                                 pSpikePoints[nCounter] = crossPt2;
                                 nCounter++;
                                 //remainder of line
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(10, tg.get_LineThickness()), 0);	//-4
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), 0);	//-4
                             } else {
-                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(45, tg.get_LineThickness()), 0);
+                                pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(45, tg.get_LineThickness(), tg.get_patternScale()), 0);
                             }
                             break;
                         }
 
                         default: {
-                            pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(30, tg.get_LineThickness()), 0);
+                            pSpikePoints[nCounter] = lineutility.ExtendLine2Double(pLinePoints[j + 1], pLinePoints[j], -k * dIncrement - arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale()), 0);
                             break;
                         }
 
@@ -1182,11 +1182,11 @@ export class arraysupport {
             let k: int = 0;
             let lCount: int = 0;
             let dLengthSegment: double = 0;
-            let dIncrement: double = arraysupport.getScaledSize(20, tg.get_LineThickness());
+            let dIncrement: double = arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
             let m: ref<number[]> = new ref();
             let pSpikePoints: POINT2[];
             let pt0: POINT2;
-            let dSpikeSize: double = arraysupport.getScaledSize(20, tg.get_LineThickness());
+            let dSpikeSize: double = arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
             let limit: int = 0;
             let d: double = 0;
             let bolVertical: int = 0;
@@ -2115,56 +2115,56 @@ export class arraysupport {
                 pt = new POINT2(pLinePoints[j]);
                 //tower
                 pt2 = new POINT2(pt);
-                pt2.y -= arraysupport.getScaledSize(5, tg.get_LineThickness());
+                pt2.y -= arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.x -= arraysupport.getScaledSize(5, tg.get_LineThickness());
+                pt2.x -= arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.y -= arraysupport.getScaledSize(20, tg.get_LineThickness());
+                pt2.y -= arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.x += arraysupport.getScaledSize(5, tg.get_LineThickness());
+                pt2.x += arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.y -= arraysupport.getScaledSize(5, tg.get_LineThickness());
+                pt2.y -= arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
                 pt2.style = 5;
                 pts.push(pt2);
                 //low cross piece
                 pt2 = new POINT2(pt);
-                pt2.x -= arraysupport.getScaledSize(2, tg.get_LineThickness());
-                pt2.y -= arraysupport.getScaledSize(10, tg.get_LineThickness());
+                pt2.x -= arraysupport.getScaledSize(2, tg.get_LineThickness(), tg.get_patternScale());
+                pt2.y -= arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.x += arraysupport.getScaledSize(2, tg.get_LineThickness());
-                pt2.y -= arraysupport.getScaledSize(10, tg.get_LineThickness());
+                pt2.x += arraysupport.getScaledSize(2, tg.get_LineThickness(), tg.get_patternScale());
+                pt2.y -= arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                 pt2.style = 5;
                 pts.push(pt2);
                 //high cross piece
                 pt2 = new POINT2(pt);
-                pt2.x -= arraysupport.getScaledSize(7, tg.get_LineThickness());
-                pt2.y -= arraysupport.getScaledSize(17, tg.get_LineThickness());
+                pt2.x -= arraysupport.getScaledSize(7, tg.get_LineThickness(), tg.get_patternScale());
+                pt2.y -= arraysupport.getScaledSize(17, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.x -= arraysupport.getScaledSize(5, tg.get_LineThickness());
-                pt2.y -= arraysupport.getScaledSize(20, tg.get_LineThickness());
+                pt2.x -= arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
+                pt2.y -= arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.x += arraysupport.getScaledSize(5, tg.get_LineThickness());
-                pt2.y -= arraysupport.getScaledSize(20, tg.get_LineThickness());
+                pt2.x += arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
+                pt2.y -= arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.x += arraysupport.getScaledSize(7, tg.get_LineThickness());
-                pt2.y -= arraysupport.getScaledSize(17, tg.get_LineThickness());
+                pt2.x += arraysupport.getScaledSize(7, tg.get_LineThickness(), tg.get_patternScale());
+                pt2.y -= arraysupport.getScaledSize(17, tg.get_LineThickness(), tg.get_patternScale());
                 pt2.style = 5;
                 pts.push(pt2);
                 //angle piece
                 pt2 = new POINT2(pt);
-                pt2.y -= arraysupport.getScaledSize(20, tg.get_LineThickness());
+                pt2.y -= arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
                 pts.push(pt2);
                 pt2 = new POINT2(pt);
-                pt2.x += arraysupport.getScaledSize(8, tg.get_LineThickness());
-                pt2.y -= arraysupport.getScaledSize(12, tg.get_LineThickness());
+                pt2.x += arraysupport.getScaledSize(8, tg.get_LineThickness(), tg.get_patternScale());
+                pt2.y -= arraysupport.getScaledSize(12, tg.get_LineThickness(), tg.get_patternScale());
                 pt2.style = 5;
                 pts.push(pt2);
             }
@@ -2173,16 +2173,16 @@ export class arraysupport {
                 pt = new POINT2(pLinePoints[j]);
                 pt2 = new POINT2(pLinePoints[j + 1]);
                 if (pt.x < pt2.x) {
-                    pt.x += arraysupport.getScaledSize(5, tg.get_LineThickness());
-                    pt.y -= arraysupport.getScaledSize(10, tg.get_LineThickness());
-                    pt2.x -= arraysupport.getScaledSize(5, tg.get_LineThickness());
-                    pt2.y -= arraysupport.getScaledSize(10, tg.get_LineThickness());
+                    pt.x += arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
+                    pt.y -= arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
+                    pt2.x -= arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
+                    pt2.y -= arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                     pt2.style = 5;
                 } else {
-                    pt.x -= arraysupport.getScaledSize(5, tg.get_LineThickness());
-                    pt.y -= arraysupport.getScaledSize(10, tg.get_LineThickness());
-                    pt2.x += arraysupport.getScaledSize(5, tg.get_LineThickness());
-                    pt2.y -= arraysupport.getScaledSize(10, tg.get_LineThickness());
+                    pt.x -= arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
+                    pt.y -= arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
+                    pt2.x += arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale());
+                    pt2.y -= arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                     pt2.style = 5;
                 }
                 pts.push(pt);
@@ -2341,13 +2341,13 @@ export class arraysupport {
                 }
 
                 case TacticalLines.REEF: {
-                    vblCounter = arraysupport.GetReefPoints(pLinePoints, arraysupport.getScaledSize(40, tg.get_LineThickness()), vblSaveCounter);
+                    vblCounter = arraysupport.GetReefPoints(pLinePoints, arraysupport.getScaledSize(40, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = vblCounter;
                     break;
                 }
 
                 case TacticalLines.RESTRICTED_AREA: {
-                    vblCounter = arraysupport.GetRestrictedAreaPoints(pLinePoints, arraysupport.getScaledSize(15, tg.get_LineThickness()), vblSaveCounter);
+                    vblCounter = arraysupport.GetRestrictedAreaPoints(pLinePoints, arraysupport.getScaledSize(15, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = vblCounter;
                     break;
                 }
@@ -2404,7 +2404,7 @@ export class arraysupport {
                 }
 
                 case TacticalLines.PIPE: {
-                    vblCounter = arraysupport.GetPipePoints(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblSaveCounter);
+                    vblCounter = arraysupport.GetPipePoints(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = vblCounter;
                     break;
                 }
@@ -2505,24 +2505,24 @@ export class arraysupport {
                         }
 
                     }
-                    lFlotCount = arraysupport.GetAnchorageDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblSaveCounter);
+                    lFlotCount = arraysupport.GetAnchorageDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = lFlotCount;
                     break;
                 }
 
                 case TacticalLines.ANCHORAGE_LINE: {
                     lineutility.ReversePointsDouble2(pLinePoints, vblSaveCounter);
-                    acCounter = arraysupport.GetAnchorageDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblSaveCounter);
+                    acCounter = arraysupport.GetAnchorageDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     break;
                 }
 
                 case TacticalLines.LRO: {
-                    let xCount: int = countsupport.GetXPointsCount(pOriginalLinePoints, arraysupport.getScaledSize(30, tg.get_LineThickness()), vblSaveCounter);
+                    let xCount: int = countsupport.GetXPointsCount(pOriginalLinePoints, arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     let xPoints2: POINT2[] = new Array<POINT2>(xCount);
-                    let lvoCount: int = countsupport.GetLVOCount(pOriginalLinePoints, arraysupport.getScaledSize(30, tg.get_LineThickness()), vblSaveCounter);
+                    let lvoCount: int = countsupport.GetLVOCount(pOriginalLinePoints, arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     let lvoPoints: POINT2[] = new Array<POINT2>(lvoCount);
-                    xCount = arraysupport.GetXPoints(pOriginalLinePoints, xPoints2, arraysupport.getScaledSize(30, tg.get_LineThickness()), vblSaveCounter);
-                    lvoCount = arraysupport.GetLVOPoints(pOriginalLinePoints, lvoPoints, arraysupport.getScaledSize(4, tg.get_LineThickness()), arraysupport.getScaledSize(30, tg.get_LineThickness()), vblSaveCounter);
+                    xCount = arraysupport.GetXPoints(pOriginalLinePoints, xPoints2, arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
+                    lvoCount = arraysupport.GetLVOPoints(pOriginalLinePoints, lvoPoints, arraysupport.getScaledSize(4, tg.get_LineThickness(), tg.get_patternScale()), arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     for (k = 0; k < xCount; k++) {
                         pLinePoints[k] = new POINT2(xPoints2[k]);
                     }
@@ -2541,18 +2541,18 @@ export class arraysupport {
                         lineutility.ReversePointsDouble2(pLinePoints, vblSaveCounter);
                     }
 
-                    lFlotCount = flot.GetFlotDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblSaveCounter);
+                    lFlotCount = flot.GetFlotDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = lFlotCount;
                     break;
                 }
 
                 case TacticalLines.LVO: {
-                    acCounter = arraysupport.GetLVOPoints(pOriginalLinePoints, pLinePoints, arraysupport.getScaledSize(4, tg.get_LineThickness()), arraysupport.getScaledSize(20, tg.get_LineThickness()), vblSaveCounter);
+                    acCounter = arraysupport.GetLVOPoints(pOriginalLinePoints, pLinePoints, arraysupport.getScaledSize(4, tg.get_LineThickness(), tg.get_patternScale()), arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     break;
                 }
 
                 case TacticalLines.ICING: {
-                    vblCounter = arraysupport.GetIcingPointsDouble(pLinePoints, arraysupport.getScaledSize(15, tg.get_LineThickness()), vblSaveCounter);
+                    vblCounter = arraysupport.GetIcingPointsDouble(pLinePoints, arraysupport.getScaledSize(15, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = vblCounter;
                     break;
                 }
@@ -2653,18 +2653,18 @@ export class arraysupport {
                         }
 
                     }
-                    lFlotCount = flot.GetFlotDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblSaveCounter);
+                    lFlotCount = flot.GetFlotDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = lFlotCount;
                     break;
                 }
 
                 case TacticalLines.ITD: {
-                    acCounter = arraysupport.GetITDPointsDouble(pLinePoints, arraysupport.getScaledSize(15, tg.get_LineThickness()), vblSaveCounter);
+                    acCounter = arraysupport.GetITDPointsDouble(pLinePoints, arraysupport.getScaledSize(15, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     break;
                 }
 
                 case TacticalLines.CONVERGENCE: {
-                    acCounter = arraysupport.GetConvergencePointsDouble(pLinePoints, arraysupport.getScaledSize(10, tg.get_LineThickness()), vblSaveCounter);
+                    acCounter = arraysupport.GetConvergencePointsDouble(pLinePoints, arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     break;
                 }
 
@@ -2678,19 +2678,19 @@ export class arraysupport {
                 case TacticalLines.UPPER_TROUGH:
                 case TacticalLines.INSTABILITY:
                 case TacticalLines.SHEAR: {
-                    vblCounter = arraysupport.GetSquallDouble(pLinePoints, arraysupport.getScaledSize(10, tg.get_LineThickness()), 6, arraysupport.getScaledSize(30, tg.get_LineThickness()), vblSaveCounter);
+                    vblCounter = arraysupport.GetSquallDouble(pLinePoints, arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale()), 6, arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = vblCounter;
                     break;
                 }
 
                 case TacticalLines.CABLE: {
-                    vblCounter = arraysupport.GetSquallDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), 6, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblSaveCounter);
+                    vblCounter = arraysupport.GetSquallDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), 6, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = vblCounter;
                     break;
                 }
 
                 case TacticalLines.SQUALL: {
-                    vblCounter = arraysupport.GetSevereSquall(pLinePoints, arraysupport.getScaledSize(30, tg.get_LineThickness()), vblSaveCounter);
+                    vblCounter = arraysupport.GetSevereSquall(pLinePoints, arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     acCounter = vblCounter;
                     break;
                 }
@@ -3396,7 +3396,7 @@ export class arraysupport {
                     //end section
                     //calculate start, end points for upper and lower lines
                     //across the middle
-                    let spikeLength: double = arraysupport.getScaledSize(10, tg.get_LineThickness());
+                    let spikeLength: double = arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                     pt2 = lineutility.ExtendLine2Double(pLinePoints[0], pt0, -spikeLength, 0);
                     pt3 = lineutility.ExtendLine2Double(pLinePoints[3], pt1, -spikeLength, 0);
                     pt4 = lineutility.ExtendLine2Double(pLinePoints[0], pt0, spikeLength, 0);
@@ -3693,7 +3693,7 @@ export class arraysupport {
                         dMBR = 500 * DPIScaleFactor;
                     }
 
-                    let rectWidth: double = arraysupport.getScaledSize(2, tg.get_LineThickness() / 2.0);
+                    let rectWidth: double = arraysupport.getScaledSize(2, tg.get_LineThickness() / 2.0, tg.get_patternScale());
 
                     pt2 = lineutility.ExtendLineDouble(pt0, pt1, -dMBR / 10);
                     bolVertical = lineutility.CalcTrueSlopeDouble(pt0, pt1, m);
@@ -4068,7 +4068,7 @@ export class arraysupport {
                 }
 
                 case TacticalLines.NAVIGATION: {
-                    let extensionLength: double = arraysupport.getScaledSize(10, tg.get_LineThickness());
+                    let extensionLength: double = arraysupport.getScaledSize(10, tg.get_LineThickness(), tg.get_patternScale());
                     pt3 = lineutility.ExtendLine2Double(pt1, pt0, -extensionLength, 0);
                     pt4 = lineutility.ExtendLine2Double(pt0, pt1, -extensionLength, 0);
 
@@ -4258,7 +4258,7 @@ export class arraysupport {
                 }
 
                 case TacticalLines.FLOT: {
-                    acCounter = flot.GetFlotDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness()), vblSaveCounter);
+                    acCounter = flot.GetFlotDouble(pLinePoints, arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale()), vblSaveCounter);
                     break;
                 }
 
@@ -4402,7 +4402,7 @@ export class arraysupport {
                 case TacticalLines.DEPTH_AREA: {
                     whiteShape = new Shape2(Shape2.SHAPE_TYPE_FILL);//use for symbol
                     whiteShape.setFillColor(Color.WHITE);
-                    let whiteStroke: BasicStroke  = new BasicStroke(arraysupport.getScaledSize(28, tg.get_LineThickness()));
+                    let whiteStroke: BasicStroke  = new BasicStroke(arraysupport.getScaledSize(28, tg.get_LineThickness(), tg.get_patternScale()));
 
                     blueShape = new Shape2(Shape2.SHAPE_TYPE_FILL);//use for symbol
                     blueShape.setFillColor(new Color(30, 144, 255));
@@ -4521,7 +4521,7 @@ export class arraysupport {
                     //the corners
                     for (k = 0; k < vblSaveCounter; k++) {
                         if (k === 0) {
-                            d = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                            d = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                             redShape.moveTo(pOriginalLinePoints[0]);
                             d1 = lineutility.CalcDistanceDouble(pOriginalLinePoints[0], pOriginalLinePoints[1]);
                             if (d1 < d) {
@@ -4532,7 +4532,7 @@ export class arraysupport {
                             redShape.lineTo(pt0);
                         } else {
                             if (k > 0 && k < vblSaveCounter - 1) {
-                                d = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                                d = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                                 d1 = lineutility.CalcDistanceDouble(pOriginalLinePoints[k], pOriginalLinePoints[k - 1]);
                                 if (d1 < d) {
                                     d = d1;
@@ -4541,7 +4541,7 @@ export class arraysupport {
                                 pt0 = lineutility.ExtendAlongLineDouble(pOriginalLinePoints[k], pOriginalLinePoints[k - 1], d);
                                 pt1 = pOriginalLinePoints[k];
 
-                                d = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                                d = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                                 d1 = lineutility.CalcDistanceDouble(pOriginalLinePoints[k], pOriginalLinePoints[k + 1]);
                                 if (d1 < d) {
                                     d = d1;
@@ -4553,7 +4553,7 @@ export class arraysupport {
                                 redShape.lineTo(pt2);
                             } else //last point
                             {
-                                d = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                                d = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                                 d1 = lineutility.CalcDistanceDouble(pOriginalLinePoints[vblSaveCounter - 1], pOriginalLinePoints[vblSaveCounter - 2]);
                                 if (d1 < d) {
                                     d = d1;
@@ -4613,7 +4613,7 @@ export class arraysupport {
                     //the corners
                     for (k = 0; k < vblSaveCounter; k++) {
                         if (k === 0) {
-                            d = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                            d = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                             redShape.moveTo(pOriginalLinePoints[0]);
                             d1 = lineutility.CalcDistanceDouble(pOriginalLinePoints[0], pOriginalLinePoints[1]);
                             if (d1 < d) {
@@ -4624,7 +4624,7 @@ export class arraysupport {
                             redShape.lineTo(pt0);
                         } else {
                             if (k > 0 && k < vblSaveCounter - 1) {
-                                d = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                                d = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                                 d1 = lineutility.CalcDistanceDouble(pOriginalLinePoints[k], pOriginalLinePoints[k - 1]);
                                 if (d1 < d) {
                                     d = d1;
@@ -4633,7 +4633,7 @@ export class arraysupport {
                                 pt0 = lineutility.ExtendAlongLineDouble(pOriginalLinePoints[k], pOriginalLinePoints[k - 1], d);
                                 pt1 = pOriginalLinePoints[k];
 
-                                d = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                                d = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                                 d1 = lineutility.CalcDistanceDouble(pOriginalLinePoints[k], pOriginalLinePoints[k + 1]);
                                 if (d1 < d) {
                                     d = d1;
@@ -4645,7 +4645,7 @@ export class arraysupport {
                                 redShape.lineTo(pt2);
                             } else //last point
                             {
-                                d = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                                d = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                                 d1 = lineutility.CalcDistanceDouble(pOriginalLinePoints[vblSaveCounter - 1], pOriginalLinePoints[vblSaveCounter - 2]);
                                 if (d1 < d) {
                                     d = d1;
@@ -4663,7 +4663,7 @@ export class arraysupport {
                     for (k = 0; k < acCounter; k++) {
                         if (pLinePoints[k].style === 22) {
                             let CirclePoints: POINT2[] = new Array<POINT2>(8);
-                            redShape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(3, tg.get_LineThickness()), 8, CirclePoints, 9);
+                            redShape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(3, tg.get_LineThickness(), tg.get_patternScale()), 8, CirclePoints, 9);
                             redShape.setFillColor(Color.RED);
                             if (redShape != null && redShape.getShape() != null) {
                                 shapes.push(redShape);
@@ -4671,7 +4671,7 @@ export class arraysupport {
                         }
                         if (pLinePoints[k].style === 20) {
                             let CirclePoints: POINT2[] = new Array<POINT2>(8);
-                            blueShape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(3, tg.get_LineThickness()), 8, CirclePoints, 9);
+                            blueShape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(3, tg.get_LineThickness(), tg.get_patternScale()), 8, CirclePoints, 9);
                             blueShape.setFillColor(Color.BLUE);
                             if (blueShape != null && blueShape.getShape() != null) {
                                 shapes.push(blueShape);
@@ -4798,7 +4798,7 @@ export class arraysupport {
                     for (k = 0; k < acCounter; k++) {
                         if (pLinePoints[k].style === 20) {
                             let CirclePoints: POINT2[] = new Array<POINT2>(8);
-                            shape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(3, tg.get_LineThickness()), 8, CirclePoints, 9);
+                            shape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(3, tg.get_LineThickness(), tg.get_patternScale()), 8, CirclePoints, 9);
                             if (shape != null && shape.getShape() != null) {
                                 shapes.push(shape);
                             }
@@ -4831,7 +4831,7 @@ export class arraysupport {
                     for (k = 0; k < acCounter; k++) {
                         if (pLinePoints[k].style === 20) {
                             let CirclePoints: POINT2[] = new Array<POINT2>(8);
-                            shape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(3, tg.get_LineThickness()), 8, CirclePoints, 9);
+                            shape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(3, tg.get_LineThickness(), tg.get_patternScale()), 8, CirclePoints, 9);
                             if (shape != null && shape.getShape() != null) {
                                 shapes.push(shape);
                             }
@@ -4851,7 +4851,7 @@ export class arraysupport {
 
                         if (pLinePoints[k].style === 0 && pLinePoints[k + 1].style === 5) {
                             d = lineutility.CalcDistanceDouble(pLinePoints[k], pLinePoints[k + 1]);
-                            pt0 = lineutility.ExtendAlongLineDouble(pLinePoints[k], pLinePoints[k + 1], d - arraysupport.getScaledSize(5, tg.get_LineThickness()));
+                            pt0 = lineutility.ExtendAlongLineDouble(pLinePoints[k], pLinePoints[k + 1], d - arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale()));
                             shape.moveTo(pLinePoints[k]);
                             shape.lineTo(pt0);
                         }
@@ -4869,7 +4869,7 @@ export class arraysupport {
                     for (k = 0; k < acCounter; k++) {
                         if (pLinePoints[k].style === 20) {
                             let CirclePoints: POINT2[] = new Array<POINT2>(8);
-                            shape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(5, tg.get_LineThickness()), 8, CirclePoints, 9);
+                            shape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(5, tg.get_LineThickness(), tg.get_patternScale()), 8, CirclePoints, 9);
                             if (shape != null && shape.getShape() != null) {
                                 shapes.push(shape);
                             }
@@ -4890,7 +4890,7 @@ export class arraysupport {
                     for (k = 0; k < acCounter; k++) {
                         if (pLinePoints[k].style === 20) {
                             let CirclePoints: POINT2[] = new Array<POINT2>(8);
-                            shape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(4, tg.get_LineThickness()), 8, CirclePoints, 9);//was 3
+                            shape = lineutility.CalcCircleShape(pLinePoints[k], arraysupport.getScaledSize(4, tg.get_LineThickness(), tg.get_patternScale()), 8, CirclePoints, 9);//was 3
                             if (shape != null && shape.getShape() != null) {
                                 shapes.push(shape);
                             }
@@ -5286,15 +5286,12 @@ export class arraysupport {
         return 0;
     }
 
-    public static getScaledSize(originalSize: double, lineWidth: double): double {
+    public static getScaledSize(originalSize: double, lineWidth: double, patternScale: double): double {
         if (lineWidth <= 3) { // Default line width
             return originalSize;
-        } else {
-            if (lineWidth > 100) {
-                lineWidth = 100; // Max scale size
-            }
+        } else if (lineWidth > 100) {
+            lineWidth = 100; // Max scale size
         }
-
-        return originalSize * (1 + (lineWidth - 3) / 2);
+        return originalSize * (1 + ((lineWidth - 3) / 2) * patternScale);
     }
 }

@@ -1,4 +1,4 @@
-import { type int, type float } from "../../graphics2d/BasicTypes";
+import { type int, type float, type double } from "../../graphics2d/BasicTypes";
 
 import { Font } from "../../graphics2d/Font"
 import { Color } from "../../renderer/utilities/Color"
@@ -118,6 +118,8 @@ export class RendererSettings {
     private _TwoLabelOnly: boolean = false;
 
     private _scaleMainIconWithoutSectorMods: boolean = false;
+       
+    private _patternScale: double = 1.0;
 
     //acevedo - 12/8/17 - allow the setting of affiliation colors.
     private _friendlyUnitFillColor: Color = AffiliationColors.FriendlyUnitFillColor;
@@ -762,6 +764,20 @@ export class RendererSettings {
     public getScaleMainIcon():boolean
     {
         return this._scaleMainIconWithoutSectorMods;
+    }
+
+    /**
+     * Multipoint features and patterns scale with line width ({@link MilStdAttributes#LineWidth}).
+     * {@code patternScale} is the ratio of how much to increase features and patterns by with line width.
+     * default value is 1.0. Can be overwritten on render with {@link MilStdAttributes#PatternScale}
+     * @param patternScale
+     */
+    public setPatternScale( patternScale: double): void {
+        this._patternScale = patternScale;
+    }
+
+    public getPatternScale(): double {
+        return this._patternScale;
     }
 
     /**
