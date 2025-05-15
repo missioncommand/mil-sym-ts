@@ -1460,73 +1460,47 @@ export class Modifier2 {
     }
 
     /**
-     * Adds label on line
-     *
-     * Replaces areasWithENY()
+     * Adds two or four labels on area outline
      *
      * @param label
      * @param tg
-     * @param g2d
-     * @param twoLabelOnly - true if only add two instances of label to line (used with N modifier)
-     *                     Ignored if RendererSettings.TwoLabelOnly is true
+     * @param twoLabelOnly - when true only two labels are added to line (east and west most segment midpoints)
+     *                     when false, four labels are added to line (north, south, east and west most segment midpoints)
      */
-    private static addModifierOnLine(label: string, tg: TGLight, g2d: Graphics2D, twoLabelOnly: boolean = false): void {
-        if (label == null || label.length === 0) {
+    private static addModifierOnLine(label: string, tg: TGLight, twoLabelOnly: boolean = false): void {
+        if (label == null || label.length === 0 || tg.Pixels.length === 0) {
             return;
         }
         try {
-            if (!RendererSettings.getInstance().getTwoLabelOnly() && !twoLabelOnly) {
-                let metrics: FontMetrics = g2d.getFontMetrics();
-                let stringWidth: int = metrics.stringWidth(label);
-                let foundLongSegment: boolean = false;
-
-                for (let j: int = 0; j < tg.Pixels.length - 1; j++) {
-                    let pt0: POINT2 = tg.Pixels[j];
-                    let pt1: POINT2 = tg.Pixels[j + 1];
-                    let dist: double = lineutility.CalcDistanceDouble(pt0, pt1);
-                    if (dist > 1.5 * stringWidth) {
-                        foundLongSegment = true;
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1, false);
-                    }
+            let leftPt: POINT2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+            let rightPt: POINT2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+            let topPt: POINT2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+            let bottomPt: POINT2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+            for (let j: int = 1; j < tg.Pixels.length - 1; j++) {
+                let midPt: POINT2 = lineutility.MidPointDouble(tg.Pixels[j], tg.Pixels[j + 1], 0);
+                if (midPt.x <= leftPt.x) {
+                    leftPt = midPt;
                 }
-                if (!foundLongSegment) {
-                    // did not find a long enough segment
-                    let middleSegment: int = tg.Pixels.length / 2 - 1;
-                    let middleSegment2: int = tg.Pixels.length - 2;
-                    if (tg.Pixels.length > 3) {
-                        middleSegment = tg.Pixels.length / 4;
-                        middleSegment2 = 3 * tg.Pixels.length / 4;
-                    }
-                    if (middleSegment !== 0) {
-                        Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, false);
-                    }
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, middleSegment2, middleSegment2 + 1, false);
+                if (midPt.x >= rightPt.x) {
+                    rightPt = midPt;
                 }
-            } else {
-                if (tg.Pixels.length > 0) {
-                    // 2 labels one to the left and the other to the right of graphic.
-                    let leftPt: POINT2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
-                    let rightPt: POINT2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
-
-                    for (let j: int = 1; j < tg.Pixels.length - 1; j++) {
-                        let midPt: POINT2 = lineutility.MidPointDouble(tg.Pixels[j], tg.Pixels[j + 1], 0);
-                        if (midPt.x <= leftPt.x) {
-                            leftPt = midPt;
-                        }
-                        if (midPt.x >= rightPt.x) {
-                            rightPt = midPt;
-                        }
-                    }
-
-                    if (leftPt !== rightPt) {
-
-                        Modifier2.AddAreaModifier(tg, label, Modifier2.aboveMiddle, 0, leftPt, leftPt);
-                    }
-
-                    Modifier2.AddAreaModifier(tg, label, Modifier2.aboveMiddle, 0, rightPt, rightPt);
+                if (midPt.y <= topPt.y) {
+                    topPt = midPt;
+                }
+                if (midPt.y >= bottomPt.y) {
+                    bottomPt = midPt;
                 }
             }
 
+            if (leftPt != rightPt)
+                Modifier2.AddAreaModifier(tg, label, Modifier2.aboveMiddle, 0, leftPt, leftPt);
+            Modifier2.AddAreaModifier(tg, label, Modifier2.aboveMiddle, 0, rightPt, rightPt);
+            if (!twoLabelOnly) {
+                if (bottomPt != leftPt && bottomPt != rightPt)
+                    Modifier2.AddAreaModifier(tg, label, Modifier2.aboveMiddle, 0, bottomPt, bottomPt);
+                if (topPt != leftPt && topPt != rightPt && topPt != bottomPt)
+                    Modifier2.AddAreaModifier(tg, label, Modifier2.aboveMiddle, 0, topPt, topPt);
+            }
         } catch (exc) {
             if (exc instanceof Error) {
                 ErrorLogger.LogException(Modifier2._className, "addModifierOnLine",
@@ -1539,11 +1513,11 @@ export class Modifier2 {
 
 
     /**
-     * Adds N modifier on line
+     * Adds N modifier on area outline
      */
-    private static addNModifier(tg: TGLight, g2d: Graphics2D): void {
+    private static addNModifier(tg: TGLight): void {
         if (tg.isHostile()) {
-            Modifier2.addModifierOnLine(tg.get_N(), tg, g2d, true);
+            Modifier2.addModifierOnLine(tg.get_N(), tg, true);
         }
     }
 
@@ -2950,7 +2924,7 @@ export class Modifier2 {
                 case TacticalLines.JTAA:
                 case TacticalLines.SAA:
                 case TacticalLines.SGAA: {
-                    Modifier2.addNModifier(tg, g2d);
+                    Modifier2.addNModifier(tg);
                     Modifier2.AddIntegralAreaModifier(tg, label + TDash + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
                     Modifier2.addDTG(tg, Modifier2.area, csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
                     break;
@@ -2990,7 +2964,7 @@ export class Modifier2 {
                     Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
                     Modifier2.AddModifier(tg, tg.get_H(), Modifier2.area, 0, ptCenter, ptCenter);
                     Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
-                    Modifier2.addNModifier(tg, g2d);
+                    Modifier2.addNModifier(tg);
                     Modifier2.addModifierBottomSegment(tg, tg.get_EchelonSymbol());
                     break;
                 }
@@ -2998,7 +2972,7 @@ export class Modifier2 {
                 case TacticalLines.GENERIC_AREA: {
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
                     Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
-                    Modifier2.addNModifier(tg, g2d);
+                    Modifier2.addNModifier(tg);
                     break;
                 }
 
@@ -3123,7 +3097,7 @@ export class Modifier2 {
                     Modifier2.GetMBR(tg, ul, ur, lr, ll);
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.aboveMiddle, -1.5 * csFactor, ul, ur, false);
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG(), Modifier2.aboveMiddle, 1.5 * csFactor, ll, lr, false);
-                    Modifier2.addModifierOnLine("M", tg, g2d);
+                    Modifier2.addModifierOnLine("M", tg);
                     Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
                     break;
                 }
@@ -3139,7 +3113,7 @@ export class Modifier2 {
                             Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
                         }
                     }
-                    Modifier2.addModifierOnLine("M", tg, g2d);
+                    Modifier2.addModifierOnLine("M", tg);
                     Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
                     break;
                 }
@@ -3332,12 +3306,12 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.UXO: {
-                    Modifier2.addModifierOnLine("UXO", tg, g2d);
+                    Modifier2.addModifierOnLine("UXO", tg, true);
                     break;
                 }
 
                 case TacticalLines.GENERAL: {
-                    Modifier2.addNModifier(tg, g2d);
+                    Modifier2.addNModifier(tg);
                     break;
                 }
 
@@ -3489,7 +3463,7 @@ export class Modifier2 {
 
                 case TacticalLines.DEPICT: {
                     Modifier2.GetMBR(tg, ul, ur, lr, ll);
-                    Modifier2.addNModifier(tg, g2d);
+                    Modifier2.addNModifier(tg);
                     Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
                     break;
                 }
@@ -3504,7 +3478,7 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.PAA: {
-                    Modifier2.addModifierOnLine("PAA", tg, g2d);
+                    Modifier2.addModifierOnLine("PAA", tg);
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
                     Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
                     break;
@@ -3551,7 +3525,7 @@ export class Modifier2 {
                 case TacticalLines.PNO: {
                     Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
                     Modifier2.addModifierBottomSegment(tg, tg.get_EchelonSymbol());
-                    Modifier2.addNModifier(tg, g2d);
+                    Modifier2.addNModifier(tg);
                     break;
                 }
 
