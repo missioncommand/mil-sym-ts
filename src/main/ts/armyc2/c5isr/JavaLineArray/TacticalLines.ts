@@ -151,7 +151,6 @@ export class TacticalLines  {
     public static readonly MAIN: number = 22521410;
     public static readonly MAIN_STRAIGHT: number = 22521411;
     public static readonly LC: number = 22123000;
-    public static readonly LC_HOSTILE: number = 22123002;
     public static readonly IL: number = 22524000;
     public static readonly LDLC: number = 22527000;
     public static readonly SPT: number = 22521420;

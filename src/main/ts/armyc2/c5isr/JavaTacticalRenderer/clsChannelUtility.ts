@@ -119,7 +119,6 @@ export class clsChannelUtility {
             let channelPixels: number[];
             switch (lineType) {
                 case TacticalLines.LC:
-                case TacticalLines.LC_HOSTILE:
                 case TacticalLines.UNSP:
                 case TacticalLines.DFENCE:
                 case TacticalLines.SFENCE:
@@ -369,7 +368,7 @@ export class clsChannelUtility {
             let ul: POINT2 = new POINT2();
             let lr: POINT2 = new POINT2();
             lineutility.CalcMBRPoints(pts as POINT2[], pts.length, ul, lr);
-            let flotDiameter: double = arraysupport.getScaledSize(21, tg.get_LineThickness());
+            let flotDiameter: double = arraysupport.getScaledSize(21, tg.get_LineThickness(), tg.get_patternScale());
             if (lr.x - ul.x >= flotDiameter) {
 
                 return pixels;
@@ -439,11 +438,6 @@ export class clsChannelUtility {
             //anchor point, i.e. the rotary feature can no longer stick out past the anchor point
             //45 pixels shift here matches the 45 pixels shift for catkbyfire found in Channels.GetAXADDouble
             lineutility.adjustCATKBYFIREControlPoint(linetype, pixels, 45);
-            if (tg.get_LineType() === TacticalLines.LC && tg.isHostile()) {
-
-                linetype = TacticalLines.LC_HOSTILE;
-            }
-
 
             let j: int = 0;
             let pixels2: number[] = new Array<number>(pixels.length * 2);
@@ -486,7 +480,7 @@ export class clsChannelUtility {
                 return null;
             }
 
-            let factor: double = arraysupport.getScaledSize(3, tg.get_LineThickness());
+            let factor: double = arraysupport.getScaledSize(3, tg.get_LineThickness(), tg.get_patternScale());
 
             clsUtility.GetSegments(pixels, segments, factor);
             partitions = new Array<P1>();
@@ -531,7 +525,7 @@ export class clsChannelUtility {
             //value array still needs to be allocated or there is a
             //null pointer exception in DrawGoodChannel2
             distanceToChannelPoint.value = new Array<number>(1);
-            distanceToChannelPoint.value[0] = arraysupport.getScaledSize(20, tg.get_LineThickness());
+            distanceToChannelPoint.value[0] = arraysupport.getScaledSize(20, tg.get_LineThickness(), tg.get_patternScale());
 
             switch (linetype) {
                 case TacticalLines.MAIN:
@@ -562,9 +556,8 @@ export class clsChannelUtility {
                     break;
                 }
 
-                case TacticalLines.LC:
-                case TacticalLines.LC_HOSTILE: {
-                    channelWidth = arraysupport.getScaledSize(40, tg.get_LineThickness()) as int;// was 20;
+                case TacticalLines.LC: {
+                    channelWidth = arraysupport.getScaledSize(40, tg.get_LineThickness(), tg.get_patternScale()) as int;// was 20;
                     pixels2 = new Array<number>(pixels.length);
                     n = pixels.length;
                     //for (j = 0; j < pixels.length; j++) 
@@ -584,9 +577,9 @@ export class clsChannelUtility {
                 case TacticalLines.DOUBLEC:
                 case TacticalLines.TRIPLE: {
                     tg.set_lineCap(BasicStroke.CAP_BUTT);
-                    channelWidth = arraysupport.getScaledSize(30, tg.get_LineThickness()) as int;
+                    channelWidth = arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale()) as int;
                     if (Channels.getShiftLines()) {
-                        channelWidth = arraysupport.getScaledSize(60, tg.get_LineThickness()) as int;
+                        channelWidth = arraysupport.getScaledSize(60, tg.get_LineThickness(), tg.get_patternScale()) as int;
                     }
                     pixels2 = new Array<number>(pixels.length);
                     n = pixels.length;
@@ -611,10 +604,10 @@ export class clsChannelUtility {
             }
 
             // Line of contact looks bad with small channel corners extending out
-            if (linetype === TacticalLines.LC || linetype === TacticalLines.LC_HOSTILE) {
+            if (linetype === TacticalLines.LC) {
                 partitions = new Array();
                 let singleLinePartitions: Array<P1> = new Array();
-                clsUtility.GetLCPartitions(pixels2, arraysupport.getScaledSize(40, tg.get_LineThickness()), partitions, singleLinePartitions);
+                clsUtility.GetLCPartitions(pixels2, arraysupport.getScaledSize(40, tg.get_LineThickness(), tg.get_patternScale()), partitions, singleLinePartitions);
                 clsChannelUtility.DrawSegments(tg, pixels2, partitions, channelWidth, shapes, channelPoints, distanceToChannelPoint.value[0]);
 
                 if (singleLinePartitions.length > 0) {

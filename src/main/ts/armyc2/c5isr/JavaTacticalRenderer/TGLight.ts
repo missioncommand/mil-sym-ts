@@ -1,4 +1,4 @@
-import { type int } from "../graphics2d/BasicTypes";
+import { type int, type double } from "../graphics2d/BasicTypes";
 
 
 import { BasicStroke } from "../graphics2d/BasicStroke"
@@ -12,6 +12,7 @@ import { ErrorLogger } from "../renderer/utilities/ErrorLogger"
 import { RendererException } from "../renderer/utilities/RendererException"
 import { SymbolID } from "../renderer/utilities/SymbolID"
 import { SymbolUtilities } from "../renderer/utilities/SymbolUtilities"
+import { RendererSettings } from "../renderer/utilities/RendererSettings";
 
 /**
  * A class to encapsulate the tactical graphic object. Many of the properties
@@ -633,5 +634,15 @@ export class TGLight {
 
     public get_lineCap(): int {
         return this.lineCap;
+    }
+
+    private patternScale: double = RendererSettings.getInstance().getPatternScale();
+
+    public get_patternScale(): double {
+        return this.patternScale;
+    }
+
+    public set_patternScale(scale: double): void {
+        this.patternScale = scale;
     }
 }

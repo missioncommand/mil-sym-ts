@@ -1647,6 +1647,7 @@ export class MultiPointHandler {
         let altitudeUnit: DistanceUnit;
         let pixelSize: int = 50;
         let keepUnitRatio: boolean = true;
+        let patternScale: double = RendererSettings.getInstance().getPatternScale();
 
         try {
 
@@ -1810,6 +1811,10 @@ export class MultiPointHandler {
                     keepUnitRatio = saAttributes.get(MilStdAttributes.KeepUnitRatio).toLowerCase() === 'true';
                     symbol.setKeepUnitRatio(keepUnitRatio);
                 }
+
+                if(saAttributes.has(MilStdAttributes.PatternScale)) {
+                    patternScale = parseFloat(saAttributes.get(MilStdAttributes.PatternScale));
+                }
             }
 
             symbol.setModifierMap(modifiers);
@@ -1859,6 +1864,7 @@ export class MultiPointHandler {
             symbol.setHideOptionalLabels(hideOptionalLabels);
             symbol.setAltitudeUnit(altitudeUnit);
             symbol.setDistanceUnit(distanceUnit);
+            symbol.setPatternScale(patternScale);
 
             // Check grpahic modifiers variables.  If we set earlier, populate
             // the fields, otherwise, ignore.

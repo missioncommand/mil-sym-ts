@@ -236,7 +236,6 @@ export class clsUtility {
             case TacticalLines.ESR1:
             case TacticalLines.ESR2:
             case TacticalLines.ROADBLK:
-            case TacticalLines.TRIP:
             case TacticalLines.EASY:
             case TacticalLines.BYDIF:
             case TacticalLines.BYIMP:
@@ -806,6 +805,7 @@ export class clsUtility {
                 case TacticalLines.PAA_RECTANGULAR:
                 case TacticalLines.RECTANGULAR_TARGET:
                 case TacticalLines.CFL:
+                case TacticalLines.TRIP:
                 case TacticalLines.DIRATKAIR:
                 case TacticalLines.BOUNDARY:
                 case TacticalLines.ISOLATE:
@@ -2308,7 +2308,7 @@ export class clsUtility {
      */
     public static SegmentLCPoints(tg: TGLight, converter: IPointConversion): void {
         try {
-            if (tg.get_LineType() !== TacticalLines.LC && tg.get_LineType() !== TacticalLines.LC_HOSTILE) {
+            if (tg.get_LineType() !== TacticalLines.LC) {
 
                 return;
             }
@@ -2316,7 +2316,7 @@ export class clsUtility {
 
             let points: Array<POINT2> = tg.get_Pixels();
 
-            let LCChannelWith: double = arraysupport.getScaledSize(40, tg.get_LineThickness());
+            let LCChannelWith: double = arraysupport.getScaledSize(40, tg.get_LineThickness(), tg.get_patternScale());
 
             for (let i: int = 0; i < points.length - 2; i++) {
                 let ptA: POINT2 = new POINT2(points[i].x, points[i].y);
@@ -2410,7 +2410,7 @@ export class clsUtility {
                 case TacticalLines.DOUBLEC:
                 case TacticalLines.TRIPLE:
                 case TacticalLines.STRONG: {
-                    glyphSize = arraysupport.getScaledSize(30, tg.get_LineThickness());
+                    glyphSize = arraysupport.getScaledSize(30, tg.get_LineThickness(), tg.get_patternScale());
                     break;
                 }
 
@@ -2418,12 +2418,12 @@ export class clsUtility {
                 case TacticalLines.LINE:
                 case TacticalLines.ATWALL:
                 case TacticalLines.SFENCE: {
-                    glyphSize = arraysupport.getScaledSize(40, tg.get_LineThickness());
+                    glyphSize = arraysupport.getScaledSize(40, tg.get_LineThickness(), tg.get_patternScale());
                     break;
                 }
 
                 case TacticalLines.DFENCE: {
-                    glyphSize = arraysupport.getScaledSize(50, tg.get_LineThickness());
+                    glyphSize = arraysupport.getScaledSize(50, tg.get_LineThickness(), tg.get_patternScale());
                     break;
                 }
 
