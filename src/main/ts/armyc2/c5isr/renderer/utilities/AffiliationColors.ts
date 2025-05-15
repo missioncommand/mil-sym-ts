@@ -10,7 +10,7 @@ import { Color } from "../../renderer/utilities/Color"
  * Default Affiliation Colors for the symbols
  *
  */
-export abstract class AffiliationColors {
+export class AffiliationColors {
 
 	//public static colorexists: boolean = (typeof Color === 'function');
 	/// <summary>
