@@ -17,7 +17,7 @@ export class GENCLookup {
     private static genc:any;
 
 
-    public static async loadData(location?:string)
+    /*public static async loadData(location?:string)
     {
         let path:string = GENCLookup.gencJSON;//String(genc);
         if(location)
@@ -26,6 +26,11 @@ export class GENCLookup {
         }
         RendererUtilities.getData(path).then(result => {this.genc = result;}).catch((err) => {ErrorLogger.LogException("GENCLookup","loadData",err)});
         //RendererUtilities.getData(String(genc)).then(result => {this.genc = result;});
+    }//*/
+
+    public static async setData(url:string)
+    {
+        RendererUtilities.getData(url).then(result => {this.genc = result;}).catch((err) => {ErrorLogger.LogException("GENCLookup","loadData",err)});
     }
 
     private constructor() 

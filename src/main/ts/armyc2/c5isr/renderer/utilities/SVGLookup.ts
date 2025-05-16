@@ -20,7 +20,7 @@ export class SVGLookup
     private static svgdJSON:string = "/svgd.json";
     private static svgeJSON:string = "/svge.json";
 
-    public static async loadData(location?:string)
+    /*public static async loadData(location?:string)
     {
 
         let pathd:string = SVGLookup.svgdJSON;//String(svgdj);
@@ -37,11 +37,20 @@ export class SVGLookup
         promises.push(RendererUtilities.getData(pathe));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
         await Promise.all(promises).then(values => {SVGLookup.svgd = values[0];SVGLookup.svge = values[1];}).catch(error => {throw error;})
 
-        /*let promises:Array<Promise<any>> = new Array<Promise<any>>()
+        //let promises:Array<Promise<any>> = new Array<Promise<any>>()
         
-        promises.push(RendererUtilities.getData(String(svgdj)));
-        promises.push(RendererUtilities.getData(String(svgej)));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
-        await Promise.all(promises).then(values => {SVGLookup.svgd = values[0];SVGLookup.svge = values[1];}).catch(error => {throw error;})//*/
+        //promises.push(RendererUtilities.getData(String(svgdj)));
+        //promises.push(RendererUtilities.getData(String(svgej)));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
+        //await Promise.all(promises).then(values => {SVGLookup.svgd = values[0];SVGLookup.svge = values[1];}).catch(error => {throw error;})
+    }//*/
+
+    public static async setData(urls:string[])
+    {
+        let promises:Array<Promise<any>> = new Array<Promise<any>>();
+
+        promises.push(RendererUtilities.getData(urls[0]));
+        promises.push(RendererUtilities.getData(urls[1]));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
+        await Promise.all(promises).then(values => {SVGLookup.svgd = values[0];SVGLookup.svge = values[1];}).catch(error => {throw error;})
     }
 
     private constructor() {

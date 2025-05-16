@@ -25,7 +25,7 @@ export class MSLookup {
     private static msdJSON:string = "/msd.json";
     private static mseJSON:string = "/mse.json";
 
-    public static async loadData(location?:string)
+    /*public static async loadData(location?:string)
     {
         let pathd:string = MSLookup.msdJSON;//String(msdj);
         let pathe:string = MSLookup.mseJSON;//String(msej);
@@ -39,12 +39,21 @@ export class MSLookup {
         
         promises.push(RendererUtilities.getData(pathd));
         promises.push(RendererUtilities.getData(pathe));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
-        await Promise.all(promises).then(values => {MSLookup.msd = values[0];MSLookup.mse = values[1];}).catch(error => {throw error;})//*/
+        await Promise.all(promises).then(values => {MSLookup.msd = values[0];MSLookup.mse = values[1];}).catch(error => {throw error;})
 
-        /*let promises:Array<Promise<any>> = new Array<Promise<any>>()
+        //let promises:Array<Promise<any>> = new Array<Promise<any>>()
         
-        promises.push(RendererUtilities.getData(String(msdj)));
-        promises.push(RendererUtilities.getData(String(msej)));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
+        //promises.push(RendererUtilities.getData(String(msdj)));
+        //promises.push(RendererUtilities.getData(String(msej)));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
+        //await Promise.all(promises).then(values => {MSLookup.msd = values[0];MSLookup.mse = values[1];}).catch(error => {throw error;})
+    }//*/
+
+    public static async setData(urls:string[])
+    {
+        let promises:Array<Promise<any>> = new Array<Promise<any>>();
+
+        promises.push(RendererUtilities.getData(urls[0]));
+        promises.push(RendererUtilities.getData(urls[1]));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
         await Promise.all(promises).then(values => {MSLookup.msd = values[0];MSLookup.mse = values[1];}).catch(error => {throw error;})//*/
     }
     /*
