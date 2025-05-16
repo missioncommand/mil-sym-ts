@@ -3406,6 +3406,26 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.TRIP: {
+                    foundSegment = false;
+                    stringWidth = (1.5 * metrics.stringWidth(label) as double) as int;
+                    for (j = 0; j < tg.Pixels.length - 1; j++) {
+                        pt0 = tg.Pixels[j];
+                        pt1 = tg.Pixels[j + 1];
+                        midPt = lineutility.MidPointDouble(pt0, pt1, 0);
+                        dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                        if (dist > stringWidth) {
+                            Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.7 * csFactor, midPt, midPt, false);
+                            foundSegment = true;
+                        }
+                    }
+                    if (!foundSegment) {
+                        midPt = lineutility.MidPointDouble(tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], 0);
+                        Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.7 * csFactor, midPt, midPt, false);
+                    }
+                    break;
+                }
+
                 case TacticalLines.GAP: {
                     if (tg.Pixels[1].y > tg.Pixels[0].y) {
                         pt0 = tg.Pixels[1];
@@ -3606,12 +3626,6 @@ export class Modifier2 {
                     Modifier2.getPixelsMiddleSegment(tg, stringWidth, pt0, pt1);
                     Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
                     Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0.7 * csFactor, 1.7 * csFactor, pt0, pt1, metrics);
-                    break;
-                }
-
-                case TacticalLines.TRIP: {
-                    midPt = lineutility.MidPointDouble(pt0, pt1, 0);
-                    Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.7 * csFactor, midPt, midPt, false);
                     break;
                 }
 
