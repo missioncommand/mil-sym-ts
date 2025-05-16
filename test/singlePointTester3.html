@@ -531,8 +531,12 @@
     function setup()
     {
         document.getElementById("btnST1").disabled = true; 
+        //Assumes location page is running in
         //C5Ren.initialize().then(function(results){document.getElementById("btnST1").disabled = false;preload();}).catch(error => {throw error;});
-        C5Ren.initialize('/dist/').then(function(results){document.getElementById("btnST1").disabled = false;preload();}).catch(error => {throw error;});
+        //Set location where renderer and files are
+        //C5Ren.initialize('/dist/').then(function(results){document.getElementById("btnST1").disabled = false;preload();}).catch(error => {throw error;});
+        //Tell the renderer specficially where the manifest file is in case the users process renamed it with a hash or something.
+        C5Ren.initialize('/dist/manifest.json').then(function(results){document.getElementById("btnST1").disabled = false;preload();}).catch(error => {throw error;});
 
         /*if(C5Ren.isReady())
         {

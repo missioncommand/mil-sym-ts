@@ -1,3 +1,12 @@
+import gencUrl from './src/main/ts/armyc2/c5isr/data/genc.json';
+import msdUrl from './src/main/ts/armyc2/c5isr/data/msd.json';
+import mseUrl from './src/main/ts/armyc2/c5isr/data/mse.json';
+import svgdUrl from './src/main/ts/armyc2/c5isr/data/svgd.json';
+import svgeUrl from './src/main/ts/armyc2/c5isr/data/svge.json';
+
+if(gencUrl && msdUrl && mseUrl && svgdUrl && svgeUrl)
+  console.log("data files located");
+
 import { ErrorLogger } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ErrorLogger";
 import { GENCLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/GENCLookup";
 import { MSLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSLookup";
@@ -51,6 +60,7 @@ let initializing:boolean = false;
  * pass in "/dist/".  This is needed when all the files aren't in the same location.  When the renderer gets imported, it thinks it's 
  * in the location of the file that imported it, not where it actually exists and then it can't find the asset files.  If location is not
  * set, the renderer assumes the json asset files are in the same location as where the C5Ren script is being run.
+ * Additionally, if your build process hashes the manifest.json file, you should include the new name like "/dist/manifest.[hash].json"
  */
 export async function initialize(location?:string):Promise<any>
 {
@@ -60,11 +70,43 @@ export async function initialize(location?:string):Promise<any>
     if(!initialized)
     {
       let promises:Array<Promise<any>> = new Array<Promise<any>>()
-      if(location && location.startsWith('/')==false)
-        location = '/' + location;
-      promises.push(GENCLookup.loadData(location));
-      promises.push(MSLookup.loadData(location));
-      promises.push(SVGLookup.loadData(location));
+      let manifestName:string = 'manifest.json';
+      let manifestIndex:number = -1;
+
+      //Load data from specific path
+      let path:string = "";
+      if(location)
+      {
+        if(location.startsWith('/')==false)
+          location = '/' + location;
+        manifestIndex = location.indexOf("manifest");
+        if(location.endsWith("json") && manifestIndex >= 0)
+        {
+          manifestName = location.substring(manifestIndex);
+          location = location.substring(0,manifestIndex);
+        }
+        if(location.endsWith('/')==true)
+          location = location.substring(0,location.length-1);
+        path = location;
+      }
+        
+
+      //load data from path provided in manifest file/////////////////////
+      // Fetch Webpack manifest to get the hashed filename
+      const manifestResponse = await fetch(location + "/" + manifestName);
+      const manifest = await manifestResponse.json();
+
+      // Get the hashed JSON file URL
+      const gencUrl = path + manifest['data/genc.json'];
+      const msdUrl = path + manifest['data/msd.json'];
+      const mseUrl = path + manifest['data/mse.json'];
+      const svgdUrl = path + manifest['data/svgd.json'];
+      const svgeUrl = path + manifest['data/svge.json'];
+
+      promises.push(GENCLookup.setData(gencUrl));
+      promises.push(MSLookup.setData([msdUrl,mseUrl]));
+      promises.push(SVGLookup.setData([svgdUrl,svgeUrl]));
+
       await Promise.all(promises).then(values => {GENCLookup.getInstance();MSLookup.getInstance();SVGLookup.getInstance()}).catch(error => {throw error;});
       initialized=true;
     }

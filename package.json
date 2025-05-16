@@ -4,7 +4,7 @@
   "description": "MIL-STD-2525 D/E symbol rendering TypeScript library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "resolveJsonModule": false,
+  "resolveJsonModule": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rd /S /Q dist",
@@ -29,11 +29,13 @@
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
     "dts-bundle-generator": "^9.5.1",
+    "file-loader": "^6.2.0",
     "jszip": "^3.10.1",
     "ts-loader": "^9.5.1",
     "tslib": "^2.6.3",
     "typedoc": "^0.26.3",
     "webpack": "^5.92.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-manifest-plugin": "^5.0.1"
   }
 }

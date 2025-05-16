@@ -19,7 +19,7 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "resolveJsonModule": false,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "target": "es2022",
     "lib": [
