@@ -810,8 +810,8 @@ export class clsRenderer {
         let result: double = distance * conversionFactor;
         result *= 10.0;
         result = Math.round(result);
-        let tempResult: int = result as int;
-        let truncatedResult: int = tempResult / 10;
+        let tempResult: int = Math.trunc(result);
+        let truncatedResult: int = Math.trunc(tempResult / 10);
         // MIL-STD-2525D says altitude/depth must be an integer
 
         // Simplifies labels of "0 units AGL" to "GL" (Ground Level) and "0 units AMSL/BMSL" to "MSL" (Mean Sea Level)
