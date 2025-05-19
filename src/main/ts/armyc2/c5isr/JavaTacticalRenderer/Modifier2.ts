@@ -2990,7 +2990,7 @@ export class Modifier2 {
                 case TacticalLines.SAAFR:
                 case TacticalLines.SC: {
                     Modifier2.AddIntegralModifier(tg, "Name: " + tg.get_Name(), Modifier2.aboveMiddle, -7 * csFactor, middleSegment, middleSegment + 1, false);
-                    Modifier2.AddIntegralModifier(tg, "Width: " + tg.get_AM(), Modifier2.aboveMiddle, -6 * csFactor, middleSegment, middleSegment + 1, false);
+                    Modifier2.AddIntegralModifier(tg, "Width: " + Modifier2.removeDecimal(tg.get_AM()), Modifier2.aboveMiddle, -6 * csFactor, middleSegment, middleSegment + 1, false);
                     Modifier2.AddIntegralModifier(tg, "Min Alt: " + tg.get_X(), Modifier2.aboveMiddle, -5 * csFactor, middleSegment, middleSegment + 1, false);
                     Modifier2.AddIntegralModifier(tg, "Max Alt: " + tg.get_X1(), Modifier2.aboveMiddle, -4 * csFactor, middleSegment, middleSegment + 1, false);
                     Modifier2.AddIntegralModifier(tg, "DTG Start: " + tg.get_DTG(), Modifier2.aboveMiddle, -3 * csFactor, middleSegment, middleSegment + 1, false);
@@ -3927,11 +3927,11 @@ export class Modifier2 {
                 if (!tg.get_HideOptionalLabels()) {
                     for (let k: int = 0; k < numSectors; k++) {
                         pt0 = locModifier[k];
-                        Modifier2.AddAreaModifier(tg, "RG " + AM[k + 1], Modifier2.area, -1, pt0, pt0);
+                        Modifier2.AddAreaModifier(tg, "RG " + Modifier2.removeDecimal(AM[k + 1]), Modifier2.area, -1, pt0, pt0);
                         ptLeft = locAZModifier[2 * k];
                         ptRight = locAZModifier[2 * k + 1];
-                        Modifier2.AddAreaModifier(tg, an[2 * k], Modifier2.area, 0, ptLeft, ptLeft);
-                        Modifier2.AddAreaModifier(tg, an[2 * k + 1], Modifier2.area, 0, ptRight, ptRight);
+                        Modifier2.AddAreaModifier(tg, Modifier2.removeDecimal(an[2 * k]), Modifier2.area, 0, ptLeft, ptLeft);
+                        Modifier2.AddAreaModifier(tg, Modifier2.removeDecimal(an[2 * k + 1]), Modifier2.area, 0, ptRight, ptRight);
                     }
                 }
             } else {
@@ -4596,12 +4596,12 @@ export class Modifier2 {
                                 //AddAreaModifier(tg, "RG " + am[j], area, -1, pt0, pt0);
                                 if (j === 0) {
 
-                                    Modifier2.AddAreaModifier(tg, "MIN RG " + am[j], 3, -1, pt0, pt0);
+                                    Modifier2.AddAreaModifier(tg, "MIN RG " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
                                 }
 
                                 else {
 
-                                    Modifier2.AddAreaModifier(tg, "MAX RG " + "(" + j.toString() + ") " + am[j], 3, -1, pt0, pt0);
+                                    Modifier2.AddAreaModifier(tg, "MAX RG " + "(" + j.toString() + ") " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
                                 }
 
                             }
@@ -5514,5 +5514,16 @@ export class Modifier2 {
             }
         }
         return null;
+    }
+
+    private static removeDecimal(doubleVal: string | double): string {
+        if (typeof doubleVal === "string") {
+            if (doubleVal.indexOf(" ") > 0) // String contains unit
+                return Math.round(Number.parseFloat(doubleVal.substring(0, doubleVal.indexOf(" ")))) + doubleVal.substring(doubleVal.indexOf(" "));
+            else
+                return String(Math.round(Number.parseFloat(doubleVal)));
+        } else {
+            return String(Math.round(doubleVal));
+        }
     }
 }
