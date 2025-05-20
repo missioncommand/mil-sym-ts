@@ -357,17 +357,21 @@ export class SVGLookup
                     case 121104:
                     case 121105:
                     case 121106:
+                    case 121107:
                     case 121300:
                     case 121301:
                     case 121302:
                     case 121303:
+                    case 121304:
                     case 121802:
+                    case 122100:
                     case 130100:
                     case 130101:
                     case 130102:
                     case 130103:
                     case 130200:
                     case 130302:
+                    case 130303:
                     case 140102:
                     case 140103:
                     case 140104:
