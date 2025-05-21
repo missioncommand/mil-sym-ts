@@ -8269,6 +8269,57 @@ export class ModifierRenderer implements SettingsEventListener {
                                                 }
                                             }
                                         }
+                                        else if(ec == 182600)//Isolated Personnel Location
+                                        {
+                                            
+                                            if (modifiers.has(Modifiers.C_QUANTITY)) {
+                                                strText = modifiers.get(Modifiers.C_QUANTITY);
+                                                if (strText != null) {
+                                                    ti = new TextInfo(strText, 0, 0, ModifierRenderer._modifierFont, frc);
+                                                    labelWidth = Math.round(ti.getTextBounds().getWidth());
+                                                    //subset of NBC, just nuclear
+                                                    x = (bounds.getMinX() + (bounds.getWidth() * 0.5));
+                                                    x = x -  (labelWidth * 0.5);
+                                                    y = bounds.getMinY() - descent;
+                                                    ti.setLocation(Math.round(x), Math.round(y));
+                                                    arrMods.push(ti);
+                                                }
+                                            }
+                                            if (modifiers.has(Modifiers.W_DTG_1)) {
+                                                strText = modifiers.get(Modifiers.W_DTG_1);
+                                                if (strText != null) {
+                                                    ti = new TextInfo(strText, 0, 0, ModifierRenderer._modifierFont, frc);
+                                                    labelWidth = Math.round(ti.getTextBounds().getWidth());
+                            
+                                                    x = bounds.getMinX() - labelWidth - bufferXL;
+                                                    if (!byLabelHeight) {
+                                                        y = bounds.getMinY() + labelHeight - descent;
+                                                    } else {
+                                                        y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - ((labelHeight - descent) * 0.5) + (-descent - bufferText)));
+                                                    }
+                            
+                                                    ti.setLocation(Math.round(x), Math.round(y));
+                                                    arrMods.push(ti);
+                                                }
+                                            }
+                                            if (modifiers.has(Modifiers.W1_DTG_2)) {
+                                                strText = modifiers.get(Modifiers.W1_DTG_2);
+                                                if (strText != null) {
+                                                    ti = new TextInfo(strText, 0, 0, ModifierRenderer._modifierFont, frc);
+                                                    labelWidth = Math.round(ti.getTextBounds().getWidth());
+                            
+                                                    x = bounds.getMinX() - labelWidth - bufferXL;
+                                                    if (!byLabelHeight) {
+                                                        y = bounds.getMinY() + labelHeight - descent;
+                                                    } else {
+                                                        y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - (((labelHeight * 2) - descent) * 0.5) + (-descent - bufferText)));
+                                                    }
+                            
+                                                    ti.setLocation(Math.round(x), Math.round(y));
+                                                    arrMods.push(ti);
+                                                }
+                                            }
+                                        }
                                         else {
                                             if (SymbolUtilities.isCBRNEvent(symbolID)) //CBRN
                                             {
@@ -8507,7 +8558,7 @@ export class ModifierRenderer implements SettingsEventListener {
                                                             }
                                                         }
                                                         else {
-                                                            if (ec === 21060)  //TACAN
+                                                            if (ec === 180600)  //TACAN
                                                             {
                                                                 if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
                                                                     strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
@@ -8545,7 +8596,7 @@ export class ModifierRenderer implements SettingsEventListener {
                                                                     }
                                                                 }
                                                                 else {
-                                                                    if (ec === 21060)  //Air Detonation
+                                                                    if (ec === 210600)  //Air Detonation
                                                                     {
                                                                         if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
                                                                             strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
