@@ -141,6 +141,7 @@ export class clsUtility {
             case TacticalLines.RECTANGULAR:
             case TacticalLines.CUED_ACQUISITION:
             case TacticalLines.CIRCULAR:
+            case TacticalLines.PBS_CIRCLE:
             case TacticalLines.BDZ:
             case TacticalLines.FSA_CIRCULAR:
             case TacticalLines.NOTACK:
@@ -163,6 +164,7 @@ export class clsUtility {
             case TacticalLines.LAUNCH_AREA:
             case TacticalLines.DEFENDED_AREA_CIRCULAR:
             case TacticalLines.SHIP_AOI_CIRCULAR:
+            case TacticalLines.PBS_ELLIPSE:
             case TacticalLines.RANGE_FAN:
             case TacticalLines.RANGE_FAN_SECTOR:
             case TacticalLines.RADAR_SEARCH: {
@@ -371,6 +373,8 @@ export class clsUtility {
     public static isClosedPolygon(linetype: int): boolean {
         let result: boolean = false;
         switch (linetype) {
+            case TacticalLines.BBS_AREA:
+            case TacticalLines.BS_BBOX:
             case TacticalLines.AT:
             case TacticalLines.DEPICT:
             case TacticalLines.DZ:
@@ -399,6 +403,7 @@ export class clsUtility {
             case TacticalLines.JTAA:
             case TacticalLines.SAA:
             case TacticalLines.SGAA:
+            case TacticalLines.BS_AREA:
             case TacticalLines.ASSAULT:
             case TacticalLines.ATKPOS:
             case TacticalLines.OBJ:
@@ -759,7 +764,9 @@ export class clsUtility {
                             switch (lineType) {
                                 case TacticalLines.RANGE_FAN:
                                 case TacticalLines.RANGE_FAN_SECTOR:
-                                case TacticalLines.RADAR_SEARCH: {
+                                case TacticalLines.RADAR_SEARCH:
+                                case TacticalLines.BBS_AREA:
+                                case TacticalLines.BBS_RECTANGLE: {
                                     shape.setFillColor(null);
                                     break;
                                 }
@@ -770,6 +777,26 @@ export class clsUtility {
                                     break;
                                 }
 
+                            }
+                        }
+                        switch (lineType) {
+                            case TacticalLines.BS_ELLIPSE:
+                            case TacticalLines.BS_RECTANGLE: {
+                                //case TacticalLines.BBS_RECTANGLE:
+                                shape.setFillStyle(tg.get_FillStyle());
+                                shape.setFillColor(tg.get_FillColor());
+                                break;
+                            }
+
+                            case TacticalLines.BBS_RECTANGLE:
+                            case TacticalLines.PBS_RECTANGLE:
+                            case TacticalLines.PBS_SQUARE: {
+                                shape.setFillColor(null);
+                                break;
+                            }
+
+                            default: {
+                             break;
                             }
                         }
                     }
@@ -802,6 +829,7 @@ export class clsUtility {
         let result: boolean = false;
         try {
             switch (linetype) {
+                case TacticalLines.BS_LINE:
                 case TacticalLines.PAA_RECTANGULAR:
                 case TacticalLines.RECTANGULAR_TARGET:
                 case TacticalLines.CFL:
@@ -1140,6 +1168,12 @@ export class clsUtility {
 
                 }
 
+                //diagnostic
+                if(lineType==TacticalLines.BBS_POINT)
+                    if(j==0)
+                        shape.setLineColor(null);
+                //end section
+
 
                 shapeType = shape.getShapeType();
 
@@ -1208,10 +1242,15 @@ export class clsUtility {
                 case TacticalLines.LAUNCH_AREA:
                 case TacticalLines.DEFENDED_AREA_CIRCULAR:
                 case TacticalLines.SHIP_AOI_CIRCULAR:
+                case TacticalLines.PBS_ELLIPSE:
                 case TacticalLines.RECTANGULAR:
                 case TacticalLines.CUED_ACQUISITION:
+                case TacticalLines.PBS_RECTANGLE:
+                case TacticalLines.PBS_SQUARE:
                 case TacticalLines.CIRCULAR:
+                case TacticalLines.PBS_CIRCLE:
                 case TacticalLines.BDZ:
+                case TacticalLines.BBS_POINT:
                 case TacticalLines.FSA_CIRCULAR:
                 case TacticalLines.NOTACK:
                 case TacticalLines.FFA_CIRCULAR:
@@ -1583,6 +1622,7 @@ export class clsUtility {
                 case TacticalLines.DOUBLEA:
                 case TacticalLines.LWFENCE:
                 case TacticalLines.HWFENCE:
+                case TacticalLines.BBS_LINE:
                 case TacticalLines.SINGLEC:
                 case TacticalLines.DOUBLEC:
                 case TacticalLines.TRIPLE:
@@ -1995,6 +2035,17 @@ export class clsUtility {
      */
     public static isAutoshape(tg: TGLight): boolean {
         try {
+            switch(tg.get_LineType())
+            {
+                case TacticalLines.BBS_RECTANGLE:
+                case TacticalLines.BS_RECTANGLE:
+                case TacticalLines.BS_ELLIPSE:
+                case TacticalLines.PBS_CIRCLE:
+                case TacticalLines.BS_CROSS:
+                case TacticalLines.BS_BBOX:
+                case TacticalLines.BBS_POINT:
+                    return true;
+            }
             let msInfo: MSInfo = MSLookup.getInstance().getMSLInfo(tg.get_SymbolId());
             if (msInfo == null || clsUtility.IsChange1Area(tg.get_LineType())) {
                 return false;
@@ -2406,6 +2457,7 @@ export class clsUtility {
                 case TacticalLines.DOUBLEA:
                 case TacticalLines.LWFENCE:
                 case TacticalLines.HWFENCE:
+                case TacticalLines.BBS_LINE:
                 case TacticalLines.SINGLEC:
                 case TacticalLines.DOUBLEC:
                 case TacticalLines.TRIPLE:

@@ -292,7 +292,8 @@ export class clsRenderer2 {
                 else {
                     //this will help with click-drag mode
                     if (tg.Pixels.length < 2) {
-                        return null;
+                        if(lineType != TacticalLines.BS_CROSS)
+                            return null;
                     }
 
 

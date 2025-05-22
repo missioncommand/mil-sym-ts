@@ -2566,7 +2566,15 @@ export class Modifier2 {
                 case TacticalLines.CIRCULAR:
                 case TacticalLines.RECTANGULAR_TARGET:
                 case TacticalLines.LINE:
-                case TacticalLines.ASLTXING: {
+                case TacticalLines.ASLTXING:
+                case TacticalLines.BS_LINE:
+                case TacticalLines.BS_AREA:
+                case TacticalLines.BBS_LINE:
+                case TacticalLines.BBS_AREA:
+                case TacticalLines.PBS_CIRCLE:
+                case TacticalLines.PBS_ELLIPSE:
+                case TacticalLines.PBS_RECTANGLE:
+                case TacticalLines.BBS_POINT: {
                     origPoints = lineutility.getDeepCopy(tg.Pixels);
                     break;
                 }
@@ -2660,6 +2668,48 @@ export class Modifier2 {
                 case TacticalLines.PL: {
                     Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
                     Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
+                    break;
+                }
+
+                case TacticalLines.BS_LINE:
+                case TacticalLines.BBS_LINE: {
+                    if (tg.get_T1() == null || tg.get_T1() == "") {
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
+                    } else {
+                        if (tg.get_T1() == "1") {
+                            for (j = 0; j < tg.Pixels.length - 1; j++) {
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, tg.Pixels[j], tg.Pixels[j + 1], false);
+                            }
+                        } else if (tg.get_T1() == "2") {
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
+                        } else if (tg.get_T1() == "3") {
+                            //either end of the polyline
+                            dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                            stringWidth = metrics.stringWidth(tg.get_Name());
+                            stringWidth /= 2;
+                            pt2 = lineutility.ExtendAlongLineDouble2(pt1, pt0, dist + stringWidth);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt2, pt2, false);
+                            dist = lineutility.CalcDistanceDouble(ptNextToLast, ptLast);
+                            pt2 = lineutility.ExtendAlongLineDouble2(ptNextToLast, ptLast, dist + stringWidth);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt2, pt2, false);
+                            //the intermediate points
+                            for (j = 1; j < tg.Pixels.length - 1; j++) {
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, tg.Pixels[j], tg.Pixels[j], false);
+                            }
+                        } else //t1 is set inadvertantly or for other graphics
+                        {
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
+                        }
+                    }
+                    break;
+                }
+
+                case TacticalLines.BS_AREA:
+                case TacticalLines.BBS_AREA: {
+                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
                     break;
                 }
 
@@ -3061,6 +3111,14 @@ export class Modifier2 {
                 case TacticalLines.RECTANGULAR:
                 case TacticalLines.CIRCULAR: {
                     Modifier2.AddIntegralAreaModifier(tg, ap, Modifier2.area, 0, pt0, pt0, false);
+                    break;
+                }
+
+                case TacticalLines.PBS_CIRCLE:
+                case TacticalLines.PBS_ELLIPSE:
+                case TacticalLines.PBS_RECTANGLE:
+                case TacticalLines.BBS_POINT: {
+                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt0, pt0, false);
                     break;
                 }
 
@@ -4053,6 +4111,8 @@ export class Modifier2 {
                 return;
             }
             switch (tg.get_LineType()) {
+                case TacticalLines.BS_RECTANGLE:
+                case TacticalLines.BBS_RECTANGLE:
                 case TacticalLines.CONVOY:
                 case TacticalLines.HCONVOY:
                 case TacticalLines.BREACH:
@@ -4078,6 +4138,7 @@ export class Modifier2 {
                 case TacticalLines.CUED_ACQUISITION:
                 case TacticalLines.CIRCULAR:
                 case TacticalLines.BDZ:
+                case TacticalLines.BBS_POINT:
                 case TacticalLines.FSA_CIRCULAR:
                 case TacticalLines.NOTACK:
                 case TacticalLines.ATI_CIRCULAR:
@@ -4189,6 +4250,17 @@ export class Modifier2 {
 
             Modifier2.shiftModifierPath(tg, pt0, pt1, ptLast, ptNextToLast);
             switch (linetype) {
+                case TacticalLines.BS_RECTANGLE:
+                case TacticalLines.BBS_RECTANGLE:{
+                    pts = new POINT2[4];
+                    for (j = 0; j < 4; j++) {
+                        pts[j] = tg.Pixels[j];
+                    }
+                    ptCenter = lineutility.CalcCenterPointDouble2(pts, 4);
+                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.125 * csFactor, ptCenter, ptCenter, false);
+                    break;
+                }
+                
                 case TacticalLines.CONVOY:
                 case TacticalLines.HCONVOY: {
                     pt2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[3], 0);

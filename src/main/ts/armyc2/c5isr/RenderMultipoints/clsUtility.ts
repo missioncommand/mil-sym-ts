@@ -60,7 +60,15 @@ export class clsUtility {
             //                    return;
             if (clsUtilityJTR.isClosedPolygon(lineType) === false) {
                 if (clsUtilityJTR.IsChange1Area(lineType) === false) {
-                    return;
+                    switch(lineType)
+                    {
+                        case TacticalLines.BBS_AREA:
+                        case TacticalLines.BBS_LINE:
+                        case TacticalLines.BBS_RECTANGLE:
+                            break;
+                        default:
+                            return;
+                    }
                 }
             }
 

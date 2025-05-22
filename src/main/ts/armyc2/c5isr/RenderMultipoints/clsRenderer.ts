@@ -1459,6 +1459,7 @@ export class clsRenderer {
                             shapes = clsUtilityCPOF.postClipShapes(tg, shapes, clipPoints);
                         }
                     }
+                    clsRenderer.resolvePostClippedShapes(tg,shapes);
 
                     //returns early if textSpecs are null
                     //currently the client is ignoring these

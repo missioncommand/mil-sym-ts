@@ -2329,6 +2329,91 @@ export class arraysupport {
             //resize the array and get the line array
             //for the specified non-channel line type
             switch (lineType) {
+                case TacticalLines.BBS_AREA: {
+                    lineutility.getExteriorPoints(pLinePoints, vblSaveCounter, lineType, false);
+                    acCounter = vblSaveCounter;
+                    break;
+                }
+                
+                case TacticalLines.BS_CROSS: {
+                    pt0 = new POINT2(pLinePoints[0]);
+                    pLinePoints[0] = new POINT2(pt0);
+                    pLinePoints[0].x -= 10;
+                    pLinePoints[1] = new POINT2(pt0);
+                    pLinePoints[1].x += 10;
+                    pLinePoints[1].style = 10;
+                    pLinePoints[2] = new POINT2(pt0);
+                    pLinePoints[2].y += 10;
+                    pLinePoints[3] = new POINT2(pt0);
+                    pLinePoints[3].y -= 10;
+                    acCounter = 4;
+                    break;
+                }  
+                
+                case TacticalLines.BS_RECTANGLE: {
+                    lineutility.CalcMBRPoints(pLinePoints, pLinePoints.length, pt0, pt2);   //pt0=ul, pt1=lr
+                    pt1 = new POINT2(pt0);
+                    pt1.x = pt2.x;
+                    pt3 = new POINT2(pt0);
+                    pt3.y = pt2.y;
+                    pLinePoints = new POINT2[5];
+                    pLinePoints[0] = new POINT2(pt0);
+                    pLinePoints[1] = new POINT2(pt1);
+                    pLinePoints[2] = new POINT2(pt2);
+                    pLinePoints[3] = new POINT2(pt3);
+                    pLinePoints[4] = new POINT2(pt0);
+                    acCounter = 5;
+                    break;
+                }
+                
+                case TacticalLines.BBS_RECTANGLE: {
+                    //double xmax=pLinePoints[0].x,xmin=pLinePoints[1].x,ymax=pLinePoints[0].y,ymin=pLinePoints[1].y;
+                    //double xmax=pLinePoints[2].x,xmin=pLinePoints[0].x,ymax=pLinePoints[2].y,ymin=pLinePoints[0].y;
+                    let buffer: double = pLinePoints[0].style;
+
+                    pOriginalLinePoints = new POINT2[5];
+                    pOriginalLinePoints[0] = new POINT2(pLinePoints[0]);
+                    pOriginalLinePoints[1] = new POINT2(pLinePoints[1]);
+                    pOriginalLinePoints[2] = new POINT2(pLinePoints[2]);
+                    pOriginalLinePoints[3] = new POINT2(pLinePoints[3]);
+                    pOriginalLinePoints[4] = new POINT2(pLinePoints[0]);
+
+                    //clockwise orientation
+                    pt0 = pLinePoints[0];
+                    pt0.x -= buffer;
+                    pt0.y -= buffer;
+                    pt1 = pLinePoints[1];
+                    pt1.x += buffer;
+                    pt1.y -= buffer;
+                    pt2 = pLinePoints[2];
+                    pt2.x += buffer;
+                    pt2.y += buffer;
+                    pt3 = pLinePoints[3];
+                    pt3.x -= buffer;
+                    pt3.y += buffer;
+                    pLinePoints = new POINT2[5];
+                    pLinePoints[0] = new POINT2(pt0);
+                    pLinePoints[1] = new POINT2(pt1);
+                    pLinePoints[2] = new POINT2(pt2);
+                    pLinePoints[3] = new POINT2(pt3);
+                    pLinePoints[4] = new POINT2(pt0);
+                    vblSaveCounter = 5;
+                    acCounter = 5;
+                    break;
+                }
+            
+                case TacticalLines.BS_ELLIPSE: {
+                    pt0 = pLinePoints[0];//the center of the ellipse
+                    pt1 = pLinePoints[1];//the width of the ellipse
+                    pt2 = pLinePoints[2];//the height of the ellipse
+                    //pLinePoints=getEllipsePoints(pt0,pt1,pt2);
+                    let azimuth: double = pLinePoints[3].x;
+                    pLinePoints = arraysupport.getRotatedEllipsePoints(pt0, pt1, pt2, azimuth, lineType);
+                    acCounter = 37;
+                    break;
+
+                }
+
                 case TacticalLines.OVERHEAD_WIRE: {
                     acCounter = arraysupport.getOverheadWire(tg, pLinePoints, vblSaveCounter);
                     break;
@@ -4296,6 +4381,8 @@ export class arraysupport {
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
                 case TacticalLines.SEIZE:
+                case TacticalLines.BS_RECTANGLE:
+                case TacticalLines.BBS_RECTANGLE:
                 //add these
                 case TacticalLines.AIRFIELD:
                 case TacticalLines.CORDONKNOCK:
@@ -4366,6 +4453,25 @@ export class arraysupport {
                         secondPoly[i] = pLinePoints[i + 8];
                     }
                     arraysupport.addPolyline(secondPoly, 6, shapes);
+                    break;
+                }
+
+                case TacticalLines.BBS_AREA:
+                case TacticalLines.BBS_RECTANGLE: {
+                    shape = new Shape2(Shape2.SHAPE_TYPE_FILL);
+                    shape.moveTo(pLinePoints[0]);
+                    for (j = 0; j < vblSaveCounter; j++) {
+                        shape.lineTo(pLinePoints[j]);
+                    }
+                    shapes.push(shape);
+
+                    shape = new Shape2(Shape2.SHAPE_TYPE_POLYLINE);
+                    shape.moveTo(pOriginalLinePoints[0]);
+                    for (j = 1; j < vblSaveCounter; j++) {
+                        shape.lineTo(pOriginalLinePoints[j]);
+                    }
+                    shapes.push(shape);
+
                     break;
                 }
 

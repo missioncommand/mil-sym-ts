@@ -389,6 +389,9 @@ export class clsUtilityGE {
 
 
             switch (linetype) {
+                case TacticalLines.BBS_AREA:
+                case TacticalLines.BBS_RECTANGLE:
+
                 case TacticalLines.CATK:
                 case TacticalLines.CATKBYFIRE:
                 case TacticalLines.AIRAOA:
