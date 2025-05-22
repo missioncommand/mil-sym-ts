@@ -40,6 +40,7 @@ import { clsRenderer2 } from "../RenderMultipoints/clsRenderer2"
 import { clsUtility } from "../RenderMultipoints/clsUtility"
 import { clsUtilityCPOF } from "../RenderMultipoints/clsUtilityCPOF"
 import { clsUtilityGE } from "../RenderMultipoints/clsUtilityGE"
+import { BasicShapes } from "../JavaLineArray/BasicShapes";
 
 /**
  * Rendering class
@@ -105,6 +106,341 @@ export class clsRenderer {
             }
         }
         return coords;
+    }
+
+        /**
+     * Build a tactical graphic object from the client MilStdSymbol
+     *
+     * @param milStd MilstdSymbol object
+     * @param converter geographic to pixels converter
+     * @param lineType {@link BasicShapes}
+     * @return tactical graphic
+     */
+    public static createTGLightFromMilStdSymbolBasicShape(milStd: MilStdSymbol,
+                                                                converter: IPointConversion,
+                                                                   lineType: int): TGLight {
+        let tg: TGLight = new TGLight();
+        try {
+            let useLineInterpolation: boolean = milStd.getUseLineInterpolation();
+            tg.set_UseLineInterpolation(useLineInterpolation);
+            tg.set_LineType(lineType);
+            let status: string = tg.get_Status();
+            tg.set_VisibleModifiers(true);
+            //set tg latlongs and pixels
+            clsRenderer.setClientCoords(milStd, tg);
+            //build tg.Pixels
+            tg.Pixels = clsUtility.LatLongToPixels(tg.LatLongs, converter);
+            //tg.set_Font(new Font("Arial", Font.PLAIN, 12));
+            let r: RendererSettings = RendererSettings.getInstance();
+            let type: int = r.getMPLabelFontType();
+            let name: string = r.getMPLabelFontName();
+            let sz: int = r.getMPLabelFontSize();
+            let font: Font = new Font(name, type, sz);
+            tg.set_Font(font);
+            tg.set_FillColor(milStd.getFillColor());
+            tg.set_LineColor(milStd.getLineColor());
+            tg.set_LineThickness(milStd.getLineWidth());
+            tg.set_TexturePaint(milStd.getFillStyle());
+            tg.set_Fillstyle(milStd.getPatternFillType());
+            tg.set_patternScale(milStd.getPatternScale());
+
+            tg.setIconSize(milStd.getUnitSize());
+            tg.set_KeepUnitRatio(milStd.getKeepUnitRatio());
+
+            tg.set_FontBackColor(Color.WHITE);
+            tg.set_TextColor(milStd.getTextColor());
+            if (milStd.getModifier(Modifiers.W_DTG_1) != null) {
+                tg.set_DTG(milStd.getModifier(Modifiers.W_DTG_1));
+            }
+            if (milStd.getModifier(Modifiers.W1_DTG_2) != null) {
+                tg.set_DTG1(milStd.getModifier(Modifiers.W1_DTG_2));
+            }
+            if (milStd.getModifier(Modifiers.H_ADDITIONAL_INFO_1) != null) {
+                tg.set_H(milStd.getModifier(Modifiers.H_ADDITIONAL_INFO_1));
+            }
+            if (milStd.getModifier(Modifiers.H1_ADDITIONAL_INFO_2) != null) {
+                tg.set_H1(milStd.getModifier(Modifiers.H1_ADDITIONAL_INFO_2));
+            }
+            if (milStd.getModifier(Modifiers.H2_ADDITIONAL_INFO_3) != null) {
+                tg.set_H2(milStd.getModifier(Modifiers.H2_ADDITIONAL_INFO_3));
+            }
+            if (milStd.getModifier(Modifiers.T_UNIQUE_DESIGNATION_1) != null) {
+                tg.set_Name(milStd.getModifier(Modifiers.T_UNIQUE_DESIGNATION_1));
+            }
+            if (milStd.getModifier(Modifiers.T1_UNIQUE_DESIGNATION_2) != null) {
+                tg.set_T1(milStd.getModifier(Modifiers.T1_UNIQUE_DESIGNATION_2));
+            }
+            if (milStd.getModifier(Modifiers.V_EQUIP_TYPE) != null) {
+                tg.set_V(milStd.getModifier(Modifiers.V_EQUIP_TYPE));
+            }
+            if (milStd.getModifier(Modifiers.AS_COUNTRY) != null) {
+                tg.set_AS(milStd.getModifier(Modifiers.AS_COUNTRY));
+            }
+            if (milStd.getModifier(Modifiers.AP_TARGET_NUMBER) != null) {
+                tg.set_AP(milStd.getModifier(Modifiers.AP_TARGET_NUMBER));
+            }
+            if (milStd.getModifier(Modifiers.Y_LOCATION) != null) {
+                tg.set_Location(milStd.getModifier(Modifiers.Y_LOCATION));
+            }
+            if (milStd.getModifier(Modifiers.N_HOSTILE) != null) {
+                tg.set_N(milStd.getModifier(Modifiers.N_HOSTILE));
+            }
+            tg.set_UseDashArray(milStd.getUseDashArray());
+            tg.set_UseHatchFill(milStd.getUseFillPattern());
+            //tg.set_UsePatternFill(milStd.getUseFillPattern());
+            tg.set_HideOptionalLabels(milStd.getHideOptionalLabels());
+            let isClosedArea: boolean = clsUtilityJTR.isClosedPolygon(lineType);
+
+            if (isClosedArea) {
+                clsUtilityJTR.ClosePolygon(tg.Pixels);
+                clsUtilityJTR.ClosePolygon(tg.LatLongs);
+            }
+
+            let strXAlt: string = "";
+            //construct the H1 and H2 modifiers for sector from the mss AM, AN, and X arraylists
+            if (lineType == TacticalLines.BS_ELLIPSE) {
+                let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                let AN: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AN_AZIMUTH);
+                //ensure array length 3
+                let r2: double =0;
+                let b: double =0;
+                if(AM.length==1)
+                {
+                    r2=AM[0];
+                    AM.push(r2);
+                    AM.push(0);
+                }
+                else if(AM.length==2)
+                {
+                    r2=AM[0];
+                    b=AM[1];
+                    AM[1] = r2;
+                    AM.push(b);
+                }
+                if (AN == null) {
+                    AN = [];
+                }
+                if (AN.length < 1) {
+                    AN.push(0);
+                }
+                if (AM != null && AM.length >= 2 && AN != null && AN.length >= 1) {
+                    let ptAzimuth: POINT2 = new POINT2(0, 0);
+                    ptAzimuth.x = AN[0];
+                    let ptCenter: POINT2 = tg.Pixels[0];
+                    let pt0: POINT2 = mdlGeodesic.geodesic_coordinate(tg.LatLongs[0], AM[0], 90);//semi-major axis
+                    let pt1: POINT2 = mdlGeodesic.geodesic_coordinate(tg.LatLongs[0], AM[1], 0);//semi-minor axis
+                    let pt02d: Point2D = new Point2D(pt0.x, pt0.y);
+                    let pt12d: Point2D = new Point2D(pt1.x, pt1.y);
+                    pt02d = converter.GeoToPixels(pt02d);
+                    pt12d = converter.GeoToPixels(pt12d);
+                    pt0 = new POINT2(pt02d.getX(), pt02d.getY());
+                    pt1 = new POINT2(pt12d.getX(), pt12d.getY());
+                    tg.Pixels = [];
+                    tg.Pixels.push(ptCenter);
+                    tg.Pixels.push(pt0);
+                    tg.Pixels.push(pt1);
+                    tg.Pixels.push(ptAzimuth);
+                }
+                if(AM != null && AM.length>2)
+                {
+                    //use AM[2] for the buffer, so PBS_CIRCLE requires AM size 3 like PBS_ELLIPSE to use a buffer
+                    let dist: double=AM[2];
+                    let pt0: POINT2=mdlGeodesic.geodesic_coordinate(tg.LatLongs[0], dist, 45);   //azimuth 45 is arbitrary
+                    let pt02d: Point2D = new Point2D(tg.LatLongs[0].x,tg.LatLongs[0].y);
+                    let pt12d: Point2D = new Point2D(pt0.x, pt0.y);
+                    pt02d = converter.GeoToPixels(pt02d);
+                    pt12d = converter.GeoToPixels(pt12d);
+                    pt0=new POINT2(pt02d.getX(),pt02d.getY());
+                    let pt1: POINT2=new POINT2(pt12d.getX(),pt12d.getY());
+                    dist=lineutility.CalcDistanceDouble(pt0, pt1);
+                    //arraysupport will use line style to create the buffer shape
+                    tg.Pixels[0].style=Math.trunc(dist);
+                }
+            }
+            let j: int = 0;
+            if (lineType == TacticalLines.BBS_RECTANGLE || lineType == TacticalLines.BS_BBOX) {
+                let minLat: double = tg.LatLongs[0].y;
+                let maxLat: double = tg.LatLongs[0].y;
+                let minLong: double = tg.LatLongs[0].x;
+                let maxLong: double = tg.LatLongs[0].x;
+                for (j = 1; j < tg.LatLongs.length; j++) {
+                    if (tg.LatLongs[j].x < minLong) {
+                        minLong = tg.LatLongs[j].x;
+                    }
+                    if (tg.LatLongs[j].x > maxLong) {
+                        maxLong = tg.LatLongs[j].x;
+                    }
+                    if (tg.LatLongs[j].y < minLat) {
+                        minLat = tg.LatLongs[j].y;
+                    }
+                    if (tg.LatLongs[j].y > maxLat) {
+                        maxLat = tg.LatLongs[j].y;
+                    }
+                }
+                tg.LatLongs = [];
+                tg.LatLongs.push(new POINT2(minLong, maxLat));
+                tg.LatLongs.push(new POINT2(maxLong, maxLat));
+                tg.LatLongs.push(new POINT2(maxLong, minLat));
+                tg.LatLongs.push(new POINT2(minLong, minLat));
+                if (lineType == TacticalLines.BS_BBOX) {
+                    tg.LatLongs.push(new POINT2(minLong, maxLat));
+                }
+                tg.Pixels = clsUtility.LatLongToPixels(tg.LatLongs, converter);
+            }
+            //these have a buffer value in meters which we'll stuff tg.H2
+            //and use the style member of tg.Pixels to stuff the buffer width in pixels
+            switch (lineType) {
+                case TacticalLines.BBS_AREA:
+                case TacticalLines.BBS_LINE:
+                case TacticalLines.BBS_RECTANGLE:
+                    let H2: string = null;
+                    let dist: double = 0;
+                    let pt0: POINT2;
+                    let pt1: POINT2;//45 is arbitrary
+                    let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                    if (AM != null && AM.length > 0) {
+                        H2 = AM[0].toString();
+                        tg.set_H2(H2);
+                    }
+                    if (H2 != null && !(H2.length === 0)) {
+                        for (j = 0; j < tg.LatLongs.length; j++) {
+                            if (tg.LatLongs.length > j) {
+                                if (!isNaN(parseFloat(H2))) {
+                                    if (j == 0) {
+                                        dist = parseFloat(H2);
+                                        pt0 = new POINT2(tg.LatLongs[0]);
+                                        pt1 = mdlGeodesic.geodesic_coordinate(pt0, dist, 45);//45 is arbitrary
+                                        let pt02d: Point2D = new Point2D(pt0.x, pt0.y);
+                                        let pt12d: Point2D = new Point2D(pt1.x, pt1.y);
+                                        pt02d = converter.GeoToPixels(pt02d);
+                                        pt12d = converter.GeoToPixels(pt12d);
+                                        pt0.x = pt02d.getX();
+                                        pt0.y = pt02d.getY();
+                                        pt1.x = pt12d.getX();
+                                        pt1.y = pt12d.getY();
+                                        dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                                    }
+                                    tg.Pixels[j].style = Math.round(dist);
+                                } else {
+                                    tg.Pixels[j].style = 0;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (lineType == TacticalLines.PBS_ELLIPSE) //geo ellipse
+            {
+                let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                let AN: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AN_AZIMUTH);
+                if (AM != null && AM.length > 1) {
+                    let strAM: string = AM[0].toString(); // major axis
+                    tg.set_AM(strAM);
+                    let strAM1: string = AM[1].toString(); // minor axis
+                    tg.set_AM1(strAM1);
+                }
+                if (AN != null && AN.length > 0) {
+                    let strAN: string = AN[0].toString(); // rotation
+                    tg.set_AN(strAN);
+                }
+            }
+            switch (lineType) {
+                case TacticalLines.BBS_AREA:
+                case TacticalLines.BBS_LINE:
+                case TacticalLines.BBS_POINT:
+                case TacticalLines.BBS_RECTANGLE:
+                    if (tg.get_FillColor() == null) {
+                        tg.set_FillColor(Color.LIGHT_GRAY);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            switch (lineType) {
+                case TacticalLines.PBS_CIRCLE:
+                case TacticalLines.BBS_POINT:
+                    let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                    if (AM != null && AM.length > 0) {
+                        let strAM: string = String(AM[0]);
+                        //set width for rectangles or radius for circles
+                        tg.set_AM(strAM);
+                    } else if (lineType == TacticalLines.BBS_POINT && tg.LatLongs.length > 1) {
+                        let dist: double = mdlGeodesic.geodesic_distance(tg.LatLongs[0], tg.LatLongs[1], null, null);
+                        let strT1: string = String(dist);
+                        tg.set_T1(strT1);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (lineType == TacticalLines.PBS_RECTANGLE || lineType == TacticalLines.PBS_SQUARE) {
+                let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                let AN: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AN_AZIMUTH);
+                if (lineType == TacticalLines.PBS_SQUARE) //for square
+                {
+                    let r2: double=AM[0];
+                    let b: double=0;
+                    if(AM.length==1)
+                    {
+                        AM.push(r2);
+                        AM.push(b);
+                    }
+                    else if(AM.length==2)
+                    {
+                        b=AM[1];
+                        AM[1] = r2;
+                        AM.push(b);
+                    }
+                    else if(AM.length>2)
+                        AM[1] = r2;
+                }
+                //if all these conditions are not met we do not want to set any tg modifiers
+                if (lineType == TacticalLines.PBS_SQUARE) //square
+                {
+                    let am0: double = AM[0];
+                    if (AM.length == 1) {
+                        AM.push(am0);
+                    } else if (AM.length >= 2) {
+                        AM[1] = am0;
+                    }
+                }
+                if (AN == null) {
+                    AN = [];
+                }
+                if (AN.length === 0) {
+                    AN.push(0);
+                }
+
+                if (AM != null && AM.length > 1) {
+                    let strAM: string = String(AM[0]);    //width
+                    let strAM1: string = String(AM[1]);     //length
+                    //set width and length in meters for rectangular target
+                    tg.set_AM(strAM);
+                    tg.set_AM1(strAM1);
+                    //set attitude in degrees
+                    let strAN: string = String(AN[0]);
+                    tg.set_AN(strAN);
+                }
+                /*
+                if(AM.length>2)
+                {
+                    let strH1: string = string(AM.get(2));     //buffer size
+                    tg.set_H1(strH1);
+                }
+                 */
+            }
+        } catch (exc) {
+            if (exc instanceof Error) {
+               ErrorLogger.LogException("clsRenderer", "createTGLightFromBasicMilStdSymbol",
+                    new RendererException("Failed to build multipoint TG for " + lineType, exc));
+            } else {
+                throw exc;
+            }
+        }
+
+        return tg;
     }
 
     /**
@@ -647,7 +983,7 @@ export class clsRenderer {
                         /*
                         if(AM.length>2)
                         {
-                            String strH1 = Double.toString(AM[2]);     //buffer size
+                            let strH1: string = string(AM[2]);     //buffer size
                             tg.set_H1(strH1);
                         }
                          */
@@ -897,8 +1233,8 @@ export class clsRenderer {
                     } else {
                         if (clipArea instanceof Array) {
                             clipPoints = clipArea as Array<Point2D>;
-                            //double x0=clipPoints[0].getX(),y0=clipPoints[0].getY();
-                            //double w=clipPoints[1].getX()-x0,h=clipPoints[3].getY()-y0;
+                            //let x0: double=clipPoints[0].getX(),y0=clipPoints[0].getY();
+                            //let w: double=clipPoints[1].getX()-x0,h=clipPoints[3].getY()-y0;
                             //clipBounds = new Rectangle2D(x0, y0, w, h);
                             clipBounds = clsUtility.getMBR(clipPoints);
                         }
@@ -1003,7 +1339,7 @@ export class clsRenderer {
 
             //            if (coordsRight - coordsLeft > 180)
             //            {
-            //                double temp = coordsLeft;
+            //                let temp: double = coordsLeft;
             //                coordsLeft = coordsRight;
             //                coordsRight = temp;
             //                coordSpanIDL=true;
@@ -1269,7 +1605,7 @@ export class clsRenderer {
 
                     //            boolean shiftLines = Channels.getShiftLines();
                     //            if (shiftLines) {
-                    //                String affiliation = tg.get_Affiliation();
+                    //                let affiliation: string = tg.get_Affiliation();
                     //                Channels.setAffiliation(affiliation);
                     //            }
                     //CELineArray.setMinLength(2.5);    //2-27-2013
@@ -1632,6 +1968,38 @@ export class clsRenderer {
         }
     }
 
+    private static resolvePostClippedShapes(tg: TGLight, shapes: Array<Shape2>): void {
+        try {
+            //resolve the PBS and BBS shape properties after the post clip, regardless whether they were clipped
+            switch (tg.get_LineType()) {
+                case TacticalLines.BBS_RECTANGLE:
+                case TacticalLines.BBS_POINT:
+                case TacticalLines.BBS_LINE:
+                case TacticalLines.BBS_AREA:
+                case TacticalLines.PBS_RECTANGLE:
+                case TacticalLines.PBS_SQUARE:
+                    break;
+                default:
+                    return;
+            }
+            let fillColor: Color = tg.get_FillColor();
+            shapes[0].setFillColor(fillColor);
+            shapes[1].setFillColor(null);
+            let fillStyle: int = tg.get_FillStyle();
+            shapes[0].setFillStyle(0);
+            shapes[1].setFillStyle(fillStyle);
+            return;
+
+        } catch (exc) {
+            if (exc instanceof Error) {
+                ErrorLogger.LogException(clsRenderer._className, "resolvePostClippedShapes",
+                    new RendererException("Failed inside resolvePostClippedShapes", exc));
+            } else {
+                throw exc;
+            }
+        }
+    }
+
     /**
      * set the clip rectangle as an arraylist or a Rectangle2D depending on the
      * object
@@ -1737,7 +2105,7 @@ export class clsRenderer {
                     clsRenderer.reversePointsRevD(tg);
                     CELineArray.setClient("generic");
                     //            if (shiftLines) {
-                    //                String affiliation = tg.get_Affiliation();
+                    //                let affiliation: string = tg.get_Affiliation();
                     //                Channels.setAffiliation(affiliation);
                     //            }
                     //CELineArray.setMinLength(2.5);    //2-27-2013
