@@ -74,6 +74,16 @@ export class countsupport {
             lineutility.InitializePOINT2Array(pSquarePoints);
             //end delcarations
             switch (vbiDrawThis) {
+                case TacticalLines.BS_ELLIPSE: {
+                    count=37;
+                    break;
+                }
+
+                case TacticalLines.BS_CROSS: {
+                    count=4;
+                    break;
+                }
+
                 case TacticalLines.OVERHEAD_WIRE: {
                     count = vblCounter * 15;    //15 points per segment
                     break;
@@ -535,6 +545,11 @@ export class countsupport {
                 case TacticalLines.SFENCE:
                 case TacticalLines.DFENCE: {
                     count = Channels.GetTripleCountDouble(pLinePoints, vblCounter, vbiDrawThis);
+                    break;
+                }
+
+                case TacticalLines.BBS_LINE: {
+                    count = 2 * vblCounter;
                     break;
                 }
 

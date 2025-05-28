@@ -2,7 +2,46 @@
  * Class to provide the symbols with values corresponding to the Mil-Standard-2525 hierarchy.
  *
  */
-export class TacticalLines  {
+export class TacticalLines {
+    public static readonly BS_LINE = 10000000;
+    public static readonly BS_AREA = 11000000;
+    /**
+     * @deprecated
+     */
+    public static readonly BS_CROSS = 12000000;
+    /**
+     * @deprecated
+     */
+    public static readonly BS_ELLIPSE = 13000000;
+    public static readonly PBS_ELLIPSE = 13000001;
+    public static readonly PBS_CIRCLE = 13000002;
+    /**
+     * @deprecated
+     */
+    public static readonly BS_RECTANGLE = 14000000;
+    public static readonly PBS_RECTANGLE = 14000001;
+    /**
+     * @deprecated
+     */
+    public static readonly PBS_SQUARE = 14000002;
+    /**
+     * @deprecated
+     */
+    public static readonly BBS_LINE = 15000000;
+    /**
+     * @deprecated
+     */
+    public static readonly BBS_AREA = 15000001;
+    public static readonly BBS_POINT = 15000002;
+    /**
+     * @deprecated
+     */
+    public static readonly BBS_RECTANGLE = 15000003;
+    /**
+     * @deprecated
+     */
+    public static readonly BS_BBOX = 15000004;
+
     public static readonly PZ: number = 22138000;
     public static readonly LZ: number = 22137000;
     public static readonly DZ: number = 22135000;

@@ -24,7 +24,7 @@ import { RendererUtilities } from "../../renderer/utilities/RendererUtilities";
 import { mdlGeodesic } from "../../JavaTacticalRenderer/mdlGeodesic"
 import { POINT2 } from "../../JavaLineArray/POINT2";
 import { ref } from "../../JavaLineArray/ref"
-
+import { BasicShapes } from "../../JavaLineArray/BasicShapes";
 
 
 /**
@@ -427,7 +427,136 @@ export class WebRenderer /* extends Applet */ {
         return mSymbol;
     }
 
+    /**
+     * Renders all MilStd 2525 multi-point symbols, creating MilStdSymbol that contains the
+     * information needed to draw the symbol on the map.
+     * DOES NOT support RADARC, CAKE, TRACK etc...
+     * ArrayList&lt;Point2D&gt; milStdSymbol.getSymbolShapes[index].getPolylines()
+     * and 
+     * ShapeInfo = milStdSymbol.getModifierShapes[index]. 
+     * 
+     * 
+     * @param id
+     *            A unique identifier used to identify the symbol by Google map.
+     *            The id will be the folder name that contains the graphic.
+     * @param name
+     *            a string used to display to the user as the name of the
+     *            graphic being created.
+     * @param description
+     *            a brief description about the graphic being made and what it
+     *            represents.
+     * @param basicShapeType
+     *             {@link BasicShapes}
+     * @param controlPoints
+     *            The vertices of the graphics that make up the graphic. Passed
+     *            in the format of a string, using decimal degrees separating
+     *            lat and lon by a comma, separating coordinates by a space. The
+     *            following format shall be used "x1,y1[,z1] [xn,yn[,zn]]..."
+     * @param altitudeMode
+     *            Indicates whether the symbol should interpret altitudes as
+     *            above sea level or above ground level. Options are
+     *            "clampToGround", "relativeToGround" (from surface of earth),
+     *            "absolute" (sea level), "relativeToSeaFloor" (from the bottom
+     *            of major bodies of water).
+     * @param scale
+     *            A number corresponding to how many meters one meter of our map
+     *            represents. A value "50000" would mean 1:50K which means for
+     *            every meter of our map it represents 50000 meters of real
+     *            world distance.
+     * @param bbox
+     *            The viewable area of the map. Passed in the format of a string
+     *            "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
+     *            but can speed up rendering in some cases. example:
+     *            "-50.4,23.6,-42.2,24.2"
+     * @param modifiers
+     *            Used like:
+     *            modifiers.set(Modifiers.T_UNIQUE_DESIGNATION_1, "T");
+     *            Or
+     *            modifiers.set(Modifiers.AM_DISTANCE, "1000,2000,3000");
+     * @param attributes
+     * 			  Used like:
+     *            attributes.set(MilStdAttributes.LineWidth, "3");
+     *            Or
+     *            attributes.set(MilStdAttributes.LineColor, "#00FF00");
+     * @return MilStdSymbol
+     */
+    public static RenderBasicShapeAsMilStdSymbol(id: string, name: string, description: string, basicShapeType: int,
+        controlPoints: string, altitudeMode: string, scale: double, bbox: string, modifiers: Map<string, string>, attributes: Map<string, string>): MilStdSymbol {
+        let mSymbol: MilStdSymbol;
+        try {
+                if (SymbolUtilities.isBasicShape(basicShapeType))
+            mSymbol = MultiPointHandler.RenderBasicShapeAsMilStdSymbol(id, name, description, basicShapeType,
+                controlPoints, scale, bbox, modifiers, attributes);
+        } catch (ea) {
+            if (ea instanceof Error) {
+                mSymbol = null;
+                ErrorLogger.LogException("WebRenderer", "RenderMultiPointAsMilStdSymbol" + " - " + basicShapeType, ea, LogLevel.WARNING);
+            } else {
+                throw ea;
+            }
+        }
 
+        return mSymbol;
+    }
+
+        /**
+     * Renders all multi-point symbols, creating KML that can be used to draw
+     * it on a Google map.  Multipoint symbols cannot be draw the same 
+     * at different scales. For instance, graphics with arrow heads will need to 
+     * redraw arrowheads when you zoom in on it.  Similarly, graphics like a 
+     * Forward Line of Troops drawn with half circles can improve performance if 
+     * clipped when the parts of the graphic that aren't on the screen.  To help 
+     * readjust graphics and increase performance, this function requires the 
+     * scale and bounding box to help calculate the new locations.
+     * @param id A unique identifier used to identify the symbol by Google map. 
+     * The id will be the folder name that contains the graphic.
+     * @param name a string used to display to the user as the name of the 
+     * graphic being created.
+     * @param description a brief description about the graphic being made and 
+     * what it represents.
+     * @param basicShapeType {@link BasicShapes}
+     * @param controlPoints The vertices of the graphics that make up the
+     * graphic.  Passed in the format of a string, using decimal degrees 
+     * separating lat and lon by a comma, separating coordinates by a space.  
+     * The following format shall be used "x1,y1[,z1] [xn,yn[,zn]]..."
+     * @param altitudeMode Indicates whether the symbol should interpret 
+     * altitudes as above sea level or above ground level. Options are 
+     * "clampToGround", "relativeToGround" (from surface of earth), "absolute" 
+     * (sea level), "relativeToSeaFloor" (from the bottom of major bodies of 
+     * water).
+     * @param scale A number corresponding to how many meters one meter of our 
+     * map represents. A value "50000" would mean 1:50K which means for every 
+     * meter of our map it represents 50000 meters of real world distance.
+     * @param bbox The viewable area of the map.  Passed in the format of a
+     * string "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
+     * but can speed up rendering in some cases.
+     * example: "-50.4,23.6,-42.2,24.2"
+     * @param modifiers {@link Map}, keyed using constants from Modifiers.
+     * Pass in comma delimited String for modifiers with multiple values like AM, AN &amp; X
+     * @param attributes {@link Map}, keyed using constants from MilStdAttributes.
+     * @param format An enumeration: 2 for GeoJSON.
+     * @return A JSON string representation of the graphic.
+     */
+    public static RenderBasicShape(id: string, name: string, description: string,
+        basicShapeType: int, controlPoints: string, altitudeMode: string,
+        scale: double, bbox: string, modifiers: Map<string, string>, attributes: Map<string, string>, format: int): string {
+        let output: string = "";
+        try {
+            JavaRendererUtilities.addAltModeToModifiersString(attributes, altitudeMode);
+            if (SymbolUtilities.isBasicShape(basicShapeType))
+                output = MultiPointHandler.RenderBasicShape(id, name, description, basicShapeType, controlPoints,
+                    scale, bbox, modifiers, attributes, format);
+        } catch (ea) {
+            if (ea instanceof Error) {
+                output = "{\"type\":'error',error:'There was an error creating the MilStdSymbol - " + ea.toString() + "'}";
+                ErrorLogger.LogException("WebRenderer", "RenderSymbol", ea, LogLevel.WARNING);
+            } else {
+                throw ea;
+            }
+        }
+
+        return output;
+    }
 
     /**
      * Given a symbol code meant for a single point symbol, returns the

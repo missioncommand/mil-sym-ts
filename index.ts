@@ -36,6 +36,8 @@ export { SymbolID } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SymbolID
 export { ShapeInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ShapeInfo";
 export { MilStdSymbol } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MilStdSymbol";
 
+export { BasicShapes } from "./src/main/ts/armyc2/c5isr/JavaLineArray/BasicShapes"
+
 export type { IPointConversion } from "./src/main/ts/armyc2/c5isr/renderer/utilities/IPointConversion";
 export { PointConverter3D } from "./src/main/ts/armyc2/c5isr/renderer/utilities/PointConverter3D";
 export { clsRenderer } from "./src/main/ts/armyc2/c5isr/RenderMultipoints/clsRenderer";

@@ -785,6 +785,11 @@ export class Channels {
                     break;
                 }
 
+                case TacticalLines.BBS_LINE: {
+                    lTotal = 2 * vblCounter + 1;
+                    break;
+                }
+
                 default: {
                     lTotal = 2 * vblCounter;
                     break;
@@ -1050,6 +1055,7 @@ export class Channels {
                 case TacticalLines.DOUBLEC:
                 case TacticalLines.SINGLEC:
                 case TacticalLines.HWFENCE:
+                case TacticalLines.BBS_LINE:
                 case TacticalLines.LWFENCE:
                 case TacticalLines.DOUBLEA:
                 case TacticalLines.UNSP:
@@ -1525,7 +1531,7 @@ export class Channels {
             //end declarations
 
             //initializations
-            if (vblChannelWidth < 5) {
+            if (vblChannelWidth < 5 && vbiDrawThis != TacticalLines.BBS_LINE) {
                 vblChannelWidth = 5;
             }
 
@@ -1629,6 +1635,7 @@ export class Channels {
                 case TacticalLines.DOUBLEC:
                 case TacticalLines.SINGLEC:
                 case TacticalLines.HWFENCE:
+                case TacticalLines.BBS_LINE:
                 case TacticalLines.LWFENCE:
                 case TacticalLines.UNSP:
                 case TacticalLines.DOUBLEA:
@@ -1653,6 +1660,7 @@ export class Channels {
                         case TacticalLines.DOUBLEC:
                         case TacticalLines.SINGLEC:
                         case TacticalLines.HWFENCE:
+                        case TacticalLines.BBS_LINE:
                         case TacticalLines.LWFENCE:
                         case TacticalLines.UNSP:
                         case TacticalLines.DOUBLEA:
@@ -2035,7 +2043,8 @@ export class Channels {
                     lEllipseCounter = vblLowerCounter + vblUpperCounter;
                     //following section only for lines with repeating features, e.g. DOUBLEA
                     //if(segments!=null &&
-                    if (vbiDrawThis !== TacticalLines.CHANNEL &&
+                    if (vbiDrawThis != TacticalLines.BBS_LINE &&
+                        vbiDrawThis !== TacticalLines.CHANNEL &&
                         vbiDrawThis !== TacticalLines.CHANNEL_DASHED &&
                         vbiDrawThis !== TacticalLines.CHANNEL_FLARED &&
                         vbiDrawThis !== TacticalLines.SPT_STRAIGHT &&
@@ -2211,6 +2220,16 @@ export class Channels {
                             }
                         }
                     }
+                    break;
+                }
+
+                case TacticalLines.BBS_LINE: {
+                    pLinePoints = new POINT2[vblLowerCounter + vblUpperCounter + 1];
+                    for (j = 0; j < vblLowerCounter; j++)
+                        pLinePoints[j] = pLowerLinePoints[j];
+                    for (j = 0; j < vblUpperCounter; j++)
+                        pLinePoints[j + vblLowerCounter] = pUpperLinePoints[vblUpperCounter - 1 - j];
+                    pLinePoints[pLinePoints.length - 1] = pLinePoints[0];
                     break;
                 }
 
@@ -2740,6 +2759,17 @@ export class Channels {
                 shapes.unshift(...fillShapes); // shapes.addAll(0,fillShapes);
             }
 
+            //diagnostic
+            if(vbiDrawThis==TacticalLines.BBS_LINE)
+            {
+                //shapes.remove(1);
+                shape=new Shape2(Shape2.SHAPE_TYPE_POLYLINE);
+                shape.moveTo(pOriginalLinePoints[0]);
+                for(j=1;j<pOriginalLinePoints.length;j++)
+                    shape.lineTo(pOriginalLinePoints[j]);
+                shapes.push(shape);
+            }
+            //end section
 
             lResult = lResultCounter;
             //FillPoints(pLinePoints,pLinePoints.length);
@@ -2768,6 +2798,17 @@ export class Channels {
             let n: int = pLinePoints.length;
             let t: int = 0;
             switch (lineType) {
+                case TacticalLines.BBS_LINE: {
+                    shape=new Shape2(Shape2.SHAPE_TYPE_FILL);
+                    shape.moveTo(pLinePoints[0]);
+                    //for(j=1;j<pLinePoints.length;j++)
+                    for(j=1;j<n;j++)
+                    {
+                        shape.lineTo(pLinePoints[j]);
+                    }
+                    break;
+                }
+
                 case TacticalLines.CHANNEL:
                 case TacticalLines.CHANNEL_FLARED:
                 case TacticalLines.CHANNEL_DASHED: {
