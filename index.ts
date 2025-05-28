@@ -29,6 +29,7 @@ export { GENCLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/GENCLo
 export { MSLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSLookup";
 export { MSInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSInfo";
 export { SVGInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SVGInfo";
+export { SVGLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SVGLookup";
 export { SVGSymbolInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SVGSymbolInfo";
 export { SymbolUtilities } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SymbolUtilities";
 export { RendererSettings } from "./src/main/ts/armyc2/c5isr/renderer/utilities/RendererSettings";
