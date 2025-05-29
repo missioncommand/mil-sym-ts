@@ -117,7 +117,7 @@ export class RendererSettings {
     //acevedo - 11/29/2017 - adding option to render only 2 labels.
     private _TwoLabelOnly: boolean = false;
 
-    private _scaleMainIconWithoutSectorMods: boolean = false;
+    private _scaleMainIconWithoutSectorMods: boolean = true;
        
     private _patternScale: double = 1.0;
 

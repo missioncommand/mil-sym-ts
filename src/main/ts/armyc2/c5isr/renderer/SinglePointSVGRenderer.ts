@@ -751,7 +751,7 @@ export class SinglePointSVGRenderer {
 
             if (keepUnitRatio) {
                 if(msi.getDrawRule() == DrawRules.POINT1)//Action Points
-                    pixelSize = Math.ceil((pixelSize/1.5) * 1.5);
+                    pixelSize = Math.ceil((pixelSize/1.5) * 2.0);
                 else
                     pixelSize = Math.ceil((pixelSize/1.5) * 1.2);
             }

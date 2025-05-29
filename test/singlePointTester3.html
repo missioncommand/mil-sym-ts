@@ -588,7 +588,7 @@
 			//RendererSettings.setTextBackgroundMethod(RendererSettings.TextBackgroundMethod_COLORFILL);
 			//RendererSettings.setTextBackgroundMethod(RendererSettings.TextBackgroundMethod_OUTLINE);
 			//RendererSettings.setTextBackgroundMethod(RendererSettings.TextBackgroundMethod_OUTLINE_QUICK);
-            
+            RendererSettings.setOutlineSPControlMeasures(false);
             //RendererSettings.setOperationalConditionModifierType(RendererSettings.OperationalConditionModifierType_SLASH);
 
 	}
@@ -722,7 +722,7 @@ Size: <input id="tbSize" type="number" value="100" style="width: 4em"><br/>
 Keep Unit Ratio: <input id="cbKeepUnitRatio" type="checkbox" checked><br/>
 Labels:  <input id="cbLabels" type="checkbox"><br/>
 Draw as Icon:  <input id="cbDrawAsIcon" type="checkbox"><br/>
-Scale Internal Symbol:  <input id="cbScaleMainIcon" type="checkbox"><br/>
+Scale Internal Symbol:  <input id="cbScaleMainIcon" type="checkbox" checked><br/>
 <button id="btnClear" type='button' onclick='clearCanvas();' >Clear Canvas</button>
 <br/>
 <!-- <button id="btnRender" type='button' onclick='testRender();' disabled>Loading Page</button>-->
