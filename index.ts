@@ -1,11 +1,12 @@
-import gencUrl from './src/main/ts/armyc2/c5isr/data/genc.json';
-import msdUrl from './src/main/ts/armyc2/c5isr/data/msd.json';
-import mseUrl from './src/main/ts/armyc2/c5isr/data/mse.json';
-import svgdUrl from './src/main/ts/armyc2/c5isr/data/svgd.json';
-import svgeUrl from './src/main/ts/armyc2/c5isr/data/svge.json';
+import genc from './src/main/ts/armyc2/c5isr/data/genc.json';
+import msd from './src/main/ts/armyc2/c5isr/data/msd.json';
+import mse from './src/main/ts/armyc2/c5isr/data/mse.json';
+import svgd from './src/main/ts/armyc2/c5isr/data/svgd.json';
+import svge from './src/main/ts/armyc2/c5isr/data/svge.json';
 
-if(gencUrl && msdUrl && mseUrl && svgdUrl && svgeUrl)
+if(genc && msd && mse && svgd && svge)
   console.log("data files located");
+
 
 import { ErrorLogger } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ErrorLogger";
 import { GENCLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/GENCLookup";
@@ -124,6 +125,30 @@ export async function initialize(location?:string):Promise<any>
   }
 }
 
+export async function init(location?:string)
+{
+  initializing = true;
+  try
+  {
+    if(!initialized)
+    {
+      GENCLookup.setDataObject();//(genc);
+      MSLookup.setDataObject();//(msd,mse);
+      SVGLookup.setDataObject();//(svgd,svge);
+
+      if(GENCLookup.getInstance() && MSLookup.getInstance() && SVGLookup.getInstance())
+        initialized=true;
+    }
+  }
+  catch(e)
+  {
+      throw e;
+  }
+  finally
+  {
+    initializing = false;
+  }
+}
 /**
  * Returns true if renderer files are loaded and initialized.
  * @returns boolean
@@ -143,3 +168,13 @@ export function isReady():boolean
     return false;
   }
 }
+
+
+  try
+  {
+   //init("");
+  }
+  catch(e)
+  {
+    ErrorLogger.LogException("C5Ren","isReady()",e);
+  }

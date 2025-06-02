@@ -15,7 +15,7 @@ module.exports = {
       libraryTarget: 'umd',     
    },
    resolve: {
-      extensions: ['.ts', '.js'],
+      extensions: ['.ts', '.js', '.json'],
    },
    plugins: [
       new WebpackManifestPlugin({
@@ -24,24 +24,10 @@ module.exports = {
    module: {
       rules: [
          {
-            test: /\.json$/,
-            type: 'asset/resource',
-            generator: {
-               filename: 'data/[name].[contenthash][ext]' // Stores JSON separately in 'data/' folder
-            }
-         },
-         {
             test: /\.ts$/,
             use: 'ts-loader',
             exclude: /node_modules/,
          }
       ],
    }, 
-   /*plugins: [
-      new CopyPlugin({
-        patterns: [
-          { from: "./src/main/ts/armyc2/c5isr/data/*", to: "[name][ext]" }
-        ],
-      }),
-    ],//*/
 };

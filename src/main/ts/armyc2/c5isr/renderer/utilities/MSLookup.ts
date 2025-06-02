@@ -6,6 +6,9 @@ import { ErrorLogger } from "./ErrorLogger";
 import { LogLevel } from "./LogLevel";
 import { RendererUtilities } from "./RendererUtilities";
 
+import jsond from '../../data/msd.json';
+import jsone from '../../data/mse.json';
+
 /**
  * Class that holds all the  objects with symbol information
  */
@@ -56,6 +59,13 @@ export class MSLookup {
         promises.push(RendererUtilities.getData(urls[1]));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
         await Promise.all(promises).then(values => {MSLookup.msd = values[0];MSLookup.mse = values[1];}).catch(error => {throw error;})//*/
     }
+
+    public static setDataObject()
+    {
+        this.msd = jsond;
+        this.mse = jsone;
+    }
+
     /*
      * Holds SymbolDefs for all symbols. (basicSymbolID, Description, MinPoint, MaxPoints, etc...) Call
      * getInstance().
@@ -74,6 +84,8 @@ export class MSLookup {
     }
 
     private init(): void {
+        MSLookup.msd = jsond;
+        MSLookup.mse = jsone;
         if (MSLookup._initCalled === false) {
             MSLookup._initCalled = true;
             MSLookup._MSLookupD = new Map();

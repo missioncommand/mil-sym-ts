@@ -5,6 +5,8 @@ import { SymbolID } from "../../renderer/utilities/SymbolID"
 import { ErrorLogger } from "./ErrorLogger";
 import { RendererUtilities } from "./RendererUtilities";
 
+import jsond from '../../data/svgd.json';
+import jsone from '../../data/svge.json';
 
 export class SVGLookup
 {
@@ -53,6 +55,12 @@ export class SVGLookup
         await Promise.all(promises).then(values => {SVGLookup.svgd = values[0];SVGLookup.svge = values[1];}).catch(error => {throw error;})
     }
 
+    public static setDataObject()
+    {
+        this.svgd = jsond;
+        this.svge = jsone;
+    }
+
     private constructor() {
         
         this.init();
@@ -67,6 +75,9 @@ export class SVGLookup
     }
 
     private init(): void {
+        SVGLookup.svgd = jsond;
+        SVGLookup.svge = jsone;
+
         if (SVGLookup._initCalled === false) {
             SVGLookup._initCalled = true;
             SVGLookup._SVGLookupD = new Map();

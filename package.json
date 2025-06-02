@@ -4,6 +4,10 @@
   "description": "MIL-STD-2525 D/E symbol rendering TypeScript library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/data",
+    "dist/manifest.json"
+  ],
   "resolveJsonModule": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

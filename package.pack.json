@@ -4,6 +4,10 @@
   "description": "MIL-STD-2525 D/E symbol rendering TypeScript library",
   "main": "C5Ren.js",
   "types": "C5Ren.d.ts",
+  "files": [
+    "data",
+    "manifest.json"
+  ],
   "author": "C5ISR ESI",
   "license": "Apache-2.0",
   "keywords": [
