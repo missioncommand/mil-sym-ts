@@ -7,6 +7,11 @@ import { RendererSettings } from "../../renderer/utilities/RendererSettings"
 import { ShapeUtilities } from "../../renderer/utilities/ShapeUtilities";
 import { RectUtilities } from "./RectUtilities";
 
+const isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+
+import { Canvas, createCanvas } from 'canvas';
+
 /**
  *
  *
@@ -18,9 +23,9 @@ export class TextInfo {
 	protected _descent: double = 0;
 	protected _aboveBaseHeight: double = 0;
 	
-	public constructor(text: string, x: int, y: int, font: Font | string, context: OffscreenCanvasRenderingContext2D | null)
+	public constructor(text: string, x: int, y: int, font: Font | string, context: OffscreenCanvasRenderingContext2D | any | null)
 	{
-		let ctx:OffscreenCanvasRenderingContext2D;
+		let ctx:any;//OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
 		let tm:TextMetrics;
 		let top:number;
 		let left:number;
@@ -32,7 +37,12 @@ export class TextInfo {
 
 		if(context == null)
 		{
-			let osc:OffscreenCanvas = new OffscreenCanvas(10,10);
+			let osc:OffscreenCanvas | Canvas
+			if(isBrowser)
+				osc = new OffscreenCanvas(10,10);
+			else
+				osc = createCanvas(10,10);
+			
 			ctx = osc.getContext("2d");
 			
 		}
@@ -48,21 +58,41 @@ export class TextInfo {
 
 		this._text = text;
 		tm = ctx.measureText(text);
-		top = y - tm.fontBoundingBoxAscent;
+		let atm:any;
+		if(!isBrowser && isNode)
+		{
+			atm = ctx.measureText("Ijq");
+		}
+		if(isBrowser)
+			top = y - tm.fontBoundingBoxAscent;
+		else
+			top = y - atm.actualBoundingBoxAscent;
+
 		left = x;
 		this._location = new Point2D(x, y);
 
 		width = tm.width;
 		width = tm.actualBoundingBoxRight + tm.actualBoundingBoxLeft;
-		height = tm.fontBoundingBoxDescent + tm.fontBoundingBoxAscent;
+
+		if(isBrowser)
+		{
+			height = tm.fontBoundingBoxDescent + tm.fontBoundingBoxAscent;
+			this._descent = tm.fontBoundingBoxDescent;
+			this._aboveBaseHeight = tm.fontBoundingBoxAscent;
+		}
+		else
+		{
+			height = atm.actualBoundingBoxDescent + atm.actualBoundingBoxAscent;
+			this._descent = atm.actualBoundingBoxDescent;
+			this._aboveBaseHeight = atm.actualBoundingBoxAscent;
+		}
 		bounds = new Rectangle2D(top, left, width, height);
 
 		RectUtilities.grow(bounds,1);
 
 		this._bounds = bounds;
-		this._descent = tm.fontBoundingBoxDescent;//this._bounds.getHeight() + this._bounds.getY();
-		this._aboveBaseHeight = tm.fontBoundingBoxAscent;//this._bounds.getY() * -1;
-
+		//console.log(this._location);
+		//console.log(bounds);
 	}
 
 	public setLocation(x: int, y: int): void {

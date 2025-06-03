@@ -47,7 +47,7 @@ export { RendererUtilities } from "./src/main/ts/armyc2/c5isr/renderer/utilities
 export { MilStdIconRenderer } from "./src/main/ts/armyc2/c5isr/renderer/MilStdIconRenderer";
 export { WebRenderer } from "./src/main/ts/armyc2/c5isr/web/render/WebRenderer";
 
-
+import { createCanvas } from 'canvas';
 
 /**
  * Module for rendering 2525D/E symbology
@@ -67,6 +67,7 @@ let initializing:boolean = false;
  */
 export async function initialize(location?:string):Promise<any>
 {
+  let canvse:any = createCanvas(10,10);
   initializing = true;
   try
   {
@@ -112,6 +113,31 @@ export async function initialize(location?:string):Promise<any>
 
       await Promise.all(promises).then(values => {GENCLookup.getInstance();MSLookup.getInstance();SVGLookup.getInstance()}).catch(error => {throw error;});
       initialized=true;
+    }
+  }
+  catch(e)
+  {
+      throw e;
+  }
+  finally
+  {
+    initializing = false;
+  }
+}
+
+export async function init(location?:string)
+{
+  initializing = true;
+  try
+  {
+    if(!initialized)
+    {
+      GENCLookup.setDataObject();//(genc);
+      MSLookup.setDataObject();//(msd,mse);
+      SVGLookup.setDataObject();//(svgd,svge);
+
+      if(GENCLookup.getInstance() && MSLookup.getInstance() && SVGLookup.getInstance())
+        initialized=true;
     }
   }
   catch(e)

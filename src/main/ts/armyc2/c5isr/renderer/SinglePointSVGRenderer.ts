@@ -1,3 +1,4 @@
+import { createCanvas } from "canvas";
 import { type int, type float, type double } from "../graphics2d/BasicTypes";
 
 import { Point } from "../graphics2d/Point"
@@ -40,9 +41,11 @@ export class SinglePointSVGRenderer {
     private readonly TAG: string = "SinglePointSVGRenderer";
     private static _instance: SinglePointSVGRenderer;
     public static readonly RENDERER_ID: string = "2525D";
-    private _buffer: OffscreenCanvas;
-    private _fontRenderContext: OffscreenCanvasRenderingContext2D;
+    private _buffer: OffscreenCanvas | any;
+    private _fontRenderContext: OffscreenCanvasRenderingContext2D | any;
 
+    private static isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+    private static isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
     public constructor() {
 
@@ -55,7 +58,11 @@ export class SinglePointSVGRenderer {
 
             if (this._buffer == null || this._buffer === undefined) 
             {
-                this._buffer = new OffscreenCanvas(8,8);
+                if(SinglePointSVGRenderer.isBrowser)
+                    this._buffer = new OffscreenCanvas(8,8);
+                else
+                    this._buffer = createCanvas(8,8);
+
                 this._fontRenderContext = this._buffer.getContext("2d");
             }
 

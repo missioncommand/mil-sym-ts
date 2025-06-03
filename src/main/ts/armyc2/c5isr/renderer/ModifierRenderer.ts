@@ -53,6 +53,7 @@ import { ShapeUtilities } from "./utilities/ShapeUtilities";
 import { SVGTextInfo } from "./utilities/SVGTextInfo";
 import { ShapeTypes } from "./shapes/types";
 
+import { createCanvas } from 'canvas';
 
 
 /**
@@ -68,10 +69,13 @@ export class ModifierRenderer implements SettingsEventListener {
     private static _modifierFontHeight: float = 11;
     private static _modifierFontDescent: float = 2;
 
+    private static isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+    private static isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
-    private static _bmp: OffscreenCanvas = new OffscreenCanvas(2, 2);
-    private static _frc: OffscreenCanvasRenderingContext2D = this._bmp.getContext("2d");
+    
 
+    private static _bmp: any;//OffscreenCanvas = new OffscreenCanvas(2, 2);
+    private static _frc: any;//OffscreenCanvasRenderingContext2D = this._bmp.getContext("2d");
 
 
     /*public onSettingsChanged(sce: SettingsChangedEvent): void {
@@ -93,10 +97,24 @@ export class ModifierRenderer implements SettingsEventListener {
             ModifierRenderer._modifierFont = RendererSettings.getInstance().getLabelFont();
             ModifierRenderer._frc.font = ModifierRenderer._modifierFont.toString();
 
+            //this should work for browser or node since we're passing text that should have the highest and lowest values
             let tm: TextMetrics = ModifierRenderer._frc.measureText("Hj");
-
-            ModifierRenderer._modifierFontHeight = tm.fontBoundingBoxAscent;//fm.getHeight();
-            ModifierRenderer._modifierFontDescent = tm.fontBoundingBoxDescent;//fm.getMaxDescent();
+                ModifierRenderer._modifierFontHeight = tm.actualBoundingBoxAscent;//fm.getHeight();
+                ModifierRenderer._modifierFontDescent = tm.actualBoundingBoxDescent;//fm.getMaxDescent();
+            
+            /*if(ModifierRenderer.isBrowser)
+            {
+                let tm: TextMetrics = ModifierRenderer._frc.measureText("Hj");
+                ModifierRenderer._modifierFontHeight = tm.fontBoundingBoxAscent;//fm.getHeight();
+                ModifierRenderer._modifierFontDescent = tm.fontBoundingBoxDescent;//fm.getMaxDescent();
+            }
+            else
+            {
+                let tm: TextMetrics = ModifierRenderer._frc.measureText("Hj");
+                ModifierRenderer._modifierFontHeight = tm.actualBoundingBoxAscent;//fm.getHeight();
+                ModifierRenderer._modifierFontDescent = tm.actualBoundingBoxDescent;//fm.getMaxDescent();
+            }//*/
+            
         }
     }
 
@@ -110,7 +128,18 @@ export class ModifierRenderer implements SettingsEventListener {
      * @return the instance
      */
     public static getInstance(): ModifierRenderer {
-        if (!ModifierRenderer._instance) {
+        if (!ModifierRenderer._instance) 
+        {
+
+            if(ModifierRenderer.isBrowser)
+            {
+                ModifierRenderer._bmp = new OffscreenCanvas(2, 2);
+            }
+            else
+            {
+                ModifierRenderer._bmp = createCanvas(2, 2);
+            }
+            ModifierRenderer._frc = ModifierRenderer._bmp.getContext("2d");
 
             ModifierRenderer._instance = new ModifierRenderer();
             RendererSettings.getInstance().addEventListener(ModifierRenderer._instance);

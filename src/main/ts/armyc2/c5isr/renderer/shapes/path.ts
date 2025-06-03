@@ -299,7 +299,7 @@ export class Path
      * @param context
      * @return  
      */
-    private setPath(context:OffscreenCanvasRenderingContext2D){
+    private setPath(context:OffscreenCanvasRenderingContext2D | any){
 
         //context.beginPath();
         var size = this._actions.length;

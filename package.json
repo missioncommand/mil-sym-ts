@@ -14,6 +14,7 @@
     "bundleESR": "node buildESR.js",
     "bundleWP": "webpack --config webpack.config.js",
     "bundleWPR": "webpack --config webpackr.config.js",
+    "bundleWPN": "webpack --config webpackn.config.js",
     "bundleDTS": "npx dts-bundle-generator -o dist/C5Ren.d.ts index.ts",
     "pack": "copy package.pack.json dist\\package.json && copy README.md dist\\README.md && copy LICENSE dist\\LICENSE && cd dist && del index.* && del tsconfig.tsbuildinfo && rd /s /q src && npm pack"
   },
@@ -31,11 +32,15 @@
     "dts-bundle-generator": "^9.5.1",
     "file-loader": "^6.2.0",
     "jszip": "^3.10.1",
+    "node-loader": "^2.1.0",
     "ts-loader": "^9.5.1",
     "tslib": "^2.6.3",
     "typedoc": "^0.26.3",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4",
     "webpack-manifest-plugin": "^5.0.1"
+  },
+  "dependencies": {
+    "canvas": "^3.1.0"
   }
 }

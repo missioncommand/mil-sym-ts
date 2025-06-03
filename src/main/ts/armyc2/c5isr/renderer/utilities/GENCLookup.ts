@@ -1,6 +1,8 @@
 import { ErrorLogger } from './ErrorLogger';
 import { RendererUtilities } from './RendererUtilities';
 
+import json from '../../data/genc.json';
+
 /**
  * Utility class that takes the 3 digit country code from the symbol ID and returns the 3 character string representation
  * of that country. For example, 840 turns into "USA" for the United States.
@@ -33,6 +35,11 @@ export class GENCLookup {
         RendererUtilities.getData(url).then(result => {this.genc = result;}).catch((err) => {ErrorLogger.LogException("GENCLookup","loadData",err)});
     }
 
+    public static setDataObject()
+    {
+        this.genc = json;
+    }
+
     private constructor() 
     {
         this.init();
@@ -51,6 +58,8 @@ export class GENCLookup {
     }
 
     private init(): void {
+        GENCLookup.genc = json;
+        
         type gencIn = 
         {
             "3char": string;

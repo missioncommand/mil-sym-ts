@@ -16,10 +16,10 @@ export class RendererUtilities {
 
     private static readonly OUTLINE_SCALING_FACTOR: float = 2.5;
 
-    public static async imgToBase64String(img: OffscreenCanvas): Promise<string> 
+    public static async imgToBase64String(img: OffscreenCanvas | any): Promise<string> 
     {
         
-        let ctx:OffscreenCanvasRenderingContext2D = img.getContext("2d");
+        let ctx:OffscreenCanvasRenderingContext2D | any = img.getContext("2d");
         let blob:Blob = await img.convertToBlob();
         //const dataURL:any = new FileReaderSync().readAsDataURL(blob);//FileReaderSync() for web workers only
         const dataURL:any = new FileReader().readAsDataURL(blob);
@@ -126,9 +126,9 @@ export class RendererUtilities {
      * @param {OffscreenCanvasRenderingContext2D}
      * @returns {Object} {width:Number,height:Number,descent:Number,fullHeight:Number}
      */
-    public static measureText(fontName:string, fontSize:int, fontStyle:string, text:string,context:OffscreenCanvasRenderingContext2D | null):Rectangle2D;
-    public static measureText(font:string, text:string,context:OffscreenCanvasRenderingContext2D | null):Rectangle2D;
-    public static measureText(text:string,context:OffscreenCanvasRenderingContext2D):Rectangle2D;
+    public static measureText(fontName:string, fontSize:int, fontStyle:string, text:string,context:OffscreenCanvasRenderingContext2D | any | null):Rectangle2D;
+    public static measureText(font:string, text:string,context:OffscreenCanvasRenderingContext2D | any | null):Rectangle2D;
+    public static measureText(text:string,context:OffscreenCanvasRenderingContext2D | any):Rectangle2D;
     public static measureText(...args: unknown[])
     {
         let bounds:Rectangle2D;

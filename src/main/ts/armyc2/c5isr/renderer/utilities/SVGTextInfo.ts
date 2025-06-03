@@ -6,6 +6,7 @@ import { Rectangle2D } from "../../graphics2d/Rectangle2D"
 import { RendererSettings } from "./RendererSettings"
 import { ShapeUtilities } from "./ShapeUtilities";
 import { RectUtilities } from "./RectUtilities";
+import { createCanvas } from "canvas";
 
 /**
  *
@@ -24,14 +25,18 @@ export class SVGTextInfo {
 	private justification: string = "start";
 	private angle: number = 0;
 	private alignmentBaseline: string = "alphabetic"
+
+	private isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+
 	public constructor(text: string, position: Point2D, font: Font, justification: string, angle: number);
 	public constructor(text: string, x: int, y: int, font: Font, context: OffscreenCanvasRenderingContext2D | null);
 	public constructor(text: string, x: int, y: int, font: string, context: OffscreenCanvasRenderingContext2D | null);
 	public constructor(text: string, x: int, y: int, fontName: string, fontSize:number, fontStyle:string, context: OffscreenCanvasRenderingContext2D | null);
 	public constructor(...args: unknown[])
 	{
-		let ctx:OffscreenCanvasRenderingContext2D;
+		let ctx:OffscreenCanvasRenderingContext2D | any;
 		let tm:TextMetrics;
+		let atm:any;
 		let top:number;
 		let left:number;
 		let width:number;
@@ -42,7 +47,13 @@ export class SVGTextInfo {
 			{
 				if (args[1] instanceof Point2D) {
 					const [text, position, font, justification, angle] = args as [string, Point2D, Font, string, number];
-					let osc: OffscreenCanvas = new OffscreenCanvas(10, 10);
+					let osc: OffscreenCanvas | any;
+					if(this.isBrowser)
+					 	osc = new OffscreenCanvas(10, 10);
+					else
+					{
+						osc = createCanvas(10,10);
+					}
 					ctx = osc.getContext("2d");
 					ctx.font = font.toString();
 					this._font = font.toString();
@@ -51,18 +62,29 @@ export class SVGTextInfo {
 					this._fontStyle = font.getTypeString();
 					this._text = text;
 					tm = ctx.measureText(text);
-					top = position.y - (tm.fontBoundingBoxAscent + tm.fontBoundingBoxDescent) / 2;
+					if(this.isBrowser)
+						top = position.y - (tm.fontBoundingBoxAscent + tm.fontBoundingBoxDescent) / 2;
+					else
+					{
+						atm = ctx.measureText("Hj");
+						top = position.y - (atm.actualBoundingBoxAscent + atm.actualBoundingBoxDescent) / 2;
+					}
 					left = position.x;
 					this._location = new Point2D(position.x, position.y);
 					this.justification = justification
 					this.angle = angle
 					this.alignmentBaseline = "middle"
 				} else {
-					const [text, x, y, font,context] = args as [string, number,number, any, OffscreenCanvasRenderingContext2D | null];
+					const [text, x, y, font,context] = args as [string, number,number, any, OffscreenCanvasRenderingContext2D | any | null];
 
 					if(context == null)
 					{
-						let osc:OffscreenCanvas = new OffscreenCanvas(10,10);
+						let osc:OffscreenCanvas | any;
+						if(this.isBrowser)
+							osc = new OffscreenCanvas(10,10);
+						else
+							osc = createCanvas(10,10);
+
 						ctx = osc.getContext("2d");				
 					}
 					else
@@ -94,7 +116,13 @@ export class SVGTextInfo {
 					
 					this._text = text;
 					tm = ctx.measureText(text);
-					top = y - tm.fontBoundingBoxAscent;
+					if(tm.fontBoundingBoxAscent)
+						top = y - tm.fontBoundingBoxAscent;
+					else
+					{
+						atm = ctx.measureText("Hj");
+						top = y - atm.actualBoundingBoxAscent;
+					}
 					left = x;
 					this._location = new Point2D(x, y);
 				}
@@ -102,14 +130,20 @@ export class SVGTextInfo {
 			}
 			case 7: 
 			{
-                const [text, x, y, fontName, fontSize, fontStyle, context] = args as [string, number, number, string, number, string, OffscreenCanvasRenderingContext2D | null];
+                const [text, x, y, fontName, fontSize, fontStyle, context] = args as [string, number, number, string, number, string, OffscreenCanvasRenderingContext2D | any | null];
                 if (arguments.length === 7)
 				{
 					
 					if(context == null)
 					{
-						let osc:OffscreenCanvas = new OffscreenCanvas(10,10);
-						ctx = osc.getContext("2d");
+						let osc:OffscreenCanvas | any;
+						if(this.isBrowser)
+							osc = new OffscreenCanvas(10,10);
+						else
+							osc = createCanvas(10,10);
+
+						ctx = osc.getContext("2d");		
+						
 						this._font = fontStyle + " " + fontSize + "px " + fontName;
 						ctx.font = this._font
 					}
@@ -121,7 +155,13 @@ export class SVGTextInfo {
 					this._fontSize = fontSize;
 					this._fontName = fontName;
 					tm = ctx.measureText(text);
-					top = y - tm.fontBoundingBoxAscent;
+					if(tm.fontBoundingBoxAscent)
+						top = y - tm.fontBoundingBoxAscent;
+					else
+					{
+						atm = ctx.measureText("Hj");
+						top = y - atm.actualBoundingBoxAscent;
+					}
 					left = x;
 					this._location = new Point2D(x, y);
 				}
@@ -131,7 +171,10 @@ export class SVGTextInfo {
 
 		width = tm.width;
 		width = tm.actualBoundingBoxRight + tm.actualBoundingBoxLeft;
-		height = tm.fontBoundingBoxDescent + tm.fontBoundingBoxAscent;
+		if(this.isBrowser)
+			height = tm.fontBoundingBoxDescent + tm.fontBoundingBoxAscent;
+		else
+			height = atm.actualBoundingBoxDescent + atm.actualBoundingBoxAscent;
 
 		if (this.justification == "middle")
 			left -= width / 2;					
@@ -145,8 +188,17 @@ export class SVGTextInfo {
 		if (this.angle != 0)
 			this._bounds = SVGTextInfo.getRotatedRectangleBounds(this._bounds, this.getLocation(), this.angle, this.justification);
 
-		this._descent = tm.fontBoundingBoxDescent;//this._bounds.getHeight() + this._bounds.getY();
-		this._aboveBaseHeight = tm.fontBoundingBoxAscent;//this._bounds.getY() * -1;
+		if(atm)
+		{
+			this._descent = atm.actualBoundingBoxDescent;//this._bounds.getHeight() + this._bounds.getY();
+			this._aboveBaseHeight = atm.actualBoundingBoxAscent;//this._bounds.getY() * -1;
+		}
+		else
+		{
+			this._descent = tm.fontBoundingBoxDescent;//this._bounds.getHeight() + this._bounds.getY();
+			this._aboveBaseHeight = tm.fontBoundingBoxAscent;//this._bounds.getY() * -1;
+		}
+		
 	}
 
 	public setLocation(x: int, y: int): void {
