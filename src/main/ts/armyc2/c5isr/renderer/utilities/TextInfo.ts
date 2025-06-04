@@ -7,10 +7,7 @@ import { RendererSettings } from "../../renderer/utilities/RendererSettings"
 import { ShapeUtilities } from "../../renderer/utilities/ShapeUtilities";
 import { RectUtilities } from "./RectUtilities";
 
-const isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
-const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
-
-import { Canvas, createCanvas } from 'canvas';
+import { Canvas, CanvasRenderingContext2D, createCanvas } from 'canvas';
 
 /**
  *
@@ -22,23 +19,26 @@ export class TextInfo {
 	protected _bounds: Rectangle2D;
 	protected _descent: double = 0;
 	protected _aboveBaseHeight: double = 0;
+
+	private isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+	private isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+	private OSCDefined = typeof OffscreenCanvasRenderingContext2D !== 'undefined';//web workers fail isBrowser test
+	private OSCanvasDefined = typeof OffscreenCanvas !== 'undefined';//web workers fail isBrowser test
 	
-	public constructor(text: string, x: int, y: int, font: Font | string, context: OffscreenCanvasRenderingContext2D | any | null)
+	public constructor(text: string, x: int, y: int, font: Font | string, context: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null)
 	{
 		let ctx:any;//OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
-		let tm:TextMetrics;
+		let tm:TextMetrics | any;//node-canvas doesn't fully implement TextMetics so must set to any
 		let top:number;
 		let left:number;
 		let width:number;
 		let height:number;
 		let bounds:Rectangle2D;
 
-
-
 		if(context == null)
 		{
 			let osc:OffscreenCanvas | Canvas
-			if(isBrowser)
+			if(this.OSCDefined)
 				osc = new OffscreenCanvas(10,10);
 			else
 				osc = createCanvas(10,10);
@@ -59,14 +59,15 @@ export class TextInfo {
 		this._text = text;
 		tm = ctx.measureText(text);
 		let atm:any;
-		if(!isBrowser && isNode)
-		{
-			atm = ctx.measureText("Ijq");
-		}
-		if(isBrowser)
+
+		if(tm.fontBoundingBoxAscent != null)
 			top = y - tm.fontBoundingBoxAscent;
 		else
-			top = y - atm.actualBoundingBoxAscent;
+		{
+			atm = ctx.measureText("Ijq");
+			//top = y - atm.actualBoundingBoxAscent;
+			top = y - atm.emHeightAscent;
+		}
 
 		left = x;
 		this._location = new Point2D(x, y);
@@ -74,7 +75,7 @@ export class TextInfo {
 		width = tm.width;
 		width = tm.actualBoundingBoxRight + tm.actualBoundingBoxLeft;
 
-		if(isBrowser)
+		if(this.OSCDefined)
 		{
 			height = tm.fontBoundingBoxDescent + tm.fontBoundingBoxAscent;
 			this._descent = tm.fontBoundingBoxDescent;
@@ -82,17 +83,22 @@ export class TextInfo {
 		}
 		else
 		{
-			height = atm.actualBoundingBoxDescent + atm.actualBoundingBoxAscent;
+			/*height = atm.actualBoundingBoxDescent + atm.actualBoundingBoxAscent;
 			this._descent = atm.actualBoundingBoxDescent;
-			this._aboveBaseHeight = atm.actualBoundingBoxAscent;
+			this._aboveBaseHeight = atm.actualBoundingBoxAscent;//*/
+
+			height = atm.emHeightDescent + atm.emHeightAscent;
+			this._descent = atm.emHeightDescent;
+			this._aboveBaseHeight = atm.emHeightAscent;
 		}
 		bounds = new Rectangle2D(top, left, width, height);
 
 		RectUtilities.grow(bounds,1);
 
 		this._bounds = bounds;
-		//console.log(this._location);
-		//console.log(bounds);
+		/*console.log(this._text);
+		console.log(this._bounds);
+		console.log(tm);//*/
 	}
 
 	public setLocation(x: int, y: int): void {

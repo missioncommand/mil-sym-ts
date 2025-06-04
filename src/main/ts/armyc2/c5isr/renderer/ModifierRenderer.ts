@@ -1,23 +1,11 @@
-
-
-
-
 import { type float, type int, type double } from "../graphics2d/BasicTypes";
 
 //Graphics2D
-import { AffineTransform } from "../graphics2d/AffineTransform"
 import { BasicStroke } from "../graphics2d/BasicStroke"
 import { Font } from "../graphics2d/Font"
-import { FontMetrics } from "../graphics2d/FontMetrics"
-import { FontRenderContext } from "../graphics2d/FontRenderContext"
-import { Graphics2D } from "../graphics2d/Graphics2D"
-import { Line2D } from "../graphics2d/Line2D"
-import { Point } from "../graphics2d/Point"
 import { Point2D } from "../graphics2d/Point2D"
-//import { Rectangle } from "../graphics2d/Rectangle"
 import { Rectangle2D } from "../graphics2d/Rectangle2D"
-import { Shape } from "../graphics2d/Shape"
-import { TextLayout } from "../graphics2d/TextLayout"
+
 
 //Renderer/Shapes
 //import { Point } from "./shapes/point";
@@ -26,8 +14,6 @@ import { Line } from "./shapes/line";
 import { Ellipse } from "./shapes/ellipse";
 import { RoundedRectangle } from "./shapes/roundedrectangle";
 import { Path } from "./shapes/path";
-import { BCurve } from "./shapes/bcurve";
-import { Arc } from "./shapes/arc";
 
 //Renderer.Utilities
 import { Color } from "../renderer/utilities/Color"
@@ -41,7 +27,6 @@ import { RectUtilities } from "../renderer/utilities/RectUtilities"
 import { RendererSettings } from "../renderer/utilities/RendererSettings"
 import { RendererUtilities } from "../renderer/utilities/RendererUtilities"
 import { SettingsChangedEvent } from "../renderer/utilities/SettingsChangedEvent"
-//import { SettingsChangedEventListener } from "../renderer/utilities/SettingsChangedEventListener"
 import { SettingsEventListener } from "../renderer/utilities/SettingsEventListener"
 import { Shape2SVG } from "../renderer/utilities/Shape2SVG"
 import { SVGSymbolInfo } from "../renderer/utilities/SVGSymbolInfo"
@@ -53,7 +38,7 @@ import { ShapeUtilities } from "./utilities/ShapeUtilities";
 import { SVGTextInfo } from "./utilities/SVGTextInfo";
 import { ShapeTypes } from "./shapes/types";
 
-import { createCanvas } from 'canvas';
+import { Canvas, CanvasRenderingContext2D, createCanvas } from 'canvas';
 
 
 /**
@@ -71,49 +56,31 @@ export class ModifierRenderer implements SettingsEventListener {
 
     private static isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
     private static isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+    private static OSCDefined = typeof OffscreenCanvasRenderingContext2D !== 'undefined';//web workers fail isBrowser test
 
     
 
-    private static _bmp: any;//OffscreenCanvas = new OffscreenCanvas(2, 2);
-    private static _frc: any;//OffscreenCanvasRenderingContext2D = this._bmp.getContext("2d");
+    private static _bmp: any;//OffscreenCanvas | Canvas;
+    private static _frc: any;//OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
 
-
-    /*public onSettingsChanged(sce: SettingsChangedEvent): void {
-
-
-        if (sce != null && sce.getEventType() === (SettingsChangedEvent.EventType_FontChanged)) {
-            ModifierRenderer._modifierFont = RendererSettings.getInstance().getLabelFont();
-            ModifierRenderer._frc.font = ModifierRenderer._modifierFont.toString();
-
-            let tm: TextMetrics = ModifierRenderer._frc.measureText("Hj");
-
-            ModifierRenderer._modifierFontHeight = tm.fontBoundingBoxAscent;//fm.getHeight();
-            ModifierRenderer._modifierFontDescent = tm.fontBoundingBoxDescent;//fm.getMaxDescent();
-        }
-    }//*/
 
     public SettingsEventChanged(type: string): void {
         if (type === (SettingsChangedEvent.EventType_FontChanged)) {
             ModifierRenderer._modifierFont = RendererSettings.getInstance().getLabelFont();
             ModifierRenderer._frc.font = ModifierRenderer._modifierFont.toString();
 
-            //this should work for browser or node since we're passing text that should have the highest and lowest values
+            //get new ascent and descent
             let tm: TextMetrics = ModifierRenderer._frc.measureText("Hj");
-                ModifierRenderer._modifierFontHeight = tm.actualBoundingBoxAscent;//fm.getHeight();
-                ModifierRenderer._modifierFontDescent = tm.actualBoundingBoxDescent;//fm.getMaxDescent();
-            
-            /*if(ModifierRenderer.isBrowser)
+            if(ModifierRenderer.OSCDefined)//If OffscreenCanvas defined
             {
-                let tm: TextMetrics = ModifierRenderer._frc.measureText("Hj");
                 ModifierRenderer._modifierFontHeight = tm.fontBoundingBoxAscent;//fm.getHeight();
                 ModifierRenderer._modifierFontDescent = tm.fontBoundingBoxDescent;//fm.getMaxDescent();
             }
-            else
+            else//likely in Node using node-canvas which uses different values in TextMetrics
             {
-                let tm: TextMetrics = ModifierRenderer._frc.measureText("Hj");
-                ModifierRenderer._modifierFontHeight = tm.actualBoundingBoxAscent;//fm.getHeight();
-                ModifierRenderer._modifierFontDescent = tm.actualBoundingBoxDescent;//fm.getMaxDescent();
-            }//*/
+                ModifierRenderer._modifierFontHeight = tm.emHeightAscent;//fm.getHeight();
+                ModifierRenderer._modifierFontDescent = tm.emHeightDescent;//fm.getMaxDescent();
+            }
             
         }
     }
@@ -131,7 +98,7 @@ export class ModifierRenderer implements SettingsEventListener {
         if (!ModifierRenderer._instance) 
         {
 
-            if(ModifierRenderer.isBrowser)
+            if(ModifierRenderer.OSCDefined)
             {
                 ModifierRenderer._bmp = new OffscreenCanvas(2, 2);
             }
@@ -150,7 +117,7 @@ export class ModifierRenderer implements SettingsEventListener {
     }
 
 
-    public static processUnitDisplayModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo | null {
+    public static processUnitDisplayModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo | null {
 
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
@@ -1239,7 +1206,7 @@ export class ModifierRenderer implements SettingsEventListener {
      * @returns {Array} of SO.Point. First 3 items are the line. Last three are
      * the arrowhead.
      */
-    private static createDOMArrowPoints(symbolID: string, bounds: Rectangle2D, center: Point2D, angle: float, isY: boolean, frc: OffscreenCanvasRenderingContext2D): Point2D[] {
+    private static createDOMArrowPoints(symbolID: string, bounds: Rectangle2D, center: Point2D, angle: float, isY: boolean, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): Point2D[] {
         let arrowPoints: Point2D[] = new Array<Point2D>(6);
         let pt1: Point2D;
         let pt2: Point2D;

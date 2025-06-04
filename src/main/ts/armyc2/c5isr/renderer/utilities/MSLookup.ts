@@ -84,8 +84,12 @@ export class MSLookup {
     }
 
     private init(): void {
-        MSLookup.msd = jsond;
-        MSLookup.mse = jsone;
+
+        if(typeof jsond === 'object')
+        {
+            MSLookup.msd = jsond;
+            MSLookup.mse = jsone;
+        }
         
         if (MSLookup._initCalled === false) {
             MSLookup._initCalled = true;

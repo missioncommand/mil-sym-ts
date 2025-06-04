@@ -58,7 +58,11 @@ export class GENCLookup {
     }
 
     private init(): void {
-        GENCLookup.genc = json;
+        
+        if(typeof json === 'object')
+        {
+            GENCLookup.genc = json;
+        }
         
         type gencIn = 
         {

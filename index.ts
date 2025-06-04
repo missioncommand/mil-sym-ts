@@ -1,12 +1,3 @@
-import gencUrl from './src/main/ts/armyc2/c5isr/data/genc.json';
-import msdUrl from './src/main/ts/armyc2/c5isr/data/msd.json';
-import mseUrl from './src/main/ts/armyc2/c5isr/data/mse.json';
-import svgdUrl from './src/main/ts/armyc2/c5isr/data/svgd.json';
-import svgeUrl from './src/main/ts/armyc2/c5isr/data/svge.json';
-
-if(gencUrl && msdUrl && mseUrl && svgdUrl && svgeUrl)
-  console.log("data files located");
-
 import { ErrorLogger } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ErrorLogger";
 import { GENCLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/GENCLookup";
 import { MSLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSLookup";
@@ -47,8 +38,6 @@ export { RendererUtilities } from "./src/main/ts/armyc2/c5isr/renderer/utilities
 export { MilStdIconRenderer } from "./src/main/ts/armyc2/c5isr/renderer/MilStdIconRenderer";
 export { WebRenderer } from "./src/main/ts/armyc2/c5isr/web/render/WebRenderer";
 
-import { createCanvas } from 'canvas';
-
 /**
  * Module for rendering 2525D/E symbology
  */
@@ -67,7 +56,6 @@ let initializing:boolean = false;
  */
 export async function initialize(location?:string):Promise<any>
 {
-  let canvse:any = createCanvas(10,10);
   initializing = true;
   try
   {
@@ -127,7 +115,7 @@ export async function initialize(location?:string):Promise<any>
 
 export async function init(location?:string)
 {
-  initializing = true;
+  /*initializing = true;
   try
   {
     if(!initialized)
@@ -147,7 +135,8 @@ export async function init(location?:string)
   finally
   {
     initializing = false;
-  }
+  }//*/
+  initialized=true;
 }
 
 /**

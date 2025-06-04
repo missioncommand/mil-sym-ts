@@ -75,9 +75,13 @@ export class SVGLookup
     }
 
     private init(): void {
-        SVGLookup.svgd = jsond;
-        SVGLookup.svge = jsone;
         
+        if(typeof jsond === 'object')
+        {
+            SVGLookup.svgd = jsond;
+            SVGLookup.svge = jsone;
+        }
+
         if (SVGLookup._initCalled === false) {
             SVGLookup._initCalled = true;
             SVGLookup._SVGLookupD = new Map();
