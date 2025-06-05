@@ -1,12 +1,3 @@
-import gencUrl from './src/main/ts/armyc2/c5isr/data/genc.json';
-import msdUrl from './src/main/ts/armyc2/c5isr/data/msd.json';
-import mseUrl from './src/main/ts/armyc2/c5isr/data/mse.json';
-import svgdUrl from './src/main/ts/armyc2/c5isr/data/svgd.json';
-import svgeUrl from './src/main/ts/armyc2/c5isr/data/svge.json';
-
-if(gencUrl && msdUrl && mseUrl && svgdUrl && svgeUrl)
-  console.log("data files located");
-
 import { ErrorLogger } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ErrorLogger";
 import { GENCLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/GENCLookup";
 import { MSLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSLookup";
@@ -47,8 +38,6 @@ export { RendererUtilities } from "./src/main/ts/armyc2/c5isr/renderer/utilities
 export { MilStdIconRenderer } from "./src/main/ts/armyc2/c5isr/renderer/MilStdIconRenderer";
 export { WebRenderer } from "./src/main/ts/armyc2/c5isr/web/render/WebRenderer";
 
-
-
 /**
  * Module for rendering 2525D/E symbology
  */
@@ -64,10 +53,12 @@ let initializing:boolean = false;
  * in the location of the file that imported it, not where it actually exists and then it can't find the asset files.  If location is not
  * set, the renderer assumes the json asset files are in the same location as where the C5Ren script is being run.
  * Additionally, if your build process hashes the manifest.json file, you should include the new name like "/dist/manifest.[hash].json"
+ * @deprecated
  */
 export async function initialize(location?:string):Promise<any>
 {
   initializing = true;
+  /*
   try
   {
     if(!initialized)
@@ -121,7 +112,40 @@ export async function initialize(location?:string):Promise<any>
   finally
   {
     initializing = false;
+  }//*/
+  initializing = false;
+  initialized=true;
+}
+
+/**
+ * 
+ * @param location 
+ * @deprecated
+ */
+export async function init(location?:string)
+{
+  /*initializing = true;
+  try
+  {
+    if(!initialized)
+    {
+      GENCLookup.setDataObject();//(genc);
+      MSLookup.setDataObject();//(msd,mse);
+      SVGLookup.setDataObject();//(svgd,svge);
+
+      if(GENCLookup.getInstance() && MSLookup.getInstance() && SVGLookup.getInstance())
+        initialized=true;
+    }
   }
+  catch(e)
+  {
+      throw e;
+  }
+  finally
+  {
+    initializing = false;
+  }//*/
+  initialized=true;
 }
 
 /**

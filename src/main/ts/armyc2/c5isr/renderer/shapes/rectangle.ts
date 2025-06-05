@@ -342,7 +342,7 @@ export class Rectangle
     
     // </editor-fold>
     
-    public setPath(context:OffscreenCanvasRenderingContext2D)
+    public setPath(context:OffscreenCanvasRenderingContext2D | any)
     {
         var x = this.getX(),
             y = this.getY(),

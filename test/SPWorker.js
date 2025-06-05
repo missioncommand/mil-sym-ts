@@ -48,7 +48,7 @@ importScripts('../dist/C5Ren.js');
 let path = "/dist/";
 //let path = self.location;
 
-C5Ren.initialize(path);//self.location
+//C5Ren.initialize(path);//self.location
 /*
     //ErrorLogger can't output to console in a webworker so change behavior here if you like//////////////////////
 	C5Ren.ErrorLogger = {};

@@ -223,7 +223,7 @@ export class ImageInfo implements SymbolDimensionInfo {
 	 */
 	public static CenterImageOnPoint(image: ImageBitmap, point: Point2D): ImageBitmap {
 		let bi:ImageBitmap;
-		let osc: OffscreenCanvas;
+		let osc: OffscreenCanvas | any;
 		let x: int = 0;
 		let y: int = 0;
 		let height: int = 0;

@@ -1,6 +1,6 @@
 {
-  "name": "@armyc2.c5isr.renderer/mil-sym-ts",
-  "version": "2.1.8",
+  "name": "@armyc2.c5isr.renderer/mil-sym-ts-web",
+  "version": "2.2.0",
   "description": "MIL-STD-2525 D/E symbol rendering TypeScript library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,12 +10,10 @@
     "clean": "rd /S /Q dist",
     "build": "tsc --build tsconfig.json",
     "docs": "npx typedoc",
-    "bundleES": "node buildES.js",
-    "bundleESR": "node buildESR.js",
-    "bundleWP": "webpack --config webpack.config.js",
-    "bundleWPR": "webpack --config webpackr.config.js",
+    "bundleWPW": "webpack --config webpackw.config.js --no-watch",
     "bundleDTS": "npx dts-bundle-generator -o dist/C5Ren.d.ts index.ts",
-    "pack": "copy package.pack.json dist\\package.json && copy README.md dist\\README.md && copy LICENSE dist\\LICENSE && cd dist && del index.* && del tsconfig.tsbuildinfo && rd /s /q src && npm pack"
+    "packWeb": "copy package.packWeb.json dist\\package.json && copy README.md dist\\README.md && copy LICENSE dist\\LICENSE && cd dist && del index.* && del tsconfig.tsbuildinfo && rd /s /q src && npm pack",
+    "buildWeb": "npm run clean && npm run build && npm run bundleWPW && npm run bundleDTS && npm run packWeb"
   },
   "author": "C5ISR ESI",
   "license": "Apache-2.0",
@@ -31,6 +29,7 @@
     "dts-bundle-generator": "^9.5.1",
     "file-loader": "^6.2.0",
     "jszip": "^3.10.1",
+    "node-loader": "^2.1.0",
     "ts-loader": "^9.5.1",
     "tslib": "^2.6.3",
     "typedoc": "^0.26.3",

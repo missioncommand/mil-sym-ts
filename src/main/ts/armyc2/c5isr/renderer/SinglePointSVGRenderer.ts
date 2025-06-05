@@ -1,9 +1,9 @@
+import { createCanvas, Canvas, CanvasRenderingContext2D } from "canvas";
 import { type int, type float, type double } from "../graphics2d/BasicTypes";
 
 import { Point } from "../graphics2d/Point"
 import { Point2D } from "../graphics2d/Point2D"
 import { Rectangle2D } from "../graphics2d/Rectangle2D"
-
 
 import { ModifierRenderer } from "../renderer/ModifierRenderer"
 
@@ -17,9 +17,7 @@ import { MSLookup } from "../renderer/utilities/MSLookup"
 import { RectUtilities } from "../renderer/utilities/RectUtilities"
 import { RendererSettings } from "../renderer/utilities/RendererSettings"
 import { RendererUtilities } from "../renderer/utilities/RendererUtilities"
-import { SettingsChangedEvent } from "../renderer/utilities/SettingsChangedEvent"
-//import { SettingsChangedEventListener } from "../renderer/utilities/SettingsChangedEventListener"
-import { SettingsEventListener } from "../renderer/utilities/SettingsEventListener"
+
 import { SVGInfo } from "../renderer/utilities/SVGInfo"
 import { SVGLookup } from "../renderer/utilities/SVGLookup"
 import { SVGSymbolInfo } from "../renderer/utilities/SVGSymbolInfo"
@@ -27,8 +25,6 @@ import { SymbolDimensionInfo } from "../renderer/utilities/SymbolDimensionInfo"
 import { SymbolID } from "../renderer/utilities/SymbolID"
 import { SymbolUtilities } from "../renderer/utilities/SymbolUtilities"
 
-
-import { LogLevel } from "./utilities/LogLevel";
 import { ShapeUtilities } from "./utilities/ShapeUtilities";
 
 
@@ -40,9 +36,12 @@ export class SinglePointSVGRenderer {
     private readonly TAG: string = "SinglePointSVGRenderer";
     private static _instance: SinglePointSVGRenderer;
     public static readonly RENDERER_ID: string = "2525D";
-    private _buffer: OffscreenCanvas;
-    private _fontRenderContext: OffscreenCanvasRenderingContext2D;
+    private _buffer: any;//OffscreenCanvas | Canvas;
+    private _fontRenderContext: any;//OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
 
+    private static isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+    private static isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+    private static OSCDefined = typeof OffscreenCanvasRenderingContext2D !== 'undefined';//web workers fail isBrowser test
 
     public constructor() {
 
@@ -55,13 +54,17 @@ export class SinglePointSVGRenderer {
 
             if (this._buffer == null || this._buffer === undefined) 
             {
-                this._buffer = new OffscreenCanvas(8,8);
+                if(SinglePointSVGRenderer.OSCDefined)//(SinglePointSVGRenderer.OSCDefined)
+                    this._buffer = new OffscreenCanvas(8,8);
+                else
+                    this._buffer = createCanvas(8,8);
+
                 this._fontRenderContext = this._buffer.getContext("2d");
             }
 
         } catch (exc) {
             if (exc instanceof Error) {
-                ErrorLogger.LogException("SinglePointRenderer", "init", exc);
+                ErrorLogger.LogException("SinglePointSVGRenderer", "init", exc);
             } else {
                 throw exc;
             }
@@ -204,7 +207,7 @@ export class SinglePointSVGRenderer {
 
             } catch (excModifiers) {
                 if (excModifiers instanceof Error) {
-                    ErrorLogger.LogException("MilStdIconRenderer", "RenderUnit", excModifiers);
+                    ErrorLogger.LogException("SinglePointSVGRenderer", "RenderUnit", excModifiers);
                 } else {
                     throw excModifiers;
                 }
@@ -617,7 +620,7 @@ export class SinglePointSVGRenderer {
             si = new SVGSymbolInfo(sbSVG.toString().valueOf(), anchor, symbolBounds, imageBounds);
         } catch (exc) {
             if (exc instanceof Error) {
-                ErrorLogger.LogException("SinglePointRenderer", "renderUnit", exc);
+                ErrorLogger.LogException("SinglePointSVGRenderer", "renderUnit", exc);
             } else {
                 throw exc;
             }
@@ -991,7 +994,7 @@ export class SinglePointSVGRenderer {
 
         } catch (exc) {
             if (exc instanceof Error) {
-                ErrorLogger.LogException("MilStdIconRenderer", "RenderSP", exc);
+                ErrorLogger.LogException("SinglePointSVGRenderer", "RenderSP", exc);
                 ErrorLogger.LogMessage(" SymbolID: " + symbolID);
                 return null;
             } else {
@@ -1096,7 +1099,7 @@ export class SinglePointSVGRenderer {
         }
         catch (e)
         {
-            ErrorLogger.LogException("MilStdIconRenderer", "RenderModifier2-Getting Attributes", e);
+            ErrorLogger.LogException("SinglePointSVGRenderer", "RenderModifier2-Getting Attributes", e);
         }
 
         try
@@ -1184,7 +1187,7 @@ export class SinglePointSVGRenderer {
         }
         catch (e)
         {
-            ErrorLogger.LogException("MilStdIconRenderer", "RenderSP", e);
+            ErrorLogger.LogException("SinglePointSVGRenderer", "RenderSP", e);
         }
         return null;
     }
