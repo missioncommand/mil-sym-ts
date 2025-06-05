@@ -58,15 +58,12 @@ export class TextInfo {
 
 		this._text = text;
 		tm = ctx.measureText(text);
-		let atm:any;
 
 		if(tm.fontBoundingBoxAscent != null)
 			top = y - tm.fontBoundingBoxAscent;
 		else
 		{
-			atm = ctx.measureText("Ijq");
-			//top = y - atm.actualBoundingBoxAscent;
-			top = y - atm.emHeightAscent;
+			top = y - tm.emHeightAscent;
 		}
 
 		left = x;
@@ -83,13 +80,9 @@ export class TextInfo {
 		}
 		else
 		{
-			/*height = atm.actualBoundingBoxDescent + atm.actualBoundingBoxAscent;
-			this._descent = atm.actualBoundingBoxDescent;
-			this._aboveBaseHeight = atm.actualBoundingBoxAscent;//*/
-
-			height = atm.emHeightDescent + atm.emHeightAscent;
-			this._descent = atm.emHeightDescent;
-			this._aboveBaseHeight = atm.emHeightAscent;
+			height = tm.emHeightDescent + tm.emHeightAscent;
+			this._descent = tm.emHeightDescent;
+			this._aboveBaseHeight = tm.emHeightAscent;
 		}
 		bounds = new Rectangle2D(top, left, width, height);
 

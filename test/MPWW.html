@@ -30,7 +30,8 @@ var stopWW = null;
 function setup()
 {
     document.getElementById("testRender").disabled = true; 
-    C5Ren.initialize("/../dist/").then(function(results){document.getElementById("testRender").disabled = false;}).catch(error => {throw error;});
+    //C5Ren.initialize("/../dist/").then(function(results){document.getElementById("testRender").disabled = false;}).catch(error => {throw error;});
+	document.getElementById("testRender").disabled = false;
 }
 
 function formatKMLForHTML(kml)

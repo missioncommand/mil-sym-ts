@@ -536,7 +536,11 @@
         //Set location where renderer and files are
         //C5Ren.initialize('/dist/').then(function(results){document.getElementById("btnST1").disabled = false;preload();}).catch(error => {throw error;});
         //Tell the renderer specficially where the manifest file is in case the users process renamed it with a hash or something.
-        C5Ren.initialize('/dist/manifest.json').then(function(results){document.getElementById("btnST1").disabled = false;preload();}).catch(error => {throw error;});
+        //C5Ren.initialize('/dist/manifest.json').then(function(results){document.getElementById("btnST1").disabled = false;preload();}).catch(error => {throw error;});
+        
+        //no longer using init call
+        document.getElementById("btnST1").disabled = false;
+        preload();
 
         /*if(C5Ren.isReady())
         {

@@ -1,6 +1,6 @@
 {
   "name": "@armyc2.c5isr.renderer/mil-sym-ts",
-  "version": "2.1.8",
+  "version": "2.2.0",
   "description": "MIL-STD-2525 D/E symbol rendering TypeScript library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,6 +14,7 @@
     "bundleESR": "node buildESR.js",
     "bundleWP": "webpack --config webpack.config.js",
     "bundleWPR": "webpack --config webpackr.config.js",
+    "bundleWPW": "webpack --config webpackw.config.js",
     "bundleWPN": "webpack --config webpackn.config.js",
     "bundleDTS": "npx dts-bundle-generator -o dist/C5Ren.d.ts index.ts",
     "pack": "copy package.pack.json dist\\package.json && copy README.md dist\\README.md && copy LICENSE dist\\LICENSE && cd dist && del index.* && del tsconfig.tsbuildinfo && rd /s /q src && npm pack"

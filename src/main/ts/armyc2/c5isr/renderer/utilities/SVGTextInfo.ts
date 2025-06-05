@@ -38,7 +38,6 @@ export class SVGTextInfo {
 	{
 		let ctx:OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
 		let tm:TextMetrics | any;
-		let atm:any;
 		let top:number;
 		let left:number;
 		let width:number;
@@ -71,9 +70,7 @@ export class SVGTextInfo {
 						top = position.y - (tm.fontBoundingBoxAscent + tm.fontBoundingBoxDescent) / 2;
 					else
 					{
-						atm = ctx.measureText("Hj");
-						//top = position.y - (atm.actualBoundingBoxAscent + atm.actualBoundingBoxDescent) / 2;
-						top = position.y - (atm.emHeightAscent + atm.emHeightDescent) / 2;
+						top = position.y - (tm.emHeightAscent + tm.emHeightDescent) / 2;
 					}
 					left = position.x;
 					this._location = new Point2D(position.x, position.y);
@@ -129,9 +126,7 @@ export class SVGTextInfo {
 						top = y - tm.fontBoundingBoxAscent;
 					else
 					{
-						atm = ctx.measureText("Hj");
-						//top = y - atm.actualBoundingBoxAscent;
-						top = y - atm.emHeightAscent;
+						top = y - tm.emHeightAscent;
 					}
 					left = x;
 					this._location = new Point2D(x, y);
@@ -173,9 +168,7 @@ export class SVGTextInfo {
 						top = y - tm.fontBoundingBoxAscent;
 					else
 					{
-						atm = ctx.measureText("Hj");
-						//top = y - atm.actualBoundingBoxAscent;
-						top = y - atm.emHeightAscent;
+						top = y - tm.emHeightAscent;
 					}
 					left = x;
 					this._location = new Point2D(x, y);
@@ -190,8 +183,7 @@ export class SVGTextInfo {
 			height = tm.fontBoundingBoxDescent + tm.fontBoundingBoxAscent;
 		else
 		{
-			//height = atm.actualBoundingBoxDescent + atm.actualBoundingBoxAscent;
-			height = atm.emHeightDescent + atm.emHeightAscent;
+			height = tm.emHeightDescent + tm.emHeightAscent;
 		}
 		if (this.justification == "middle")
 			left -= width / 2;					
@@ -205,17 +197,15 @@ export class SVGTextInfo {
 		if (this.angle != 0)
 			this._bounds = SVGTextInfo.getRotatedRectangleBounds(this._bounds, this.getLocation(), this.angle, this.justification);
 
-		if(atm)
+		if(this.OSCDefined)
 		{
-			//this._descent = atm.actualBoundingBoxDescent;//this._bounds.getHeight() + this._bounds.getY();
-			//this._aboveBaseHeight = atm.actualBoundingBoxAscent;//this._bounds.getY() * -1;
-			this._descent = atm.emHeightDescent;//this._bounds.getHeight() + this._bounds.getY();
-			this._aboveBaseHeight = atm.emHeightAscent;//this._bounds.getY() * -1;
+			this._descent = tm.fontBoundingBoxDescent;
+			this._aboveBaseHeight = tm.fontBoundingBoxAscent;
 		}
 		else
 		{
-			this._descent = tm.fontBoundingBoxDescent;//this._bounds.getHeight() + this._bounds.getY();
-			this._aboveBaseHeight = tm.fontBoundingBoxAscent;//this._bounds.getY() * -1;
+			this._descent = tm.emHeightDescent;
+			this._aboveBaseHeight = tm.emHeightAscent;
 		}
 
 		/*console.log(this._text);
