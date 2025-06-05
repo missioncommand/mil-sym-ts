@@ -7,7 +7,7 @@ if (!version) {
 }
 
 // Define multiple package files
-const packageFiles = ["package.web.json", "package.node.json", "package.pack.json"];
+const packageFiles = ["package.web.json", "package.node.json", "package.packNode.json", "package.packWeb.json"];
 
 packageFiles.forEach((file) => {
   if (fs.existsSync(file)) {
