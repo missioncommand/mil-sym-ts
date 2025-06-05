@@ -46,20 +46,25 @@ export class SVGLookup
         //await Promise.all(promises).then(values => {SVGLookup.svgd = values[0];SVGLookup.svge = values[1];}).catch(error => {throw error;})
     }//*/
 
+    /**
+     * 
+     * @param urls 
+     * @deprecated
+     */
     public static async setData(urls:string[])
     {
-        let promises:Array<Promise<any>> = new Array<Promise<any>>();
+        /*let promises:Array<Promise<any>> = new Array<Promise<any>>();
 
         promises.push(RendererUtilities.getData(urls[0]));
         promises.push(RendererUtilities.getData(urls[1]));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
-        await Promise.all(promises).then(values => {SVGLookup.svgd = values[0];SVGLookup.svge = values[1];}).catch(error => {throw error;})
+        await Promise.all(promises).then(values => {SVGLookup.svgd = values[0];SVGLookup.svge = values[1];}).catch(error => {throw error;})//*/
     }
 
-    public static setDataObject()
+    /*public static setDataObject()
     {
         this.svgd = jsond;
         this.svge = jsone;
-    }
+    }//*/
 
     private constructor() {
         

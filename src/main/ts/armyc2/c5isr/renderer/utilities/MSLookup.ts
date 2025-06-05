@@ -51,20 +51,25 @@ export class MSLookup {
         //await Promise.all(promises).then(values => {MSLookup.msd = values[0];MSLookup.mse = values[1];}).catch(error => {throw error;})
     }//*/
 
+    /**
+     * 
+     * @param urls 
+     * @deprecated
+     */
     public static async setData(urls:string[])
     {
-        let promises:Array<Promise<any>> = new Array<Promise<any>>();
+        /*let promises:Array<Promise<any>> = new Array<Promise<any>>();
 
         promises.push(RendererUtilities.getData(urls[0]));
         promises.push(RendererUtilities.getData(urls[1]));// RendererUtilities.getData(String(svgd)).then(function(result){this.genc = result;this.init();});
         await Promise.all(promises).then(values => {MSLookup.msd = values[0];MSLookup.mse = values[1];}).catch(error => {throw error;})//*/
     }
 
-    public static setDataObject()
+    /*public static setDataObject()
     {
         this.msd = jsond;
         this.mse = jsone;
-    }
+    }//*/
 
     /*
      * Holds SymbolDefs for all symbols. (basicSymbolID, Description, MinPoint, MaxPoints, etc...) Call

@@ -30,15 +30,20 @@ export class GENCLookup {
         //RendererUtilities.getData(String(genc)).then(result => {this.genc = result;});
     }//*/
 
+    /**
+     * 
+     * @param url 
+     * @deprecated
+     */
     public static async setData(url:string)
     {
-        RendererUtilities.getData(url).then(result => {this.genc = result;}).catch((err) => {ErrorLogger.LogException("GENCLookup","loadData",err)});
+        //RendererUtilities.getData(url).then(result => {this.genc = result;}).catch((err) => {ErrorLogger.LogException("GENCLookup","loadData",err)});
     }
 
-    public static setDataObject()
+    /*public static setDataObject()
     {
         this.genc = json;
-    }
+    }//*/
 
     private constructor() 
     {

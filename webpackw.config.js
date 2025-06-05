@@ -14,7 +14,7 @@ module.exports = {
       libraryTarget: 'umd',     
    },
    resolve: {
-      extensions: ['.ts', '.js', ".node", ".json"],
+      extensions: ['.ts', '.js', ".json"],
    },
    plugins: [
       new WebpackManifestPlugin({

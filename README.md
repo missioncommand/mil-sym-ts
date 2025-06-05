@@ -12,7 +12,7 @@ Notes:
 
 Starting with version 2.2.0, support for running in NodeJS was added.  
 The node release will be the baseline version on [npmjs.com](https://www.npmjs.com/package/@armyc2.c5isr.renderer/mil-sym-ts?activeTab=versions)  
-The web version of the release will have the 'WEB' tag with the same version number.  
+The web version of the release will be [mil-sym-ts-web](https://www.npmjs.com/package/@armyc2.c5isr.renderer/mil-sym-ts-web?activeTab=versions)  
 
 The Node version depends on [node-canvas](https://www.npmjs.com/package/canvas).  
 ```
@@ -21,17 +21,12 @@ npm install canvas
 
 The Web version leverage the canvas in the browser.  
 
-Compilation Step:  
+Compilation Options:  
 ```
-npm run clean
-npm run build
-//Node Build
-npm run bundleWPN
-//Web Build
-npm run bundleWPW
-//generate DTS file
-npm run bundleDTS
-npm run pack
+//For Web Target
+buildWeb.bat
+//For Node Target
+buildNode.bat
 ```
 
 The following classes are exported by the module:  
