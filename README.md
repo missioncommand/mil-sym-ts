@@ -21,6 +21,19 @@ npm install canvas
 
 The Web version leverage the canvas in the browser.  
 
+Compilation Step:  
+```
+npm run clean
+npm run build
+//Node Build
+npm run bundleWPN
+//Web Build
+npm run bundleWPW
+//generate DTS file
+npm run bundleDTS
+npm run pack
+```
+
 The following classes are exported by the module:  
 
 Point  
