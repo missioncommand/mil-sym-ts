@@ -53,10 +53,12 @@ let initializing:boolean = false;
  * in the location of the file that imported it, not where it actually exists and then it can't find the asset files.  If location is not
  * set, the renderer assumes the json asset files are in the same location as where the C5Ren script is being run.
  * Additionally, if your build process hashes the manifest.json file, you should include the new name like "/dist/manifest.[hash].json"
+ * @deprecated
  */
 export async function initialize(location?:string):Promise<any>
 {
   initializing = true;
+  /*
   try
   {
     if(!initialized)
@@ -110,9 +112,16 @@ export async function initialize(location?:string):Promise<any>
   finally
   {
     initializing = false;
-  }
+  }//*/
+  initializing = false;
+  initialized=true;
 }
 
+/**
+ * 
+ * @param location 
+ * @deprecated
+ */
 export async function init(location?:string)
 {
   /*initializing = true;
