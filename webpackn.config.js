@@ -14,7 +14,7 @@ module.exports = {
       libraryTarget: 'umd',     
    },
    resolve: {
-      extensions: ['.ts', '.js', ".node", ".json"],
+      extensions: ['.ts', '.js', ".json"],
    },
    plugins: [
       new WebpackManifestPlugin({
@@ -24,19 +24,5 @@ module.exports = {
       canvas: "commonjs canvas"
    }, 
    module: {
-      rules: [
-         {
-            test: /\.ts$/,
-            use: 'ts-loader',
-            exclude: /node_modules/,
-         },
-         {
-            test: /\.node$/,
-            loader: "node-loader",
-            generator: {
-               filename: '[name].[ext]' // Keeps original file name
-            }
-         }
-      ],
    }, 
 };

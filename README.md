@@ -8,21 +8,20 @@
 The old 2525C renderer has been retired but the libraries and usage information are still available here:  
 [2525C Renderer Overview](https://github.com/missioncommand/mil-sym-ts/wiki/2525C-Renderer-Overview)
 
-Usage:
+Notes:
 
-Renderer must be initialized first.
+Starting with version 2.2.0, support for running in NodeJS was added.  
+The node release will be the baseline version on [npmjs.com](https://www.npmjs.com/package/@armyc2.c5isr.renderer/mil-sym-ts?activeTab=versions)  
+The web version of the release will have the 'WEB' tag with the same version number.  
 
-C5Ren.initialize(location):Promise
+The Node version depends on [node-canvas](https://www.npmjs.com/package/canvas).  
+```
+npm install canvas  
+```
 
-If no value passed, it assumes assets are in the same location.
-If library and its json asset files are at the location "127.0.0.1:8080/renderer/C5Ren.js"
-Call like: C5Ren.initialize("/renderer/");  
+The Web version leverage the canvas in the browser.  
 
-If you or your process renamed the "manifest.json" file, call like: C5Ren.initialize("/renderer/[new manifest.json file name]");
-
-When the promise resolves, files are loaded and initialized and the renderer is ready to go.
-
-The following classes are exported by the module:
+The following classes are exported by the module:  
 
 Point  
 Point2D  
