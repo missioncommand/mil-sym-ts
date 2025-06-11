@@ -296,6 +296,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.PURSUIT: {
+                    label = "P";
+                    break;
+                }
+
                 case TacticalLines.FPOL: {
                     label = "P(F)";
                     break;
@@ -2544,6 +2549,7 @@ export class Modifier2 {
                 case TacticalLines.IL:
                 case TacticalLines.DRCL:
                 case TacticalLines.RETIRE:
+                case TacticalLines.PURSUIT:
                 case TacticalLines.FPOL:
                 case TacticalLines.RPOL:
                 case TacticalLines.WITHDRAW:
@@ -3773,6 +3779,7 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.RETIRE:
+                case TacticalLines.PURSUIT:
                 case TacticalLines.FPOL:
                 case TacticalLines.RPOL:
                 case TacticalLines.WITHDRAW:

@@ -4330,6 +4330,11 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.PURSUIT: {
+                    acCounter = DISMSupport.GetPursuitGraphicDouble(pLinePoints);
+                    break;
+                }
+
                 case TacticalLines.EASY: {
                     acCounter = DISMSupport.GetDISMEasyDouble(pLinePoints, lineType);
                     break;

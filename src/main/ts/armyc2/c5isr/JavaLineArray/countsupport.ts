@@ -311,6 +311,11 @@ export class countsupport {
                     break;
                 }
 
+                case TacticalLines.PURSUIT: {
+                    count = 25;
+                    break;
+                }
+
                 case TacticalLines.SEIZE:
                 case TacticalLines.EVACUATE: {
                     count = 37;

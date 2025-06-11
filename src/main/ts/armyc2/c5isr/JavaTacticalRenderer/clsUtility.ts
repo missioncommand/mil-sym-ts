@@ -215,6 +215,7 @@ export class clsUtility {
             case TacticalLines.DISRUPT:
             case TacticalLines.PENETRATE:
             case TacticalLines.RETIRE:
+            case TacticalLines.PURSUIT:
             case TacticalLines.FPOL:
             case TacticalLines.RPOL:
             case TacticalLines.SCREEN:
