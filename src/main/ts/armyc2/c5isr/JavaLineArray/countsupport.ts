@@ -310,7 +310,8 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.SEIZE: {
+                case TacticalLines.SEIZE:
+                case TacticalLines.EVACUATE: {
                     count = 37;
                     break;
                 }

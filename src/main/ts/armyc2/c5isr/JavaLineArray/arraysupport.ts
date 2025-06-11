@@ -4295,7 +4295,8 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.SEIZE: {
+                case TacticalLines.SEIZE:
+                case TacticalLines.EVACUATE: {
                     let radius: double = 0;
                     if (vblSaveCounter === 4) {
                         radius = lineutility.CalcDistanceDouble(pLinePoints[0], pLinePoints[1]);
@@ -4381,6 +4382,7 @@ export class arraysupport {
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
                 case TacticalLines.SEIZE:
+                case TacticalLines.EVACUATE:
                 case TacticalLines.BS_RECTANGLE:
                 case TacticalLines.BBS_RECTANGLE:
                 //add these
