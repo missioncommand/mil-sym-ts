@@ -222,6 +222,7 @@ export class clsUtility {
             case TacticalLines.SEIZE:
             case TacticalLines.EVACUATE:
             case TacticalLines.WITHDRAW:
+            case TacticalLines.DISENGAGE:
             case TacticalLines.WDRAWUP:
             //non task autoshapes
             case TacticalLines.SARA:

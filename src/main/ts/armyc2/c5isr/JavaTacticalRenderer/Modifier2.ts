@@ -368,6 +368,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.DISENGAGE: {
+                    label = "DIS";
+                    break;
+                }
+
                 case TacticalLines.WDRAWUP: {
                     label = "WP";
                     break;
@@ -2531,6 +2536,7 @@ export class Modifier2 {
                 case TacticalLines.FPOL:
                 case TacticalLines.RPOL:
                 case TacticalLines.WITHDRAW:
+                case TacticalLines.DISENGAGE:
                 case TacticalLines.WDRAWUP:
                 case TacticalLines.BEARING:
                 case TacticalLines.BEARING_J:
@@ -3756,6 +3762,7 @@ export class Modifier2 {
                 case TacticalLines.FPOL:
                 case TacticalLines.RPOL:
                 case TacticalLines.WITHDRAW:
+                case TacticalLines.DISENGAGE:
                 case TacticalLines.WDRAWUP: {
                     Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
                     break;

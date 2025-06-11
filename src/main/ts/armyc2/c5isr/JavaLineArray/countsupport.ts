@@ -301,6 +301,7 @@ export class countsupport {
                 }
 
                 case TacticalLines.WITHDRAW:
+                case TacticalLines.DISENGAGE:
                 case TacticalLines.WDRAWUP:
                 case TacticalLines.DELAY:		//extra four points for hash marks on last segment
                 case TacticalLines.RETIRE:
