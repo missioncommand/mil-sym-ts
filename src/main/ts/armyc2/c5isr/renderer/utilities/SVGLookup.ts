@@ -128,7 +128,7 @@ export class SVGLookup
 
             let lookup: Map<string, SVGInfo>;
 
-            if (version === SymbolID.Version_2525E) {
+            if (version >= SymbolID.Version_2525E) {
 
                 lookup = SVGLookup._SVGLookupE;
             }
@@ -733,7 +733,7 @@ export class SVGLookup
                     SVGLookup._SVGLookupD.set(svgInfo.getID(),svgInfo);
                 }
             }
-            else if (version === SymbolID.Version_2525E) 
+            else if (version >= SymbolID.Version_2525E) 
             {
                 if(SVGLookup._SVGLookupE.has(svgInfo.getID()) == false)
                 {

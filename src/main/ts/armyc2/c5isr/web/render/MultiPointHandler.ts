@@ -3015,8 +3015,8 @@ export class MultiPointHandler {
             let info: MSInfo = MSLookup.getInstance().getMSLInfo(symbolID);
 
             if (info == null) {
-                if (SymbolID.getVersion(symbolID) === SymbolID.Version_2525E) {
-                    return "Basic ID: " + basicID + " not recognized in version E (13)";
+                if (SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E) {
+                    return "Basic ID: " + basicID + " not recognized in version E (15)";
                 } else {
                     return "Basic ID: " + basicID + " not recognized in version D (11)";
                 }

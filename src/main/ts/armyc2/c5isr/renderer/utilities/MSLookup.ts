@@ -142,7 +142,7 @@ export class MSLookup {
 
         try {
             let msJSON: JSONSymbol[];
-            if (version === SymbolID.Version_2525E) {
+            if (version >= SymbolID.Version_2525E) {
                 lookup = MSLookup._MSLookupE;
                 list = this._IDListE;
                 msJSON = MSLookup.mse["mse"]["SYMBOL"]
@@ -802,7 +802,7 @@ export class MSLookup {
 
                 let length: number = basicID.length;
                 if (length === 8) {
-                    if (version === SymbolID.Version_2525E) {
+                    if (version >= SymbolID.Version_2525E) {
                         return MSLookup._MSLookupE.get(basicID) || null;
                     } else if (version === SymbolID.Version_2525D && basicID === "25272100") {
                         // MSDZ can have extra point in D
@@ -836,7 +836,7 @@ export class MSLookup {
     public getIDList(version: number): Array<string> {
         if (version < SymbolID.Version_2525E) {
             return this._IDListD;
-        } else if (version === SymbolID.Version_2525E) {
+        } else if (version >= SymbolID.Version_2525E) {
             return this._IDListE;
         } else {
             return this._IDListD;
@@ -860,7 +860,7 @@ export class MSLookup {
                 else
                     ErrorLogger.LogMessage("Symbol Set and Entity Code combination already exist: " + msInfo.getBasicSymbolID(), LogLevel.INFO,false);
             }
-            else if (version === SymbolID.Version_2525E) 
+            else if (version >= SymbolID.Version_2525E) 
             {
                 if(this._IDListE.indexOf(msInfo.getBasicSymbolID()) == -1)
                 {
