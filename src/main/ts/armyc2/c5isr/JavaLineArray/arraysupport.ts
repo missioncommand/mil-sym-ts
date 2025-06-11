@@ -4384,6 +4384,11 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.ENVELOPMENT: {
+                    acCounter = DISMSupport.GetEnvelopmentGraphicDouble(pLinePoints);
+                    break;
+                }
+
                 case TacticalLines.EASY: {
                     acCounter = DISMSupport.GetDISMEasyDouble(pLinePoints, lineType);
                     break;
@@ -4451,7 +4456,9 @@ export class arraysupport {
                 case TacticalLines.HCONVOY:
                 case TacticalLines.MFLANE:
                 case TacticalLines.DIRATKAIR:
-                case TacticalLines.ABATIS: {
+                case TacticalLines.ABATIS:
+                case TacticalLines.MOBILE_DEFENSE:
+                case TacticalLines.ENVELOPMENT: {
                     arraysupport.FillPoints(pLinePoints, acCounter, points);
                     break;
                 }

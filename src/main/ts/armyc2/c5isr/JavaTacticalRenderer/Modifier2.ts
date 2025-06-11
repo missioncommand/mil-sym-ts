@@ -306,6 +306,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.ENVELOPMENT: {
+                    label = "E";
+                    break;
+                }
+
                 case TacticalLines.FPOL: {
                     label = "P(F)";
                     break;
@@ -4222,7 +4227,8 @@ export class Modifier2 {
                 case TacticalLines.RANGE_FAN_SECTOR:
                 case TacticalLines.RADAR_SEARCH:
                 case TacticalLines.SHIP_AOI_CIRCULAR:
-                case TacticalLines.MFLANE: {
+                case TacticalLines.MFLANE:
+                case TacticalLines.ENVELOPMENT: {
                     break;
                 }
 
@@ -4728,6 +4734,11 @@ export class Modifier2 {
                 case TacticalLines.RANGE_FAN_SECTOR:
                 case TacticalLines.RADAR_SEARCH: {
                     Modifier2.addSectorModifiers(tg, converter);
+                    break;
+                }
+
+                case TacticalLines.ENVELOPMENT: {
+                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
                     break;
                 }
 

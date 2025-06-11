@@ -501,6 +501,132 @@ export class DISMSupport {
         }
         return counter;
     }
+    
+    private static IsEnvelopmentArcReversed(pPoints: POINT2[]): boolean {
+        try {
+            if (pPoints.length < 4) {
+                return false;
+            }
+
+            let ptsSeize: POINT2[] = new Array<POINT2>(2);
+            ptsSeize[0] = new POINT2(pPoints[0]);
+            ptsSeize[1] = new POINT2(pPoints[2]);
+            lineutility.CalcClockwiseCenterDouble(ptsSeize);
+            let d: double = lineutility.CalcDistanceDouble(ptsSeize[0], pPoints[3]);
+
+            ptsSeize[0] = new POINT2(pPoints[2]);
+            ptsSeize[1] = new POINT2(pPoints[0]);
+            lineutility.CalcClockwiseCenterDouble(ptsSeize);
+            let dArcReversed: double = lineutility.CalcDistanceDouble(ptsSeize[0], pPoints[3]);
+
+            return dArcReversed > d;
+        } catch (exc) {
+            if (exc instanceof Error) {
+                ErrorLogger.LogException(DISMSupport._className, "IsEnvelopmentArcReversed",
+                    new RendererException("Failed inside IsEnvelopmentArcReversed", exc));
+            } else {
+                throw exc;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Calculates the points for ENVELOPMENT
+     *
+     * @param points OUT - the client points, also used for the returned points.
+     */
+    static GetEnvelopmentGraphicDouble(points: POINT2[]): int {
+        let counter: int = 0;
+        try {
+            let savepoints: POINT2[] = new Array<POINT2>(4);
+            let iLength: double = 0;
+            let iRadius: double = 0;
+            let iDiagEOL_length: double = 0;
+            let dAngle1: double = 0;
+            let iDeltaX1: double = 0;
+            let iDeltaY1: double = 0;
+            let iDeltaX2: double = 0;
+            let iDeltaY2: double = 0;
+            let ptArcCenter: POINT2 = new POINT2();
+            let arcpoints: POINT2[] = new Array<POINT2>(17);
+            let deltapoints: POINT2[] = new Array<POINT2>(4);
+            let j: int = 0;
+
+            for (j = 0; j < 4; j++) {
+                savepoints[j] = new POINT2(points[j]);
+            }
+
+            lineutility.InitializePOINT2Array(arcpoints);
+            lineutility.InitializePOINT2Array(deltapoints);
+
+            points[0] = new POINT2(savepoints[0]);
+            points[0].style = 14;
+            counter++;
+            points[1] = lineutility.ClosestPointOnLine(savepoints[0], savepoints[2], savepoints[1]);
+            points[1].style = 5;
+            counter++;
+
+            iLength = Math.sqrt((points[1].x - points[0].x) * (points[1].x - points[0].x) +
+                (points[1].y - points[0].y) * (points[1].y - points[0].y));
+            iRadius = Math.sqrt((points[2].x - points[1].x) * (points[2].x - points[1].x) +
+                (points[2].y - points[1].y) * (points[2].y - points[1].y)) / 2;
+            iDiagEOL_length = (iLength + iRadius * 2) / 20;
+            dAngle1 = Math.atan2(points[2].y - points[1].y, points[2].x - points[1].x);
+
+            let DPIScaleFactor: double = RendererSettings.getInstance().getDeviceDPI() / 96.0;
+            if (iDiagEOL_length > DISMSupport.maxLength * DPIScaleFactor) {
+                iDiagEOL_length = DISMSupport.maxLength * DPIScaleFactor;
+            }
+            if (iDiagEOL_length < DISMSupport.minLength * DPIScaleFactor) {   //was minLength
+                iDiagEOL_length = DISMSupport.minLength * DPIScaleFactor;
+            }
+
+            // draw the semicircle
+            ptArcCenter.x = (points[1].x + savepoints[2].x) / 2;
+            ptArcCenter.y = (points[1].y + savepoints[2].y) / 2;
+            let reverseArc: boolean = DISMSupport.IsEnvelopmentArcReversed(savepoints);
+            if (reverseArc) {
+                DISMSupport.ArcApproximationDouble( (ptArcCenter.x - iRadius), (ptArcCenter.y - iRadius),
+                        (ptArcCenter.x + iRadius), (ptArcCenter.y + iRadius),
+                        points[1].x, points[1].y, savepoints[2].x, savepoints[2].y, arcpoints);
+                dAngle1 += DISMSupport.CONST_PI / 2;
+            } else {
+                dAngle1 -= DISMSupport.CONST_PI / 2;
+                DISMSupport.ArcApproximationDouble((ptArcCenter.x - iRadius), (ptArcCenter.y - iRadius),
+                        (ptArcCenter.x + iRadius), (ptArcCenter.y + iRadius),
+                        savepoints[2].x, savepoints[2].y, points[1].x, points[1].y, arcpoints);
+            }
+
+            // draw the arrow
+            iDeltaX1 = (iDiagEOL_length * Math.cos(dAngle1 - DISMSupport.CONST_PI / 4));
+            iDeltaY1 = (iDiagEOL_length * Math.sin(dAngle1 - DISMSupport.CONST_PI / 4));
+            iDeltaX2 = (iDiagEOL_length * Math.cos(dAngle1 + DISMSupport.CONST_PI / 4));
+            iDeltaY2 = (iDiagEOL_length * Math.sin(dAngle1 + DISMSupport.CONST_PI / 4));
+            DISMSupport.DrawEndpieceDeltasDouble(savepoints[2],
+                iDeltaX1, iDeltaY1, iDeltaX2, iDeltaY2, deltapoints);
+
+            for (j = 0; j < 4; j++) {
+                points[counter] = new POINT2(deltapoints[j]);
+                counter++;
+            }
+
+            for (j = 0; j < 17; j++) {
+                points[counter] = new POINT2(arcpoints[j]);
+                points[counter].style = 0;
+                counter++;
+            }
+            points[counter-1].style = 5;
+        } catch (exc) {
+            if (exc instanceof Error) {
+                ErrorLogger.LogException(DISMSupport._className, "GetEnvelopmentGraphicDouble",
+                    new RendererException("Failed inside GetEnvelopmentGraphicDouble", exc));
+            } else {
+                throw exc;
+            }
+        }
+        return counter;
+    }
     /**
      * Calculates the points for SCREEN, COVER, GUARD, SARA.
      *

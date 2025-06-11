@@ -306,7 +306,8 @@ export class countsupport {
                 case TacticalLines.DELAY:		//extra four points for hash marks on last segment
                 case TacticalLines.RETIRE:
                 case TacticalLines.FPOL:
-                case TacticalLines.RPOL: {
+                case TacticalLines.RPOL:
+                case TacticalLines.ENVELOPMENT: {
                     count = 23;
                     break;
                 }

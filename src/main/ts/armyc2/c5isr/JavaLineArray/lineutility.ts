@@ -4068,6 +4068,31 @@ export class lineutility {
     }  // end
 
     /**
+     * Returns the point on line (pt0 to pt1) closest to ptRelative
+     *
+     * @param pt0 the first point on line
+     * @param pt1 the second point on line
+     * @param ptRelative the second point on line
+     * @return the point closest to ptRelative on the line
+     */
+    public static ClosestPointOnLine(pt0: POINT2, pt1: POINT2, ptRelative: POINT2): POINT2 {
+        if (pt0.x == ptRelative.x && pt0.y == ptRelative.y)
+            return new POINT2(pt0);
+        else if (pt1.x == ptRelative.x && pt1.y == ptRelative.y)
+            return new POINT2(pt1);
+        else if (pt0.x == pt1.x && pt0.y == pt1.y)
+            return new POINT2(pt0);
+
+        let atob = new POINT2(pt1.x - pt0.x,  pt1.y - pt0.y );
+        let atop = new POINT2(ptRelative.x - pt0.x,  ptRelative.y - pt0.y );
+        let len: double = atob.x * atob.x + atob.y * atob.y;
+        let dot: double = atop.x * atob.x + atop.y * atob.y;
+        let t: double = Math.min( 1, Math.max( 0, dot / len ) );
+
+        return new POINT2(pt0.x + atob.x * t, pt0.y + atob.y * t);
+    }
+
+    /**
      * Returns the point perpendicular to the line (pt0 to pt1) at the midpoint
      * the same distance from (and on the same side of) the the line as
      * ptRelative.
