@@ -3093,8 +3093,9 @@ export class Modifier2 {
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_T1(), Modifier2.area, -2 * csFactor, ptCenter, ptCenter, false);
                     Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false, "H");
                     Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 0, ptCenter, ptCenter, false, "H1");
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Location(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, false, "H2");
-                    Modifier2.addDTG(tg, Modifier2.area, 2 * csFactor, 3 * csFactor, ptCenter, ptCenter, metrics);
+                    Modifier2.AddIntegralAreaModifier(tg, "GRID " + tg.get_Location(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, false, "H2");
+                    Modifier2.AddModifier2(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.area, 2 * csFactor, ptCenter, ptCenter, false, "W");
+                    Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.area, 3 * csFactor, ptCenter, ptCenter, false, "W1");
                     break;
                 }
 
@@ -4458,8 +4459,8 @@ export class Modifier2 {
                     Modifier2.AddModifier2(tg, tg.get_T1(), Modifier2.aboveMiddle, -2 * csFactor, ptLeft, ptRight, false, "T1");
                     Modifier2.AddModifier2(tg, "MIN ALT: " + tg.get_X(), Modifier2.aboveMiddle, -1 * csFactor, ptLeft, ptRight, false, "H");
                     Modifier2.AddModifier2(tg, "MAX ALT: " + tg.get_X1(), Modifier2.aboveMiddle, 0, ptLeft, ptRight, false, "H1");
-                    Modifier2.AddModifier2(tg, "Grids: " + tg.get_H(), Modifier2.aboveMiddle, 1 * csFactor, ptLeft, ptRight, false, "H2");
-                    Modifier2.AddModifier2(tg, "EFF: " + tg.get_DTG() + WDash, Modifier2.aboveMiddle, 2 * csFactor, ptLeft, ptRight, false, "W");
+                    Modifier2.AddModifier2(tg, "GRID " + tg.get_Location(), Modifier2.aboveMiddle, 1 * csFactor, ptLeft, ptRight, false, "H2");
+                    Modifier2.AddModifier2(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.aboveMiddle, 2 * csFactor, ptLeft, ptRight, false, "W");
                     Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 3 * csFactor, ptLeft, ptRight, false, "W1");
                     break;
                 }
@@ -4470,8 +4471,8 @@ export class Modifier2 {
                     Modifier2.AddModifier2(tg, tg.get_T1(), Modifier2.area, -2 * csFactor, ptCenter, ptCenter, false, "T1");
                     Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false, "H");
                     Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 0, ptCenter, ptCenter, false, "H1");
-                    Modifier2.AddIntegralAreaModifier(tg, "Grids: " + tg.get_H(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, false, "H2");
-                    Modifier2.AddIntegralAreaModifier(tg, "EFF: " + tg.get_DTG() + WDash, Modifier2.area, 2 * csFactor, ptCenter, ptCenter, false, "W");
+                    Modifier2.AddIntegralAreaModifier(tg, "GRID " + tg.get_Location(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, false, "H2");
+                    Modifier2.AddIntegralAreaModifier(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.area, 2 * csFactor, ptCenter, ptCenter, false, "W");
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.area, 3 * csFactor, ptCenter, ptCenter, false, "W1");
                     break;
                 }
