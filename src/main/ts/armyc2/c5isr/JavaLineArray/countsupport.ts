@@ -317,7 +317,8 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.RIP: {
+                case TacticalLines.RIP:
+                case TacticalLines.DEMONSTRATE: {
                     count = 29;
                     break;
                 }

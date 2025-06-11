@@ -498,6 +498,7 @@ export class clsUtility {
             case TacticalLines.FPOL:
             case TacticalLines.RPOL:
             case TacticalLines.RIP:
+            case TacticalLines.DEMONSTRATE:
             case TacticalLines.DELAY:
             case TacticalLines.CATK:
             case TacticalLines.CATKBYFIRE:

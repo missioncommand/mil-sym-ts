@@ -197,6 +197,7 @@ export class clsUtility {
 
             case TacticalLines.SPTBYFIRE:
             case TacticalLines.RIP:
+            case TacticalLines.DEMONSTRATE:
             case TacticalLines.GAP:
             case TacticalLines.ASLTXING:
             case TacticalLines.MSDZ: {

@@ -4313,7 +4313,8 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.RIP: {
+                case TacticalLines.RIP:
+                case TacticalLines.DEMONSTRATE: {
                     acCounter = DISMSupport.GetDISMRIPDouble(pLinePoints, lineType);
                     break;
                 }

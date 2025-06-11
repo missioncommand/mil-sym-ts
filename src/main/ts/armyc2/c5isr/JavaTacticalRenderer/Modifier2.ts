@@ -363,6 +363,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.DEMONSTRATE: {
+                    label = "DEM";
+                    break;
+                }
+
                 case TacticalLines.WITHDRAW: {
                     label = "W";
                     break;
@@ -2554,6 +2559,7 @@ export class Modifier2 {
                 case TacticalLines.TORPEDO:
                 case TacticalLines.OPTICAL:
                 case TacticalLines.RIP:
+                case TacticalLines.DEMONSTRATE:
                 case TacticalLines.BOMB:
                 case TacticalLines.ZONE:
                 case TacticalLines.AT:
@@ -3770,7 +3776,8 @@ export class Modifier2 {
                 case TacticalLines.RPOL:
                 case TacticalLines.WITHDRAW:
                 case TacticalLines.DISENGAGE:
-                case TacticalLines.WDRAWUP: {
+                case TacticalLines.WDRAWUP:
+                case TacticalLines.DEMONSTRATE: {
                     Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
                     break;
                 }
