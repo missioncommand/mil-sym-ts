@@ -1094,7 +1094,8 @@ export class clsRenderer {
                             case TacticalLines.MAIN:
                             case TacticalLines.SPT:
                             case TacticalLines.FRONTAL_ATTACK:
-                            case TacticalLines.TURNING_MOVEMENT: {
+                            case TacticalLines.TURNING_MOVEMENT:
+                            case TacticalLines.MOVEMENT_TO_CONTACT: {
                                 let ptPixels: POINT2 = clsUtilityJTR.ComputeLastPoint(tg.Pixels);
                                 tg.Pixels.push(ptPixels);
                                 //Point pt = clsUtility.POINT2ToPoint(ptPixels);

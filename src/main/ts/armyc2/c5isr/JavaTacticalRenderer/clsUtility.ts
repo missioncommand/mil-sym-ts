@@ -780,6 +780,24 @@ export class clsUtility {
                     break;
                 }
 
+                case TacticalLines.MOVEMENT_TO_CONTACT: {
+                    if (shape.getShapeType() == Shape2.SHAPE_TYPE_FILL) {
+                        shape.setFillStyle(tg.get_FillStyle());
+                        shape.setFillColor(tg.get_FillColor());
+                        // If there are 4 points and the first and last are the same this is
+                        // an arrow at the end of a jaggy line and should be filled with line color
+                        let firstPt: POINT2 = shape.getPoints()[0];
+                        let lastPt: POINT2 = shape.getPoints()[shape.getPoints().length - 1];
+                        if (shape.getPoints().length == 4 && firstPt.x == lastPt.x && firstPt.y == lastPt.y)
+                            shape.setFillColor(tg.get_LineColor());
+                    }
+                    if (shape.getShapeType() == Shape2.SHAPE_TYPE_POLYLINE) {
+                        shape.setLineColor(tg.get_LineColor());
+                        shape.set_Style(lineStyle);
+                    }
+                    break;
+                }
+
                 default: {
                     if (shape.getShapeType() === Shape2.SHAPE_TYPE_FILL) {
                         shape.setFillStyle(tg.get_FillStyle());
@@ -1152,6 +1170,7 @@ export class clsUtility {
                     case TacticalLines.SPT:
                     case TacticalLines.FRONTAL_ATTACK:
                     case TacticalLines.TURNING_MOVEMENT:
+                    case TacticalLines.MOVEMENT_TO_CONTACT:
                     case TacticalLines.MAIN:
                     case TacticalLines.CATKBYFIRE: {	//80
                         let tempShapes: Array<Shape2> = new Array();
@@ -1653,6 +1672,7 @@ export class clsUtility {
                 case TacticalLines.SPT:
                 case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.TURNING_MOVEMENT:
+                case TacticalLines.MOVEMENT_TO_CONTACT:
                 case TacticalLines.LC:
                 case TacticalLines.UNSP:
                 case TacticalLines.DFENCE:

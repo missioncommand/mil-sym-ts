@@ -89,6 +89,11 @@ export class CELineArray {
                     break;
                 }
 
+                case TacticalLines.MOVEMENT_TO_CONTACT: {
+                    lResult = 2 * lElements + 24;
+                    break;
+                }
+
                 case TacticalLines.CATK: {
                     lResult = 2 * lElements + 8;
                     break;
@@ -150,6 +155,7 @@ export class CELineArray {
                 case TacticalLines.SPT_STRAIGHT:
                 case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.TURNING_MOVEMENT:
+                case TacticalLines.MOVEMENT_TO_CONTACT:
                 case TacticalLines.UNSP:
                 case TacticalLines.SFENCE:
                 case TacticalLines.DFENCE:
