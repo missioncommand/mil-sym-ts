@@ -2559,35 +2559,38 @@ export class DISMSupport {
             }
             points[counter - 3].style = 5;
             points[counter - 1].style = 5;
+
             // draw the arrowhead on line between savepoints 2 and 3
-            pts[0] = new POINT2(savepoints[2]);
-            pts[1] = new POINT2(savepoints[3]);
-            iLengthPt2Pt3 = Math.sqrt((pts[1].x - pts[0].x) * (pts[1].x - pts[0].x) +
-                (pts[1].y - pts[0].y) * (pts[1].y - pts[0].y));
-            iDiagEOL_length = iLengthPt2Pt3 / 8;
+            if (linetype != TacticalLines.MOBILE_DEFENSE) {
+                pts[0] = new POINT2(savepoints[2]);
+                pts[1] = new POINT2(savepoints[3]);
+                iLengthPt2Pt3 = Math.sqrt((pts[1].x - pts[0].x) * (pts[1].x - pts[0].x) +
+                    (pts[1].y - pts[0].y) * (pts[1].y - pts[0].y));
+                iDiagEOL_length = iLengthPt2Pt3 / 8;
 
-            //M. Deutch 8-19-04
-            if (iDiagEOL_length > DISMSupport.maxLength * DPIScaleFactor) {
-                iDiagEOL_length = DISMSupport.maxLength * DPIScaleFactor;
-            }
-            if (iDiagEOL_length < DISMSupport.minLength * DPIScaleFactor) {
-                iDiagEOL_length = DISMSupport.minLength * DPIScaleFactor;
-            }
+                //M. Deutch 8-19-04
+                if (iDiagEOL_length > DISMSupport.maxLength * DPIScaleFactor) {
+                    iDiagEOL_length = DISMSupport.maxLength * DPIScaleFactor;
+                }
+                if (iDiagEOL_length < DISMSupport.minLength * DPIScaleFactor) {
+                    iDiagEOL_length = DISMSupport.minLength * DPIScaleFactor;
+                }
 
-            dAngle1 = Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x);
-            iDeltaX1 = (iDiagEOL_length * Math.cos(dAngle1 - DISMSupport.CONST_PI / 4));
-            iDeltaY1 = (iDiagEOL_length * Math.sin(dAngle1 - DISMSupport.CONST_PI / 4));
-            iDeltaX2 = (iDiagEOL_length * Math.cos(dAngle1 + DISMSupport.CONST_PI / 4));
-            iDeltaY2 = (iDiagEOL_length * Math.sin(dAngle1 + DISMSupport.CONST_PI / 4));
-            DISMSupport.DrawEndpieceDeltasDouble(pts[0],
-                iDeltaX1, iDeltaY1, iDeltaX2, iDeltaY2, deltapoints);
-            for (j = 0; j < 4; j++) {
-                points[counter] = new POINT2(deltapoints[j]);
-                points[counter].style = 0;
-                counter++;
+                dAngle1 = Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x);
+                iDeltaX1 = (iDiagEOL_length * Math.cos(dAngle1 - DISMSupport.CONST_PI / 4));
+                iDeltaY1 = (iDiagEOL_length * Math.sin(dAngle1 - DISMSupport.CONST_PI / 4));
+                iDeltaX2 = (iDiagEOL_length * Math.cos(dAngle1 + DISMSupport.CONST_PI / 4));
+                iDeltaY2 = (iDiagEOL_length * Math.sin(dAngle1 + DISMSupport.CONST_PI / 4));
+                DISMSupport.DrawEndpieceDeltasDouble(pts[0],
+                    iDeltaX1, iDeltaY1, iDeltaX2, iDeltaY2, deltapoints);
+                for (j = 0; j < 4; j++) {
+                    points[counter] = new POINT2(deltapoints[j]);
+                    points[counter].style = 0;
+                    counter++;
+                }
+                points[counter - 3].style = 5;
+                points[counter - 1].style = 5;
             }
-            points[counter - 3].style = 5;
-            points[counter - 1].style = 5;
 
             // draw the semicircle
             iRadius = (Math.sqrt((savepoints[2].x - savepoints[1].x) * (savepoints[2].x - savepoints[1].x) +

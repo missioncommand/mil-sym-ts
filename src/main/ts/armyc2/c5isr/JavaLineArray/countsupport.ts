@@ -329,6 +329,11 @@ export class countsupport {
                     break;
                 }
 
+                case TacticalLines.MOBILE_DEFENSE: {
+                    count = 44;
+                    break;
+                }
+
                 case TacticalLines.DIRATKSPT: {
                     count = vblCounter + 3;
                     break;

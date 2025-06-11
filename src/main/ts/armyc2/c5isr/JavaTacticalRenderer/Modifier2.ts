@@ -378,6 +378,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.MOBILE_DEFENSE: {
+                    label = "MD";
+                    break;
+                }
+
                 case TacticalLines.DEMONSTRATE: {
                     label = "DEM";
                     break;
@@ -4228,7 +4233,8 @@ export class Modifier2 {
                 case TacticalLines.RADAR_SEARCH:
                 case TacticalLines.SHIP_AOI_CIRCULAR:
                 case TacticalLines.MFLANE:
-                case TacticalLines.ENVELOPMENT: {
+                case TacticalLines.ENVELOPMENT:
+                case TacticalLines.MOBILE_DEFENSE: {
                     break;
                 }
 
@@ -4739,6 +4745,11 @@ export class Modifier2 {
 
                 case TacticalLines.ENVELOPMENT: {
                     Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
+                    break;
+                }
+
+                case TacticalLines.MOBILE_DEFENSE: {
+                    Modifier2.AddIntegralModifier(tg, label, Modifier2.area, 0, 16, 16, true);
                     break;
                 }
 
