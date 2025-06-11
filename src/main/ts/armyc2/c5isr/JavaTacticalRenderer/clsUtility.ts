@@ -439,6 +439,7 @@ export class clsUtility {
             case TacticalLines.ENCIRCLE:
             case TacticalLines.DHA_REVD:
             case TacticalLines.DHA:
+            case TacticalLines.KILL_ZONE:
             case TacticalLines.EPW:
             case TacticalLines.RHA:
             case TacticalLines.DSA:

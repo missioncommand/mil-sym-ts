@@ -820,6 +820,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.KILL_ZONE: {
+                    label = "KILL ZONE";
+                    break;
+                }
+
                 case TacticalLines.FARP: {
                     label = "FARP";
                     break;
@@ -2409,6 +2414,7 @@ export class Modifier2 {
                 case TacticalLines.ROUTE_ALT:
                 case TacticalLines.DHA_REVD:
                 case TacticalLines.DHA:
+                case TacticalLines.KILL_ZONE:
                 case TacticalLines.EPW:
                 case TacticalLines.UXO:
                 case TacticalLines.FARP:
@@ -3385,6 +3391,7 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.DHA:
+                case TacticalLines.KILL_ZONE:
                 case TacticalLines.FARP: {
                     Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
