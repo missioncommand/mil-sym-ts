@@ -518,7 +518,8 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.FRONTAL_ATTACK: {
+                case TacticalLines.FRONTAL_ATTACK:
+                case TacticalLines.TURNING_MOVEMENT: {
                     count=2*vblCounter+10;
                     break;
                 }

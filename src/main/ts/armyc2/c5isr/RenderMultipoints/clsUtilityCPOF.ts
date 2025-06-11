@@ -2142,6 +2142,7 @@ export class clsUtilityCPOF {
                 case TacticalLines.MAIN:
                 case TacticalLines.SPT:
                 case TacticalLines.FRONTAL_ATTACK:
+                case TacticalLines.TURNING_MOVEMENT:
                 case TacticalLines.AIRAOA:
                 case TacticalLines.AAAAA: {
                     return false;

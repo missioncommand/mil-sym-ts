@@ -1093,7 +1093,8 @@ export class clsRenderer {
                             case TacticalLines.AIRAOA:
                             case TacticalLines.MAIN:
                             case TacticalLines.SPT:
-                            case TacticalLines.FRONTAL_ATTACK: {
+                            case TacticalLines.FRONTAL_ATTACK:
+                            case TacticalLines.TURNING_MOVEMENT: {
                                 let ptPixels: POINT2 = clsUtilityJTR.ComputeLastPoint(tg.Pixels);
                                 tg.Pixels.push(ptPixels);
                                 //Point pt = clsUtility.POINT2ToPoint(ptPixels);

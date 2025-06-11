@@ -750,6 +750,7 @@ export class clsUtility {
                 case TacticalLines.AAAAA:
                 case TacticalLines.SPT:
                 case TacticalLines.FRONTAL_ATTACK:
+                case TacticalLines.TURNING_MOVEMENT:
                 case TacticalLines.MAIN: {
                     break;
                 }
@@ -915,6 +916,7 @@ export class clsUtility {
                 case TacticalLines.AAAAA:
                 case TacticalLines.SPT:
                 case TacticalLines.FRONTAL_ATTACK:
+                case TacticalLines.TURNING_MOVEMENT:
                 case TacticalLines.MAIN:
                 case TacticalLines.CATKBYFIRE: {	//80
                     return;
