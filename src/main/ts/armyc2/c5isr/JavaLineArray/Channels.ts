@@ -986,6 +986,7 @@ export class Channels {
             switch (vbiDrawThis) {
                 case TacticalLines.SPT_STRAIGHT:
                 case TacticalLines.SPT:
+                case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.AAAAA:
                 case TacticalLines.AIRAOA:
                 case TacticalLines.CATK:
@@ -1051,6 +1052,7 @@ export class Channels {
                 case TacticalLines.MAIN_STRAIGHT:
                 case TacticalLines.SPT:
                 case TacticalLines.SPT_STRAIGHT:
+                case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.TRIPLE:
                 case TacticalLines.DOUBLEC:
                 case TacticalLines.SINGLEC:
@@ -1599,6 +1601,7 @@ export class Channels {
                 case TacticalLines.AAAAA:
                 case TacticalLines.SPT:
                 case TacticalLines.SPT_STRAIGHT:
+                case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.MAIN:
                 case TacticalLines.MAIN_STRAIGHT:
                 case TacticalLines.CATKBYFIRE: {	//80
@@ -1629,6 +1632,7 @@ export class Channels {
                 case TacticalLines.MAIN_STRAIGHT:
                 case TacticalLines.SPT:
                 case TacticalLines.SPT_STRAIGHT:
+                case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.CATK:
                 case TacticalLines.CATKBYFIRE:
                 case TacticalLines.TRIPLE:
@@ -2235,6 +2239,7 @@ export class Channels {
 
                 case TacticalLines.SPT:
                 case TacticalLines.SPT_STRAIGHT:
+                case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.CATK:
                 case TacticalLines.CATKBYFIRE:
                 case TacticalLines.AIRAOA:
@@ -2249,6 +2254,8 @@ export class Channels {
                     //diagnostic
                     if (vbiDrawThis === TacticalLines.AAAAA) {
                         vblCounter = vblLowerCounter + vblUpperCounter + 19;
+                    } else if (vbiDrawThis == TacticalLines.FRONTAL_ATTACK) {
+                        vblCounter = vblLowerCounter + vblUpperCounter + 10;
                     }
 
                     pLinePoints = new Array<POINT2>(vblCounter);
@@ -2541,6 +2548,23 @@ export class Channels {
                             pLinePoints[vblCounter - k - 1].style = 18;
                         }
                     }
+                    
+                    if (vbiDrawThis == TacticalLines.FRONTAL_ATTACK) {
+                        // Add line on perpendicular to arrow head
+                        pt0 = new POINT2(pLinePoints[vblLowerCounter + vblUpperCounter + 1]); // arrow head left
+                        ptCenter = new POINT2(pLinePoints[vblLowerCounter + vblUpperCounter + 6]); // arrow head tip
+                        pt1 = new POINT2(pLinePoints[vblLowerCounter + vblUpperCounter + 5]); // arrow right
+
+                        // Make distance between pt0 and pt1 vblChannelWidth * 2
+                        midPt1 = lineutility.MidPointDouble(pt0, pt1, 0);
+                        pt0 = lineutility.ExtendAlongLineDouble(pt1, midPt1, vblChannelWidth);
+                        pt1 = lineutility.ExtendAlongLineDouble(pt0, midPt1, vblChannelWidth);
+
+                        pLinePoints[vblLowerCounter + vblUpperCounter + 8] = lineutility.PointRelativeToLine(pt0, pt1, pt0, ptCenter);
+                        pLinePoints[vblLowerCounter + vblUpperCounter + 8].style = 0;
+                        pLinePoints[vblLowerCounter + vblUpperCounter + 9] = lineutility.PointRelativeToLine(pt0, pt1, pt1, ptCenter);
+                        pLinePoints[vblLowerCounter + vblUpperCounter + 9].style = 5;
+                    }
                     break;
                 }
 
@@ -2643,7 +2667,8 @@ export class Channels {
                     case TacticalLines.AAAAA:
                     case TacticalLines.SPT:
                     case TacticalLines.SPT_STRAIGHT:
-                    case TacticalLines.AIRAOA: {
+                    case TacticalLines.AIRAOA:
+                    case TacticalLines.FRONTAL_ATTACK: {
                         if (beginLine) {
                             if (k > 0) //doubled points with linestyle=5
                             {
@@ -2901,6 +2926,32 @@ export class Channels {
                     t = newPts.length;
                     //for(j=1;j<newPts.length;j++)
                     for (j = 1; j < t; j++) {
+                        shape.lineTo(newPts[j]);
+                    }
+                    break;
+                }
+
+                case TacticalLines.FRONTAL_ATTACK: {
+                    for(j=0;j<(n-10)/2;j++)
+                    {
+                        newPts.push(pLinePoints[j]);
+                    }
+                    //add the arrow outline
+                    newPts.push(pLinePoints[n-8]);
+                    newPts.push(pLinePoints[n-9]);
+                    newPts.push(pLinePoints[n-10]);
+                    newPts.push(pLinePoints[n-5]);
+                    newPts.push(pLinePoints[n-6]);
+
+                    for(j=n-11;j>=(n-10)/2;j--)
+                    {
+                        newPts.push(pLinePoints[j]);
+                    }
+                    shape=new Shape2(Shape2.SHAPE_TYPE_FILL);
+                    shape.moveTo(newPts[0]);
+                    t=newPts.length;
+                    for(j=1;j<t;j++)
+                    {
                         shape.lineTo(newPts[j]);
                     }
                     break;

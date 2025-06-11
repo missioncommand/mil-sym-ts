@@ -518,6 +518,11 @@ export class countsupport {
                     break;
                 }
 
+                case TacticalLines.FRONTAL_ATTACK: {
+                    count=2*vblCounter+10;
+                    break;
+                }
+
                 case TacticalLines.CATKBYFIRE: {
                     count = 2 * vblCounter + 17;
                     break;

@@ -890,6 +890,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.FRONTAL_ATTACK: {
+                    label = "A";
+                    break;
+                }
+
                 default: {
                     break;
                 }
@@ -2599,6 +2604,7 @@ export class Modifier2 {
                 case TacticalLines.ANCHORAGE_LINE:
                 case TacticalLines.ANCHORAGE_AREA:
                 case TacticalLines.SPT:
+                case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.AIRAOA:
                 case TacticalLines.AAAAA:
                 case TacticalLines.MAIN:
@@ -2932,6 +2938,7 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.SPT:
+                case TacticalLines.FRONTAL_ATTACK:
                 case TacticalLines.AIRAOA:
                 case TacticalLines.AAAAA:
                 case TacticalLines.MAIN: {
@@ -2958,7 +2965,10 @@ export class Modifier2 {
                             Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, -csFactor / 2, midPt, midPt, false);
                         }
                     }
-
+                    if (linetype == TacticalLines.FRONTAL_ATTACK) {
+                        midPt=lineutility.ClosestPointOnLine(pt0, pt1, ptLast);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0.5 * csFactor, midPt, pt0, true);
+                    }
                     break;
                 }
 

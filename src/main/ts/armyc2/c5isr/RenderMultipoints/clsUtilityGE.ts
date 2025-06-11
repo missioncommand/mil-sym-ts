@@ -398,6 +398,7 @@ export class clsUtilityGE {
                 case TacticalLines.AAAAA:
                 case TacticalLines.MAIN:
                 case TacticalLines.SPT:
+                case TacticalLines.FRONTAL_ATTACK:
 
                 case TacticalLines.SARA:
                 case TacticalLines.RANGE_FAN_SECTOR:
