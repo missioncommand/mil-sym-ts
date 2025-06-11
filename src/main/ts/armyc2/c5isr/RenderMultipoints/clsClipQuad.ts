@@ -518,6 +518,7 @@ export class clsClipQuad {
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
                 case TacticalLines.ISOLATE:
+                case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.CONVOY:
                 case TacticalLines.HCONVOY: {
                     return shapes;

@@ -732,7 +732,7 @@ export class arraysupport {
             let l: int = 0;
             let ptsArc: POINT2[] = new Array<POINT2>(26);
             let midPts: POINT2[] = new Array<POINT2>(7);
-            let trianglePts: POINT2[] = new Array<POINT2>(21);
+            let trianglePts: POINT2[] = new Array<POINT2>(35);
             let pArrowPoints: POINT2[] = new Array<POINT2>(3);
             let dRadius: double = lineutility.CalcDistanceDouble(pt0, pt1);
             let dLength: double = Math.abs(dRadius - 20);
@@ -824,6 +824,49 @@ export class arraysupport {
                     pLinePoints[46].style = 5;
                     for (j = 47; j < 50; j++) {
                         pLinePoints[j] = new POINT2(pArrowPoints[j - 47]);
+                        pLinePoints[j].style = 0;
+                    }
+                    break;
+                }
+
+                case TacticalLines.AREA_DEFENSE: {
+                    if (dRadius > 100) {
+                        dLength = 0.8 * dRadius;
+                    }
+                    for (j = 1; j <= 23; j++) {
+                        if (j % 3 == 0) {
+                            midPts[k].x = pt0.x - ((dRadius / dLength) * (pt0.x - ptsArc[j].x));
+                            midPts[k].y = pt0.y - ((dRadius / dLength) * (pt0.y - ptsArc[j].y));
+                            trianglePts[l] = new POINT2(ptsArc[j - 1]);
+                            trianglePts[l].style = 9;
+                            l++;
+                            trianglePts[l] = new POINT2(midPts[k]);
+                            trianglePts[l].style = 9;
+                            l++;
+                            trianglePts[l] = new POINT2(ptsArc[j + 1]);
+                            trianglePts[l].style = 9;
+                            l++;
+                            trianglePts[l] = new POINT2(ptsArc[j]);
+                            trianglePts[l].style = 9;
+                            l++;
+                            trianglePts[l] = new POINT2(ptsArc[j - 1]);
+                            trianglePts[l].style = 10;
+                            l++;
+                            k++;
+                        }
+                    }
+                    for (j = 26; j < 61; j++) {
+                        pLinePoints[j] = new POINT2(trianglePts[j - 26]);
+                    }
+                    for (j = 61; j < 64; j++) {
+                        pLinePoints[j] = new POINT2(pArrowPoints[j - 61]);
+                        pLinePoints[j].style = 0;
+                    }
+
+                    lineutility.GetArrowHead4Double(ptsArc[1], ptsArc[0], d / 7, d / 7, pArrowPoints, 0);
+                    pLinePoints[63].style = 5;
+                    for (j = 64; j < 67; j++) {
+                        pLinePoints[j] = new POINT2(pArrowPoints[j - 64]);
                         pLinePoints[j].style = 0;
                     }
                     break;
@@ -3048,6 +3091,12 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.AREA_DEFENSE: {
+                    arraysupport.GetIsolatePointsDouble(pLinePoints, lineType, converter);
+                    acCounter = 67;
+                    break;
+                }
+
                 case TacticalLines.OCCUPY: {
                     arraysupport.GetIsolatePointsDouble(pLinePoints, lineType, converter);
                     acCounter = 32;
@@ -4388,6 +4437,7 @@ export class arraysupport {
                 case TacticalLines.PENETRATE:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.SEIZE:
                 case TacticalLines.EVACUATE:
                 case TacticalLines.BS_RECTANGLE:
@@ -5266,7 +5316,8 @@ export class arraysupport {
                 case TacticalLines.ATDITCHM:
                 case TacticalLines.MNFLDFIX:
                 case TacticalLines.TURN:
-                case TacticalLines.MNFLDDIS: {
+                case TacticalLines.MNFLDDIS:
+                case TacticalLines.AREA_DEFENSE: {
                     //POINT2 initialFillPt=null;
                     for (k = 0; k < acCounter; k++) {
                         if (k === 0) {
@@ -5290,7 +5341,10 @@ export class arraysupport {
                         if (pLinePoints[k].style === 10) {
                             shape.lineTo(pLinePoints[k]);
                             if (shape != null && shape.getShape() != null) {
-                                shapes.splice(0, 0, shape);
+                                if (lineType == TacticalLines.AREA_DEFENSE)
+                                    shapes.push(shape);
+                                else
+                                    shapes.splice(0, 0, shape);
                             }
                         }
                     }//end for

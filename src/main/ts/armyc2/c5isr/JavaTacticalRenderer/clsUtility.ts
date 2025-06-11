@@ -753,6 +753,30 @@ export class clsUtility {
                     break;
                 }
 
+                case TacticalLines.AREA_DEFENSE: {
+                    if (shape.getShapeType() == Shape2.SHAPE_TYPE_FILL) {
+                        shape.setFillStyle(tg.get_FillStyle());
+                        shape.setFillColor(tg.get_FillColor());
+                        // If there are 5 points and the first and last are the same this is
+                        // a triangle and should be filled with line color
+                        let firstPt: POINT2 = shape.getPoints()[0];
+                        let lastPt: POINT2 = shape.getPoints()[shape.getPoints().length - 1];
+                        if (shape.getPoints().length == 5 && firstPt.x == lastPt.x && firstPt.y == lastPt.y) {
+                            shape.setFillStyle(1);
+                            shape.setFillColor(tg.get_LineColor());
+                        }
+                    }
+                    if (shape.getShapeType() == Shape2.SHAPE_TYPE_POLYLINE) {
+                        shape.setLineColor(tg.get_LineColor());
+                        shape.set_Style(lineStyle);
+                        if (hasFill || clsUtility.isClosedPolygon(lineType) || clsUtility.IsChange1Area(lineType)) {
+                            shape.setFillStyle(tg.get_FillStyle());
+                            shape.setFillColor(tg.get_FillColor());
+                        }
+                    }
+                    break;
+                }
+
                 default: {
                     if (shape.getShapeType() === Shape2.SHAPE_TYPE_FILL) {
                         shape.setFillStyle(tg.get_FillStyle());
@@ -847,6 +871,7 @@ export class clsUtility {
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.FLOT:
                 case TacticalLines.LC:
                 case TacticalLines.PL:
