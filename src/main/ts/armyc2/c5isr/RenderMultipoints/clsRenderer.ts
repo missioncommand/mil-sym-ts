@@ -2293,7 +2293,46 @@ export class clsRenderer {
 
     public static getCMLineType(version: int, entityCode: int): int {
         // Check if line type is specific to a version
-        if (version === SymbolID.Version_2525E) {
+        if (version >= SymbolID.Version_2525Ech1) {
+            switch (entityCode) {
+                // Added in 2525Ech1
+                case 152600:
+                    return TacticalLines.AREA_DEFENSE;
+                case 152700:
+                    return TacticalLines.FRONTAL_ATTACK;
+                case 152900:
+                    return TacticalLines.TURNING_MOVEMENT;
+                case 152800:
+                    return TacticalLines.MOBILE_DEFENSE;
+                case 242800:
+                    return TacticalLines.KILL_ZONE;
+                case 342900:
+                    return TacticalLines.MOVEMENT_TO_CONTACT;
+                case 343100:
+                    return TacticalLines.EXPLOIT;
+                case 343300:
+                    return TacticalLines.DEMONSTRATE;
+                case 343500:
+                    return TacticalLines.ENVELOPMENT;
+                case 343800:
+                    return TacticalLines.INFILTRATION;
+                case 344000:
+                    return TacticalLines.PURSUIT;
+                case 344400:
+                    return TacticalLines.DISENGAGE;
+                case 344500:
+                    return TacticalLines.EVACUATE;
+                // Removed in 2525Ech1
+                case 240804:
+                    return -1;
+                // Code changed in 2525Ech1
+                case 270504:
+                    return -1; // TacticalLines.TURN in older versions
+                case 344700:
+                    return TacticalLines.TURN;
+            }
+        }
+        if (version >= SymbolID.Version_2525E) {
             switch (entityCode) {
                 // Added in 2525E
                 case 110400: {

@@ -511,5 +511,19 @@ export class TacticalLines {
     public static readonly ROUTE: number = 25330500;
     public static readonly FPOL: number = 25344100;
     public static readonly RPOL: number = 25344200;
+
+    public static readonly AREA_DEFENSE: number = 25152600;
+    public static readonly FRONTAL_ATTACK: number = 25152700;
+    public static readonly TURNING_MOVEMENT: number = 25152900;
+    public static readonly MOBILE_DEFENSE: number = 25152800;
+    public static readonly KILL_ZONE: number = 25242800;
+    public static readonly MOVEMENT_TO_CONTACT: number = 25342900;
+    public static readonly EXPLOIT: number = 25343100;
+    public static readonly DEMONSTRATE: number = 25343300;
+    public static readonly ENVELOPMENT: number = 25343500;
+    public static readonly INFILTRATION: number = 25343800;
+    public static readonly PURSUIT: number = 25344000;
+    public static readonly DISENGAGE: number = 25344400;
+    public static readonly EVACUATE: number = 25344500;
 }
 
