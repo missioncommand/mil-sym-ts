@@ -5656,7 +5656,7 @@ export class arraysupport {
         } catch (exc) {
             if (exc instanceof Error) {
                 ErrorLogger.LogException(arraysupport._className, "GetLineArray2Double",
-                    new RendererException("GetLineArray2Dboule " + tg.get_LineType().toString(), exc));
+                    new RendererException("GetLineArray2Double " + tg.get_LineType().toString() + exc.message, exc));
             } else {
                 throw exc;
             }
