@@ -2399,7 +2399,7 @@ export class arraysupport {
                     pt1.x = pt2.x;
                     pt3 = new POINT2(pt0);
                     pt3.y = pt2.y;
-                    pLinePoints = new POINT2[5];
+                    pLinePoints = new Array<POINT2>(5);
                     pLinePoints[0] = new POINT2(pt0);
                     pLinePoints[1] = new POINT2(pt1);
                     pLinePoints[2] = new POINT2(pt2);
@@ -2414,7 +2414,7 @@ export class arraysupport {
                     //double xmax=pLinePoints[2].x,xmin=pLinePoints[0].x,ymax=pLinePoints[2].y,ymin=pLinePoints[0].y;
                     let buffer: double = pLinePoints[0].style;
 
-                    pOriginalLinePoints = new POINT2[5];
+                    pOriginalLinePoints = new Array<POINT2>(5);
                     pOriginalLinePoints[0] = new POINT2(pLinePoints[0]);
                     pOriginalLinePoints[1] = new POINT2(pLinePoints[1]);
                     pOriginalLinePoints[2] = new POINT2(pLinePoints[2]);
@@ -2434,7 +2434,7 @@ export class arraysupport {
                     pt3 = pLinePoints[3];
                     pt3.x -= buffer;
                     pt3.y += buffer;
-                    pLinePoints = new POINT2[5];
+                    pLinePoints = new Array<POINT2>(5);
                     pLinePoints[0] = new POINT2(pt0);
                     pLinePoints[1] = new POINT2(pt1);
                     pLinePoints[2] = new POINT2(pt2);

@@ -4330,7 +4330,7 @@ export class Modifier2 {
             switch (linetype) {
                 case TacticalLines.BS_RECTANGLE:
                 case TacticalLines.BBS_RECTANGLE:{
-                    pts = new POINT2[4];
+                    pts = new Array<POINT2>(4);
                     for (j = 0; j < 4; j++) {
                         pts[j] = tg.Pixels[j];
                     }

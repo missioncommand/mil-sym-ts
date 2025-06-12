@@ -2237,7 +2237,7 @@ export class Channels {
                 }
 
                 case TacticalLines.BBS_LINE: {
-                    pLinePoints = new POINT2[vblLowerCounter + vblUpperCounter + 1];
+                    pLinePoints = new Array<POINT2>(vblLowerCounter + vblUpperCounter + 1);
                     for (j = 0; j < vblLowerCounter; j++)
                         pLinePoints[j] = pLowerLinePoints[j];
                     for (j = 0; j < vblUpperCounter; j++)
