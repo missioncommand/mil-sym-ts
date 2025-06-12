@@ -794,7 +794,9 @@ export class MultiPointHandler {
 
                 //moving meta data properties to the last feature with no coords as feature collection doesn't allow properties
                 jsonOutput = jsonOutput.slice(0, -1);
-                jsonOutput += (",{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
+                if (jsonContent.length > 2)
+                    jsonOutput += ","
+                jsonOutput += ("{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
 
                 jsonOutput += (",\"properties\":{\"id\":\"");
                 jsonOutput += (id);
@@ -1378,7 +1380,9 @@ export class MultiPointHandler {
 
                 //moving meta data properties to the last feature with no coords as feature collection doesn't allow properties
                 jsonOutput = jsonOutput.slice(0, -1);
-                jsonOutput += (",{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
+                if (jsonContent.length > 2)
+                    jsonOutput += ","
+                jsonOutput += ("{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
 
                 jsonOutput += (",\"properties\":{\"id\":\"");
                 jsonOutput += (id);
@@ -2387,13 +2391,14 @@ export class MultiPointHandler {
 
             let shapesToAdd: string = null;
             let tempShape:ShapeInfo = shapes[i];
-            if(tempShape != null && tempShape !== undefined)
+            if(tempShape != null && tempShape !== undefined) {
                 shapesToAdd = MultiPointHandler.ShapeToGeoJSONString(tempShape, ipc, normalize);
-            if (shapesToAdd != null && shapesToAdd.length > 0) {
-                fc += (shapesToAdd);
-            }
-            if (shapesToAdd != null && i < len - 1) {
-                fc += (",");
+                if (shapesToAdd != null && shapesToAdd.length > 0) {
+                    fc += (shapesToAdd);
+                    if (i < len - 1) {
+                        fc += (",");
+                    }
+                }
             }
         }
 
@@ -2409,7 +2414,8 @@ export class MultiPointHandler {
                 modifiersToAdd = MultiPointHandler.LabelToGeoJSONString(tempModifier, ipc, normalize, textColor, textBackgroundColor);
             }
             if (modifiersToAdd.length > 0) {
-                fc += (",");
+                if (fc.length > 1)
+                    fc += (",");
                 fc += (modifiersToAdd);
             }
         }
@@ -3730,7 +3736,9 @@ export class MultiPointHandler {
 
                 //moving meta data properties to the last feature with no coords as feature collection doesn't allow properties
                 jsonOutput = jsonOutput.slice(0, -1);
-                jsonOutput += (",{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
+                if (jsonContent.length > 2)
+                    jsonOutput += ","
+                jsonOutput += ("{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
 
                 jsonOutput += (",\"properties\":{\"id\":\"");
                 jsonOutput += (id);
