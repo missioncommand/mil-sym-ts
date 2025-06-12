@@ -3926,6 +3926,25 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.EXPLOIT: {
+                    // Convert arrows to 90 degrees with the hypotenuse distance = distance between pt1 and pt2
+                    let triBiSector: int = (lineutility.CalcDistanceDouble(pt1, pt2) / Math.sqrt(2));
+
+                    // Arrow at pt1
+                    lineutility.GetArrowHead4Double(pt1, pt0, triBiSector, triBiSector * 2, pArrowPoints, 0);
+                    for (k = 0; k < 3; k++) {
+                        pLinePoints[k+2] = new POINT2(pArrowPoints[k]);
+                    }
+
+                    // Dashed tail at pt2
+                    lineutility.GetArrowHead4Double(lineutility.ExtendLineDouble(pt0, pt1, 10), pt1, triBiSector, triBiSector * 2, pArrowPoints, 1);
+                    for (k = 0; k < 3; k++) {
+                        pLinePoints[k+5] = new POINT2(pArrowPoints[k]);
+                    }
+                    acCounter = vblCounter;
+                    break;
+                }
+
                 case TacticalLines.ABATIS: {
                     //must use an x offset for ptYintercept because of extending from it
                     pts2 = new Array<POINT2>(2);
@@ -5345,6 +5364,21 @@ export class arraysupport {
                         secondPoly[i] = pLinePoints[pLinePoints.length - 3 + i];
                     }
                     arraysupport.addPolyline(secondPoly, 3, shapes); // Arrow
+                    break;
+                }
+
+                case TacticalLines.EXPLOIT: {
+                    arraysupport.addPolyline(pLinePoints, 2, shapes); // Main line
+                    secondPoly = new Array<POINT2>(3);
+                    for (let i = 0; i < 3; i++) {
+                        secondPoly[i] = pLinePoints[i + 2];
+                    }
+                    arraysupport.addPolyline(secondPoly, 3, shapes); // Arrow at pt1
+                    secondPoly = new Array<POINT2>(3);
+                    for (let i = 0; i < 3; i++) {
+                        secondPoly[i] = pLinePoints[i + 5];
+                    }
+                    arraysupport.addPolyline(secondPoly, 3, shapes); // Dashed tail at pt2
                     break;
                 }
 

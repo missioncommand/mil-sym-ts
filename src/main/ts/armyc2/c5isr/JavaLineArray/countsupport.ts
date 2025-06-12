@@ -222,7 +222,8 @@ export class countsupport {
                 }
 
                 case TacticalLines.ROADBLK:
-                case TacticalLines.FERRY: {
+                case TacticalLines.FERRY:
+                case TacticalLines.EXPLOIT: {
                     count = 8;
                     break;
                 }

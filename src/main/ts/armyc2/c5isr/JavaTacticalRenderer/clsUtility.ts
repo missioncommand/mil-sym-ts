@@ -798,6 +798,21 @@ export class clsUtility {
                     break;
                 }
 
+                case TacticalLines.EXPLOIT: {
+                    // Some shapes have solid lines some have dashed
+                    if (shape.getShapeType() == Shape2.SHAPE_TYPE_FILL) {
+                        shape.setFillStyle(tg.get_FillStyle());
+                        shape.setFillColor(tg.get_FillColor());
+                    }
+                    if (shape.getShapeType() == Shape2.SHAPE_TYPE_POLYLINE) {
+                        shape.setLineColor(tg.get_LineColor());
+                        if (shapeStyle != 1 /*GraphicProperties.LINE_TYPE_DASHED*/) {
+                            shape.set_Style(lineStyle);
+                        }
+                    }
+                    break;
+                }
+
                 default: {
                     if (shape.getShapeType() === Shape2.SHAPE_TYPE_FILL) {
                         shape.setFillStyle(tg.get_FillStyle());
@@ -1259,7 +1274,7 @@ export class clsUtility {
                     arrowHeadShape.setStroke(stroke);
                 }
             } else {
-                if (tg.get_LineType() === TacticalLines.DIRATKGND || tg.get_LineType() === TacticalLines.DIRATKSPT) {
+                if (tg.get_LineType() === TacticalLines.DIRATKGND || tg.get_LineType() === TacticalLines.DIRATKSPT || tg.get_LineType() == TacticalLines.EXPLOIT) {
                     // Make arrowhead shape solid even if tg.get_LineStyle() isn't
                     let arrowHeadShape: Shape2 = shapes[1];
                     arrowHeadShape.set_Style(0);

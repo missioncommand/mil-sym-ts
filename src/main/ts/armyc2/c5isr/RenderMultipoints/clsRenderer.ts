@@ -1444,7 +1444,15 @@ export class clsRenderer {
                 let ptB: POINT2 = new POINT2(points[1]);
                 let ptC: POINT2 = new POINT2(points[2]);
                 shapes.push(DISMSupport.getFDIShape(tg, ptA, ptB, ptC));
-            } else {
+            }
+            else if (lineType == TacticalLines.EXPLOIT) {
+                let points: Array<POINT2> = shapes[1].getPoints();
+                let ptA = new POINT2(points[0]);
+                let ptB = new POINT2(points[1]);
+                let ptC = new POINT2(points[2]);
+                shapes.push(DISMSupport.getFDIShape(tg, ptA, ptB, ptC));
+            }
+            else {
                 // Shape has no arrow. Put on top of shape
                 let firstPoint: POINT2 = shapes[0].getPoints()[0];
                 let ptUl: POINT2 = new POINT2(firstPoint);
