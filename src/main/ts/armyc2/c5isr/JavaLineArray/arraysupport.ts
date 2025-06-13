@@ -4646,13 +4646,9 @@ export class arraysupport {
                 case TacticalLines.WDRAWUP:
                 case TacticalLines.RETIRE:
                 case TacticalLines.FPOL:
-                case TacticalLines.RPOL: {
-                    acCounter = DISMSupport.GetDelayGraphicEtcDouble(pLinePoints);
-                    break;
-                }
-
+                case TacticalLines.RPOL:
                 case TacticalLines.PURSUIT: {
-                    acCounter = DISMSupport.GetPursuitGraphicDouble(pLinePoints);
+                    acCounter = DISMSupport.GetDelayGraphicEtcDouble(pLinePoints, lineType);
                     break;
                 }
 
