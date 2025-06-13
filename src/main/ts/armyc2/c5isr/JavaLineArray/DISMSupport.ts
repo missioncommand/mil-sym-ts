@@ -457,7 +457,6 @@ export class DISMSupport {
     static GetEnvelopmentGraphicDouble(points: POINT2[]): int {
         let counter: int = 0;
         try {
-            let savepoints: POINT2[] = new Array<POINT2>(4);
             let iLength: double = 0;
             let iRadius: double = 0;
             let iDiagEOL_length: double = 0;
@@ -471,19 +470,18 @@ export class DISMSupport {
             let deltapoints: POINT2[] = new Array<POINT2>(4);
             let j: int = 0;
 
-            for (j = 0; j < 4; j++) {
-                savepoints[j] = new POINT2(points[j]);
-            }
-
             lineutility.InitializePOINT2Array(arcpoints);
             lineutility.InitializePOINT2Array(deltapoints);
 
-            points[0] = new POINT2(savepoints[0]);
+            let reverseArc: boolean = DISMSupport.IsEnvelopmentArcReversed(points);
+
             points[0].style = 14;
             counter++;
-            points[1] = lineutility.ClosestPointOnLine(savepoints[0], savepoints[2], savepoints[1]);
             points[1].style = 5;
             counter++;
+
+            // Place pt3 on line pt1pt2
+            points[2] = lineutility.ClosestPointOnLine(points[0], lineutility.ExtendLine2Double(points[0], points[1], lineutility.CalcDistanceDouble(points[1], points[2]), 0), points[2]);
 
             iLength = Math.sqrt((points[1].x - points[0].x) * (points[1].x - points[0].x) +
                 (points[1].y - points[0].y) * (points[1].y - points[0].y));
@@ -501,19 +499,18 @@ export class DISMSupport {
             }
 
             // draw the semicircle
-            ptArcCenter.x = (points[1].x + savepoints[2].x) / 2;
-            ptArcCenter.y = (points[1].y + savepoints[2].y) / 2;
-            let reverseArc: boolean = DISMSupport.IsEnvelopmentArcReversed(savepoints);
+            ptArcCenter.x = (points[1].x + points[2].x) / 2;
+            ptArcCenter.y = (points[1].y + points[2].y) / 2;
             if (reverseArc) {
                 DISMSupport.ArcApproximationDouble( (ptArcCenter.x - iRadius), (ptArcCenter.y - iRadius),
                         (ptArcCenter.x + iRadius), (ptArcCenter.y + iRadius),
-                        points[1].x, points[1].y, savepoints[2].x, savepoints[2].y, arcpoints);
+                        points[1].x, points[1].y, points[2].x, points[2].y, arcpoints);
                 dAngle1 += DISMSupport.CONST_PI / 2;
             } else {
                 dAngle1 -= DISMSupport.CONST_PI / 2;
                 DISMSupport.ArcApproximationDouble((ptArcCenter.x - iRadius), (ptArcCenter.y - iRadius),
                         (ptArcCenter.x + iRadius), (ptArcCenter.y + iRadius),
-                        savepoints[2].x, savepoints[2].y, points[1].x, points[1].y, arcpoints);
+                        points[2].x, points[2].y, points[1].x, points[1].y, arcpoints);
             }
 
             // draw the arrow
@@ -521,7 +518,7 @@ export class DISMSupport {
             iDeltaY1 = (iDiagEOL_length * Math.sin(dAngle1 - DISMSupport.CONST_PI / 4));
             iDeltaX2 = (iDiagEOL_length * Math.cos(dAngle1 + DISMSupport.CONST_PI / 4));
             iDeltaY2 = (iDiagEOL_length * Math.sin(dAngle1 + DISMSupport.CONST_PI / 4));
-            DISMSupport.DrawEndpieceDeltasDouble(savepoints[2],
+            DISMSupport.DrawEndpieceDeltasDouble(points[2],
                 iDeltaX1, iDeltaY1, iDeltaX2, iDeltaY2, deltapoints);
 
             for (j = 0; j < 4; j++) {
