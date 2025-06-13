@@ -919,6 +919,7 @@ export class clsUtility {
                 //                case TacticalLines.SAAFR:
                 case TacticalLines.DIRATKGND:
                 case TacticalLines.DIRATKSPT:
+                case TacticalLines.INFILTRATION:
                 case TacticalLines.FCL:
                 case TacticalLines.HOLD:
                 case TacticalLines.BRDGHD:
@@ -1274,7 +1275,7 @@ export class clsUtility {
                     arrowHeadShape.setStroke(stroke);
                 }
             } else {
-                if (tg.get_LineType() === TacticalLines.DIRATKGND || tg.get_LineType() === TacticalLines.DIRATKSPT || tg.get_LineType() == TacticalLines.EXPLOIT) {
+                if (tg.get_LineType() === TacticalLines.DIRATKGND || tg.get_LineType() === TacticalLines.DIRATKSPT || tg.get_LineType() == TacticalLines.EXPLOIT || lineType == TacticalLines.INFILTRATION) {
                     // Make arrowhead shape solid even if tg.get_LineStyle() isn't
                     let arrowHeadShape: Shape2 = shapes[1];
                     arrowHeadShape.set_Style(0);
@@ -2126,7 +2127,8 @@ export class clsUtility {
             switch (tg.get_LineType()) {
                 case TacticalLines.DIRATKAIR:
                 case TacticalLines.DIRATKGND:
-                case TacticalLines.DIRATKSPT: {
+                case TacticalLines.DIRATKSPT:
+                case TacticalLines.INFILTRATION: {
                     // Direction of attack symbols only have two points but can handle more
                     return false;
                 }

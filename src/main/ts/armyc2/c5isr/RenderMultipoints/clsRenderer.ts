@@ -1438,7 +1438,7 @@ export class clsRenderer {
                 let ptB: POINT2 = new POINT2(points[4]);
                 let ptC: POINT2 = new POINT2(points[9]);
                 shapes.push(DISMSupport.getFDIShape(tg, ptA, ptB, ptC));
-            } else if (lineType === TacticalLines.DIRATKSPT) {
+            } else if (lineType === TacticalLines.DIRATKSPT || lineType == TacticalLines.INFILTRATION) {
                 let points: Array<POINT2> = shapes[1].getPoints();
                 let ptA: POINT2 = new POINT2(points[0]);
                 let ptB: POINT2 = new POINT2(points[1]);

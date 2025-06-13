@@ -335,7 +335,8 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT: {
+                case TacticalLines.DIRATKSPT:
+                case TacticalLines.INFILTRATION: {
                     count = vblCounter + 3;
                     break;
                 }

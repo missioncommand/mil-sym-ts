@@ -1457,6 +1457,7 @@ export class clsUtilityCPOF {
                 case TacticalLines.DIRATKAIR:
                 case TacticalLines.DIRATKGND:
                 case TacticalLines.DIRATKSPT:
+                case TacticalLines.INFILTRATION:
                 case TacticalLines.FCL:
                 case TacticalLines.HOLD:
                 case TacticalLines.BRDGHD:
@@ -1640,6 +1641,7 @@ export class clsUtilityCPOF {
             case TacticalLines.DIRATKAIR:
             case TacticalLines.DIRATKGND:
             case TacticalLines.DIRATKSPT:
+            case TacticalLines.INFILTRATION:
             case TacticalLines.FCL:
             case TacticalLines.HOLD:
             case TacticalLines.BRDGHD:

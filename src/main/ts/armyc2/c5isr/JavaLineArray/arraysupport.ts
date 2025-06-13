@@ -3900,11 +3900,14 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT: {
+                case TacticalLines.DIRATKSPT:
+                case TacticalLines.INFILTRATION: {
+                    if (lineType == TacticalLines.DIRATKSPT) {
                     //reverse the points
                     lineutility.ReversePointsDouble2(
                         pLinePoints,
                         vblSaveCounter);
+                    }
                     if (dMBR / 20 > arraysupport.maxLength * DPIScaleFactor) {
                         dMBR = 20 * arraysupport.maxLength * DPIScaleFactor;
                     }
@@ -5353,7 +5356,8 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT: {
+                case TacticalLines.DIRATKSPT:
+                case TacticalLines.INFILTRATION: {
                     arraysupport.addPolyline(pLinePoints, acCounter - 3, shapes); // Main line
                     secondPoly = new Array<POINT2>(3);
                     for (let i: int = 0; i < 3; i++) {
