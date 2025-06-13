@@ -75,7 +75,7 @@ export class DISMSupport {
         }
         return result;
     }
-    public static ArcApproximationDouble(left: double, top: double, right: double, bottom: double,
+    private static ArcApproximationDouble(left: double, top: double, right: double, bottom: double,
         startx: double, starty: double, endx: double, endy: double, lpoints: POINT2[]): void {
 
         try {

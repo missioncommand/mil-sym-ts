@@ -3926,162 +3926,6 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.INFILTRATION: {
-                    // Move pt1 into rectangle between pt1 and pt2
-                    if (pt1.y < pt0.y && pt1.y < pt2.y)
-                        pt1.y = Math.min(pt0.y, pt2.y);
-                    else if (pt1.y > pt0.y && pt1.y > pt2.y)
-                        pt1.y = Math.max(pt0.y, pt2.y);
-                    if (pt1.x < pt0.x && pt1.x < pt2.x)
-                        pt1.x = Math.min(pt0.x, pt2.x);
-                    else if (pt1.x > pt0.x && pt1.x > pt2.x)
-                        pt1.x = Math.max(pt0.x, pt2.x);
-                    dMBR = lineutility.MBRDistance(pLinePoints, vblSaveCounter);
-
-                    lineutility.InitializePOINT2Array(arcPts);
-
-                    if (dMBR / 20 > arraysupport.maxLength * DPIScaleFactor) {
-                        dMBR = 20 * arraysupport.maxLength * DPIScaleFactor;
-                    }
-                    if (dMBR / 20 < arraysupport.minLength * DPIScaleFactor) {
-                        dMBR = 20 * arraysupport.minLength * DPIScaleFactor;
-                    }
-                    if (dMBR < 150 * DPIScaleFactor) {
-                        dMBR = 150 * DPIScaleFactor;
-                    }
-                    if (dMBR > 500 * DPIScaleFactor) {
-                        dMBR = 500 * DPIScaleFactor;
-                    }
-
-                    // Add control points
-                    pLinePoints[0] = pt0;
-                    pLinePoints[18] = pt1;
-                    pLinePoints[36] = pt2;
-
-                    // Add arrow
-                    lineutility.GetArrowHead4Double(new POINT2(pt0.x, pt2.y), pt2, dMBR / 20, dMBR / 20, pArrowPoints, 0);
-                    for (k = 0; k < 3; k++) {
-                        pLinePoints[vblCounter - k - 1] = new POINT2(pArrowPoints[k]);
-                    }
-
-                    // Add curves
-                    if (pt0.y > pt2.y && pt0.x > pt2.x) { // pt0 is bottom right
-                        if (pt1.x < pt0.x) {
-                            dRadius = pt0.y - pt1.y;
-                            DISMSupport.ArcApproximationDouble(pt1.x, pt0.y - 2 * dRadius, Math.min(pt1.x + 2 * dRadius, pt1.x + 2 * (pt0.x - pt1.x)), pt0.y,
-                                    pt1.x, pt1.y, Math.min(pt1.x + dRadius, pt0.x), pt0.y,
-                                    arcPts);
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 1] = new POINT2(arcPts[16 - k]);
-                            }
-                        } else {
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 1] = new POINT2(pt1);
-                            }
-                        }
-
-                        if (pt2.x < pt1.x) {
-                            dRadius = pt1.y - pt2.y;
-                            DISMSupport.ArcApproximationDouble(Math.max(pt1.x - 2 * dRadius, pt1.x - 2 * (pt1.x - pt2.x)), pt2.y, pt1.x, pt2.y + dRadius * 2,
-                                    pt1.x, pt1.y, Math.max(pt1.x - dRadius, pt2.x), pt2.y,
-                                    arcPts);
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 19] = new POINT2(arcPts[k]);
-                            }
-                        } else {
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 19] = new POINT2(pt1);
-                            }
-                        }
-                    } else if (pt0.y > pt2.y && pt0.x < pt2.x) { // pt0 is bottom left
-                        if (pt0.x < pt1.x) {
-                            dRadius = pt0.y - pt1.y;
-                            DISMSupport.ArcApproximationDouble(Math.max(pt1.x - 2 * dRadius, pt1.x - 2 * (pt1.x - pt0.x)), pt0.y - dRadius * 2, pt1.x, pt0.y,
-                                    Math.max(pt1.x - dRadius, pt0.x), pt0.y, pt1.x, pt1.y,
-                                    arcPts);
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 1] = new POINT2(arcPts[k]);
-                            }
-                        } else {
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 1] = new POINT2(pt1);
-                            }
-                        }
-
-                        if (pt1.x < pt2.x) {
-                            dRadius = pt1.y - pt2.y;
-                            DISMSupport.ArcApproximationDouble(pt1.x, pt2.y, Math.min(pt1.x + 2 * dRadius, pt1.x + 2 * (pt2.x - pt1.x)), pt2.y + 2 * dRadius,
-                                    Math.min(pt1.x + dRadius, pt2.x), pt2.y, pt1.x, pt1.y,
-                                    arcPts);
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 19] = new POINT2(arcPts[16 - k]);
-                            }
-                        } else {
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 19] = new POINT2(pt1);
-                            }
-                        }
-                    } else if (pt0.y < pt2.y && pt0.x > pt2.x) { // pt0 is top right
-                        if (pt1.x < pt0.x) {
-                            dRadius = pt1.y - pt0.y;
-                            DISMSupport.ArcApproximationDouble(pt1.x, pt0.y, Math.min(pt1.x + 2 * dRadius, pt1.x + 2 * (pt0.x - pt1.x)), pt0.y + 2 * dRadius,
-                                    Math.min(pt1.x + dRadius, pt0.x), pt0.y, pt1.x, pt1.y,
-                                    arcPts);
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 1] = new POINT2(arcPts[k]);
-                            }
-                        } else {
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 1] = new POINT2(pt1);
-                            }
-                        }
-
-                        if (pt2.x < pt1.x) {
-                            dRadius = pt2.y - pt1.y;
-                            DISMSupport.ArcApproximationDouble(Math.max(pt1.x - 2 * dRadius, pt1.x - 2 * (pt1.x - pt2.x)), pt2.y - dRadius * 2, pt1.x, pt2.y,
-                                    Math.max(pt1.x - dRadius, pt2.x), pt2.y, pt1.x, pt1.y,
-                                    arcPts);
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 19] = new POINT2(arcPts[16 - k]);
-                            }
-                        } else {
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 19] = new POINT2(pt1);
-                            }
-                        }
-                    } else { // if (pt0.y < pt2.y && pt0.x < pt2.x) { // pt0 is top left
-                        if (pt0.x < pt1.x) {
-                            dRadius = pt1.y - pt0.y;
-                            DISMSupport.ArcApproximationDouble(Math.max(pt1.x - 2 * dRadius, pt1.x - 2 * (pt1.x - pt0.x)), pt0.y, pt1.x, pt0.y + dRadius * 2,
-                                    pt1.x, pt1.y, Math.max(pt1.x - dRadius, pt0.x), pt0.y,
-                                    arcPts);
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 1] = new POINT2(arcPts[16 - k]);
-                            }
-                        } else {
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 1] = new POINT2(pt1);
-                            }
-                        }
-
-                        if (pt1.x < pt2.x) {
-                            dRadius = pt2.y - pt1.y;
-                            DISMSupport.ArcApproximationDouble(pt1.x, pt2.y - 2 * dRadius, Math.min(pt1.x + 2 * dRadius, pt1.x + 2 * (pt2.x - pt1.x)), pt2.y,
-                                    pt1.x, pt1.y, Math.min(pt1.x + dRadius, pt2.x), pt2.y,
-                                    arcPts);
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 19] = new POINT2(arcPts[k]);
-                            }
-                        } else {
-                            for (k = 0; k < 17; k++) {
-                                pLinePoints[k + 19] = new POINT2(pt1);
-                            }
-                        }
-                    }
-                    acCounter = vblCounter;
-                    break;
-                }
-
                 case TacticalLines.EXPLOIT: {
                     // Convert arrows to 90 degrees with the hypotenuse distance = distance between pt1 and pt2
                     let triBiSector: int = (lineutility.CalcDistanceDouble(pt1, pt2) / Math.sqrt(2));
@@ -4726,8 +4570,7 @@ export class arraysupport {
                 case TacticalLines.DIRATKAIR:
                 case TacticalLines.ABATIS:
                 case TacticalLines.MOBILE_DEFENSE:
-                case TacticalLines.ENVELOPMENT:
-                case TacticalLines.INFILTRATION: {
+                case TacticalLines.ENVELOPMENT: {
                     arraysupport.FillPoints(pLinePoints, acCounter, points);
                     break;
                 }
@@ -5510,8 +5353,7 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT:
-                case TacticalLines.INFILTRATION: {
+                case TacticalLines.DIRATKSPT: {
                     arraysupport.addPolyline(pLinePoints, acCounter - 3, shapes); // Main line
                     secondPoly = new Array<POINT2>(3);
                     for (let i: int = 0; i < 3; i++) {

@@ -895,11 +895,6 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.INFILTRATION: {
-                    label = "IN";
-                    break;
-                }
-
                 case TacticalLines.TURNING_MOVEMENT: {
                     label = "T";
                     break;
@@ -4258,8 +4253,7 @@ export class Modifier2 {
                 case TacticalLines.SHIP_AOI_CIRCULAR:
                 case TacticalLines.MFLANE:
                 case TacticalLines.ENVELOPMENT:
-                case TacticalLines.MOBILE_DEFENSE:
-                case TacticalLines.INFILTRATION: {
+                case TacticalLines.MOBILE_DEFENSE: {
                     break;
                 }
 
@@ -4775,11 +4769,6 @@ export class Modifier2 {
 
                 case TacticalLines.MOBILE_DEFENSE: {
                     Modifier2.AddIntegralModifier(tg, label, Modifier2.area, 0, 16, 16, true);
-                    break;
-                }
-
-                case TacticalLines.INFILTRATION: {
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
                     break;
                 }
 
