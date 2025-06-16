@@ -520,9 +520,13 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.FRONTAL_ATTACK:
+                case TacticalLines.FRONTAL_ATTACK: {
+                    count=2*vblCounter+15;
+                    break;
+                }
+                
                 case TacticalLines.TURNING_MOVEMENT: {
-                    count=2*vblCounter+10;
+                    count=2*vblCounter+14;
                     break;
                 }
 

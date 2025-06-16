@@ -2265,8 +2265,10 @@ export class Channels {
                     //diagnostic
                     if (vbiDrawThis === TacticalLines.AAAAA) {
                         vblCounter = vblLowerCounter + vblUpperCounter + 19;
-                    } else if (vbiDrawThis == TacticalLines.FRONTAL_ATTACK || vbiDrawThis == TacticalLines.TURNING_MOVEMENT) {
-                        vblCounter = vblLowerCounter + vblUpperCounter + 10;
+                    } else if (vbiDrawThis == TacticalLines.FRONTAL_ATTACK) {
+                        vblCounter = vblLowerCounter + vblUpperCounter + 15;
+                    } else if (vbiDrawThis ==  TacticalLines.TURNING_MOVEMENT) {
+                        vblCounter = vblLowerCounter + vblUpperCounter + 14;
                     } else if (vbiDrawThis == TacticalLines.MOVEMENT_TO_CONTACT) {
                         vblCounter = vblLowerCounter + vblUpperCounter + 24;
                     }
@@ -2603,6 +2605,83 @@ export class Channels {
                         lHowManyThisSegment = DISMSupport.GetDISMCoverDoubleRevC(DISMPts, vbiDrawThis, 4);
                         for (let i = 0; i < lHowManyThisSegment; i++) {
                             pLinePoints[vblLowerCounter + vblUpperCounter + 8 + i] = DISMPts[i];
+                        }
+                    }
+
+                    if (vbiDrawThis == TacticalLines.FRONTAL_ATTACK || vbiDrawThis == TacticalLines.TURNING_MOVEMENT) {
+                        pt0 = new POINT2(pLinePoints[vblLowerCounter + vblUpperCounter+2]); // top left
+                        pt1 = lineutility.MidPointDouble(pLinePoints[vblLowerCounter + vblUpperCounter + 1], pLinePoints[vblLowerCounter + vblUpperCounter + 6], 0); // top right
+                        pt2 = new POINT2(pLinePoints[vblLowerCounter + vblUpperCounter+4]); // bottom left
+                        pt3 = lineutility.MidPointDouble(pLinePoints[vblLowerCounter + vblUpperCounter + 5], pLinePoints[vblLowerCounter + vblUpperCounter + 6], 0); // bottom right
+
+                        // Shrink vertically to add spacing between arrow lines
+                        dist = lineutility.CalcDistanceDouble(pt0, pt2) / 4;
+                        pt0 = lineutility.ExtendAlongLineDouble2(pt0, pt2, dist);
+                        pt1 = lineutility.ExtendAlongLineDouble2(pt1, pt3, dist);
+                        pt2 = lineutility.ExtendAlongLineDouble2(pt2, pt0, dist);
+                        pt3 = lineutility.ExtendAlongLineDouble2(pt3, pt1, dist);
+
+                        // Make height twice size of width
+                        if (lineutility.CalcDistanceDouble(pt0, pt2) > 2 * lineutility.CalcDistanceDouble(pt0, pt1)) {
+                            // Shrink vertical
+                            dist = lineutility.CalcDistanceDouble(pt0, pt1);
+
+                            midPt1 = lineutility.MidPointDouble(pt0, pt2, 0);
+                            pt0 = lineutility.ExtendAlongLineDouble2(midPt1, pt0, dist);
+                            pt2 = lineutility.ExtendAlongLineDouble2(midPt1, pt2, dist);
+
+                            midPt1 = lineutility.MidPointDouble(pt1, pt3, 0);
+                            pt1 = lineutility.ExtendAlongLineDouble2(midPt1, pt1, dist);
+                            pt3 = lineutility.ExtendAlongLineDouble2(midPt1, pt3, dist);
+                        } else if (2 * lineutility.CalcDistanceDouble(pt0, pt1) > lineutility.CalcDistanceDouble(pt0, pt2)) {
+                            //Shrink horizontal
+                            dist = lineutility.CalcDistanceDouble(pt0, pt2) / 2;
+                            pt1 = lineutility.ExtendAlongLineDouble2(pt0, pt1, dist);
+                            pt3 = lineutility.ExtendAlongLineDouble2(pt2, pt3, dist);
+                        }
+
+                        // Want actual top / left if arrow head is rotated
+                        if (pt0.y > pt2.y && pt1.y > pt3.y) {
+                            pt4 = pt0;
+                            pt0 = pt2;
+                            pt2 = pt4;
+
+                            pt4 = pt1;
+                            pt1 = pt3;
+                            pt3 = pt4;
+                        }
+                        if (pt0.x > pt1.x && pt2.x > pt3.x) {
+                            pt4 = pt0;
+                            pt0 = pt1;
+                            pt1 = pt4;
+
+                            pt4 = pt2;
+                            pt2 = pt3;
+                            pt3 = pt4;
+                        }
+
+                        if (vbiDrawThis == TacticalLines.FRONTAL_ATTACK) {
+                            // Draw "A"
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 10] = new POINT2(pt2);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 10].style = 0;
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 11] = lineutility.MidPointDouble(pt0, pt1, 0);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 11].style = 0;
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 12] = new POINT2(pt3);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 12].style = 5;
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 13] = lineutility.MidPointDouble(pLinePoints[vblLowerCounter + vblUpperCounter + 10], pLinePoints[vblLowerCounter + vblUpperCounter + 11], 0);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 13].style = 0;
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 14] = lineutility.MidPointDouble(pLinePoints[vblLowerCounter + vblUpperCounter + 11], pLinePoints[vblLowerCounter + vblUpperCounter + 12], 5);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 14].style = 5;
+                        } else {
+                            // Draw "T"
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 10] = lineutility.MidPointDouble(pt0, pt1, 0);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 10].style = 0;
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 11] = lineutility.MidPointDouble(pt2, pt3, 5);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 11].style = 5;
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 12] = new POINT2(pt0);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 12].style = 0;
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 13] = new POINT2(pt1);
+                            pLinePoints[vblLowerCounter + vblUpperCounter + 13].style = 5;
                         }
                     }
                     break;

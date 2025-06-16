@@ -83,9 +83,13 @@ export class CELineArray {
                     break;
                 }
 
-                case TacticalLines.FRONTAL_ATTACK:
+                case TacticalLines.FRONTAL_ATTACK: {
+                    lResult = 2 * lElements + 15;
+                    break;
+                }
+
                 case TacticalLines.TURNING_MOVEMENT: {
-                    lResult = 2 * lElements + 10;
+                    lResult = 2 * lElements + 14;
                     break;
                 }
 
