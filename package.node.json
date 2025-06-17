@@ -13,7 +13,7 @@
     "bundleWPN": "webpack --config webpackn.config.js --no-watch",
     "bundleDTS": "npx dts-bundle-generator -o dist/C5Ren.d.ts index.ts",
     "pack": "copy package.packNode.json dist\\package.json && copy README.md dist\\README.md && copy LICENSE dist\\LICENSE && cd dist && del index.* && del tsconfig.tsbuildinfo && rd /s /q src && npm pack",
-    "buildNode": "npm run clean && npm run build && npm run bundleWPN && npm run bundleDTS && npm run pack"
+    "buildNode": "npm run clean & npm run build && npm run bundleWPN && npm run bundleDTS && npm run pack"
   },
   "author": "C5ISR ESI",
   "license": "Apache-2.0",
