@@ -1134,13 +1134,12 @@ export class lineutility {
      *
      * @param pt0 first point fo the line
      * @param pt1 last point of the line
-     * @param pt2 relative point
-     * @deprecated
+     * @param ptRelative relative point
      * @return 0 if left, 1 if right, 2 if above, 3 if below
      */
-    protected static CalcDirectionFromLine(pt0: POINT2,
+    static CalcDirectionFromLine(pt0: POINT2,
         pt1: POINT2,
-        pt2: POINT2): int {
+        ptRelative: POINT2): int {
         let result: int = -1;
         try {
             let m2: double = 0;
@@ -1151,7 +1150,7 @@ export class lineutility {
             //int direction=-1;
             //handle vertical line
             if (pt0.x === pt1.x) {
-                if (pt2.x < pt0.x) {
+                if (ptRelative.x < pt0.x) {
                     return 0;
                 } else {
                     return 1;
@@ -1159,32 +1158,32 @@ export class lineutility {
             }
             //handle horizontal line so that we do not have slope = 0.
             if (pt0.y === pt1.y) {
-                if (pt2.y < pt0.y) {
+                if (ptRelative.y < pt0.y) {
                     return 2;
                 } else {
                     return 3;
                 }
             }
             lineutility.CalcTrueSlopeDouble(pt0, pt1, m1);
-            m2 = -1 / m1.value[0];	//slope for the perpendicular line from the line to pt2
+            m2 = -1 / m1.value[0];	//slope for the perpendicular line from the line to ptRelative
             //b=mx-y line equation for line
             b1 = pt0.y - m1.value[0] * pt0.x;
-            //b=mx-y line equation for perpendicular line which contains pt2
-            b2 = pt2.y - m2 * pt2.x;
+            //b=mx-y line equation for perpendicular line which contains ptRelative
+            b2 = ptRelative.y - m2 * ptRelative.x;
             ptIntersect = lineutility.CalcTrueIntersectDouble2(m1.value[0], b1, m2, b2, 1, 1, 0, 0);
-            //compare the intersection point with pt2 to get the direction,
+            //compare the intersection point with ptRelative to get the direction,
             //i.e. the direction from the line is the same as the direction
             //from the interseciton point.
             if (m1.value[0] > 1) //line is steep, use left/right
             {
-                if (pt2.x < ptIntersect.x) {
+                if (ptRelative.x < ptIntersect.x) {
                     return 0;
                 } else {
                     return 1;
                 }
             } else //line is not steep, use above/below
             {
-                if (pt2.y < ptIntersect.y) {
+                if (ptRelative.y < ptIntersect.y) {
                     return 2;
                 } else {
                     return 3;
@@ -4958,4 +4957,18 @@ export class lineutility {
         return deepCopy;
     }
 
+    public static reverseDirection(direction: int): int {
+        switch (direction) {
+            case lineutility.extend_left:
+                return lineutility.extend_right;
+            case lineutility.extend_right:
+                return lineutility.extend_left;
+            case lineutility.extend_above:
+                return lineutility.extend_below;
+            case lineutility.extend_below:
+                return lineutility.extend_above;
+            default:
+                return direction;
+        }
+    }
 }//end lineutility
