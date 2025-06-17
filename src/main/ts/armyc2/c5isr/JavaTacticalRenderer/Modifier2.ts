@@ -5181,32 +5181,6 @@ export class Modifier2 {
         }
     }
 
-    private static switchDirection(direction: int): int {
-        let result: int = -1;
-        switch (direction) {
-            case 0: {
-                return 1;
-            }
-
-            case 1: {
-                return 0;
-            }
-
-            case 2: {
-                return 3;
-            }
-
-            case 3: {
-                return 2;
-            }
-
-
-            default:
-
-        }
-        return result;
-    }
-
     /**
      * Displays the modifiers to a Graphics2D from a BufferedImage
      *
@@ -5320,7 +5294,7 @@ export class Modifier2 {
                         }
 
                         if (lineType === TacticalLines.LC || tg.get_Client().toLowerCase() === "ge") {
-                            direction = Modifier2.switchDirection(direction);
+                            direction = lineutility.reverseDirection(direction);
                         }
 
                         if ((modifier.type === Modifier2.toEnd && x1 < x2) || (modifier.type === Modifier2.aboveEnd && x2 < x1)) {

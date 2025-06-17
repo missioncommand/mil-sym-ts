@@ -331,10 +331,6 @@ export class arraysupport {
             let bolVertical: int = 0;
             let bolVertical2: int = 0;
             let nOrientation: int = 0; //will use 0 for horiz line from left, 1 for vertical line from top
-            let extendLeft: int = 0;
-            let extendRight: int = 1;
-            let extendAbove: int = 2;
-            let extendBelow: int = 3;
 
             let pt2: POINT2 = new POINT2();
             //end declarations. will use this to determine the direction
@@ -435,18 +431,18 @@ export class arraysupport {
             switch (nInOutCounter % 2) {
                 case 0: {
                     if (nOrientation === 0) {
-                        nDirection = extendLeft;
+                        nDirection = lineutility.extend_left;
                     } else {
-                        nDirection = extendAbove;
+                        nDirection = lineutility.extend_above;
                     }
                     break;
                 }
 
                 case 1: {
                     if (nOrientation === 0) {
-                        nDirection = extendRight;
+                        nDirection = lineutility.extend_right;
                     } else {
-                        nDirection = extendBelow;
+                        nDirection = lineutility.extend_below;
                     }
                     break;
                 }
@@ -457,33 +453,8 @@ export class arraysupport {
 
             }
             //reverse direction for ICING
-            switch (lineType) {
-                case TacticalLines.ICING: {
-                    if (nDirection === extendLeft) {
-                        nDirection = extendRight;
-                    } else {
-                        if (nDirection === extendRight) {
-                            nDirection = extendLeft;
-                        } else {
-                            if (nDirection === extendAbove) {
-                                nDirection = extendBelow;
-                            } else {
-                                if (nDirection === extendBelow) {
-                                    nDirection = extendAbove;
-                                }
-                            }
-
-                        }
-
-                    }
-
-                    break;
-                }
-
-                default: {
-                    break;
-                }
-
+             if (lineType == TacticalLines.ICING) {
+                nDirection = lineutility.reverseDirection(nDirection);
             }
         } catch (exc) {
             if (exc instanceof Error) {
@@ -541,32 +512,7 @@ export class arraysupport {
                 switch (lineType) {
                     case TacticalLines.OBSAREA:
                     case TacticalLines.OBSFAREA: {
-                        switch (nDirection) {
-                            case 0: {	//extend left
-                                nDirection = 1;	//extend right
-                                break;
-                            }
-
-                            case 1: {	//extend right
-                                nDirection = 0;	//extend left
-                                break;
-                            }
-
-                            case 2: {	//extend above
-                                nDirection = 3;	//extend below
-                                break;
-                            }
-
-                            case 3: {	//extgend below
-                                nDirection = 2;	//extend above
-                                break;
-                            }
-
-                            default: {
-                                break;
-                            }
-
-                        }
+                        nDirection = lineutility.reverseDirection(nDirection);
                         break;
                     }
 
