@@ -768,7 +768,8 @@ export class clsRenderer {
                         case TacticalLines.HIMEZ:
                         case TacticalLines.ACA:
                         case TacticalLines.ACA_RECTANGULAR:
-                        case TacticalLines.ACA_CIRCULAR: {
+                        case TacticalLines.ACA_CIRCULAR:
+                        case TacticalLines.WFZ: {
                             let X: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.X_ALTITUDE_DEPTH);
                             if (X != null && X.length > 0) {
                                 strXAlt = clsRenderer.createAltitudeLabel(X[0], altitudeUnit, altitudeLabel);
@@ -2333,6 +2334,9 @@ export class clsRenderer {
                     return TacticalLines.DISENGAGE;
                 case 344500:
                     return TacticalLines.EVACUATE;
+                // Updated in 2525Ech1
+                case 172000:
+                    return TacticalLines.WFZ;
                 // Removed in 2525Ech1
                 case 240804:
                     return -1;
@@ -2407,6 +2411,10 @@ export class clsRenderer {
                     return TacticalLines.DHA;
                 }
 
+                // Updated in 2525Ech1
+                case 172000: {
+                    return TacticalLines.WFZ_REVD;
+                }
 
                 default:
 
@@ -2451,6 +2459,10 @@ export class clsRenderer {
                     return TacticalLines.SENSOR_CIRCULAR;
                 }
 
+                // Updated in 2525Ech1
+                case 172000: {
+                    return TacticalLines.WFZ_REVD;
+                }
 
                 default:
 
@@ -2760,10 +2772,6 @@ export class clsRenderer {
 
             case 171900: {
                 return TacticalLines.FAADZ;
-            }
-
-            case 172000: {
-                return TacticalLines.WFZ;
             }
 
             case 200401: {

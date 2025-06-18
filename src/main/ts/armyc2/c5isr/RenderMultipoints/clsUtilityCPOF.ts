@@ -1450,6 +1450,7 @@ export class clsUtilityCPOF {
                 case TacticalLines.MEZ:
                 case TacticalLines.LOMEZ:
                 case TacticalLines.HIMEZ:
+                case TacticalLines.WFZ_REVD:
                 case TacticalLines.WFZ:
                 case TacticalLines.AIRFIELD:
                 case TacticalLines.BATTLE:

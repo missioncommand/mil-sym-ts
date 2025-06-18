@@ -55,6 +55,7 @@ export class TacticalLines {
     public static readonly WEZ: number = 25171300;
     public static readonly FEZ: number = 25171400;
     public static readonly JEZ: number = 25171500;
+    public static readonly WFZ_REVD: number = 2517200;
     public static readonly WFZ: number = 22235000;
     public static readonly EZ: number = 22136000;
     public static readonly AIRFIELD: number = 221311000;

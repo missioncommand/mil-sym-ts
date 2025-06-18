@@ -499,6 +499,7 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.WFZ_REVD:
                 case TacticalLines.WFZ: {
                     label = "WFZ";
                     break;
@@ -2498,6 +2499,7 @@ export class Modifier2 {
                 case TacticalLines.GENERIC_AREA:
                 case TacticalLines.ATKPOS:
                 case TacticalLines.ASSAULT:
+                case TacticalLines.WFZ_REVD:
                 case TacticalLines.WFZ:
                 case TacticalLines.OBSFAREA:
                 case TacticalLines.OBSAREA:
@@ -3672,11 +3674,21 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.WFZ: {
+                case TacticalLines.WFZ_REVD: {
                     Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, true);
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
                     Modifier2.AddIntegralAreaModifier(tg, "TIME FROM: " + tg.get_DTG(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, true, "W");
                     Modifier2.AddIntegralAreaModifier(tg, "TIME TO: " + tg.get_DTG1(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, true, "W1");
+                    break;
+                }
+                
+                case TacticalLines.WFZ: {
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -2.5 * csFactor, ptCenter, ptCenter, true);
+                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, true);
+                    Modifier2.AddIntegralAreaModifier(tg, "TIME FROM: " + tg.get_DTG(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true, "W");
+                    Modifier2.AddIntegralAreaModifier(tg, "TIME TO: " + tg.get_DTG1(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, true, "W1");
+                    Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false, "H");
+                    Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 2.5, ptCenter, ptCenter, false, "H1");
                     break;
                 }
 

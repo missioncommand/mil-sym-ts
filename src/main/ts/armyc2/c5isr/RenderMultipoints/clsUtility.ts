@@ -91,6 +91,7 @@ export class clsUtility {
                     break;
                 }
 
+                case TacticalLines.WFZ_REVD:
                 case TacticalLines.WFZ: {
                     hatchStyle = clsUtility.Hatch_BackwardDiagonal;
                     if (tg.get_LineColor() === Color.BLACK) {
