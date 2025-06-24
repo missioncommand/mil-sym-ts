@@ -288,6 +288,8 @@ export class RendererUtilities {
 
         let affiliation: int = SymbolID.getAffiliation(symbolID);
         let defaultFillColor: string;
+
+        returnSVG = svg;
         if (strokeColor != null) {
             if (strokeColor.getAlpha() !== 255) {
                 strokeAlpha = strokeColor.getAlpha() / 255.0;
@@ -308,6 +310,22 @@ export class RendererUtilities {
                 returnSVG = returnSVG.replace(svgStart, svgStartReplace);
             }
 
+            if((SymbolID.getSymbolSet(symbolID)===SymbolID.SymbolSet_LandInstallation && SymbolID.getFrameShape(symbolID)==="0") || 
+                SymbolID.getFrameShape(symbolID)===SymbolID.FrameShape_LandInstallation)
+            {
+                let i1 = returnSVG.indexOf("<rect") + 5;
+                if(SymbolID.getAffiliation(symbolID)===SymbolID.StandardIdentity_Affiliation_Neutral)
+                    i1 = returnSVG.indexOf("<rect",i1) + 5;
+                returnSVG = returnSVG.substring(0,i1) + " fill=\"" + hexStrokeColor + "\"" + returnSVG.substring(i1);
+            }
+        }
+        else if((SymbolID.getSymbolSet(symbolID)===SymbolID.SymbolSet_LandInstallation && SymbolID.getFrameShape(symbolID)==="0") || 
+                SymbolID.getFrameShape(symbolID)===SymbolID.FrameShape_LandInstallation)
+        {
+            let i1 = returnSVG.indexOf("<rect") + 5;
+            if(SymbolID.getAffiliation(symbolID)===SymbolID.StandardIdentity_Affiliation_Neutral)
+                i1 = returnSVG.indexOf("<rect",i1) + 5;
+            returnSVG = returnSVG.substring(0,i1) + " fill=\"#000000\"" + returnSVG.substring(i1);
         }
         if (fillColor != null) {
             if (fillColor.getAlpha() !== 255) {
@@ -360,12 +378,11 @@ export class RendererUtilities {
 
             }
 
-            if (returnSVG == null) {
-                returnSVG = svg.replace(defaultFillColor, "fill=\"" + hexFillColor + "\"" + fillOpacity);
-            }
-            else {
-                returnSVG = returnSVG.replace(defaultFillColor, "fill=\"" + hexFillColor + "\"" + fillOpacity);
-            }
+            let fillIndex:number = returnSVG.lastIndexOf(defaultFillColor);
+            if(fillIndex != -1)
+                returnSVG = returnSVG.substring(0,fillIndex) + "fill=\"" + hexFillColor + "\"" + fillOpacity + returnSVG.substring(fillIndex + defaultFillColor.length);
+
+            //returnSVG = returnSVG.replaceFirst(defaultFillColor, "fill=\"" + hexFillColor + "\"" + fillOpacity);
 
         }
 
