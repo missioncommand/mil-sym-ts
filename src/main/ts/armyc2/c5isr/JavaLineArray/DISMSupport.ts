@@ -2255,6 +2255,35 @@ export class DISMSupport {
                 DISMSupport.ArcApproximationDouble((ptArcCenter.x - dArcRadius), (ptArcCenter.y - dArcRadius),
                     (ptArcCenter.x + dArcRadius), (ptArcCenter.y + dArcRadius),
                     savepoints[1].x, savepoints[1].y, ptArcStart.x, ptArcStart.y, arcpoints);
+                for (j = 0; j < 17; j++) {
+                    if (lineutility.CalcDistanceDouble(savepoints[0], arcpoints[j]) >= iCircleRadius) {
+                        points[counter] = new POINT2(arcpoints[j]);
+                        points[counter].style = 0;
+                        counter++;
+                    } else if (j > 0) {
+                        // Last point was outside the circle this point is inside
+                        let intersectPt = lineutility.intersectPolygon(points.slice(0, 17), arcpoints[j], arcpoints[j - 1]);
+                        if (intersectPt == null) {
+                            intersectPt = arcpoints[j];
+                        }
+
+                        // Add remaining points to keep constant count
+                        for (let k = j; k < 17; k++) {
+                            points[counter] = new POINT2(intersectPt);
+                            points[counter].style = 0;
+                            counter++;
+                        }
+                        break;
+                    } else {
+                        // All points are in the circle
+                        for (j = 0; j < 17; j++) {
+                            points[counter] = new POINT2(arcpoints[j]);
+                            points[counter].style = 0;
+                            counter++;
+                        }
+                        break;
+                    }
+                }
             } else //arc is reversed
             {
                 ptArcStart.x = savepoints[0].x - dDeltaX1 * iCircleRadius;
@@ -2267,12 +2296,39 @@ export class DISMSupport {
                 DISMSupport.ArcApproximationDouble((ptArcCenter.x - dArcRadius), (ptArcCenter.y - dArcRadius),
                     (ptArcCenter.x + dArcRadius), (ptArcCenter.y + dArcRadius),
                     ptArcStart.x, ptArcStart.y, savepoints[1].x, savepoints[1].y, arcpoints);
-            }
+                let outsideCircle = false;
+                for (j = 0; j < 17; j++) {
+                    // Don't include points inside circle
+                    if (outsideCircle || lineutility.CalcDistanceDouble(savepoints[0], arcpoints[j]) >= iCircleRadius) {
+                        if (!outsideCircle && j > 0) {
+                            // Last point was inside the circle this point is outside
+                            let intersectPt = lineutility.intersectPolygon(points.slice(0, 17), arcpoints[j], arcpoints[j - 1]);
+                            if (intersectPt == null) {
+                                intersectPt = arcpoints[j - 1];
+                            }
 
-            for (j = 0; j < 17; j++) {
-                points[counter] = new POINT2(arcpoints[j]);
-                points[counter].style = 0;
-                counter++;
+                            // Add skipped points to keep constant count
+                            for (let k = 0; k < j; k++) {
+                                points[counter] = new POINT2(intersectPt);
+                                points[counter].style = 0;
+                                counter++;
+                            }
+                        }
+
+                        points[counter] = new POINT2(arcpoints[j]);
+                        points[counter].style = 0;
+                        counter++;
+                        outsideCircle = true;
+                    }
+                }
+                if (!outsideCircle) {
+                    // All points are in the circle
+                    for (j = 0; j < 17; j++) {
+                        points[counter] = new POINT2(arcpoints[j]);
+                        points[counter].style = 0;
+                        counter++;
+                    }
+                }
             }
             points[counter - 1].style = 5;
 

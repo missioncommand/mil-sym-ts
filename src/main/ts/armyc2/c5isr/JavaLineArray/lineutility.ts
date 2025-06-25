@@ -4067,6 +4067,51 @@ export class lineutility {
     }
 
     /**
+     * Returns the intersection between two line segments or null if it doesn't exist
+     *
+     * @param pt1
+     * @param pt2
+     * @param pt3
+     * @param pt4
+     * @return
+     */
+    private static getIntersectionPoint(pt1: POINT2, pt2: POINT2, pt3: POINT2, pt4: POINT2): POINT2 {
+        let denom: double = (pt4.y - pt3.y) * (pt2.x - pt1.x) - (pt4.x - pt3.x) * (pt2.y - pt1.y);
+
+        if (denom == 0.0) { // Lines are parallel or collinear
+            return null;
+        }
+
+        let ua: double = ((pt4.x - pt3.x) * (pt1.y - pt3.y) - (pt4.y - pt3.y) * (pt1.x - pt3.x)) / denom;
+        let ub: double = ((pt2.x - pt1.x) * (pt1.y - pt3.y) - (pt2.y - pt1.y) * (pt1.x - pt3.x)) / denom;
+
+        if (ua >= 0.0 && ua <= 1.0 && ub >= 0.0 && ub <= 1.0) {
+            // Intersection point lies within both segments
+            let intersectX: double = pt1.x + ua * (pt2.x - pt1.x);
+            let intersectY: double = pt1.y + ua * (pt2.y - pt1.y);
+            return new POINT2(intersectX, intersectY);
+        }
+
+        return null; // Segments do not intersect
+    }
+
+    /**
+     * Returns the intersection between a polygon and a line or null if it doesn't exist
+     *
+     * @param polyPts
+     * @param pt0
+     * @param pt1
+     * @return
+     */
+    public static intersectPolygon(polyPts: POINT2[], pt0: POINT2, pt1: POINT2): POINT2 {
+        for (let i = 0; i < polyPts.length; i++) {
+            let temp = lineutility.getIntersectionPoint(polyPts[i], polyPts[(i + 1) % polyPts.length], pt0, pt1);
+            if (temp != null) return temp;
+        }
+        return null;
+    }
+
+    /**
      * Returns the point perpendicular to the line (pt0 to pt1) at the midpoint
      * the same distance from (and on the same side of) the the line as
      * ptRelative.
