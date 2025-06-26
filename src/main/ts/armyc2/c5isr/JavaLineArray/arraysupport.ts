@@ -839,6 +839,7 @@ export class arraysupport {
                 }
 
 
+                case TacticalLines.TURN_REVD:
                 case TacticalLines.TURN: {
                     let changeArc: boolean = arraysupport.IsTurnArcReversed(savepoints);
                     if (changeArc) //swap the points
@@ -3061,6 +3062,7 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.TURN_REVD:
                 case TacticalLines.TURN: {
                     // Switch first and last point. Order changed in 2525C
                     let swapPt: POINT2 = pLinePoints[0];
@@ -4506,6 +4508,7 @@ export class arraysupport {
                 case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.SEIZE:
                 case TacticalLines.EVACUATE:
+                case TacticalLines.TURN:
                 case TacticalLines.BS_RECTANGLE:
                 case TacticalLines.BBS_RECTANGLE:
                 //add these
@@ -5399,6 +5402,7 @@ export class arraysupport {
                 case TacticalLines.ATDITCHC:
                 case TacticalLines.ATDITCHM:
                 case TacticalLines.MNFLDFIX:
+                case TacticalLines.TURN_REVD:
                 case TacticalLines.TURN:
                 case TacticalLines.MNFLDDIS:
                 case TacticalLines.AREA_DEFENSE:

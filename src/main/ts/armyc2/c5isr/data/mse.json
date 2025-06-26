@@ -8811,6 +8811,17 @@
   {
     "ss": "",
     "e": "",
+    "et": "",
+    "est": "Turn",
+    "code": "270504",
+    "geometry": "Line",
+    "drawRules": "Line10",
+    "modifiers": "",
+    "aux1": ""
+  },
+  {
+    "ss": "",
+    "e": "",
     "et": "Obstacle Bypass",
     "est": "",
     "code": "270600",

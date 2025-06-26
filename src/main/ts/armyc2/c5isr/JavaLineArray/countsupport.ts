@@ -436,6 +436,7 @@ export class countsupport {
                     break;
                 }
 
+                case TacticalLines.TURN_REVD:
                 case TacticalLines.TURN: {
                     count = 29;
                     break;

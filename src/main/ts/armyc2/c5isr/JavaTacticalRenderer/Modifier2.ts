@@ -229,6 +229,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.TURN: {
+                    label = "T";
+                    break;
+                }
+
                 case TacticalLines.EVACUATE: {
                     label = "E";
                     break;
@@ -4210,6 +4215,7 @@ export class Modifier2 {
                 case TacticalLines.CONTAIN:
                 case TacticalLines.SEIZE:
                 case TacticalLines.EVACUATE:
+                case TacticalLines.TURN:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH:
                 case TacticalLines.FOLLA:
@@ -4417,6 +4423,14 @@ export class Modifier2 {
                             break;
                         }
                     }
+                    break;
+                }
+
+                case TacticalLines.TURN: {
+                    pt0 = tg.Pixels[12];
+                    pt1 = tg.Pixels[13];
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.125 * csFactor, ptCenter, ptCenter, true);
                     break;
                 }
 

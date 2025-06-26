@@ -2712,6 +2712,7 @@ export class lineutility {
                     break;
                 }
 
+                case TacticalLines.TURN_REVD:
                 case TacticalLines.TURN: {
                     startangle = M;
                     endangle = startangle + 90 * Math.PI / 180;
@@ -2759,6 +2760,7 @@ export class lineutility {
                         break;
                     }
 
+                    case TacticalLines.TURN_REVD:
                     case TacticalLines.TURN: {
                         startangle = M - Math.PI;
                         endangle = startangle + 90 * Math.PI / 180;

@@ -98,6 +98,7 @@ export class TacticalLines {
     public static readonly ATKBYFIRE: number = 22533000;
     public static readonly SPTBYFIRE: number = 22534000;
     public static readonly CLUSTER: number = 23157000;
+    public static readonly TURN_REVD: number = 25270504;
     public static readonly TURN: number = 23173000;
     public static readonly PLANNED: number = 23191000;
     public static readonly ESR1: number = 23192000;

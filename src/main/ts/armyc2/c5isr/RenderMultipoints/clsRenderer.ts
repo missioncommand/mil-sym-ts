@@ -2334,17 +2334,14 @@ export class clsRenderer {
                     return TacticalLines.DISENGAGE;
                 case 344500:
                     return TacticalLines.EVACUATE;
+                case 344700:
+                    return TacticalLines.TURN;
                 // Updated in 2525Ech1
                 case 172000:
                     return TacticalLines.WFZ;
                 // Removed in 2525Ech1
                 case 240804:
                     return -1;
-                // Code changed in 2525Ech1
-                case 270504:
-                    return -1; // TacticalLines.TURN in older versions
-                case 344700:
-                    return TacticalLines.TURN;
             }
         }
         if (version >= SymbolID.Version_2525E) {
@@ -3139,7 +3136,7 @@ export class clsRenderer {
             }
 
             case 270504: {
-                return TacticalLines.TURN;
+                return TacticalLines.TURN_REVD;
             }
 
             case 270601: {
