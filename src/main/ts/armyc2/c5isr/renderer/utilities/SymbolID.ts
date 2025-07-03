@@ -611,7 +611,7 @@ export class SymbolID {
      */
     public static getModifier1(symbolID: string): number {
         if (symbolID != null && symbolID.length >= 20) {
-            return parseInt(symbolID.substring(16, 18));
+            return parseInt(symbolID.substring(16, 18),16);
         }
         else {
             return 0;
@@ -621,12 +621,26 @@ export class SymbolID {
     /**
      * Set Sector 1 Modifier at positions 17-18.
      * @param symbolID 30 Character string
-     * @param mod1 number
+     * @param mod1 number 0-255 or string "00" to "FF"
      * @return string
      */
-    public static setModifier1(symbolID: string, mod1: number): string {
+    public static setModifier1(symbolID: string, mod1: number | string): string {
+        let mod:string = "00";
+        if (typeof mod1 === "number")
+        {
+            if(mod1 >=0 && mod1 <= 255)
+            {
+                mod = mod1.toString(16);
+            }
+        }
+        else if (typeof mod1 === "string")
+        {
+            let num = parseInt(mod1);
+            if(num >=0 && num <= 255)
+                mod = mod1;
+        }
         let newID: string = symbolID.toString();
-        let mod: string = mod1.toString();
+
         if (mod.length === 1) {
 
             mod = "0" + mod;
@@ -676,7 +690,7 @@ export class SymbolID {
      */
     public static getModifier2(symbolID: string): number {
         if (symbolID != null && symbolID.length >= 20) {
-            return parseInt(symbolID.substring(18, 20));
+            return parseInt(symbolID.substring(18, 20),16);
         }
         else {
             return 0;
@@ -686,13 +700,28 @@ export class SymbolID {
     /**
      * Set Sector 2 Modifier at positions 17-18.
      * @param symbolID 30 Character string
-     * @param mod1 number
+     * @param mod2 number 0-255 or string "00" to "FF"
      * @return string
      */
-    public static setModifier2(symbolID: string, mod1: number): string {
+    public static setModifier2(symbolID: string, mod2: number): string {
+        let mod:string = "00";
+        if (typeof mod2 === "number")
+        {
+            if(mod2 >=0 && mod2 <= 255)
+            {
+                mod = mod2.toString(16);
+            }
+        }
+        else if (typeof mod2 === "string")
+        {
+            let num = parseInt(mod2);
+            if(num >=0 && num <= 255)
+                mod = mod2;
+        }
         let newID: string = symbolID.toString();
-        let mod: string = mod1.toString();
+
         if (mod.length === 1) {
+
             mod = "0" + mod;
         }
 

@@ -321,14 +321,15 @@ export class MultiPointHandlerSVG {
                 svgElements.push(tempShape.toSVGElement(textColor, outlineColor, outlineWidth));
             }
         }
-        else if (tbm === RendererSettings.TextBackgroundMethod_OUTLINE_QUICK) {
+        /*else if (tbm === RendererSettings.TextBackgroundMethod_OUTLINE_QUICK) {
             //TODO: need to update, this is regular outline approach
             for (let i = 0; i < size; i++) {
                 tempShape = tiArray[i];
                 svgElements.push(tempShape.toSVGElement(textColor, outlineColor, outlineWidth));
             }
         }
-        else if (tbm === RendererSettings.TextBackgroundMethod_COLORFILL) {
+        else //*/
+        if (tbm === RendererSettings.TextBackgroundMethod_COLORFILL) {
             for (let i = 0; i < size; i++) {
                 tempShape = tiArray[i];
                 svgElements.push(tempShape.getTextOutlineBounds().toSVGElement(null, null, outlineColor));

@@ -266,6 +266,12 @@ export class RendererUtilities {
         }
     }
 
+    public static getRecommendedTextOutlineWidth():number
+    {
+        let dpi:number = RendererSettings.getInstance().getDeviceDPI();
+        return Math.max(dpi/48,2);
+    }
+
     /**
      * For Renderer Use Only
      * Assumes a fresh SVG String from the SVGLookup with its default values

@@ -93,7 +93,7 @@
 			//modifiers.set(C5Ren.utilities.MilStdAttributes.FillColor,"#00FF00";
             //modifiers.set(C5Ren.utilities.MilStdAttributes.Alpha,50;
             
-            //modifiers.set(C5Ren.utilities.MilStdAttributes.LineColor,"#FF00FF";
+            //modifiers.set(C5Ren.utilities.MilStdAttributes.LineColor,"#FF00FF");
 			//modifiers.set(C5Ren.utilities.MilStdAttributes.FillColor,"#0000FF00");
             //modifiers.set(C5Ren.utilities.MilStdAttributes.Alpha,50;
 			
@@ -105,18 +105,26 @@
 
         function drawToCanvas(svg,x,y)
         {
-            var canvas = document.getElementById('preview');
-            var ctx = canvas.getContext('2d');
-            var data = svg;
-            var DOMURL = window.URL || window.webkitURL || window;
-            var img1 = new Image();
-            var svg = new Blob([data], {type: 'image/svg+xml'});
-            var url = DOMURL.createObjectURL(svg);
-            img1.onload = function() {
-                ctx.drawImage(img1, x, y);
-                DOMURL.revokeObjectURL(url);
+            try
+            {
+                var canvas = document.getElementById('preview');
+                var ctx = canvas.getContext('2d');
+                var data = svg;
+                var DOMURL = window.URL || window.webkitURL || window;
+                var img1 = new Image();
+                var svg = new Blob([data], {type: 'image/svg+xml'});
+                var url = DOMURL.createObjectURL(svg);
+                img1.onload = function() {
+                    ctx.drawImage(img1, x, y);
+                    DOMURL.revokeObjectURL(url);
+                }
+                img1.src = url;
             }
-            img1.src = url;
+            catch(exc)
+            {
+                console.log();
+            }
+
         }
 
         
@@ -152,7 +160,7 @@
 
             //attributes.set(C5Ren.MilStdAttributes.LineColor,"#00FF00");
             //attributes.set(C5Ren.MilStdAttributes.FillColor,"#0000FF00");
-            //attributes.set(C5Ren.MilStdAttributes.IconColor,"#0000FF");
+            //attributes.set(C5Ren.MilStdAttributes.IconColor,"#00FF00");
         
             var si = C5Ren.MilStdIconRenderer.getInstance().RenderSVG(symbolID,modifiers,attributes);
             //var si2 = C5Ren.MilStdIconRenderer.getInstance().RenderSVG("130310000016570000000000000000",modifiers,attributes);

@@ -9585,7 +9585,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
 
         let svgFill: string = RendererUtilities.colorToHexString(color, false);
-        let svgStrokeWidth: string = "2";//String.valueOf(RendererSettings.getInstance().getTextOutlineWidth());
+        let svgStrokeWidth: string = RendererSettings.getInstance().getTextOutlineWidth().toString();
         for (let ti of tiArray) {
             sbSVG += (Shape2SVG.Convert(ti, svgStroke, svgFill, svgStrokeWidth, null, null, null));
             sbSVG += ("\n");
@@ -9615,7 +9615,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
 
         let svgFill: string = RendererUtilities.colorToHexString(color, false);
-        let svgStrokeWidth: string = "2";//String.valueOf(RendererSettings.getInstance().getTextOutlineWidth());
+        let svgStrokeWidth: string = RendererSettings.getInstance().getTextOutlineWidth().toString();
         sbSVG += ("\n<g");
         sbSVG += (" font-family=\"" + name + '"');
         sbSVG += (" font-size=\"" + size + "px\"");
@@ -9694,7 +9694,7 @@ export class ModifierRenderer implements SettingsEventListener {
         g2d.fillStyle = color.toHexString();
         g2d.strokeStyle = textBackgroundColor.toHexString();
 
-        if (tbm === RendererSettings.TextBackgroundMethod_OUTLINE_QUICK) {
+        /*if (tbm === RendererSettings.TextBackgroundMethod_OUTLINE_QUICK) {
             let tempShape: TextInfo;
             //draw text outline
             //_modifierFont.setStyle(Style.FILL);
@@ -9714,7 +9714,8 @@ export class ModifierRenderer implements SettingsEventListener {
                 textInfo.fillText(g2d);
             }
         }
-        else if (tbm === RendererSettings.TextBackgroundMethod_OUTLINE) {
+        else //*/
+        if (tbm === RendererSettings.TextBackgroundMethod_OUTLINE) {
             //TODO: compare performance against TextBackgroundMethod_OUTLINE_QUICK
             let tempShape: TextInfo;
             if (outlineWidth > 0)

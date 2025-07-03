@@ -7,6 +7,7 @@ import { ErrorLogger } from "../../renderer/utilities/ErrorLogger"
 import { SettingsChangedEvent } from "../../renderer/utilities/SettingsChangedEvent"
 import { SettingsEventListener } from "../../renderer/utilities/SettingsEventListener"
 import { LogLevel } from "./LogLevel";
+import { RendererUtilities } from "./RendererUtilities";
 
 
 /**
@@ -21,7 +22,7 @@ export class RendererSettings {
 
     //outline approach.  none, filled rectangle, outline (default),
     //outline quick (outline will not exceed 1 pixels).
-    private static _TextBackgroundMethod: int = 3;
+    private static _TextBackgroundMethod: int = 2;
     /**
      * There will be no background for text
      */
@@ -38,14 +39,7 @@ export class RendererSettings {
      */
     public static readonly TextBackgroundMethod_OUTLINE: int = 2;
 
-    /**
-     * A different approach for outline which is quicker and seems to use
-     * less memory.  Also, you may do well with a lower outline thickness setting
-     * compared to the regular outlining approach.  Outline Width of 1 is
-     * recommended. 
-     */
-    public static readonly TextBackgroundMethod_OUTLINE_QUICK: int = 3;
-
+    
     /**
      * Value from 0 to 255. The closer to 0 the lighter the text color has to be
      * to have the outline be black. Default value is 160.
@@ -53,7 +47,7 @@ export class RendererSettings {
     private static _TextBackgroundAutoColorThreshold: int = 160;
 
     //if TextBackgroundMethod_OUTLINE is set, This value determines the width of that outline.
-    private static _TextOutlineWidth: int = 1;
+    private static _TextOutlineWidth: int = 2;
 
     //label foreground color, uses line color of symbol if null.
     private static _ColorLabelForeground: Color; //Color.BLACK;
@@ -242,17 +236,10 @@ export class RendererSettings {
      * Use setTextOutlineWidth if you'd like a different value.
      * @param textBackgroundMethod like RenderSettings.TextBackgroundMethod_NONE
      */
-    public setTextBackgroundMethod(textBackgroundMethod: int): void {
+    public setTextBackgroundMethod(textBackgroundMethod: int): void 
+    {
         RendererSettings._TextBackgroundMethod = textBackgroundMethod;
-        if (RendererSettings._TextBackgroundMethod === RendererSettings.TextBackgroundMethod_OUTLINE) {
-
-            RendererSettings._TextOutlineWidth = 4;
-        }
-
-        else if (RendererSettings._TextBackgroundMethod === RendererSettings.TextBackgroundMethod_OUTLINE_QUICK) {
-
-            RendererSettings._TextOutlineWidth = 1;
-        }
+        RendererSettings._TextOutlineWidth = RendererUtilities.getRecommendedTextOutlineWidth();       
     }
 
     /**
@@ -327,6 +314,12 @@ export class RendererSettings {
      */
     public setDeviceDPI(value: int): void {
         RendererSettings._DPI = value;
+        if(this.getTextBackgroundMethod()==RendererSettings.TextBackgroundMethod_OUTLINE)
+        {
+            //_TextOutlineWidth = 8;//441 DPI
+            RendererSettings._TextOutlineWidth = RendererUtilities.getRecommendedTextOutlineWidth();
+            //_TextOutlineWidth = Math.round((4.0f/96.0f)*(float)_DPI);
+        }
     }
     public getDeviceDPI(): int {
         return RendererSettings._DPI;
@@ -366,7 +359,6 @@ export class RendererSettings {
      * the outline will be this many pixels wide.
      *
      * @param width
-     * @deprecated - controlled within the renderer
      */
     /*synchronized public void setTextOutlineWidth(int width)
     {

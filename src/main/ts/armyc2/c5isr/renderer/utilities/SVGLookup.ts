@@ -579,6 +579,11 @@ export class SVGLookup
 
         if ((SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E) && symbolID.charAt(20) !== '0') {//2525E with Modifier 1 Indicator set
             mod1ID = symbolID.substring(20, 21) + symbolID.substring(16, 18) + "_1";
+            if(mod1ID === "175_1")
+            {
+                //TODO: as this is a common modifier, it can fit more than land units and will probably need its own function and more SVGs
+                mod1ID += SVGLookup.getPostFixForIcon(symbolID);
+            }
         }
         else //2525D or no Modifier 1 Indicator set
         {
@@ -616,6 +621,11 @@ export class SVGLookup
         let mod2ID: string;
         if ((SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E) && symbolID.charAt(21) !== '0') {//2525E with Modifier 1 Indicator set
             mod2ID = symbolID.substring(21, 22) + symbolID.substring(18, 20) + "_2";
+            if(mod2ID === "131_2" || mod2ID === "134_2")
+            {
+                //TODO: as this is a common modifier, it can fit more than land units and will probably need its own function and more SVGs
+                mod2ID += SVGLookup.getPostFixForIcon(symbolID);
+            }
         }
         else //2525D or no Modifier 1 Indicator set
         {

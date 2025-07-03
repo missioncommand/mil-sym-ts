@@ -77,7 +77,7 @@ export class WebRenderer /* extends Applet */ {
 
                 //Set Renderer Settings/////////////////////////////////////////////
                 RendererSettings.getInstance().setTextBackgroundMethod(
-                    RendererSettings.TextBackgroundMethod_OUTLINE_QUICK);
+                    RendererSettings.TextBackgroundMethod_OUTLINE);
                 //RendererSettings.getInstance().setLabelForegroundColor(Color.BLACK);
                 //RendererSettings.getInstance().setLabelBackgroundColor(new Color(255, 255, 255, 200));
                 RendererSettings.getInstance().setLabelFont("arial", Font.PLAIN, 12);
