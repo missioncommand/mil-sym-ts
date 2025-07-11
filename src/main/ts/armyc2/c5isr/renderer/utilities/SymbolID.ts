@@ -126,6 +126,8 @@ export class SymbolID {
     public static readonly StandardIdentity_Context_Reality: number = 0;
     public static readonly StandardIdentity_Context_Exercise: number = 1;
     public static readonly StandardIdentity_Context_Simulation: number = 2;
+    public static readonly StandardIdentity_Context_Restricted_Target_Reality: number = 3;
+    public static readonly StandardIdentity_Context_No_Strike_Entity_Reality: number = 4;
 
     //Standard Identity, Second Digit (4)
     public static readonly StandardIdentity_Affiliation_Pending: number = 0;

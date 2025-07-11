@@ -5979,6 +5979,14 @@
     "SVG": "<g id=\"35122\">        <text enable-background=\"new    \" font-family=\"sans-serif\" font-size=\"72\" id=\"N6\" opacity=\"0.98\" x=\"260\" y=\"499\">N6</text>    </g>"
   },
   {
+    "id": "no-strike",
+    "X": "378.0",
+    "Y": "248.0",
+    "Width": "80.0",
+    "Height": "80.0",
+    "SVG": "<g id=\"no-strike\">          <circle cx=\"418\" cy=\"288\" fill=\"yellow\" r=\"36\" stroke=\"black\" stroke-width=\"8\"/>          <line fill=\"none\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"8\" x1=\"390\" x2=\"446\" y1=\"265\" y2=\"310\"/>    </g>"
+  },
+  {
     "id": "35121",
     "X": "237.875",
     "Y": "298.375",
@@ -26529,6 +26537,14 @@
     "Width": "82.9599609375",
     "Height": "48.859375",
     "SVG": "<g id=\"52201\">        <text font-family=\"sans-serif\" font-size=\"66\" x=\"258\" y=\"340\">HS</text>    </g>"
+  },
+  {
+    "id": "restricted",
+    "X": "375.44801678047673",
+    "Y": "248.63298320770264",
+    "Width": "85.1039714496415",
+    "Height": "79.36734275822477",
+    "SVG": "<g id=\"restricted\" transform=\"translate(370,240) scale(4)\">          <path d=\"M10.25,4.19,2.63,18a2,2,0,0,0,1.75,3H19.62a2,2,0,0,0,1.75-3L13.75,4.19A2,2,0,0,0,10.25,4.19Z\" fill=\"yellow\" id=\"secondary\"/>          <line fill=\"none\" id=\"primary-upstroke\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" x1=\"12.05\" x2=\"11.95\" y1=\"17\" y2=\"17\"/>          <path d=\"M12,7v6M10.25,4.19,2.63,18a2,2,0,0,0,1.75,3H19.62a2,2,0,0,0,1.75-3L13.75,4.19A2,2,0,0,0,10.25,4.19Z\" fill=\"none\" id=\"primary\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"/>    </g>"
   },
   {
     "id": "octagon",

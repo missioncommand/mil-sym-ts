@@ -556,6 +556,7 @@
             var si = new C5Ren.SVGInfo("10165700", new C5Ren.Rectangle2D(198,365,215,64),"<g id=\"10165700\"><text font-family=\"sans-serif\" stroke=\"red\" font-size=\"89\" x=\"192\" y=\"428\">MWR</text></g>");
             C5Ren.MilStdIconRenderer.getInstance().AddCustomSymbol(mi,si);
         }//*/
+        C5Ren.RendererSettings.getInstance().setLabelFont("arial","bold",12);
     }
         
 	function preload()
@@ -632,6 +633,8 @@ Context: <select id = lbContext onchange="buildSymbolID();">
     <option>0-Reality</option>
     <option>1-Exercise</option>	
 	<option>2-Simulation</option>	
+    <option>3-Restricted</option>
+    <option>4-No-Strike</option>
 </select>
 Affiliation: <select id = lbAffiliation onchange="buildSymbolID();">
     <option>0-Pending</option>

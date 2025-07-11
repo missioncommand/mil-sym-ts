@@ -39,6 +39,8 @@ import { SVGTextInfo } from "./utilities/SVGTextInfo";
 import { ShapeTypes } from "./shapes/types";
 
 import { Canvas, CanvasRenderingContext2D, createCanvas } from 'canvas';
+import { SVGLookup } from "./utilities/SVGLookup";
+import { SVGInfo } from "./utilities/SVGInfo";
 
 
 /**
@@ -52,7 +54,7 @@ export class ModifierRenderer implements SettingsEventListener {
     private static _modifierFont: Font = ModifierRenderer.RS.getLabelFont();
 
     private static _modifierFontHeight: float = 11;
-    private static _modifierFontDescent: float = 2;
+    private static _modifierFontDescent: float = 3;
 
     private static isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
     private static isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
@@ -890,6 +892,119 @@ export class ModifierRenderer implements SettingsEventListener {
         }
 
         // </editor-fold>
+
+        // <editor-fold defaultstate="collapsed" desc="Build Restricted Indicator">
+        let rBounds: Rectangle2D;
+        let rPath: Path;
+        let rPath2: Path;
+        let rCircle: Ellipse;
+        let rStrokeWidth: number = 3;
+        if(SymbolID.getContext(symbolID) === SymbolID.StandardIdentity_Context_Restricted_Target_Reality)
+        {
+            // <path id="primary" d="M380,320l38,-67l40,67h-78m38,-11v-1m0,-10l0,-20" fill="yellow" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" />
+            let nsTx:number = 0;
+            let nsTy:number = 0;
+            let ratio:number = 1;
+            let si:SVGInfo = SVGLookup.getInstance().getSVGLInfo(SVGLookup.getFrameID(symbolID),SymbolID.getVersion(symbolID));
+            if(symbolBounds.getHeight() > symbolBounds.getWidth())
+            {
+                let sHeight:number = si.getBbox().getHeight();
+                ratio = symbolBounds.getHeight() / sHeight;
+            }
+            else
+            {
+                let sWidth:number = si.getBbox().getWidth();
+                ratio = symbolBounds.getHeight() / sWidth;
+            }
+
+            nsTx = (si.getBbox().getX() * ratio) * -1;
+            nsTy = (si.getBbox().getY() * ratio) * -1;
+            
+            let radius:number = 36 * ratio;
+            let x:number = 418 * ratio - radius;
+            let y:number = 288 * ratio - radius;
+
+            //<path d="m373,313l53,-97l57,97l-110,0" fill="yellow" id="triangle" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+            //<path d="m373,313L426,216L483,313L373,313" fill="yellow" id="triangle" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+            rPath = new Path();//triangle
+            rPath.moveTo(373 * ratio, 313 * ratio);
+            rPath.lineTo(426 * ratio, 216 * ratio);
+            rPath.lineTo(483 * ratio, 313 * ratio);
+            rPath.lineTo(373 * ratio, 313 * ratio);
+
+            //<path d="M426.5,276L426.5,244" fill="none" id="line" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+            rPath2 = new Path();//line
+            rPath2.moveTo(426.5 * ratio, 276 * ratio);
+            rPath2.lineTo(426.5 * ratio, 248 * ratio);
+
+            //<circle cx="426.5" cy="293" r="6" id="dot"/>
+            rCircle = new Ellipse(423.5 * ratio, 290 * ratio, 6 * ratio, 6 * ratio);
+
+            //need to shift like we do the frame and main icons since it's based in that space
+            rPath.shift(nsTx,nsTy);
+            rPath2.shift(nsTx,nsTy);
+            rCircle.shift(nsTx,nsTy);
+            
+
+            let bounds = rPath.getBounds().clone();//triangle bounds
+            rBounds = RectUtilities.toRectangle2D(bounds.getX(),bounds.getY(),bounds.getWidth(), bounds.getHeight());
+            rStrokeWidth = (2/80) * Math.max(symbolBounds.getWidth(), symbolBounds.getHeight()); //RendererSettings.getInstance().getDeviceDPI()/48;
+            rBounds.grow(Math.ceil(rStrokeWidth/2));
+            imageBounds = imageBounds.createUnion(rBounds);
+        }
+        // </editor-fold>
+
+        // <editor-fold defaultstate="collapsed" desc="Build No Strike Indicator">
+        let nsBounds: Rectangle2D;
+        let nsCircle: Ellipse;
+        let nsLine: Line;
+        let nsStrokeWidth: number = 3;
+        if(SymbolID.getContext(symbolID) === SymbolID.StandardIdentity_Context_No_Strike_Entity_Reality)
+        {
+            //octagon~182.08058166503906~272.0794677734375~245.8407440185547~244.85235595703125
+            //restricted~375.44801678047673~248.63298320770264~85.1039714496415~79.36734275822477
+            //no-strike~378.0~248.0~80.0~80.0
+            //<circle cx="418" cy="288" fill="yellow" r="36" stroke="black" stroke-width="8"/>
+            //<line fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" x1="390" x2="446" y1="265" y2="310"/>
+            //nsCircle = new Ellipse(x,y,radius * 2, radius * 2);
+            //nsLine = new Line(390 * ratio, 265 * ratio, 446 * ratio, 310 * ratio);
+            let nsTx:number = 0;
+            let nsTy:number = 0;
+            let ratio:number = 1;
+            let si:SVGInfo = SVGLookup.getInstance().getSVGLInfo(SVGLookup.getFrameID(symbolID),SymbolID.getVersion(symbolID));
+            if(symbolBounds.getHeight() > symbolBounds.getWidth())
+            {
+                let sHeight:number = si.getBbox().getHeight();
+                ratio = symbolBounds.getHeight() / sHeight;
+            }
+            else
+            {
+                let sWidth:number = si.getBbox().getWidth();
+                ratio = symbolBounds.getWidth() / sWidth;
+            }
+
+            nsTx = (si.getBbox().getX() * ratio) * -1;
+            nsTy = (si.getBbox().getY() * ratio) * -1;
+            
+            let radius:number = 50 * ratio;
+            let x:number = 426 * ratio - radius;
+            let y:number = 267 * ratio - radius;
+            nsCircle = new Ellipse(x,y,radius * 2, radius * 2);
+            nsLine = new Line(390 * ratio, 235 * ratio, 463 * ratio, 298 * ratio);
+
+            //need to shift like we do the frame and main icons since it's based in that space
+            nsCircle.shift(nsTx,nsTy);
+            nsLine.shift(nsTx,nsTy);
+
+            let bounds = nsCircle.getBounds().clone();
+            bounds.union(nsLine.getBounds());
+            nsBounds = RectUtilities.toRectangle2D(bounds.getX(),bounds.getY(),bounds.getWidth(), bounds.getHeight());
+            nsStrokeWidth = (2/80) * Math.max(symbolBounds.getWidth(), symbolBounds.getHeight()); //RendererSettings.getInstance().getDeviceDPI()/48;
+            nsBounds.grow(Math.ceil(nsStrokeWidth/2));
+            imageBounds = imageBounds.createUnion(nsBounds);
+        }
+        // </editor-fold>
+
         //
         // <editor-fold defaultstate="collapsed" desc="Shift Modifiers">
         //adjust points if necessary
@@ -1085,6 +1200,29 @@ export class ModifierRenderer implements SettingsEventListener {
 
                 domBounds = null;
                 domPoints = null;
+            }
+
+            if (rBounds != null)
+            {
+                let restrictedGroup = "<g id=\"nostrike\" stroke-linecap=\"round\" stroke-linejoin=\"round\">";
+                //triangle
+                restrictedGroup += rPath.toSVGElement("black",rStrokeWidth,"yellow");
+                //exclamation
+                restrictedGroup += rPath2.toSVGElement("black",rStrokeWidth * 1.66667,"none");
+                //dot
+                restrictedGroup += rCircle.toSVGElement("black",rStrokeWidth,"black");
+                restrictedGroup += "</g>";
+                
+                sbSVG += restrictedGroup;
+            }
+
+            if(nsBounds != null)
+            {
+                let noStrikeGroup = "<g id=\"nostrike\">";
+                noStrikeGroup += nsCircle.toSVGElement("black",nsStrokeWidth,"yellow");
+                noStrikeGroup += nsLine.toSVGElement("black",nsStrokeWidth,null);
+                noStrikeGroup += "</g>";
+                sbSVG += noStrikeGroup;
             }
 
             newsdi = new SVGSymbolInfo(sbSVG.toString().valueOf(), new Point2D(centerPoint.x, centerPoint.y), symbolBounds, imageBounds);
@@ -3147,96 +3285,105 @@ export class ModifierRenderer implements SettingsEventListener {
         let modifierValue: string;
         let tiTemp: TextInfo;
 
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-
-            let gm: string = "";
-            let hm: string = "";
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-
-                hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-
-            modifierValue = gm + " " + hm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //on bottom
-                y = (bounds.getY() + bounds.getHeight()) as int;
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.Z_SPEED) || modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-            modifierValue = "";
-            let zm: string = "";
-            let xm: string = "";
-            if (modifiers.has(Modifiers.Z_SPEED)) {
-
-                zm = modifiers.get(Modifiers.Z_SPEED);
-            }
-
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-
-                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-            }
-
-
-            modifierValue = zm + " " + xm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //on bottom
-                y = (bounds.getY() + bounds.getHeight() - labelHeight) as int;
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-            modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //right
-                x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //above Z
-                y = (bounds.getY() + bounds.getHeight() - (labelHeight * 2)) as int;
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
         if (SymbolUtilities.isAir(symbolID)) {
+            if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+
+                let gm: string = "";
+                let hm: string = "";
+                if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
+
+                    gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+                }
+
+
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+
+                    hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                }
+
+
+                modifierValue = gm + " " + hm;
+                modifierValue = modifierValue.trim();
+
+                if (modifierValue != null && modifierValue !== "") {
+                    tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                    labelBounds = tiTemp.getTextBounds();
+                    labelWidth = labelBounds.getWidth() as int;
+
+                    //on right
+                    x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
+                    //below Z
+                    y = (bounds.getHeight());
+                    y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                    y = y + ((labelHeight + bufferText) * 2);
+                    y = Math.round(bounds.getY() + y);
+
+                    tiTemp.setLocation(x, y);
+                    tiArray.push(tiTemp);
+
+                }
+            }
+
+            if (modifiers.has(Modifiers.Z_SPEED) || modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+                modifierValue = "";
+                let zm: string = "";
+                let xm: string = "";
+                if (modifiers.has(Modifiers.Z_SPEED)) {
+
+                    zm = modifiers.get(Modifiers.Z_SPEED);
+                }
+
+
+                if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+
+                    xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                }
+
+
+                modifierValue = zm + " " + xm;
+                modifierValue = modifierValue.trim();
+
+                if (modifierValue != null && modifierValue !== "") {
+                    tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                    labelBounds = tiTemp.getTextBounds();
+                    labelWidth = labelBounds.getWidth() as int;
+
+                    //on right
+                    x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
+                    //just below V
+                    y = (bounds.getHeight());
+                    y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                    y = y + ((labelHeight + bufferText));
+                    y = bounds.getY() + y;
+
+                    tiTemp.setLocation(x, y);
+                    tiArray.push(tiTemp);
+
+                }
+            }
+
+            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
+                modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
+
+                if (modifierValue != null && modifierValue !== "") {
+                    tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                    labelBounds = tiTemp.getTextBounds();
+                    labelWidth = labelBounds.getWidth() as int;
+
+                    //right
+                    x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
+                    //center
+                    y = (bounds.getHeight());
+                    y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                    y = bounds.getY() + y;
+
+                    tiTemp.setLocation(x, y);
+                    tiArray.push(tiTemp);
+
+                }
+            }
+
+        
             if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
                 modifierValue = modifiers.get(Modifiers.P_IFF_SIF_AIS);
 
@@ -3247,8 +3394,11 @@ export class ModifierRenderer implements SettingsEventListener {
 
                     //right
                     x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                    //above Z
-                    y = (bounds.getY() + bounds.getHeight() - (labelHeight * 3)) as int;
+                    //just above V
+                    y = (bounds.getHeight());
+                    y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                    y = y - ((labelHeight + bufferText));
+                    y = bounds.getY() + y;
 
                     tiTemp.setLocation(x, y);
                     tiArray.push(tiTemp);
@@ -3266,8 +3416,11 @@ export class ModifierRenderer implements SettingsEventListener {
 
                     //right
                     x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                    //above Z
-                    y = (bounds.getY() + bounds.getHeight() - (labelHeight * 4)) as int;
+                    //above P
+                    y = (bounds.getHeight());
+                    y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                    y = y - ((labelHeight + bufferText) * 2);
+                    y = bounds.getY() + y;
 
                     tiTemp.setLocation(x, y);
                     tiArray.push(tiTemp);
@@ -3298,17 +3451,108 @@ export class ModifierRenderer implements SettingsEventListener {
 
                     //right
                     x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                    //above Z
-                    y = (bounds.getY() + bounds.getHeight() - (labelHeight * 5)) as int;
+                    //above T
+                    y = (bounds.getHeight());
+                    y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                    y = y - ((labelHeight + bufferText) * 3);
+                    y = bounds.getY() + y;
 
                     tiTemp.setLocation(x, y);
                     tiArray.push(tiTemp);
-
                 }
             }
         }
         else //space
         {
+            if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+
+                let gm: string = "";
+                let hm: string = "";
+                if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
+
+                    gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+                }
+
+
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+
+                    hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                }
+
+
+                modifierValue = gm + " " + hm;
+                modifierValue = modifierValue.trim();
+
+                if (modifierValue != null && modifierValue !== "") {
+                    tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                    labelBounds = tiTemp.getTextBounds();
+                    labelWidth = labelBounds.getWidth() as int;
+
+                    //on right
+                    x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
+                    //below Z/X
+                    y = (bounds.getY() + (bounds.getHeight() / 2) - descent + ((labelHeight + bufferText) * 2));
+
+                    tiTemp.setLocation(x, y);
+                    tiArray.push(tiTemp);
+
+                }
+            }
+
+            if (modifiers.has(Modifiers.Z_SPEED) || modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+                modifierValue = "";
+                let zm: string = "";
+                let xm: string = "";
+                if (modifiers.has(Modifiers.Z_SPEED)) {
+
+                    zm = modifiers.get(Modifiers.Z_SPEED);
+                }
+
+
+                if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+
+                    xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                }
+
+
+                modifierValue = zm + " " + xm;
+                modifierValue = modifierValue.trim();
+
+                if (modifierValue != null && modifierValue !== "") {
+                    tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                    labelBounds = tiTemp.getTextBounds();
+                    labelWidth = labelBounds.getWidth() as int;
+
+                    //on right
+                    x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
+                    //just below center
+                    y = (bounds.getY() + (bounds.getHeight() / 2) - descent + labelHeight + bufferText);
+
+                    tiTemp.setLocation(x, y);
+                    tiArray.push(tiTemp);
+
+                }
+            }
+
+            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
+                modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
+
+                if (modifierValue != null && modifierValue !== "") {
+                    tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                    labelBounds = tiTemp.getTextBounds();
+                    labelWidth = labelBounds.getWidth() as int;
+
+                    //right
+                    x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
+                    //above vertical center
+                    y = (bounds.getY() + ((bounds.getHeight() / 2) - descent));
+
+                    tiTemp.setLocation(x, y);
+                    tiArray.push(tiTemp);
+
+                }
+            }
+
             if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
                 modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
 
@@ -3319,8 +3563,8 @@ export class ModifierRenderer implements SettingsEventListener {
 
                     //right
                     x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                    //above Z
-                    y = (bounds.getY() + bounds.getHeight() - (labelHeight * 3)) as int;
+                    //above V
+                    y = (bounds.getY() + ((bounds.getHeight() / 2) - descent - bufferText - labelHeight));
 
                     tiTemp.setLocation(x, y);
                     tiArray.push(tiTemp);
@@ -3351,8 +3595,8 @@ export class ModifierRenderer implements SettingsEventListener {
 
                     //right
                     x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                    //above Z
-                    y = (bounds.getY() + bounds.getHeight() - (labelHeight * 4)) as int;
+                    //above T
+                    y = (bounds.getY() + (bounds.getHeight() / 2) - descent - ((bufferText + labelHeight) * 2));
 
                     tiTemp.setLocation(x, y);
                     tiArray.push(tiTemp);
@@ -3447,21 +3691,25 @@ export class ModifierRenderer implements SettingsEventListener {
         if (cc != null && cc !== "") {
             modifiers.set(Modifiers.AS_COUNTRY, cc);
         }
-
-        //            int y0 = 0;//             AS
-        //            int y1 = 0;//             T
-        //            int y2 =                  V
-        //            int y3 = 0;//             X/Z
-        //            int y4 = 0;//             G/H
+        //                              AO
+        //                              B/C
+        //            int y0 = 0;//W            AS
+        //            int y1 = 0;//AR           T/Y
+        //            int y2 =     AD           V/AF
+        //            int y3 = 0;//             P/X/Z
+        //            int y4 = 0;//             G/H/J
         //
         // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
         let modifierValue: string;
         let tiTemp: TextInfo;
 
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || 
+            modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
+            modifiers.has(Modifiers.J_EVALUATION_RATING)) {
 
             let gm: string = "";
             let hm: string = "";
+            let jm: string = "";
             if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
 
                 gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);
@@ -3473,8 +3721,15 @@ export class ModifierRenderer implements SettingsEventListener {
                 hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
             }
 
+            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
+
+                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
+            }
+
 
             modifierValue = gm + " " + hm;
+            modifierValue = modifierValue.trim();
+            modifierValue += " " + jm;
             modifierValue = modifierValue.trim();
 
             if (modifierValue != null && modifierValue !== "") {
@@ -3484,8 +3739,11 @@ export class ModifierRenderer implements SettingsEventListener {
 
                 //on right
                 x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //on bottom
-                y = (bounds.getY() + bounds.getHeight()) as int;
+                //below Z
+                y = (bounds.getHeight());
+                y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                y = y + ((labelHeight + bufferText) * 2);
+                y = Math.round(bounds.getY() + y);
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
@@ -3493,23 +3751,30 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
 
-        if (modifiers.has(Modifiers.Z_SPEED) || modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+        if (modifiers.has(Modifiers.P_IFF_SIF_AIS) || 
+            modifiers.has(Modifiers.Z_SPEED) || 
+            modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
             modifierValue = null;
+            let pm: string = "";
             let zm: string = "";
             let xm: string = "";
+            if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
+
+                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
+            }
+            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+
+                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+            }
             if (modifiers.has(Modifiers.Z_SPEED)) {
 
                 zm = modifiers.get(Modifiers.Z_SPEED);
             }
 
 
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-
-                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-            }
-
-
-            modifierValue = xm + " " + zm;
+            modifierValue = pm + " " + xm;
+            modifierValue = modifierValue.trim();
+            modifierValue += " " + zm;
             modifierValue = modifierValue.trim();
 
             if (modifierValue != null && modifierValue !== "") {
@@ -3519,8 +3784,11 @@ export class ModifierRenderer implements SettingsEventListener {
 
                 //on right
                 x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //on bottom
-                y = (bounds.getY() + bounds.getHeight() - labelHeight) as int;
+                //just below V
+                y = (bounds.getHeight());
+                y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                y = y + ((labelHeight + bufferText));
+                y = bounds.getY() + y;
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
@@ -3539,7 +3807,7 @@ export class ModifierRenderer implements SettingsEventListener {
             }
 
 
-            if (modifiers.has(Modifiers.AF_COMMON_IDENTIFIER) && SymbolID.getSymbolSet(symbolID) === SymbolID.SymbolSet_Air) {
+            if (modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
 
                 afm = modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
             }
@@ -3555,8 +3823,10 @@ export class ModifierRenderer implements SettingsEventListener {
 
                 //right
                 x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //above Z
-                y = (bounds.getY() + bounds.getHeight() - (labelHeight * 2)) as int;
+                //center
+                y = (bounds.getHeight());
+                y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                y = bounds.getY() + y;
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
@@ -3565,8 +3835,24 @@ export class ModifierRenderer implements SettingsEventListener {
         }
 
 
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) || modifiers.has(Modifiers.Y_LOCATION)) {
+            
+            let tm = "";
+            let ym = "";
+
+            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+
+                tm = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+            }
+
+
+            if (modifiers.has(Modifiers.Y_LOCATION)) {
+
+                ym = modifiers.get(Modifiers.Y_LOCATION);
+            }
+            
+            modifierValue = tm + " " + ym;
+            modifierValue = modifierValue.trim();
 
             if (modifierValue != null && modifierValue !== "") {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
@@ -3575,8 +3861,11 @@ export class ModifierRenderer implements SettingsEventListener {
 
                 //right
                 x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //above Z
-                y = (bounds.getY() + bounds.getHeight() - (labelHeight * 3)) as int;
+                //just above V
+                y = (bounds.getHeight());
+                y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                y = y - ((labelHeight + bufferText));
+                y = bounds.getY() + y;
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
@@ -3611,8 +3900,94 @@ export class ModifierRenderer implements SettingsEventListener {
 
                 //right
                 x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //above Z
-                y = (bounds.getY() + bounds.getHeight() - (labelHeight * 4)) as int;
+                //above T
+                y = (bounds.getHeight());
+                y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                y = y - ((labelHeight + bufferText) * 2);
+                y = bounds.getY() + y;
+
+                tiTemp.setLocation(x, y);
+                tiArray.push(tiTemp);
+
+            }
+        }
+
+        if (modifiers.has(Modifiers.AD_PLATFORM_TYPE)) {
+            modifierValue = null;
+
+            if (modifiers.has(Modifiers.AD_PLATFORM_TYPE)) {
+
+                modifierValue = modifiers.get(Modifiers.AD_PLATFORM_TYPE);
+            }
+
+
+            if (modifierValue != null && modifierValue !== "") {
+                tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                labelBounds = tiTemp.getTextBounds();
+                labelWidth = labelBounds.getWidth() as int;
+
+                //left
+                x = (bounds.getX() - labelWidth - bufferXL) as int;
+                //center
+                y = (bounds.getHeight());
+                y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                y = bounds.getY() + y;
+
+                tiTemp.setLocation(x, y);
+                tiArray.push(tiTemp);
+
+            }
+        }
+
+
+        if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
+            modifierValue = null;
+
+            if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
+
+                modifierValue = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
+            }
+
+
+            if (modifierValue != null && modifierValue !== "") {
+                tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                labelBounds = tiTemp.getTextBounds();
+                labelWidth = labelBounds.getWidth() as int;
+
+                //left
+                x = (bounds.getX() - labelWidth - bufferXL) as int;
+                //just above AD
+                y = (bounds.getHeight());
+                y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                y = y - ((labelHeight + bufferText));
+                y = bounds.getY() + y;
+
+                tiTemp.setLocation(x, y);
+                tiArray.push(tiTemp);
+
+            }
+        }
+
+        if (modifiers.has(Modifiers.W_DTG_1)) {
+            modifierValue = null;
+
+            if (modifiers.has(Modifiers.W_DTG_1)) {
+
+                modifierValue = modifiers.get(Modifiers.W_DTG_1);
+            }
+
+            if (modifierValue != null && modifierValue !== "") {
+                tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
+                labelBounds = tiTemp.getTextBounds();
+                labelWidth = labelBounds.getWidth() as int;
+
+                //left
+                x = (bounds.getX() - labelWidth - bufferXL) as int;
+                //above T
+                y = (bounds.getHeight());
+                y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                y = y - ((labelHeight + bufferText) * 2);
+                y = bounds.getY() + y;
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
