@@ -948,7 +948,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
             let bounds = rPath.getBounds().clone();//triangle bounds
             rBounds = RectUtilities.toRectangle2D(bounds.getX(),bounds.getY(),bounds.getWidth(), bounds.getHeight());
-            rStrokeWidth = (2/80) * Math.max(symbolBounds.getWidth(), symbolBounds.getHeight()); //RendererSettings.getInstance().getDeviceDPI()/48;
+            rStrokeWidth = (2/66.666667) * (symbolBounds.getHeight() / SymbolUtilities.getUnitRatioHeight(symbolID));
             rBounds.grow(Math.ceil(rStrokeWidth/2));
             imageBounds = imageBounds.createUnion(rBounds);
         }
@@ -999,7 +999,7 @@ export class ModifierRenderer implements SettingsEventListener {
             let bounds = nsCircle.getBounds().clone();
             bounds.union(nsLine.getBounds());
             nsBounds = RectUtilities.toRectangle2D(bounds.getX(),bounds.getY(),bounds.getWidth(), bounds.getHeight());
-            nsStrokeWidth = (2/80) * Math.max(symbolBounds.getWidth(), symbolBounds.getHeight()); //RendererSettings.getInstance().getDeviceDPI()/48;
+            nsStrokeWidth = (2/66.666667) * (symbolBounds.getHeight() / SymbolUtilities.getUnitRatioHeight(symbolID));
             nsBounds.grow(Math.ceil(nsStrokeWidth/2));
             imageBounds = imageBounds.createUnion(nsBounds);
         }
