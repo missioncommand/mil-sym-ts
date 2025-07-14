@@ -554,7 +554,7 @@ export class ModifierRenderer implements SettingsEventListener {
         //Draw Echelon
         let intEchelon: int = SymbolID.getAmplifierDescriptor(symbolID);// SymbolUtilitiesD.getEchelon(symbolID);//symbolID.substring(11, 12);
         let strEchelon: string;
-        if (intEchelon > 10 && intEchelon < 29 && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.B_ECHELON)) {
+        if (intEchelon > 10 && intEchelon < 29 && SymbolUtilities.hasModifier(symbolID, Modifiers.B_ECHELON)) {
             strEchelon = SymbolUtilities.getEchelonText(intEchelon);
         }
         if (strEchelon != null && SymbolUtilities.isInstallation(symbolID) === false
@@ -726,7 +726,7 @@ export class ModifierRenderer implements SettingsEventListener {
             }
             else if (SymbolUtilities.hasModifier(symbolID, Modifiers.C_QUANTITY) &&
                 modifiers.has(Modifiers.C_QUANTITY)) {
-                ebTop = symbolBounds.getY() as int - ebHeight * 2 - 4;
+                ebTop = symbolBounds.getY() as int - ebHeight * 2.4;
             }
             else if (ss === SymbolID.SymbolSet_LandInstallation) {
                 ebTop = symbolBounds.getY() as int - ebHeight - 8;
@@ -1204,7 +1204,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
             if (rBounds != null)
             {
-                let restrictedGroup = "<g id=\"nostrike\" stroke-linecap=\"round\" stroke-linejoin=\"round\">";
+                let restrictedGroup = "<g id=\"restricted\" stroke-linecap=\"round\" stroke-linejoin=\"round\">";
                 //triangle
                 restrictedGroup += rPath.toSVGElement("black",rStrokeWidth,"yellow");
                 //exclamation
@@ -3703,6 +3703,23 @@ export class ModifierRenderer implements SettingsEventListener {
         let modifierValue: string;
         let tiTemp: TextInfo;
 
+        //if(Modifiers.C_QUANTITY in modifiers
+        let ad:number = SymbolID.getAmplifierDescriptor(symbolID);
+        if (modifiers.has(Modifiers.C_QUANTITY) && !(ad > 0 && ad < 30))//if C and no echelon
+        {
+            let text: string = modifiers.get(Modifiers.C_QUANTITY);
+            if (text != null) {
+                //bounds = armyc2.c5isr.renderer.utilities.RendererUtilities.getTextOutlineBounds(_modifierFont, text, new SO.Point(0,0));
+                tiTemp = new TextInfo(text, 0, 0, ModifierRenderer._modifierFont, frc);
+                labelBounds = tiTemp.getTextBounds();
+                labelWidth = labelBounds.getWidth() as int;
+                x = Math.round((symbolBounds.getX() + (symbolBounds.getWidth() * 0.5)) - (labelWidth * 0.5)) as int;
+                y = Math.round(symbolBounds.getY() - bufferY - descent) as int;
+                tiTemp.setLocation(x, y);
+                tiArray.push(tiTemp);
+            }
+        }
+
         if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || 
             modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
             modifiers.has(Modifiers.J_EVALUATION_RATING)) {
@@ -3915,10 +3932,8 @@ export class ModifierRenderer implements SettingsEventListener {
         if (modifiers.has(Modifiers.AD_PLATFORM_TYPE)) {
             modifierValue = null;
 
-            if (modifiers.has(Modifiers.AD_PLATFORM_TYPE)) {
-
-                modifierValue = modifiers.get(Modifiers.AD_PLATFORM_TYPE);
-            }
+            modifierValue = modifiers.get(Modifiers.AD_PLATFORM_TYPE);
+            
 
 
             if (modifierValue != null && modifierValue !== "") {
@@ -3941,13 +3956,8 @@ export class ModifierRenderer implements SettingsEventListener {
 
 
         if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-            modifierValue = null;
 
-            if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-
-                modifierValue = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
-            }
-
+            modifierValue = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
 
             if (modifierValue != null && modifierValue !== "") {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
@@ -3983,7 +3993,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
                 //left
                 x = (bounds.getX() - labelWidth - bufferXL) as int;
-                //above T
+                //above AR
                 y = (bounds.getHeight());
                 y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
                 y = y - ((labelHeight + bufferText) * 2);
