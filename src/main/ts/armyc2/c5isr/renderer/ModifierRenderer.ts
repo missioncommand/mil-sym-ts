@@ -712,28 +712,32 @@ export class ModifierRenderer implements SettingsEventListener {
             ebTextBounds = stiAO.getTextBounds();
             ebHeight = ebTextBounds.getHeight() as int;
 
+            let barOffset:number = Math.max(RendererSettings.getInstance().getDeviceDPI()/32, 4);
+
             if (fdiBounds != null)//set bar above FDI if present
             {
-                ebTop = fdiBounds.getY() as int - ebHeight - 4;
+                ebTop = fdiBounds.getY() as int - ebHeight - barOffset;
             }
             else if (tfBounds != null)//set bar above TF if present
             {
-                ebTop = tfBounds.getY() as int - ebHeight - 4;
+                ebTop = tfBounds.getY() as int - ebHeight - barOffset;
             }
             else if (echelonBounds != null)//set bar above echelon if present
             {
-                ebTop = echelonBounds.getY() as int - ebHeight - 4;
+                ebTop = echelonBounds.getY() as int - ebHeight - barOffset;
             }
             else if (SymbolUtilities.hasModifier(symbolID, Modifiers.C_QUANTITY) &&
-                modifiers.has(Modifiers.C_QUANTITY)) {
+                modifiers.has(Modifiers.C_QUANTITY) && 
+                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandUnit &&
+                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandInstallation) {
                 ebTop = symbolBounds.getY() as int - ebHeight * 2.4;
             }
             else if (ss === SymbolID.SymbolSet_LandInstallation) {
-                ebTop = symbolBounds.getY() as int - ebHeight - 8;
+                ebTop = symbolBounds.getY() as int - ebHeight - barOffset;
             }
             else//position above symbol
             {
-                ebTop = symbolBounds.getY() as int - ebHeight - 4;
+                ebTop = symbolBounds.getY() as int - ebHeight - barOffset;
             }
 
 
@@ -2742,8 +2746,7 @@ export class ModifierRenderer implements SettingsEventListener {
             modifierValue = null;
 
             let xm: string;
-            let
-                ym: string;
+            let ym: string;
 
             if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) && SymbolUtilities.hasModifier(symbolID, Modifiers.X_ALTITUDE_DEPTH)) {
                 xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);// xm = modifiers.X;
@@ -2788,8 +2791,7 @@ export class ModifierRenderer implements SettingsEventListener {
             modifierValue = null;
 
             let gm: string;
-            let
-                aqm: string;
+            let aqm: string;
 
             if (modifiers.has(Modifiers.G_STAFF_COMMENTS) && SymbolUtilities.hasModifier(symbolID, Modifiers.G_STAFF_COMMENTS)) {
                 gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);// xm = modifiers.X;
@@ -2925,8 +2927,24 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
 
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+        if (modifiers.has(Modifiers.C_QUANTITY) ||
+            modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) 
+        {
+
+            modifierValue = null;
+
+            let cm: string;
+            let tm: string;
+
+            if (modifiers.has(Modifiers.C_QUANTITY)) {
+                cm = modifiers.get(Modifiers.C_QUANTITY);// xm = modifiers.X;
+            }
+            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                tm = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);// ym = modifiers.Y;
+            }
+
+            modifierValue = cm + " " + tm;
+            modifierValue = modifierValue.trim();
 
             if (modifierValue != null) {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
@@ -4576,8 +4594,8 @@ export class ModifierRenderer implements SettingsEventListener {
         //                                 C
         //            int y0 = 0;//W/           AS
         //            int y1 = 0;//X/Y          G/AQ
-        //            int y2 = 0;//V/AD/AE      H/AF
-        //            int y3 = 0;//T            M
+        //            int y2 = 0;//V/AD/AE      
+        //            int y3 = 0;//T            H/AF
         //            int y4 = 0;//Z            J/K/L/N/P
         //
         // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
@@ -4672,12 +4690,9 @@ export class ModifierRenderer implements SettingsEventListener {
                 labelWidth = labelBounds.getWidth() as int;
 
                 //on right
-                x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //just above H
-                y = (bounds.getHeight()) as int;
-                y = ((y * 0.5) + (labelHeight * 0.5)) as int;
-                y = y - ((labelHeight + bufferText));
-                y = bounds.getY() as int + y;
+                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, bufferXR, true);
+                //just above center
+                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
@@ -4708,12 +4723,10 @@ export class ModifierRenderer implements SettingsEventListener {
                 labelBounds = tiTemp.getTextBounds();
                 labelWidth = labelBounds.getWidth() as int;
 
-                //right
-                x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //center
-                y = (bounds.getHeight()) as int;
-                y = ((y * 0.5) + ((labelHeight - descent) * 0.5)) as int;
-                y = bounds.getY() as int + y;
+                //on right
+                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, bufferXR, true);
+                //just below G/AQ
+                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
@@ -4742,32 +4755,6 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
 
-        if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-                modifierValue += modifiers.get(Modifiers.M_HIGHER_FORMATION);
-            }
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //right
-                x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //just below H
-                y = (bounds.getHeight()) as int;
-                y = ((y * 0.5) + (labelHeight * 0.5)) as int;
-                y = y + ((labelHeight + bufferText - descent));
-                y = bounds.getY() as int + y;
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
         if (modifiers.has(Modifiers.Z_SPEED)) {
             modifierValue = modifiers.get(Modifiers.Z_SPEED);
 
@@ -4783,7 +4770,6 @@ export class ModifierRenderer implements SettingsEventListener {
                 y = ((y * 0.5) + (labelHeight * 0.5)) as int;
                 y = y + ((labelHeight + bufferText) * 2) - (descent);
                 y = Math.round(bounds.getY() + y) as int;
-
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
@@ -4843,13 +4829,10 @@ export class ModifierRenderer implements SettingsEventListener {
                 labelBounds = tiTemp.getTextBounds();
                 labelWidth = labelBounds.getWidth() as int;
 
-                //right
-                x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
-                //below M
-                y = (bounds.getHeight()) as int;
-                y = ((y * 0.5) + (labelHeight * 0.5)) as int;
-                y = y + ((labelHeight + bufferText) * 2) - (descent * 2);
-                y = Math.round(bounds.getY() as int + y);
+                //on right
+                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, bufferXR, true);
+                //below H/AF
+                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
 
 
                 tiTemp.setLocation(x, y);
@@ -4962,14 +4945,10 @@ export class ModifierRenderer implements SettingsEventListener {
                 labelBounds = tiTemp.getTextBounds();
                 labelWidth = labelBounds.getWidth() as int;
 
-                //right
-                x = (bounds.getX() + bounds.getWidth() + bufferXR) as int;
+                //on right
+                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, bufferXR, true);
                 //above G
-                y = (bounds.getHeight()) as int;
-                y = ((y * 0.5) + (labelHeight * 0.5)) as int;
-                y = y - ((labelHeight + bufferText) * 2);
-                y = bounds.getY() as int + y;
-
+                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
 
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
@@ -5407,7 +5386,7 @@ export class ModifierRenderer implements SettingsEventListener {
         //            int y0 = 0;// W            AS
         //            int y1 = 0;//X/Y           G/AQ
         //            int y2 = 0;//              H
-        //            int y3 = 0;//AE            M
+        //            int y3 = 0;//C/AE          M
         //            int y4 = 0;//T             J/K/P
         //
         // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
@@ -5479,8 +5458,21 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
 
-        if (modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
-            modifierValue = modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
+        if (modifiers.has(Modifiers.C_QUANTITY) || 
+            modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
+
+            modifierValue = "";
+            let mc = "";
+            let mae = "";
+
+            if(modifiers.has(Modifiers.C_QUANTITY))
+                mc = modifiers.get(Modifiers.C_QUANTITY);
+            if(modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                mae = modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
+
+            modifierValue = mc + " " + mae;
+
+            modifierValue = modifierValue.trim();
 
             if (modifierValue != null) {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);
@@ -10140,7 +10132,107 @@ export class ModifierRenderer implements SettingsEventListener {
 
     }
 
+    /**
+     * 
+     * @param bounds bounds of the core icon
+     * @param labelWidth height of the label to be placed
+     * @param buffer additional horizontal spacing buffer between label and symbol if desired
+     * @param onRight if true, label on right side of symbol. On left if false.
+     * @returns 
+     */
+    private static getLabelXPosition(bounds:Rectangle2D, labelWidth:number, buffer:number, onRight:boolean):number 
+    {
+        let x:number = 0;
+        if(onRight)
+        {
+            //x = (int)(bounds.getX() + bounds.getWidth() + bufferXR);
+            x = bounds.getX() + bounds.getWidth() + buffer;
+        }
+        else//left
+        {
+            //x = (int) (bounds.getX() - labelWidth - bufferXL);
+            x = bounds.x - labelWidth - buffer;
+        }
+        return x;
+    }
 
+    /**
+     * 
+     * @param bounds bounds of the core icon
+     * @param labelHeight height of the label to be placed
+     * @param descent descent of the label to be placed
+     * @param bufferText additional vertical spacing buffer between labels if desired
+     * @param centered if true, there will be a center label location identified by 0
+     * @param location positive 1, 2, 3 to be above symbol mid-point or negative values to be below
+     * @returns y position
+     */
+    private static getLabelYPosition(bounds:Rectangle2D, labelHeight:number, descent:number, bufferText:number, centered:boolean, location:number):number 
+    {
+        let y:number = 0;
+        if (bounds != null && !bounds.isEmpty())
+        {
+            if(centered)
+            {
+                switch (location)
+                {
+                    case 2://2 above center
+                        y = (bounds.getHeight());
+                        y = ((y * 0.5) + (labelHeight * 0.5));
+                        y = y - ((labelHeight + bufferText) * 2);
+                        y = bounds.getY() + y;
+                        break;
+                    case 1://1 above center
+                        y = (bounds.getHeight());
+                        y = ((y * 0.5) + (labelHeight * 0.5));
+                        y = y - ((labelHeight + bufferText));
+                        y = bounds.getY() + y;
+                        break;
+                    case 0: //centered
+                        y = (bounds.getHeight());
+                        y = ((y * 0.5) + ((labelHeight - descent) * 0.5));
+                        y = bounds.getY() + y;
+                        break;
+                    case -1://1 below center
+                        y = (bounds.getHeight());
+                        y = ((y * 0.5) + (labelHeight * 0.5));
+                        y = y + ((labelHeight + bufferText - descent));
+                        y = bounds.getY() + y;
+                        break;
+                    case -2://2 below center
+                        y = (bounds.getHeight());
+                        y = ((y * 0.5) + (labelHeight * 0.5));
+                        y = y + ((labelHeight + bufferText) * 2) - (descent * 2);
+                        y = bounds.getY() + y;
+                        break;
+                }
+            }
+            else//split between top and bottom
+            {
+                switch (location)
+                {
+                    case 3:
+                        y = (bounds.getY() + ((bounds.getHeight() / 2) - (bufferText - descent - labelHeight)*2));
+                        break;
+                    case 2:
+                        y = (bounds.getY() + ((bounds.getHeight() / 2) - bufferText - descent - labelHeight));
+                        break;
+                    case 1:
+                        y = (bounds.getY() + ((bounds.getHeight() / 2) - (bufferText/2) - descent));
+                        break;
+                    case -1:
+                        y = (bounds.getY() + (bounds.getHeight() / 2 + labelHeight + (bufferText/2) - descent));
+                        break;
+                    case -2:
+                        y = (bounds.getY() + ((bounds.getHeight() / 2) + ((labelHeight - descent + bufferText) * 2)));
+                        break;
+                    case -3:
+                        y = (bounds.getY() + ((bounds.getHeight() / 2) + ((labelHeight - descent + bufferText) * 3)));
+                        break;
+                }
+            }
+        }
+        return y;
+    }
 
     public static hasDisplayModifiers(symbolID: string, modifiers: Map<string, string>): boolean {
         let hasModifiers: boolean = false;

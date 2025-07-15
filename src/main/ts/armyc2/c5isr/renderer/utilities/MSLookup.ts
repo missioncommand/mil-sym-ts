@@ -217,6 +217,7 @@ export class MSLookup {
                         case SymbolID.SymbolSet_LandCivilianUnit_Organization: {
                             modifiers.push(Modifiers.A_SYMBOL_ICON);
                             modifiers.push(Modifiers.B_ECHELON);
+                            modifiers.push(Modifiers.C_QUANTITY);
                             modifiers.push(Modifiers.D_TASK_FORCE_INDICATOR);
                             modifiers.push(Modifiers.F_REINFORCED_REDUCED);
                             modifiers.push(Modifiers.G_STAFF_COMMENTS);
@@ -254,7 +255,7 @@ export class MSLookup {
                         }
 
                         case SymbolID.SymbolSet_LandEquipment:
-                        case SymbolID.SymbolSet_SignalsIntelligence: {
+                        case SymbolID.SymbolSet_SignalsIntelligence_Land: {
                             modifiers.push(Modifiers.A_SYMBOL_ICON);
                             modifiers.push(Modifiers.C_QUANTITY);
                             modifiers.push(Modifiers.G_STAFF_COMMENTS);
@@ -262,7 +263,6 @@ export class MSLookup {
                             modifiers.push(Modifiers.J_EVALUATION_RATING);
                             modifiers.push(Modifiers.K_COMBAT_EFFECTIVENESS);
                             modifiers.push(Modifiers.L_SIGNATURE_EQUIP);
-                            modifiers.push(Modifiers.M_HIGHER_FORMATION);
                             modifiers.push(Modifiers.N_HOSTILE);
                             modifiers.push(Modifiers.P_IFF_SIF_AIS);
                             modifiers.push(Modifiers.Q_DIRECTION_OF_MOVEMENT);
@@ -292,6 +292,7 @@ export class MSLookup {
 
                         case SymbolID.SymbolSet_LandInstallation: {
                             modifiers.push(Modifiers.A_SYMBOL_ICON);
+                            modifiers.push(Modifiers.C_QUANTITY);
                             modifiers.push(Modifiers.G_STAFF_COMMENTS);
                             modifiers.push(Modifiers.H_ADDITIONAL_INFO_1);
                             modifiers.push(Modifiers.J_EVALUATION_RATING);
