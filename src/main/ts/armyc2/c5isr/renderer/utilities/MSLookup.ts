@@ -286,7 +286,6 @@ export class MSLookup {
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AQ_GUARDED_UNIT);
                             modifiers.push(Modifiers.AS_COUNTRY);
-                            modifiers.push(Modifiers.AR_SPECIAL_DESIGNATOR);
                             break;
                         }
 
@@ -435,7 +434,6 @@ export class MSLookup {
                             modifiers.push(Modifiers.W_DTG_1);
                             modifiers.push(Modifiers.Y_LOCATION);
                             modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
-                            modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
