@@ -376,7 +376,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.Y_LOCATION);
                             modifiers.push(Modifiers.Z_SPEED);
                             modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
-                            modifiers.push(Modifiers.AQ_GUARDED_UNIT);
+                            modifiers.push(Modifiers.AG_AUX_EQUIP_INDICATOR);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AQ_GUARDED_UNIT);
@@ -407,6 +407,7 @@ export class MSLookup {
 
                         case SymbolID.SymbolSet_Activities: {
                             modifiers.push(Modifiers.A_SYMBOL_ICON);
+                            modifiers.push(Modifiers.C_QUANTITY);
                             modifiers.push(Modifiers.G_STAFF_COMMENTS);
                             modifiers.push(Modifiers.H_ADDITIONAL_INFO_1);
                             modifiers.push(Modifiers.J_EVALUATION_RATING);
@@ -422,7 +423,6 @@ export class MSLookup {
                         case SymbolID.SymbolSet_CyberSpace: {
                             modifiers.push(Modifiers.A_SYMBOL_ICON);
                             modifiers.push(Modifiers.B_ECHELON);
-                            modifiers.push(Modifiers.D_TASK_FORCE_INDICATOR);
                             modifiers.push(Modifiers.F_REINFORCED_REDUCED);
                             modifiers.push(Modifiers.G_STAFF_COMMENTS);
                             modifiers.push(Modifiers.H_ADDITIONAL_INFO_1);

@@ -549,7 +549,10 @@ export class SinglePointSVGRenderer {
                     }
 
                     case SymbolID.SymbolSet_CyberSpace: {
-                        newSDI = ModifierRenderer.processCyberSpaceTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
+                        if (ver >= SymbolID.Version_2525E)
+                            newSDI = ModifierRenderer.processCyberSpaceTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
+                        else
+                            newSDI = ModifierRenderer.processCyberSpaceTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
                         break;
                     }
 
