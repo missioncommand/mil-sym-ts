@@ -13616,7 +13616,7 @@
     "code": "110100",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13627,7 +13627,7 @@
     "code": "110101",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13638,7 +13638,7 @@
     "code": "110102",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "X",
     "aux1": ""
   },
   {
@@ -13671,7 +13671,7 @@
     "code": "110202",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "X",
     "aux1": ""
   },
   {
@@ -13737,7 +13737,7 @@
     "code": "110305",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13748,7 +13748,7 @@
     "code": "110306",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13759,7 +13759,7 @@
     "code": "110307",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13770,7 +13770,7 @@
     "code": "110308",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13869,7 +13869,7 @@
     "code": "110401",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13880,7 +13880,7 @@
     "code": "110402",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13891,7 +13891,7 @@
     "code": "110403",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13902,7 +13902,7 @@
     "code": "110404",
     "geometry": "Line",
     "drawRules": "Line2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13913,7 +13913,7 @@
     "code": "110405",
     "geometry": "Line",
     "drawRules": "Line3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -13924,7 +13924,7 @@
     "code": "110406",
     "geometry": "Line",
     "drawRules": "Line4",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14023,7 +14023,7 @@
     "code": "110505",
     "geometry": "Point",
     "drawRules": "Point2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14298,7 +14298,7 @@
     "code": "140100",
     "geometry": "Point",
     "drawRules": "Point4",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14309,7 +14309,7 @@
     "code": "140200",
     "geometry": "Point",
     "drawRules": "Point5",
-    "modifiers": "000000",
+    "modifiers": "AN",
     "aux1": ""
   },
   {
@@ -14320,7 +14320,7 @@
     "code": "140300",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14331,7 +14331,7 @@
     "code": "140400",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14364,7 +14364,7 @@
     "code": "150101",
     "geometry": "Point",
     "drawRules": "Point6",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14375,7 +14375,7 @@
     "code": "150102",
     "geometry": "Point",
     "drawRules": "Point6",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14386,7 +14386,7 @@
     "code": "150103",
     "geometry": "Point",
     "drawRules": "Point6",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14397,7 +14397,7 @@
     "code": "150104",
     "geometry": "Point",
     "drawRules": "Point6",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14408,7 +14408,7 @@
     "code": "150105",
     "geometry": "Point",
     "drawRules": "Point6",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14419,7 +14419,7 @@
     "code": "150106",
     "geometry": "Point",
     "drawRules": "Point6",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14452,7 +14452,7 @@
     "code": "160101",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14463,7 +14463,7 @@
     "code": "160102",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14474,7 +14474,7 @@
     "code": "160103",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14485,7 +14485,7 @@
     "code": "160104",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14496,7 +14496,7 @@
     "code": "160105",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14507,7 +14507,7 @@
     "code": "160106",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14529,7 +14529,7 @@
     "code": "160201",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14540,7 +14540,7 @@
     "code": "160202",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14562,7 +14562,7 @@
     "code": "160301",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14573,7 +14573,7 @@
     "code": "160302",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14584,7 +14584,7 @@
     "code": "160303",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14606,7 +14606,7 @@
     "code": "160401",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14617,7 +14617,7 @@
     "code": "160402",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14628,7 +14628,7 @@
     "code": "160403",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14639,7 +14639,7 @@
     "code": "160404",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14650,7 +14650,7 @@
     "code": "160405",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14661,7 +14661,7 @@
     "code": "160406",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14683,7 +14683,7 @@
     "code": "160501",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14694,7 +14694,7 @@
     "code": "160502",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14716,7 +14716,7 @@
     "code": "160601",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14727,7 +14727,7 @@
     "code": "160602",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14738,7 +14738,7 @@
     "code": "160603",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14749,7 +14749,7 @@
     "code": "160604",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14771,7 +14771,7 @@
     "code": "160701",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14782,7 +14782,7 @@
     "code": "160702",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14793,7 +14793,7 @@
     "code": "160703",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14804,7 +14804,7 @@
     "code": "160704",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14815,7 +14815,7 @@
     "code": "160705",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14826,7 +14826,7 @@
     "code": "160706",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14837,7 +14837,7 @@
     "code": "160707",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14848,7 +14848,7 @@
     "code": "160708",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14859,7 +14859,7 @@
     "code": "160800",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": "dark green"
   },
   {
@@ -14881,7 +14881,7 @@
     "code": "160901",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": "dark green"
   },
   {
@@ -14892,7 +14892,7 @@
     "code": "160902",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14914,7 +14914,7 @@
     "code": "161001",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": "dark red"
   },
   {
@@ -14925,7 +14925,7 @@
     "code": "161002",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14936,7 +14936,7 @@
     "code": "161100",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14958,7 +14958,7 @@
     "code": "161201",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14969,7 +14969,7 @@
     "code": "161202",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14980,7 +14980,7 @@
     "code": "161203",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -14991,7 +14991,7 @@
     "code": "161300",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": "black"
   },
   {
@@ -15013,7 +15013,7 @@
     "code": "161401",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15024,7 +15024,7 @@
     "code": "161402",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15035,7 +15035,7 @@
     "code": "161403",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15046,7 +15046,7 @@
     "code": "161404",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15057,7 +15057,7 @@
     "code": "161405",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15068,7 +15068,7 @@
     "code": "161406",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15079,7 +15079,7 @@
     "code": "161407",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15090,7 +15090,7 @@
     "code": "161408",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15167,7 +15167,7 @@
     "code": "161506",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15178,7 +15178,7 @@
     "code": "161507",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15288,7 +15288,7 @@
     "code": "162001",
     "geometry": "Point",
     "drawRules": "Point8",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": "Red or Purple - Current and Forecast Position"
   },
   {
@@ -15299,7 +15299,7 @@
     "code": "162002",
     "geometry": "Point",
     "drawRules": "Point8",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": "Black - Past Position"
   },
   {
@@ -15310,7 +15310,7 @@
     "code": "162003",
     "geometry": "Point",
     "drawRules": "Point8",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15321,7 +15321,7 @@
     "code": "162004",
     "geometry": "Area",
     "drawRules": "Area1",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": "US Navy ship avoidance areas can be depicted using Operator-Defined Freeform. 171000"
   },
   {
@@ -15332,7 +15332,7 @@
     "code": "162100",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15343,7 +15343,7 @@
     "code": "162101",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15354,7 +15354,7 @@
     "code": "162200",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "000000",
+    "modifiers": "X",
     "aux1": ""
   },
   {
@@ -15365,7 +15365,7 @@
     "code": "162300",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15376,7 +15376,7 @@
     "code": "162400",
     "geometry": "Point",
     "drawRules": "Point7",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15398,7 +15398,7 @@
     "code": "170100",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15442,7 +15442,7 @@
     "code": "170500",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15453,7 +15453,7 @@
     "code": "170501",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15464,7 +15464,7 @@
     "code": "170600",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15475,7 +15475,7 @@
     "code": "170700",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": "dark red"
   },
   {
@@ -15508,7 +15508,7 @@
     "code": "171000",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15530,7 +15530,7 @@
     "code": "180100",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15541,7 +15541,7 @@
     "code": "180200",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15552,7 +15552,7 @@
     "code": "180300",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15574,7 +15574,7 @@
     "code": "180500",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "008000",
+    "modifiers": "",
     "aux1": "dark green"
   },
   {
@@ -15585,7 +15585,7 @@
     "code": "180600",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "C61021",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15596,7 +15596,7 @@
     "code": "180700",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15629,7 +15629,7 @@
     "code": "190101",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15640,7 +15640,7 @@
     "code": "190102",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15651,7 +15651,7 @@
     "code": "190103",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15662,7 +15662,7 @@
     "code": "190104",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15673,7 +15673,7 @@
     "code": "190105",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15684,7 +15684,7 @@
     "code": "190106",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15695,7 +15695,7 @@
     "code": "190107",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15706,7 +15706,7 @@
     "code": "190108",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15717,7 +15717,7 @@
     "code": "190109",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15728,7 +15728,7 @@
     "code": "190110",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15750,7 +15750,7 @@
     "code": "190201",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15761,7 +15761,7 @@
     "code": "190202",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15772,7 +15772,7 @@
     "code": "190203",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15783,7 +15783,7 @@
     "code": "190204",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15794,7 +15794,7 @@
     "code": "190205",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15805,7 +15805,7 @@
     "code": "190206",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15816,7 +15816,7 @@
     "code": "190207",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15827,7 +15827,7 @@
     "code": "190208",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15838,7 +15838,7 @@
     "code": "190209",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15849,7 +15849,7 @@
     "code": "190210",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15882,7 +15882,7 @@
     "code": "110101",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15893,7 +15893,7 @@
     "code": "110102",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15904,7 +15904,7 @@
     "code": "110103",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15915,7 +15915,7 @@
     "code": "110104",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15926,7 +15926,7 @@
     "code": "110105",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15937,7 +15937,7 @@
     "code": "110106",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15948,7 +15948,7 @@
     "code": "110107",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15959,7 +15959,7 @@
     "code": "110108",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15970,7 +15970,7 @@
     "code": "110109",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -15981,7 +15981,7 @@
     "code": "110110",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16003,7 +16003,7 @@
     "code": "110201",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16014,7 +16014,7 @@
     "code": "110202",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16025,7 +16025,7 @@
     "code": "110203",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16047,7 +16047,7 @@
     "code": "110301",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16058,7 +16058,7 @@
     "code": "110302",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16069,7 +16069,7 @@
     "code": "110303",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16080,7 +16080,7 @@
     "code": "110304",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16091,7 +16091,7 @@
     "code": "110400",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000"
+    "modifiers": ""
   },
   {
     "ss": "",
@@ -16101,7 +16101,7 @@
     "code": "110401",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16112,7 +16112,7 @@
     "code": "110402",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16123,7 +16123,7 @@
     "code": "110403",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16145,7 +16145,7 @@
     "code": "110501",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16156,7 +16156,7 @@
     "code": "110502",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16167,7 +16167,7 @@
     "code": "110503",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16178,7 +16178,7 @@
     "code": "110504",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16189,7 +16189,7 @@
     "code": "110505",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16200,7 +16200,7 @@
     "code": "110506",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16222,7 +16222,7 @@
     "code": "110601",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16233,7 +16233,7 @@
     "code": "110602",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16244,7 +16244,7 @@
     "code": "110603",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16255,7 +16255,7 @@
     "code": "110604",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16266,7 +16266,7 @@
     "code": "110700",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16277,7 +16277,7 @@
     "code": "110701",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16299,7 +16299,7 @@
     "code": "110801",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16310,7 +16310,7 @@
     "code": "110802",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16321,7 +16321,7 @@
     "code": "110803",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16354,7 +16354,7 @@
     "code": "120101",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16365,7 +16365,7 @@
     "code": "120102",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16376,7 +16376,7 @@
     "code": "120103",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16387,7 +16387,7 @@
     "code": "120104",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16409,7 +16409,7 @@
     "code": "120201",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16420,7 +16420,7 @@
     "code": "120202",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16431,7 +16431,7 @@
     "code": "120203",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16442,7 +16442,7 @@
     "code": "120204",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16453,7 +16453,7 @@
     "code": "120205",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16464,7 +16464,7 @@
     "code": "120206",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16497,7 +16497,7 @@
     "code": "120302",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16508,7 +16508,7 @@
     "code": "120303",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16519,7 +16519,7 @@
     "code": "120304",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16530,7 +16530,7 @@
     "code": "120305",
     "geometry": "Line",
     "drawRules": "Line8",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16541,7 +16541,7 @@
     "code": "120306",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16552,7 +16552,7 @@
     "code": "120307",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16563,7 +16563,7 @@
     "code": "120308",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16574,7 +16574,7 @@
     "code": "120309",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16585,7 +16585,7 @@
     "code": "120310",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16596,7 +16596,7 @@
     "code": "120311",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16607,7 +16607,7 @@
     "code": "120312",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16629,7 +16629,7 @@
     "code": "120314",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16640,7 +16640,7 @@
     "code": "120315",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16651,7 +16651,7 @@
     "code": "120316",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16662,7 +16662,7 @@
     "code": "120317",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16673,7 +16673,7 @@
     "code": "120318",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16684,7 +16684,7 @@
     "code": "120319",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16695,7 +16695,7 @@
     "code": "120320",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16717,7 +16717,7 @@
     "code": "120322",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": "magenta"
   },
   {
@@ -16728,7 +16728,7 @@
     "code": "120323",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16761,7 +16761,7 @@
     "code": "120326",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16772,7 +16772,7 @@
     "code": "120327",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16783,7 +16783,7 @@
     "code": "120328",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16805,7 +16805,7 @@
     "code": "120401",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16827,7 +16827,7 @@
     "code": "120403",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16838,7 +16838,7 @@
     "code": "120404",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16860,7 +16860,7 @@
     "code": "120406",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16871,7 +16871,7 @@
     "code": "120407",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16882,7 +16882,7 @@
     "code": "120408",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16893,7 +16893,7 @@
     "code": "120409",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16926,7 +16926,7 @@
     "code": "120502",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16948,7 +16948,7 @@
     "code": "120504",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": "gray"
   },
   {
@@ -16959,7 +16959,7 @@
     "code": "120505",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16970,7 +16970,7 @@
     "code": "120506",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -16981,7 +16981,7 @@
     "code": "120507",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17003,7 +17003,7 @@
     "code": "120509",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17025,7 +17025,7 @@
     "code": "120511",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17036,7 +17036,7 @@
     "code": "120512",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17047,7 +17047,7 @@
     "code": "120513",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17080,7 +17080,7 @@
     "code": "120601",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17091,7 +17091,7 @@
     "code": "120602",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17102,7 +17102,7 @@
     "code": "120603",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17113,7 +17113,7 @@
     "code": "120604",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17124,7 +17124,7 @@
     "code": "120605",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17135,7 +17135,7 @@
     "code": "120606",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17146,7 +17146,7 @@
     "code": "120607",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17157,7 +17157,7 @@
     "code": "120608",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17168,7 +17168,7 @@
     "code": "120609",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17179,7 +17179,7 @@
     "code": "120610",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17190,7 +17190,7 @@
     "code": "120611",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17201,7 +17201,7 @@
     "code": "120612",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17212,7 +17212,7 @@
     "code": "120613",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17223,7 +17223,7 @@
     "code": "120614",
     "geometry": "Point",
     "drawRules": "Point3",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17245,7 +17245,7 @@
     "code": "120701",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": "gray"
   },
   {
@@ -17256,7 +17256,7 @@
     "code": "120702",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "C0C0C0",
+    "modifiers": "",
     "aux1": "light gray"
   },
   {
@@ -17267,7 +17267,7 @@
     "code": "120703",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "C0C0C0",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17278,7 +17278,7 @@
     "code": "120704",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17410,7 +17410,7 @@
     "code": "130109",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": "Red"
   },
   {
@@ -17432,7 +17432,7 @@
     "code": "130201",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "C0C0C0",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17443,7 +17443,7 @@
     "code": "130202",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17454,7 +17454,7 @@
     "code": "130203",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "C0C0C0",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17465,7 +17465,7 @@
     "code": "130204",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "808080",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17498,7 +17498,7 @@
     "code": "140101",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": "Magenta"
   },
   {
@@ -17619,7 +17619,7 @@
     "code": "140112",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": "Red"
   },
   {
@@ -17707,7 +17707,7 @@
     "code": "140120",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": "Red"
   },
   {
@@ -17740,7 +17740,7 @@
     "code": "140123",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": "Red"
   },
   {
@@ -17795,7 +17795,7 @@
     "code": "140128",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": "Red"
   },
   {
@@ -17828,7 +17828,7 @@
     "code": "140131",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF0000",
+    "modifiers": "",
     "aux1": "Red"
   },
   {
@@ -17949,7 +17949,7 @@
     "code": "150100",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": "Magenta"
   },
   {
@@ -17960,7 +17960,7 @@
     "code": "150200",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17971,7 +17971,7 @@
     "code": "150300",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17982,7 +17982,7 @@
     "code": "150400",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -17993,7 +17993,7 @@
     "code": "150500",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -18026,7 +18026,7 @@
     "code": "160100",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "FF00FF",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -18048,7 +18048,7 @@
     "code": "160300",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -18059,7 +18059,7 @@
     "code": "160400",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -18070,7 +18070,7 @@
     "code": "160500",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -18081,7 +18081,7 @@
     "code": "160600",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -18092,7 +18092,7 @@
     "code": "160700",
     "geometry": "Area",
     "drawRules": "Area2",
-    "modifiers": "C0C0C0",
+    "modifiers": "",
     "aux1": "light gray"
   },
   {
@@ -18103,7 +18103,7 @@
     "code": "160800",
     "geometry": "Line",
     "drawRules": "Line1",
-    "modifiers": "C0C0C0",
+    "modifiers": "",
     "aux1": ""
   },
   {
@@ -18114,7 +18114,7 @@
     "code": "160900",
     "geometry": "Point",
     "drawRules": "Point1",
-    "modifiers": "000000",
+    "modifiers": "",
     "aux1": ""
   },
   {
