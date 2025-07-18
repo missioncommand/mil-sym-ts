@@ -153,6 +153,9 @@ export class MSLookup {
             }
 
             let ss: string = ""
+            let e: string = ""
+            let et: string = ""
+            let est: string = ""
             for (let JSONSymbol of msJSON) {
                 if (JSONSymbol.code.length != 6) {
                     JSONSymbol.code = "000000";
@@ -161,20 +164,39 @@ export class MSLookup {
                     ss = JSONSymbol.ss;
                 }
 
+                if(JSONSymbol.e !== null && JSONSymbol.e !=="")
+                {
+                    e = JSONSymbol.e;
+                    et = "";
+                    est = "";
+                }
+
+                if(JSONSymbol.et !== null && JSONSymbol.et !=="")
+                {
+                    et = JSONSymbol.et;
+                    est = "";
+                }
+
+                if(JSONSymbol.est !== null && JSONSymbol.est !=="")
+                {
+                    est = JSONSymbol.est;
+                }
+
                 if (JSONSymbol.code !== "000000") {
                     let id = ss + JSONSymbol.code;
                     if (JSONSymbol.geometry || JSONSymbol.drawRules) {//Control Measures and METOCS
-                        let modifiers: string[] | null = null;
-                        if (JSONSymbol.modifiers && JSONSymbol.modifiers !== "") {
+                        let modifiers: Array<string> = new Array<string>() ;
+                        if (JSONSymbol.modifiers != null && JSONSymbol.modifiers != "null" && JSONSymbol.modifiers !== "") 
+                        {
                             modifiers = JSONSymbol.modifiers.split(",");
                         }
 
                         let g: string = JSONSymbol.geometry || "";
                         let dr: string = JSONSymbol.drawRules || "";
-                        lookup.set(id, new MSInfo(version, ss, JSONSymbol.e, JSONSymbol.et, JSONSymbol.est, JSONSymbol.code, g, dr, this.populateModifierList(modifiers)));
+                        lookup.set(id, new MSInfo(version, ss, e, et, est, JSONSymbol.code, g, dr, this.populateModifierList(modifiers)));
                     } else {//Everything else
                         //_MSLookupD.set(id, new MSInfo(ss, e, et, est, ec));
-                        lookup.set(id, new MSInfo(version, ss, JSONSymbol.e, JSONSymbol.et, JSONSymbol.est, JSONSymbol.code, this.populateModifierList(ss, JSONSymbol.code, version)));
+                        lookup.set(id, new MSInfo(version, ss, e, et, est, JSONSymbol.code, this.populateModifierList(ss, JSONSymbol.code, version)));
                     }
                     list.push(id);
                 }
@@ -197,9 +219,13 @@ export class MSLookup {
                 const [modifiers] = args as [string[]];
 
                 let mods: Array<string> = new Array<string>();
+                
                 if (modifiers != null && modifiers.length > 0) {
-                    for (let mod of modifiers) {
-                        mods.push(Modifiers.getModifierKey(mod));
+                    for (let mod of modifiers) 
+                    {
+                        let key:string = Modifiers.getModifierKey(mod);
+                        if(key != null)
+                            mods.push(key);
                     }
                 }
                 return mods;
@@ -245,7 +271,6 @@ export class MSLookup {
                             modifiers.push(Modifiers.AF_COMMON_IDENTIFIER);
                             modifiers.push(Modifiers.AH_AREA_OF_UNCERTAINTY);
                             modifiers.push(Modifiers.AI_DEAD_RECKONING_TRAILER);
-                            modifiers.push(Modifiers.AJ_SPEED_LEADER);
                             modifiers.push(Modifiers.AK_PAIRING_LINE);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
@@ -280,7 +305,6 @@ export class MSLookup {
                             modifiers.push(Modifiers.AG_AUX_EQUIP_INDICATOR);
                             modifiers.push(Modifiers.AH_AREA_OF_UNCERTAINTY);
                             modifiers.push(Modifiers.AI_DEAD_RECKONING_TRAILER);
-                            modifiers.push(Modifiers.AJ_SPEED_LEADER);
                             modifiers.push(Modifiers.AK_PAIRING_LINE);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
@@ -306,7 +330,6 @@ export class MSLookup {
                             modifiers.push(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
                             modifiers.push(Modifiers.AH_AREA_OF_UNCERTAINTY);
                             modifiers.push(Modifiers.AI_DEAD_RECKONING_TRAILER);
-                            modifiers.push(Modifiers.AJ_SPEED_LEADER);
                             modifiers.push(Modifiers.AK_PAIRING_LINE);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             //modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
@@ -347,7 +370,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.H_ADDITIONAL_INFO_1);
                             modifiers.push(Modifiers.J_EVALUATION_RATING);
                             modifiers.push(Modifiers.P_IFF_SIF_AIS);
-                            modifiers.push(Modifiers.Q_DIRECTION_OF_MOVEMENT);
+                            //modifiers.push(Modifiers.Q_DIRECTION_OF_MOVEMENT);
                             modifiers.push(Modifiers.T_UNIQUE_DESIGNATION_1);
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.W_DTG_1);
@@ -357,6 +380,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AD_PLATFORM_TYPE);
                             modifiers.push(Modifiers.AF_COMMON_IDENTIFIER);
+                            modifiers.push(Modifiers.AJ_SPEED_LEADER);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AR_SPECIAL_DESIGNATOR);
@@ -369,13 +393,14 @@ export class MSLookup {
                             modifiers.push(Modifiers.G_STAFF_COMMENTS);
                             modifiers.push(Modifiers.H_ADDITIONAL_INFO_1);
                             modifiers.push(Modifiers.P_IFF_SIF_AIS);
-                            modifiers.push(Modifiers.Q_DIRECTION_OF_MOVEMENT);
+                            //modifiers.push(Modifiers.Q_DIRECTION_OF_MOVEMENT);
                             modifiers.push(Modifiers.T_UNIQUE_DESIGNATION_1);
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.Y_LOCATION);
                             modifiers.push(Modifiers.Z_SPEED);
                             modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AG_AUX_EQUIP_INDICATOR);
+                            modifiers.push(Modifiers.AJ_SPEED_LEADER);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AQ_GUARDED_UNIT);
@@ -389,7 +414,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.G_STAFF_COMMENTS);
                             modifiers.push(Modifiers.H_ADDITIONAL_INFO_1);
                             modifiers.push(Modifiers.P_IFF_SIF_AIS);
-                            modifiers.push(Modifiers.Q_DIRECTION_OF_MOVEMENT);
+                            //modifiers.push(Modifiers.Q_DIRECTION_OF_MOVEMENT);
                             modifiers.push(Modifiers.T_UNIQUE_DESIGNATION_1);
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.X_ALTITUDE_DEPTH);
@@ -397,6 +422,7 @@ export class MSLookup {
                             modifiers.push(Modifiers.Z_SPEED);
                             modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AL_OPERATIONAL_CONDITION);
+                            modifiers.push(Modifiers.AJ_SPEED_LEADER);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AQ_GUARDED_UNIT);
                             modifiers.push(Modifiers.AR_SPECIAL_DESIGNATOR);
@@ -433,7 +459,6 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.W_DTG_1);
                             modifiers.push(Modifiers.Y_LOCATION);
-                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             break;
                         }
@@ -688,7 +713,6 @@ export class MSLookup {
                             modifiers.push(Modifiers.V_EQUIP_TYPE);
                             modifiers.push(Modifiers.W_DTG_1);
                             modifiers.push(Modifiers.Y_LOCATION);
-                            modifiers.push(Modifiers.AB_FEINT_DUMMY_INDICATOR);
                             modifiers.push(Modifiers.AO_ENGAGEMENT_BAR);
                             modifiers.push(Modifiers.AS_COUNTRY);
                             break;
