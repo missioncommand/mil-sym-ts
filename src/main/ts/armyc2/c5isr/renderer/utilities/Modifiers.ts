@@ -270,12 +270,22 @@ export class Modifiers {
      * <pre>
      * Lines - Unique Identifier or Primary Purpose
      * An amplifier that uniquely identifies a particular symbol or track number. Identifies acquisitions number when used with SIGINT symbology.
-     * Format: Alphanumeric - {1,30}
-     * Symbol Set: All
+     * Format: Alphanumeric - Lines: {1,30}, Points: Alphanumeric - {1,7}
+     * Symbol Set: 25
      * Remarks:
      * </pre>
      */
     public static readonly T1_UNIQUE_DESIGNATION_2: string = "T1_UNIQUE_DESIGNATION_2";
+    /**
+     * <pre>
+     * Lines - Unique Identifier or Primary Purpose
+     * An amplifier used to provide the designation of the Establishing Headquarters.
+     * Format: Alphanumeric - {1,7}
+     * Symbol Set: 25
+     * Remarks: Used with Fire Support Control Measures only.
+     * </pre>
+     */
+    public static readonly T2_UNIQUE_DESIGNATION_3: string = "T2_UNIQUE_DESIGNATION_3";
     /**
      * <pre>
      * Type
@@ -451,9 +461,9 @@ export class Modifiers {
      * An amplifier that depicts the speed and direction of movement of an object (see 5.3.7.13.3 and figure 18).
      * Format: Graphic
      * Symbol Set: 10, 15, 30, 35
-     * Remarks:
-     * Land units and equipment use the Direction of Movement and Speed amplifiers for this information.
-     * Notes: Not implemented by the renderer
+     * Remarks: Set as "[Speed] [unit of measure] [angle in degrees if 3 characters "045", and in mils if 4 characters "0150]" like [100 KPH 045]
+     * Notes: It is recommended users handle this amplifier within their map engine many maps always show icons in the upright position when the map
+     * is rotated, invalidating the line that's render with the symbol.
      * </pre>
      */
     public static readonly AJ_SPEED_LEADER: string = "AJ_SPEED_LEADER";
@@ -1586,6 +1596,9 @@ export class Modifiers {
 
             case "T1": {
                 return Modifiers.T1_UNIQUE_DESIGNATION_2;
+            }
+            case "T2": {
+                return Modifiers.T2_UNIQUE_DESIGNATION_3;
             }
 
             case "V": {

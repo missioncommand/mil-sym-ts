@@ -553,12 +553,11 @@ export class ModifierRenderer implements SettingsEventListener {
         // <editor-fold defaultstate="collapsed" desc="Build Echelon">
         //Draw Echelon
         let intEchelon: int = SymbolID.getAmplifierDescriptor(symbolID);// SymbolUtilitiesD.getEchelon(symbolID);//symbolID.substring(11, 12);
-        let strEchelon: string;
+        let strEchelon: string = null;
         if (intEchelon > 10 && intEchelon < 29 && SymbolUtilities.hasModifier(symbolID, Modifiers.B_ECHELON)) {
             strEchelon = SymbolUtilities.getEchelonText(intEchelon);
         }
-        if (strEchelon != null && SymbolUtilities.isInstallation(symbolID) === false
-            && SymbolUtilities.hasModifier(symbolID, Modifiers.B_ECHELON)) {
+        if (strEchelon != null && SymbolUtilities.hasModifier(symbolID, Modifiers.B_ECHELON)) {
 
             let echelonOffset: int = 2;
             let outlineOffset: int = RendererSettings.getInstance().getTextOutlineWidth();
@@ -593,7 +592,7 @@ export class ModifierRenderer implements SettingsEventListener {
         let tfBounds: Rectangle2D;
         let tfRectangle: Rectangle2D;
         let hqtfd: int = SymbolID.getHQTFD(symbolID);
-        if (SymbolUtilities.isTaskForce(symbolID)) {
+        if (SymbolUtilities.isTaskForce(symbolID) && SymbolUtilities.hasModifier(symbolID, Modifiers.D_TASK_FORCE_INDICATOR)) {
             let height: int = Math.round(symbolBounds.getHeight() / 4) as int;
             let width: int = Math.round(symbolBounds.getWidth() / 3) as int;
 
@@ -864,6 +863,83 @@ export class ModifierRenderer implements SettingsEventListener {
                 imageBounds = imageBounds.createUnion(domBounds);
             }
         }
+
+                // <editor-fold defaultstate="collapsed" desc="Build Speed Leader">
+                let slPath:Path = null;
+                let slBounds:Rectangle2D = null;
+                if (SymbolUtilities.hasModifier(symbolID, Modifiers.AJ_SPEED_LEADER) &&
+                        (modifiers.has(Modifiers.AJ_SPEED_LEADER)))
+                {
+                    let aj:string = modifiers.get(Modifiers.AJ_SPEED_LEADER);
+                    let values:string[] = aj.split(" ");
+                    if(values.length >= 3)
+                    {
+                        let speed:number = parseInt(values[0]);
+                        let speedUnit:string = values[1];
+                        let angle:number = 0;
+                        if(values[2].length==3)
+                            angle = parseInt(values[2]);
+                        else
+                            angle = parseInt(values[2]) * 0.05625;//convert mils to degrees
+        
+                        slPath = new Path();
+                        slPath.moveTo(symbolCenter.getX(), symbolCenter.getY());
+        
+                        //convert to Knots
+                        switch(speedUnit)//KPH, KPS, MPH, NMH, KTS//https://www.aviationhunt.com/speed-converter/
+                        {
+                            case "KPH":
+                                speed = speed * 0.539957;
+                                break;
+                            case "KPS"://https://www.metric-conversions.org/speed/kilometers-per-second-to-knots.htm
+                                speed = speed * 1943.84;
+                                break;
+                            case "MPH":
+                                speed = speed * 0.86897;
+                                break;
+                        }
+        
+                        let distance:number = 0;
+                        let frame:string = SymbolID.getFrameShape(symbolID);
+                        let dpi:number = RendererSettings.getInstance().getDeviceDPI();
+                        if(ss == SymbolID.SymbolSet_Air ||
+                                ss == SymbolID.SymbolSet_AirMissile ||
+                                ss == SymbolID.SymbolSet_SignalsIntelligence_Air ||
+                                ss == SymbolID.SymbolSet_SpaceMissile ||
+                                ss == SymbolID.SymbolSet_Space ||
+                                (SymbolID.getVersion(symbolID) <= SymbolID.Version_2525Dch1 && ss == SymbolID.SymbolSet_SignalsIntelligence_Space) ||
+                                (SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E &&
+                                        (frame == SymbolID.FrameShape_Air) ||
+                                        frame == SymbolID.FrameShape_Space))
+                        {//aircraft might be 1/4 inch if its speed is less than 300 knots, 1/2 inch if its speed is between 300 and 600 knots and 3/4 inch if its speed is more than 600 knots.
+                            if(speed < 300)
+                                distance = dpi * 0.25;
+                            else if (speed < 600)
+                                distance = dpi * 0.5;
+                            else
+                                distance = dpi * 0.75;
+                        }
+                        else//submarine might be 1/4 inch if its speed is less than 15 knots, 1/2 inch if its speed is between 15 and 30 knots and 3/4 inch if its speed is more than 30 knots
+                        {
+                            if(speed < 15)
+                                distance = dpi * 0.25;
+                            else if (speed < 30)
+                                distance = dpi * 0.5;
+                            else
+                                distance = dpi * 0.75;
+                        }
+        
+                        angle = angle - 90; //in java, east is zero, we want north to be zero
+                        let radians = (angle * (Math.PI / 180));//convert degrees to radians
+                        let x2:number = (symbolCenter.getX() + distance * Math.cos(radians));
+                        let y2:number = (symbolCenter.getY() + distance * Math.sin(radians));
+        
+                        slPath.lineTo(x2,y2);
+                        slBounds = slPath.getBounds().toRectangle2D();
+                        imageBounds = imageBounds.createUnion(slBounds);
+                    }
+                }
+                // </editor-fold>
 
         // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="Build Operational Condition Indicator">
@@ -1206,6 +1282,11 @@ export class ModifierRenderer implements SettingsEventListener {
                 domPoints = null;
             }
 
+            if(slBounds != null)
+            {
+                sbSVG += slPath.toSVGElement(svgStroke, svgStrokeWidth, "none");
+            }
+
             if (rBounds != null)
             {
                 let restrictedGroup = "<g id=\"restricted\" stroke-linecap=\"round\" stroke-linejoin=\"round\">";
@@ -1396,7 +1477,10 @@ export class ModifierRenderer implements SettingsEventListener {
         pt1 = new Point2D(x1, y1);
 
         if (SymbolUtilities.hasModifier(symbolID, Modifiers.Q_DIRECTION_OF_MOVEMENT) &&
-            SymbolUtilities.isCBRNEvent(symbolID) || SymbolUtilities.isLand(symbolID)) {
+            SymbolUtilities.isCBRNEvent(symbolID) || 
+            SymbolUtilities.isLand(symbolID) ||
+            SymbolID.getSymbolSet(symbolID)==SymbolID.SymbolSet_DismountedIndividuals) 
+        {
             //drawStaff = true;
             if (SymbolUtilities.isHQ(symbolID) === false)//has HQ staff to start from
             {
@@ -10341,6 +10425,12 @@ export class ModifierRenderer implements SettingsEventListener {
             {
                 switch (location)
                 {
+                    case 3://3 above center
+                        y = (bounds.getHeight());
+                        y = ((y * 0.5) + (labelHeight * 0.5));
+                        y = y - ((labelHeight + bufferText) * 3);
+                        y = bounds.getY() + y;
+                        break;
                     case 2://2 above center
                         y = (bounds.getHeight());
                         y = ((y * 0.5) + (labelHeight * 0.5));

@@ -79,7 +79,7 @@
             modifiers.set(C5Ren.Modifiers.AD_PLATFORM_TYPE,"AD");
             modifiers.set(C5Ren.Modifiers.AE_EQUIPMENT_TEARDOWN_TIME,"AE");
             modifiers.set(C5Ren.Modifiers.AF_COMMON_IDENTIFIER,"AF");
-
+            modifiers.set(C5Ren.Modifiers.AJ_SPEED_LEADER,"700 KTS 045");
             modifiers.set(C5Ren.Modifiers.AO_ENGAGEMENT_BAR, "AO:AOA-AO");
             modifiers.set(C5Ren.Modifiers.AR_SPECIAL_DESIGNATOR, "AR");
             modifiers.set(C5Ren.Modifiers.AQ_GUARDED_UNIT, "AQ");
@@ -603,6 +603,10 @@
 			//RendererSettings.setTextBackgroundMethod(RendererSettings.TextBackgroundMethod_OUTLINE_QUICK);
             RendererSettings.setOutlineSPControlMeasures(false);
             //RendererSettings.setOperationalConditionModifierType(RendererSettings.OperationalConditionModifierType_SLASH);
+
+            //lookup test
+            var msInfo = C5Ren.MSLookup.getInstance().getMSLInfo("110345000016140700000000000840");
+            var mods = msInfo.getModifiers();
 
 	}
 </script>
