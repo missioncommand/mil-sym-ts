@@ -10268,7 +10268,9 @@ export class ModifierRenderer implements SettingsEventListener {
 
     private static renderTextElements(tiArray: Array<TextInfo>, color: Color, backgroundColor: Color | null): string {
         let style: string;
-        let name: string = RendererSettings.getInstance().getLabelFont().getName() + ", sans-serif";//"SansSerif";
+        let name: string = RendererSettings.getInstance().getLabelFont().getName(); + ", sans-serif";//"SansSerif";
+        if(name !== "sans-serif")
+            name += ", sans-serif";
         let size: string = RendererSettings.getInstance().getLabelFont().getSize().toString();
         let weight: string;
         let anchor: string;//"start";

@@ -61,7 +61,9 @@ export class Shape2SVG {
 
                 let res: string = "";
                 if (textInfo != null) {
-                    let name: string = RendererSettings.getInstance().getLabelFont().getName() + ", sans-serif";//"SansSerif";
+                    let name: string = RendererSettings.getInstance().getLabelFont().getName();
+                    if(name !== "sans-serif")
+                        name += ", sans-serif";
                     let size: string = RendererSettings.getInstance().getLabelFont().getSize().toString();
                     let weight: string;
                     let anchor: string;//"start";
