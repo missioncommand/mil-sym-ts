@@ -729,7 +729,9 @@ export class ModifierRenderer implements SettingsEventListener {
             else if (SymbolUtilities.hasModifier(symbolID, Modifiers.C_QUANTITY) &&
                 modifiers.has(Modifiers.C_QUANTITY) && 
                 SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandUnit &&
-                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandInstallation) {
+                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandInstallation &&
+                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_Activities &&
+                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandEquipment) {
                 ebTop = symbolBounds.getY() as int - ebHeight * 2.4;
             }
             else if (ss === SymbolID.SymbolSet_LandInstallation) {
@@ -4621,8 +4623,8 @@ export class ModifierRenderer implements SettingsEventListener {
         let modifierValue: string;
         let tiTemp: TextInfo;
 
-        //if(Modifiers.C_QUANTITY in modifiers
-        if (modifiers.has(Modifiers.C_QUANTITY)) {
+        //if(Modifiers.C_QUANTITY in modifiers//moved to left in Ech1
+        /*if (modifiers.has(Modifiers.C_QUANTITY)) {
             let text: string = modifiers.get(Modifiers.C_QUANTITY);
             if (text != null) {
                 //bounds = armyc2.c5isr.renderer.utilities.RendererUtilities.getTextOutlineBounds(_modifierFont, text, new SO.Point(0,0));
@@ -4634,7 +4636,7 @@ export class ModifierRenderer implements SettingsEventListener {
                 tiTemp.setLocation(x, y);
                 tiArray.push(tiTemp);
             }
-        }
+        }//*/
 
         //if(Modifiers.X_ALTITUDE_DEPTH in modifiers || Modifiers.Y_LOCATION in modifiers)
         if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)) {
@@ -4751,8 +4753,21 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
 
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) || 
+            modifiers.has(Modifiers.C_QUANTITY)) {
+            
+            let cm: string;
+            let tm: string;
+
+            if (modifiers.has(Modifiers.C_QUANTITY)) {
+                cm = modifiers.get(Modifiers.C_QUANTITY);// xm = modifiers.X;
+            }
+            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                tm = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);// ym = modifiers.Y;
+            }
+
+            modifierValue = cm + " " + tm;
+            modifierValue = modifierValue.trim();
 
             if (modifierValue != null) {
                 tiTemp = new TextInfo(modifierValue, 0, 0, ModifierRenderer._modifierFont, frc);

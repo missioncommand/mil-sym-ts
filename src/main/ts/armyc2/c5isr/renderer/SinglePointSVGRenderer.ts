@@ -376,7 +376,7 @@ export class SinglePointSVGRenderer {
                 RectUtilities.shift(symbolBounds, 0, -symbolBounds.getY() as int);
 
                 //Add core symbol to SVGSymbolInfo
-                let anchor: Point2D = new Point2D(symbolBounds.getCenterX(), symbolBounds.getCenterY());
+                let anchor: Point2D = new Point2D(centerPoint.getX(),centerPoint.getY());//new Point2D(symbolBounds.getCenterX(), symbolBounds.getCenterY());
                 si = new SVGSymbolInfo(sbGroupUnit.toString().valueOf(), anchor, symbolBounds, symbolBounds);
 
                 hasDisplayModifiers = ModifierRenderer.hasDisplayModifiers(symbolID, modifiers);
