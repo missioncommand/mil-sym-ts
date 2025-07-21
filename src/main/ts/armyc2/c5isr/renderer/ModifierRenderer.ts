@@ -726,12 +726,8 @@ export class ModifierRenderer implements SettingsEventListener {
             {
                 ebTop = echelonBounds.getY() as int - ebHeight - barOffset;
             }
-            else if (SymbolUtilities.hasModifier(symbolID, Modifiers.C_QUANTITY) &&
-                modifiers.has(Modifiers.C_QUANTITY) && 
-                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandUnit &&
-                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandInstallation &&
-                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_Activities &&
-                SymbolID.getSymbolSet(symbolID) != SymbolID.SymbolSet_LandEquipment) {
+            else if(this.isCOnTop(symbolID))//OR frame in air/space
+            {
                 ebTop = symbolBounds.getY() as int - ebHeight * 2.4;
             }
             else if (ss === SymbolID.SymbolSet_LandInstallation) {
@@ -10538,6 +10534,28 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
         return y;
+    }
+
+    private static isCOnTop(symbolID:string): boolean
+    {
+        let onTop:boolean = false;
+
+        let version:number = SymbolID.getVersion(symbolID);
+        let ss:number = SymbolID.getSymbolSet(symbolID);
+        let frame:string = SymbolID.getFrameShape(symbolID);
+
+        if(frame == SymbolID.FrameShape_Air || frame == SymbolID.FrameShape_Space)
+            onTop = true;
+        else if(ss == SymbolID.SymbolSet_Air ||
+                ss == SymbolID.SymbolSet_Space ||
+                ss == SymbolID.SymbolSet_SignalsIntelligence_Air ||
+                        (ss == SymbolID.SymbolSet_SignalsIntelligence_Space && version <= SymbolID.Version_2525Dch1) ||
+                        (ss == SymbolID.SymbolSet_LandEquipment && version <= SymbolID.Version_2525Dch1))
+        {
+            onTop = true;
+        }
+
+        return onTop;
     }
 
     public static hasDisplayModifiers(symbolID: string, modifiers: Map<string, string>): boolean {
