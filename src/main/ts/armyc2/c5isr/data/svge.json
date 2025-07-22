@@ -68,11 +68,11 @@
   },
   {
     "id": "1_24_0",
-    "X": "153.5",
-    "Y": "243.50001525878906",
-    "Width": "305.0",
-    "Height": "304.99998474121094",
-    "SVG": "<g id=\"1_24_0\">        <g>                <circle cx=\"306\" cy=\"396\" fill=\"#80E0FF\" r=\"144\"/>                <circle cx=\"306\" cy=\"396\" fill=\"none\" r=\"144\" stroke=\"#000000\" stroke-dasharray=\"5.0267,5.0267\" stroke-width=\"17\"/>            </g>    </g>"
+    "X": "153.8735809326172",
+    "Y": "243.5059814453125",
+    "Width": "303.12974548339844",
+    "Height": "304.51995849609375",
+    "SVG": "<g id=\"1_24_0\">        <g>                <circle cx=\"306\" cy=\"396\" fill=\"#80E0FF\" r=\"144\"/>                <circle cx=\"306\" cy=\"396\" fill=\"none\" r=\"144\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\"/>            </g>    </g>"
   },
   {
     "id": "25242100",
@@ -3092,11 +3092,11 @@
   },
   {
     "id": "135_2",
-    "X": "72.40625",
-    "Y": "179.234375",
-    "Width": "107.80859375",
-    "Height": "41.453125",
-    "SVG": "<g id=\"135_2\">        <text font-family=\"sans-serif\" font-size=\"56px\" x=\"68\" y=\"220\">RES</text>    </g>"
+    "X": "260.71875",
+    "Y": "451.3125",
+    "Width": "115.521484375",
+    "Height": "44.421875",
+    "SVG": "<g id=\"135_2\">        <text font-family=\"sans-serif\" font-size=\"60px\" x=\"256\" y=\"495\">RES</text>    </g>"
   },
   {
     "id": "35072",
@@ -4852,11 +4852,11 @@
   },
   {
     "id": "1_56_0",
-    "X": "117.58200073242188",
-    "Y": "267.5",
-    "Width": "377.0",
-    "Height": "257.0",
-    "SVG": "<g id=\"1_56_0\">        <g>                <rect fill=\"#FFE599\" height=\"240\" width=\"360\" x=\"126.082\" y=\"276\"/>                <g>                        <polyline fill=\"none\" points=\"126.082,278.5 126.082,276 128.582,276    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"5,5\" stroke-width=\"17\" x1=\"133.582\" x2=\"481.082\" y1=\"276\" y2=\"276\"/>                        <polyline fill=\"none\" points=\"483.582,276 486.082,276 486.082,278.5    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"5,5\" stroke-width=\"17\" x1=\"486.082\" x2=\"486.082\" y1=\"283.5\" y2=\"511\"/>                        <polyline fill=\"none\" points=\"486.082,513.5 486.082,516 483.582,516    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"5,5\" stroke-width=\"17\" x1=\"478.582\" x2=\"131.082\" y1=\"516\" y2=\"516\"/>                        <polyline fill=\"none\" points=\"128.582,516 126.082,516 126.082,513.5    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"5,5\" stroke-width=\"17\" x1=\"126.082\" x2=\"126.082\" y1=\"508.5\" y2=\"281\"/>                    </g>            </g>    </g>"
+    "X": "166.4508056640625",
+    "Y": "241.412841796875",
+    "Width": "275.2071838378906",
+    "Height": "306.99786376953125",
+    "SVG": "<g id=\"1_56_0\">        <g>                <polygon fill=\"#FFE599\" points=\"174.974,324.176 304.168,251.149 433.158,322.396 433.158,465.816 304.27,538.638     175.631,465.342   \"/>                <g>                        <polyline fill=\"none\" points=\"174.988,327.176 174.974,324.176 177.586,322.7    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\" x1=\"182.976\" x2=\"298.861\" y1=\"319.653\" y2=\"254.149\"/>                        <polyline fill=\"none\" points=\"301.556,252.625 304.168,251.149 306.794,252.599    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\" x1=\"312.174\" x2=\"427.842\" y1=\"255.571\" y2=\"319.46\"/>                        <polyline fill=\"none\" points=\"430.532,320.946 433.158,322.396 433.158,325.396    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\" x1=\"433.158\" x2=\"433.158\" y1=\"331.371\" y2=\"459.829\"/>                        <polyline fill=\"none\" points=\"433.158,462.816 433.158,465.816 430.546,467.292    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\" x1=\"425.169\" x2=\"309.57\" y1=\"470.33\" y2=\"535.643\"/>                        <polyline fill=\"none\" points=\"306.882,537.162 304.27,538.638 301.663,537.153    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\" x1=\"296.297\" x2=\"180.921\" y1=\"534.095\" y2=\"468.356\"/>                        <polyline fill=\"none\" points=\"178.238,466.827 175.631,465.342 175.617,462.342    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\" x1=\"175.59\" x2=\"175.002\" y1=\"456.465\" y2=\"330.114\"/>                    </g>            </g>    </g>"
   },
   {
     "id": "311",
@@ -8580,11 +8580,11 @@
   },
   {
     "id": "1_66_1",
-    "X": "117.58200073242188",
-    "Y": "267.5",
-    "Width": "377.0",
-    "Height": "257.0",
-    "SVG": "<g id=\"1_66_1\">        <g>                <rect fill=\"#FF8080\" height=\"240\" width=\"360\" x=\"126.082\" y=\"276\"/>                <g>                        <polyline fill=\"none\" points=\"126.082,288.5 126.082,276 138.582,276    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"25,15\" stroke-width=\"17\" x1=\"153.582\" x2=\"466.082\" y1=\"276\" y2=\"276\"/>                        <polyline fill=\"none\" points=\"473.582,276 486.082,276 486.082,288.5    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"25,15\" stroke-width=\"17\" x1=\"486.082\" x2=\"486.082\" y1=\"303.5\" y2=\"496\"/>                        <polyline fill=\"none\" points=\"486.082,503.5 486.082,516 473.582,516    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"25,15\" stroke-width=\"17\" x1=\"458.582\" x2=\"146.082\" y1=\"516\" y2=\"516\"/>                        <polyline fill=\"none\" points=\"138.582,516 126.082,516 126.082,503.5    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"25,15\" stroke-width=\"17\" x1=\"126.082\" x2=\"126.082\" y1=\"488.5\" y2=\"296\"/>                    </g>            </g>    </g>"
+    "X": "166.45095825195312",
+    "Y": "241.41209411621094",
+    "Width": "275.20703125",
+    "Height": "306.9987335205078",
+    "SVG": "<g id=\"1_66_1\">        <g>                <polygon fill=\"#FF8080\" points=\"174.974,324.176 304.168,251.149 433.158,322.396 433.158,465.816 304.27,538.638     175.631,465.342   \"/>                <g>                        <polyline fill=\"none\" points=\"175.032,336.676 174.974,324.176 185.856,318.025    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"22.8528,13.7117\" stroke-width=\"17\" x1=\"197.793\" x2=\"287.318\" y1=\"311.278\" y2=\"260.674\"/>                        <polyline fill=\"none\" points=\"293.286,257.3 304.168,251.149 315.11,257.193    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"22.659,13.5954\" stroke-width=\"17\" x1=\"327.011\" x2=\"416.266\" y1=\"263.766\" y2=\"313.066\"/>                        <polyline fill=\"none\" points=\"422.216,316.352 433.158,322.396 433.158,334.896    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"21.9296,13.1578\" stroke-width=\"17\" x1=\"433.158\" x2=\"433.158\" y1=\"348.054\" y2=\"446.737\"/>                        <polyline fill=\"none\" points=\"433.158,453.316 433.158,465.816 422.275,471.965    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"22.7848,13.6709\" stroke-width=\"17\" x1=\"410.373\" x2=\"321.104\" y1=\"478.69\" y2=\"529.127\"/>                        <polyline fill=\"none\" points=\"315.153,532.489 304.27,538.638 293.409,532.45    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"22.788,13.6728\" stroke-width=\"17\" x1=\"281.53\" x2=\"192.432\" y1=\"525.681\" y2=\"474.915\"/>                        <polyline fill=\"none\" points=\"186.492,471.53 175.631,465.342 175.573,452.842    \" stroke=\"#000000\" stroke-width=\"17\"/>                        <line fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"21.5125,12.9075\" stroke-width=\"17\" x1=\"175.513\" x2=\"175.062\" y1=\"439.935\" y2=\"343.13\"/>                    </g>            </g>    </g>"
   },
   {
     "id": "50041",
@@ -8788,11 +8788,11 @@
   },
   {
     "id": "1_66_0",
-    "X": "117.58200073242188",
-    "Y": "267.5",
-    "Width": "377.0",
-    "Height": "257.0",
-    "SVG": "<g id=\"1_66_0\">        <rect fill=\"#FF8080\" height=\"240\" stroke=\"#000000\" stroke-width=\"17\" width=\"360\" x=\"126.082\" y=\"276\"/>    </g>"
+    "X": "166.4508819580078",
+    "Y": "241.41212463378906",
+    "Width": "275.2071075439453",
+    "Height": "306.99876403808594",
+    "SVG": "<g id=\"1_66_0\">        <polygon fill=\"#FF8080\" points=\"174.974,324.176 304.168,251.149 433.158,322.396    433.158,465.816 304.27,538.638 175.631,465.342  \" stroke=\"#000000\" stroke-width=\"17\"/>    </g>"
   },
   {
     "id": "50051",
@@ -11388,11 +11388,11 @@
   },
   {
     "id": "2_24_0",
-    "X": "153.5",
-    "Y": "243.50001525878906",
-    "Width": "305.0",
-    "Height": "304.99998474121094",
-    "SVG": "<g id=\"2_24_0\">        <g>                <circle cx=\"306\" cy=\"396\" fill=\"#80E0FF\" r=\"144\"/>                <circle cx=\"306\" cy=\"396\" fill=\"none\" r=\"144\" stroke=\"#000000\" stroke-dasharray=\"5.0267,5.0267\" stroke-width=\"17\"/>            </g>    </g>"
+    "X": "153.8735809326172",
+    "Y": "243.5059814453125",
+    "Width": "303.12974548339844",
+    "Height": "304.51995849609375",
+    "SVG": "<g id=\"2_24_0\">        <g>                <circle cx=\"306\" cy=\"396\" fill=\"#80E0FF\" r=\"144\"/>                <circle cx=\"306\" cy=\"396\" fill=\"none\" r=\"144\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\"/>            </g>    </g>"
   },
   {
     "id": "25220107",
@@ -12796,11 +12796,11 @@
   },
   {
     "id": "1_54_0",
-    "X": "153.5",
-    "Y": "243.50001525878906",
-    "Width": "305.0",
-    "Height": "304.99998474121094",
-    "SVG": "<g id=\"1_54_0\">        <g>                <circle cx=\"306\" cy=\"396\" fill=\"#FFE599\" r=\"144\"/>                <circle cx=\"306\" cy=\"396\" fill=\"none\" r=\"144\" stroke=\"#000000\" stroke-dasharray=\"5.0267,5.0267\" stroke-width=\"17\"/>            </g>    </g>"
+    "X": "153.8735809326172",
+    "Y": "243.5059814453125",
+    "Width": "303.12974548339844",
+    "Height": "304.51995849609375",
+    "SVG": "<g id=\"1_54_0\">        <g>                <circle cx=\"306\" cy=\"396\" fill=\"#FFE599\" r=\"144\"/>                <circle cx=\"306\" cy=\"396\" fill=\"none\" r=\"144\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\"/>            </g>    </g>"
   },
   {
     "id": "50161",
@@ -26628,11 +26628,11 @@
   },
   {
     "id": "133_2",
-    "X": "82.59375",
-    "Y": "182.484375",
-    "Width": "88.185546875",
-    "Height": "41.515625",
-    "SVG": "<g id=\"133_2\">        <text font-family=\"sans-serif\" font-size=\"58px\" x=\"78\" y=\"224\">EW</text>    </g>"
+    "X": "267.75",
+    "Y": "452.046875",
+    "Width": "91.22265625",
+    "Height": "42.953125",
+    "SVG": "<g id=\"133_2\">        <text font-family=\"sans-serif\" font-size=\"60px\" x=\"263\" y=\"495\">EW</text>    </g>"
   },
   {
     "id": "25151500",
