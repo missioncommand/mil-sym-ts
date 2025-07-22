@@ -611,11 +611,22 @@ export class SymbolID {
      * @param symbolID 30 Character string
      * @return number
      */
-    public static getModifier1(symbolID: string): number {
-        if (symbolID != null && symbolID.length >= 20) {
-            return parseInt(symbolID.substring(16, 18),16);
+    public static getModifier1(symbolID: string): number 
+    {
+        if(symbolID != null && symbolID.length >= 20)
+        {
+            let mod:string = symbolID.substring(16, 18);
+            if(SymbolUtilities.isNumber(symbolID))
+            {
+                return parseInt(mod);
+            }
+            else
+            {
+                return parseInt(mod,16);
+            }
         }
-        else {
+        else
+        {
             return 0;
         }
     }
@@ -623,36 +634,45 @@ export class SymbolID {
     /**
      * Set Sector 1 Modifier at positions 17-18.
      * @param symbolID 30 Character string
-     * @param mod1 number 0-255 or string "00" to "FF"
+     * @param mod1 number 0-99 && 161-255 OR string "00" to "FF"
      * @return string
      */
-    public static setModifier1(symbolID: string, mod1: number | string): string {
-        let mod:string = "00";
-        if (typeof mod1 === "number")
+    public static setModifier1(symbolID: string, mod1: number | string): string 
+    {
+        let mod:string = null;
+        if (typeof mod1 === "number" && mod1 >=0 && mod1 <=255)
         {
-            if(mod1 >=0 && mod1 <= 255)
+            let temp:string = null;
+            if(mod1 < 100)
             {
-                mod = mod1.toString(16);
+                temp = mod1.toString();
+                return SymbolID.setModifier1(symbolID,temp);
             }
+            else if(mod1 >= 161 && mod1 <= 255)
+            {
+                let mod:string = mod1.toString(16).toUpperCase();
+                return SymbolID.setModifier1(symbolID,mod);
+            }
+            else
+                return symbolID;
         }
         else if (typeof mod1 === "string")
         {
-            let num = parseInt(mod1);
-            if(num >=0 && num <= 255)
-                mod = mod1;
+            let newID:string = symbolID;
+            let mod:string = mod1;
+            if(mod === null || mod.length === 0 || mod.length > 2)
+                mod = "00";
+            else if(mod.length==1)
+                mod = "0" + mod;
+            if(symbolID != null && symbolID.length >= 20)
+            {
+                newID = newID.substring(0,16) + mod + newID.substring(18);
+            }
+            return newID;
         }
-        let newID: string = symbolID.toString();
-
-        if (mod.length === 1) {
-
-            mod = "0" + mod;
-        }
-
-        if (symbolID != null && symbolID.length >= 20) {
-            newID = newID.substring(0, 16) + mod + newID.substring(18);
-        }
-        return newID;
+        return symbolID;
     }
+
 
     /**
      * Get Common Sector 1 Modifier from position 21.
@@ -690,11 +710,22 @@ export class SymbolID {
      * @param symbolID 30 Character string
      * @return number
      */
-    public static getModifier2(symbolID: string): number {
-        if (symbolID != null && symbolID.length >= 20) {
-            return parseInt(symbolID.substring(18, 20),16);
+    public static getModifier2(symbolID: string): number 
+    {
+        if(symbolID != null && symbolID.length >= 20)
+        {
+            let mod:string = symbolID.substring(18, 20);
+            if(SymbolUtilities.isNumber(symbolID))
+            {
+                return parseInt(mod);
+            }
+            else
+            {
+                return parseInt(mod,16);
+            }
         }
-        else {
+        else
+        {
             return 0;
         }
     }
@@ -705,32 +736,40 @@ export class SymbolID {
      * @param mod2 number 0-255 or string "00" to "FF"
      * @return string
      */
-    public static setModifier2(symbolID: string, mod2: number): string {
-        let mod:string = "00";
-        if (typeof mod2 === "number")
+    public static setModifier2(symbolID: string, mod2: number | string): string 
+    {
+        let mod:string = null;
+        if (typeof mod2 === "number" && mod2 >=0 && mod2 <=255)
         {
-            if(mod2 >=0 && mod2 <= 255)
+            let temp:string = null;
+            if(mod2 < 100)
             {
-                mod = mod2.toString(16);
+                temp = mod2.toString();
+                return SymbolID.setModifier2(symbolID,temp);
             }
+            else if(mod2 >= 161 && mod2 <= 255)
+            {
+                let mod:string = mod2.toString(16).toUpperCase();
+                return SymbolID.setModifier2(symbolID,mod);
+            }
+            else
+                return symbolID;
         }
         else if (typeof mod2 === "string")
         {
-            let num = parseInt(mod2);
-            if(num >=0 && num <= 255)
-                mod = mod2;
+            let newID:string = symbolID;
+            let mod:string = mod2;
+            if(mod === null || mod.length === 0 || mod.length > 2)
+                mod = "00";
+            else if(mod.length==1)
+                mod = "0" + mod;
+            if(symbolID != null && symbolID.length >= 20)
+            {
+                newID = newID.substring(0,18) + mod + newID.substring(20);
+            }
+            return newID;
         }
-        let newID: string = symbolID.toString();
-
-        if (mod.length === 1) {
-
-            mod = "0" + mod;
-        }
-
-        if (symbolID != null && symbolID.length >= 20) {
-            newID = newID.substring(0, 18) + mod + newID.substring(20);
-        }
-        return newID;
+        return symbolID;
     }
 
     /**
