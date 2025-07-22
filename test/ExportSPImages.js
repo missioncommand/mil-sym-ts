@@ -6,8 +6,8 @@ const MilStdAttributes = C5Ren.MilStdAttributes
 const RendererSettings = C5Ren.RendererSettings
 const MSInfo = C5Ren.MSInfo
 
-const unitTestIDs = ["01110000", "02110000", "05110000", "06110000", "10110000", "11110000", "15110000", "20110000", "30110000", "35110000", "36110000", "40130500", "50110100", "51110100", "52110100", "53110100", "54110100", "60110100"];
-const VERSION = SymbolID.Version_2525Dch1;
+const unitTestIDs = ["01110100", "02110000", "05110100", "06110000", "10110000", "11110100", "15110100", "20110100", "27110201", "30120100", "35110000", "36110000", "40130500", "50110100", "60110100"];
+const VERSION = SymbolID.Version_2525Ech1;
 
 // Relies on module jszip
 async function exportTestImages(filename) {
@@ -346,28 +346,29 @@ function createHQTFDTestImages() {
 function createSector1TestImages() {
     let res = []
     let sector1Mods = new Map();
-    sector1Mods.set("01", 41);
-    sector1Mods.set("02", 8);
-    sector1Mods.set("05", 7);
-    sector1Mods.set("06", 3);
-    sector1Mods.set("10", 98);
-    sector1Mods.set("11", 26);
-    sector1Mods.set("15", 24);
-    sector1Mods.set("20", 14);
+    sector1Mods.set("01", 39);
+    sector1Mods.set("02", 9);
+    sector1Mods.set("05", 6);
+    sector1Mods.set("06", 4);
+    sector1Mods.set("10", 99);
+    sector1Mods.set("11", 24);
+    sector1Mods.set("15", 13);
+    sector1Mods.set("20", 16);
     sector1Mods.set("25", 50);
-    sector1Mods.set("30", 25);
-    sector1Mods.set("35", 22);
+    sector1Mods.set("27", 46);
+    sector1Mods.set("30", 22);
+    sector1Mods.set("35", 19);
     sector1Mods.set("36", -1);
-    sector1Mods.set("40", 20);
+    sector1Mods.set("40", 24);
     sector1Mods.set("45", -1);
     sector1Mods.set("46", -1);
     sector1Mods.set("47", -1);
-    sector1Mods.set("50", -1); // No need to test all sigint
+    sector1Mods.set("50", 64);
     sector1Mods.set("51", 65);
     sector1Mods.set("52", -1); // No need to test all sigint
     sector1Mods.set("53", -1); // No need to test all sigint
     sector1Mods.set("54", -1); // No need to test all sigint
-    sector1Mods.set("60", -1);
+    sector1Mods.set("60", 14);
 
     for (const basicID of unitTestIDs) {
         if (sector1Mods.get(basicID.substring(0, 2)) > 0)
@@ -383,6 +384,15 @@ function createSector1TestImages() {
             }
     }
 
+    // Non integer sector modifiers
+    for (const sector1Mod of ["A1", "A3", "A4", "A6", "A7"]) {
+        let id = VERSION + "0310000011000000000000000000";
+        id = SymbolID.setModifier1(id, sector1Mod);
+
+        const modFolder = "Sector Mods/110000/";
+        res.push({ filename: modFolder + SymbolID.getMod1ID(id) + ".svg", file: renderAndSave(id) });
+    }
+
     // Static Depiction
     for (const sector1Mod of Array.from(new Array(1 + 50 - 13), (x, i) => i + 13)) {
         let id = VERSION + "0325000027070100000000000000";
@@ -390,7 +400,15 @@ function createSector1TestImages() {
 
         const modFolder = "Sector Mods/" + SymbolUtilities.getBasicSymbolID(id) + "/";
         res.push({ filename: modFolder + SymbolID.getMod1ID(id) + ".svg", file: renderAndSave(id) });
+    }
 
+    // Common modifiers
+    for (const sector1Mod of Array(83).keys()) {
+        let id = VERSION + "03100000110100000010000000";
+        id = SymbolID.setModifier1(id, sector1Mod);
+
+        let modFolder = "Common Mods/Sector 1/";
+        res.push({ filename: modFolder + SymbolID.getMod1ID(id) + ".svg", file: renderAndSave(id) });
     }
     return res
 }
@@ -398,19 +416,20 @@ function createSector1TestImages() {
 function createSector2TestImages() {
     let res = []
     let sector2Mods = new Map();
-    sector2Mods.set("01", 12);
+    sector2Mods.set("01", 11); // Used with tanker only
     sector2Mods.set("02", 16);
-    sector2Mods.set("05", 5);
+    sector2Mods.set("05", 12);
     sector2Mods.set("06", 15);
-    sector2Mods.set("10", 78);
-    sector2Mods.set("11", 2);
-    sector2Mods.set("15", 9);
-    sector2Mods.set("20", 9);
+    sector2Mods.set("10", 96);
+    sector2Mods.set("11", 1);
+    sector2Mods.set("15", 6);
+    sector2Mods.set("20", 12);
     sector2Mods.set("25", -1);
-    sector2Mods.set("30", 16);
-    sector2Mods.set("35", 17);
+    sector2Mods.set("27", 38);
+    sector2Mods.set("30", 12);
+    sector2Mods.set("35", 13);
     sector2Mods.set("36", -1);
-    sector2Mods.set("40", 2);
+    sector2Mods.set("40", 4);
     sector2Mods.set("45", -1);
     sector2Mods.set("46", -1);
     sector2Mods.set("47", -1);
@@ -419,7 +438,7 @@ function createSector2TestImages() {
     sector2Mods.set("52", -1); // No need to test all sigint
     sector2Mods.set("53", -1); // No need to test all sigint
     sector2Mods.set("54", -1); // No need to test all sigint
-    sector2Mods.set("60", -1);
+    sector2Mods.set("60", 10);
 
     for (const basicID of unitTestIDs) {
         if (sector2Mods.get(basicID.substring(0, 2)) > 0)
@@ -433,6 +452,15 @@ function createSector2TestImages() {
                 modFolder = "Sector Mods/" + basicID + "/";
                 res.push({ filename: modFolder + SymbolID.getMod2ID(id) + ".svg", file: renderAndSave(id) });
             }
+    }
+
+    // Common modifiers
+    for (const sector2Mod of Array(36).keys()) {
+        let id = VERSION + "03100000110100000010000000";
+        id = SymbolID.setModifier2(id, sector2Mod);
+
+        let modFolder = "Common Mods/Sector 2/";
+        res.push({ filename: modFolder + SymbolID.getMod2ID(id) + ".svg", file: renderAndSave(id) });
     }
     return res
 }
