@@ -22816,7 +22816,7 @@
     "Y": "246.5",
     "Width": "305.0",
     "Height": "305.0",
-    "SVG": "<g id=\"0_24_0\">            <circle cx=\"306\" cy=\"399\" fill=\"none\" r=\"144\" stroke=\"#FFFFFF\" stroke-linecap=\"round\" stroke-width=\"17\"/>            <circle cx=\"306\" cy=\"399\" fill=\"#80e0ff\" r=\"144\" stroke=\"#000000\" stroke-dasharray=\"0 14\" stroke-linecap=\"round\" stroke-width=\"17\"/>      </g>"
+    "SVG": "<g id=\"0_24_0\">            <circle cx=\"306\" cy=\"399\" fill=\"none\" r=\"144\" stroke=\"#FFFFFF\" stroke-linecap=\"round\" stroke-width=\"17\"/>            <circle cx=\"306\" cy=\"399\" fill=\"#80e0ff\" r=\"144\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\"/>      </g>"
   },
   {
     "id": "15151",
@@ -23984,7 +23984,7 @@
     "Y": "267.5",
     "Width": "377.0",
     "Height": "257.0",
-    "SVG": "<g id=\"0_28_0\">            <rect fill=\"none\" height=\"240\" stroke=\"#FFFFFF\" stroke-linecap=\"round\" stroke-width=\"17\" width=\"360\" x=\"126.082\" y=\"276\"/>            <rect fill=\"#80e0ff\" height=\"240\" stroke=\"#000000\" stroke-dasharray=\"0 14\" stroke-linecap=\"round\" stroke-width=\"17\" width=\"360\" x=\"126.082\" y=\"276\"/>            <g>                      <rect height=\"21\" width=\"21\" x=\"126.52\" y=\"276.438\"/>                      <rect height=\"21\" width=\"21\" x=\"463.855\" y=\"495.064\"/>                      <rect height=\"21\" width=\"21\" x=\"463.855\" y=\"277.438\"/>                      <rect height=\"21\" width=\"21\" x=\"126.52\" y=\"495.064\"/>                </g>      </g>"
+    "SVG": "<g id=\"0_28_0\">            <rect fill=\"none\" height=\"240\" stroke=\"#FFFFFF\" stroke-linecap=\"round\" stroke-width=\"17\" width=\"360\" x=\"126.082\" y=\"276\"/>            <rect fill=\"#80e0ff\" height=\"240\" stroke=\"#000000\" stroke-dasharray=\"0,34\"  stroke-linecap=\"round\" stroke-width=\"17\" width=\"360\" x=\"126.082\" y=\"276\"/>            <g>                      <rect height=\"21\" width=\"21\" x=\"126.52\" y=\"276.438\"/>                      <rect height=\"21\" width=\"21\" x=\"463.855\" y=\"495.064\"/>                      <rect height=\"21\" width=\"21\" x=\"463.855\" y=\"277.438\"/>                      <rect height=\"21\" width=\"21\" x=\"126.52\" y=\"495.064\"/>                </g>      </g>"
   },
   {
     "id": "10412",
