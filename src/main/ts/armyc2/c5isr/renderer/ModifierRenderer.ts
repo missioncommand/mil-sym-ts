@@ -720,7 +720,7 @@ export class ModifierRenderer implements SettingsEventListener {
             {
                 ebTop = echelonBounds.getY() as int - ebHeight - barOffset;
             }
-            else if(this.isCOnTop(symbolID))//OR frame in air/space
+            else if(ModifierRenderer.isCOnTop(symbolID) && modifiers.has(Modifiers.C_QUANTITY))//OR frame in air/space
             {
                 ebTop = symbolBounds.getY() as int - ebHeight * 2.4;
             }
@@ -1703,20 +1703,20 @@ export class ModifierRenderer implements SettingsEventListener {
                     if(fast)
                     {//aircraft might be 1/4 inch if its speed is less than 300 knots, 1/2 inch if its speed is between 300 and 600 knots and 3/4 inch if its speed is more than 600 knots.
                         if(speed < 300)
-                            distance = pixelSize * 0.25;
+                            distance = (pixelSize * 0.25)/300 * speed;
                         else if (speed < 600)
-                            distance = pixelSize * 0.5;
+                            distance = (pixelSize * 0.5)/600 * speed;
                         else
-                            distance = pixelSize * 0.75;
+                            distance = (pixelSize * 0.75);
                     }
                     else//submarine might be 1/4 inch if its speed is less than 15 knots, 1/2 inch if its speed is between 15 and 30 knots and 3/4 inch if its speed is more than 30 knots
                     {
                         if(speed < 15)
-                            distance = pixelSize * 0.25;
+                            distance = (pixelSize * 0.25)/15 * speed;
                         else if (speed < 30)
-                            distance = pixelSize * 0.5;
+                            distance = (pixelSize * 0.5)/30 * speed;
                         else
-                            distance = pixelSize * 0.75;
+                            distance = (pixelSize * 0.75);
                     }
 
                     angle = angle - 90; //in java, east is zero, we want north to be zero
@@ -10540,17 +10540,19 @@ export class ModifierRenderer implements SettingsEventListener {
         let ss:number = SymbolID.getSymbolSet(symbolID);
         let frame:string = SymbolID.getFrameShape(symbolID);
 
-        if(frame == SymbolID.FrameShape_Air || frame == SymbolID.FrameShape_Space)
-            onTop = true;
-        else if(ss == SymbolID.SymbolSet_Air ||
-                ss == SymbolID.SymbolSet_Space ||
-                ss == SymbolID.SymbolSet_SignalsIntelligence_Air ||
-                        (ss == SymbolID.SymbolSet_SignalsIntelligence_Space && version <= SymbolID.Version_2525Dch1) ||
-                        (ss == SymbolID.SymbolSet_LandEquipment && version <= SymbolID.Version_2525Dch1))
-        {
-            onTop = true;
+        if(SymbolUtilities.hasModifier(symbolID,Modifiers.C_QUANTITY)) {
+            if (frame == SymbolID.FrameShape_Air || frame == SymbolID.FrameShape_Space)
+                onTop = true;
+            else if(frame === '0') 
+            {
+                if (ss == SymbolID.SymbolSet_Air ||
+                        ss == SymbolID.SymbolSet_Space ||
+                        ss == SymbolID.SymbolSet_SignalsIntelligence_Air ||
+                        (ss == SymbolID.SymbolSet_LandEquipment && version <= SymbolID.Version_2525Dch1)) {
+                    onTop = true;
+                }
+            }
         }
-
         return onTop;
     }
 

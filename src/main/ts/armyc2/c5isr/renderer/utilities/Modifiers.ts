@@ -462,6 +462,7 @@ export class Modifiers {
      * Format: Graphic
      * Symbol Set: 10, 15, 30, 35
      * Remarks: Set as "[Speed] [unit of measure] [angle in degrees if 3 characters "045", and in mils if 4 characters "0150]" like [100 KPH 045]
+     * Valid units of measure are: KPH, KPS, MPH, NMH, KTS
      * Notes: It is recommended users handle this amplifier within their map engine many maps always show icons in the upright position when the map
      * is rotated, invalidating the line that's render with the symbol.
      * </pre>
