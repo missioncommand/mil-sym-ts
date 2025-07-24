@@ -803,10 +803,10 @@ export class SinglePointSVGRenderer {
                 {
                     borderPadding = RendererUtilities.findWidestStrokeWidth(siIcon.getSVG());
                 }
-                top = Math.round(siIcon.getBbox().getY()) as int;
-                left = Math.round(siIcon.getBbox().getX()) as int;
-                width = Math.round(siIcon.getBbox().getWidth()) as int;
-                height = Math.round(siIcon.getBbox().getHeight()) as int;
+                top = Math.floor(siIcon.getBbox().getY());
+                left = Math.floor(siIcon.getBbox().getX());
+                width = Math.ceil(siIcon.getBbox().getWidth() + (siIcon.getBbox().getX() - left));
+                height = Math.ceil(siIcon.getBbox().getHeight() + (siIcon.getBbox().getY() - top));
 
                 let strSVGIcon: string;
 
