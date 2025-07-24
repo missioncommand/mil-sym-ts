@@ -346,7 +346,7 @@ export class SVGTextInfo {
                 seStroke = se + ' stroke="' + stroke.replace(/#/g,"&#35;") + '"';*/
                 
             if(strokeWidth)
-                seStroke += ' stroke-width="' + (strokeWidth + 2) + '"';
+                seStroke += ' stroke-width="' + (strokeWidth) + '"';
             seStroke += ' fill="none"';
             seStroke += '>';
             seStroke += text;

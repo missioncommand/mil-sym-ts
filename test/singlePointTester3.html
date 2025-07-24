@@ -79,7 +79,7 @@
             modifiers.set(C5Ren.Modifiers.AD_PLATFORM_TYPE,"AD");
             modifiers.set(C5Ren.Modifiers.AE_EQUIPMENT_TEARDOWN_TIME,"AE");
             modifiers.set(C5Ren.Modifiers.AF_COMMON_IDENTIFIER,"AF");
-
+            modifiers.set(C5Ren.Modifiers.AJ_SPEED_LEADER,"700 KTS 045");
             modifiers.set(C5Ren.Modifiers.AO_ENGAGEMENT_BAR, "AO:AOA-AO");
             modifiers.set(C5Ren.Modifiers.AR_SPECIAL_DESIGNATOR, "AR");
             modifiers.set(C5Ren.Modifiers.AQ_GUARDED_UNIT, "AQ");
@@ -556,6 +556,7 @@
             var si = new C5Ren.SVGInfo("10165700", new C5Ren.Rectangle2D(198,365,215,64),"<g id=\"10165700\"><text font-family=\"sans-serif\" stroke=\"red\" font-size=\"89\" x=\"192\" y=\"428\">MWR</text></g>");
             C5Ren.MilStdIconRenderer.getInstance().AddCustomSymbol(mi,si);
         }//*/
+        C5Ren.RendererSettings.getInstance().setLabelFont("arial","bold",12);
     }
         
 	function preload()
@@ -603,6 +604,10 @@
             RendererSettings.setOutlineSPControlMeasures(false);
             //RendererSettings.setOperationalConditionModifierType(RendererSettings.OperationalConditionModifierType_SLASH);
 
+            //lookup test
+            var msInfo = C5Ren.MSLookup.getInstance().getMSLInfo("110345000016140700000000000840");
+            var mods = msInfo.getModifiers();
+
 	}
 </script>
 </head>
@@ -632,6 +637,8 @@ Context: <select id = lbContext onchange="buildSymbolID();">
     <option>0-Reality</option>
     <option>1-Exercise</option>	
 	<option>2-Simulation</option>	
+    <option>3-Restricted</option>
+    <option>4-No-Strike</option>
 </select>
 Affiliation: <select id = lbAffiliation onchange="buildSymbolID();">
     <option>0-Pending</option>

@@ -376,7 +376,7 @@ export class SinglePointSVGRenderer {
                 RectUtilities.shift(symbolBounds, 0, -symbolBounds.getY() as int);
 
                 //Add core symbol to SVGSymbolInfo
-                let anchor: Point2D = new Point2D(symbolBounds.getCenterX(), symbolBounds.getCenterY());
+                let anchor: Point2D = new Point2D(centerPoint.getX(),centerPoint.getY());//new Point2D(symbolBounds.getCenterX(), symbolBounds.getCenterY());
                 si = new SVGSymbolInfo(sbGroupUnit.toString().valueOf(), anchor, symbolBounds, symbolBounds);
 
                 hasDisplayModifiers = ModifierRenderer.hasDisplayModifiers(symbolID, modifiers);
@@ -549,7 +549,10 @@ export class SinglePointSVGRenderer {
                     }
 
                     case SymbolID.SymbolSet_CyberSpace: {
-                        newSDI = ModifierRenderer.processCyberSpaceTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
+                        if (ver >= SymbolID.Version_2525E)
+                            newSDI = ModifierRenderer.processCyberSpaceTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
+                        else
+                            newSDI = ModifierRenderer.processCyberSpaceTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
                         break;
                     }
 
@@ -570,6 +573,8 @@ export class SinglePointSVGRenderer {
                 si = newSDI as SVGSymbolInfo;
             }
             newSDI = null;//*/
+
+            si = ModifierRenderer.processSpeedLeader(si,symbolID,modifiers,attributes);
 
             let widthOffset: int = 0;
             if (hasTextModifiers) {
@@ -798,10 +803,10 @@ export class SinglePointSVGRenderer {
                 {
                     borderPadding = RendererUtilities.findWidestStrokeWidth(siIcon.getSVG());
                 }
-                top = Math.round(siIcon.getBbox().getY()) as int;
-                left = Math.round(siIcon.getBbox().getX()) as int;
-                width = Math.round(siIcon.getBbox().getWidth()) as int;
-                height = Math.round(siIcon.getBbox().getHeight()) as int;
+                top = Math.floor(siIcon.getBbox().getY());
+                left = Math.floor(siIcon.getBbox().getX());
+                width = Math.ceil(siIcon.getBbox().getWidth() + (siIcon.getBbox().getX() - left));
+                height = Math.ceil(siIcon.getBbox().getHeight() + (siIcon.getBbox().getY() - top));
 
                 let strSVGIcon: string;
 

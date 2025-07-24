@@ -229,7 +229,8 @@ export class SymbolUtilities {
     public static hasModifier(symbolID: string, modifier: string): boolean {
         let msi: MSInfo = MSLookup.getInstance().getMSLInfo(symbolID);
 
-        if (msi != null && msi.getDrawRule() !== DrawRules.DONOTDRAW) {
+        if (msi != null)// && msi.getDrawRule() !== DrawRules.DONOTDRAW) 
+        {
             let mods: Array<string> = msi.getModifiers();
 
             if (mods != null && mods.includes(modifier)) {
@@ -1721,13 +1722,12 @@ export class SymbolUtilities {
                         case SymbolID.SymbolSet_LandCivilianUnit_Organization:
                         case SymbolID.SymbolSet_LandUnit:
                         case SymbolID.SymbolSet_LandInstallation:
-                        case SymbolID.SymbolSet_SignalsIntelligence_Land:
                         case SymbolID.SymbolSet_Activities:
                         case SymbolID.SymbolSet_CyberSpace: {
                             rh = 1;
                             break;
                         }
-
+                        case SymbolID.SymbolSet_SignalsIntelligence_Land:
                         default: {
                             rh = 1.2;
                         }
@@ -1919,13 +1919,12 @@ export class SymbolUtilities {
                         case SymbolID.SymbolSet_LandCivilianUnit_Organization:
                         case SymbolID.SymbolSet_LandUnit:
                         case SymbolID.SymbolSet_LandInstallation:
-                        case SymbolID.SymbolSet_SignalsIntelligence_Land:
                         case SymbolID.SymbolSet_Activities:
                         case SymbolID.SymbolSet_CyberSpace: {
                             rw = 1.5;
                             break;
                         }
-
+                        case SymbolID.SymbolSet_SignalsIntelligence_Land:
                         case SymbolID.SymbolSet_LandEquipment: {
                             rw = 1.2;
                             break;

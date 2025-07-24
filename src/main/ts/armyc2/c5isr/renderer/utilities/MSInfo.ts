@@ -91,7 +91,7 @@ export class MSInfo {
 
                 //Only Control Measures and METOC categories have draw rules so everything else shows up in here if we
                 //here if we don't check for them.
-                if (entityCode !== "000000" &&
+                if (/* entityCode !== "000000" && */ //Commented out to allow top-level unspecified symbols
                     !(this._SymbolSetInt === SymbolID.SymbolSet_ControlMeasure ||
                         this._SymbolSetInt === SymbolID.SymbolSet_Atmospheric ||
                         this._SymbolSetInt === SymbolID.SymbolSet_Oceanographic ||

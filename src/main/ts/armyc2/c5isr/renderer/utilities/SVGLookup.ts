@@ -309,6 +309,9 @@ export class SVGLookup
                 }
 
             }
+            if(context === SymbolID.StandardIdentity_Context_Restricted_Target_Reality ||
+                context === SymbolID.StandardIdentity_Context_No_Strike_Entity_Reality)
+                context = SymbolID.StandardIdentity_Context_Reality;
             frameID = context + "_" + affiliation + ss + "_" + status;
         }
         else//2525E or above
@@ -335,6 +338,9 @@ export class SVGLookup
                 (frameShape === SymbolID.FrameShape_LandEquipment_SeaSurface || frameShape === SymbolID.FrameShape_Unknown)) {
                 return "octagon";
             }
+            if(context === SymbolID.StandardIdentity_Context_Restricted_Target_Reality ||
+                context === SymbolID.StandardIdentity_Context_No_Strike_Entity_Reality)
+                context = SymbolID.StandardIdentity_Context_Reality;
             frameID = context + "_" + affiliation + frameShape + "_" + status;
         }
 
