@@ -139,6 +139,7 @@ export class MSLookup {
             modifiers?: string;
             aux1?: string;
         }
+        let intSS: number = 0;
 
         try {
             let msJSON: JSONSymbol[];
@@ -182,8 +183,9 @@ export class MSLookup {
                     est = JSONSymbol.est;
                 }
 
+                intSS = parseInt(ss);
+                let id = ss + JSONSymbol.code;
                 if (JSONSymbol.code !== "000000") {
-                    let id = ss + JSONSymbol.code;
                     if (JSONSymbol.geometry || JSONSymbol.drawRules) {//Control Measures and METOCS
                         let modifiers: Array<string> = new Array<string>() ;
                         if (JSONSymbol.modifiers != null && JSONSymbol.modifiers != "null" && JSONSymbol.modifiers !== "") 
@@ -198,6 +200,14 @@ export class MSLookup {
                         //_MSLookupD.set(id, new MSInfo(ss, e, et, est, ec));
                         lookup.set(id, new MSInfo(version, ss, e, et, est, JSONSymbol.code, this.populateModifierList(ss, JSONSymbol.code, version)));
                     }
+                    list.push(id);
+                }
+                else if(intSS != SymbolID.SymbolSet_ControlMeasure &&
+                    intSS != SymbolID.SymbolSet_Atmospheric &&
+                    intSS != SymbolID.SymbolSet_Oceanographic &&
+                    intSS != SymbolID.SymbolSet_MeteorologicalSpace)
+                {
+                    lookup.set(id, new MSInfo(version, ss, e, et, est, JSONSymbol.code, this.populateModifierList(ss,JSONSymbol.code, version)));
                     list.push(id);
                 }
             }

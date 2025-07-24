@@ -229,7 +229,8 @@ export class SymbolUtilities {
     public static hasModifier(symbolID: string, modifier: string): boolean {
         let msi: MSInfo = MSLookup.getInstance().getMSLInfo(symbolID);
 
-        if (msi != null && msi.getDrawRule() !== DrawRules.DONOTDRAW) {
+        if (msi != null)// && msi.getDrawRule() !== DrawRules.DONOTDRAW) 
+        {
             let mods: Array<string> = msi.getModifiers();
 
             if (mods != null && mods.includes(modifier)) {
