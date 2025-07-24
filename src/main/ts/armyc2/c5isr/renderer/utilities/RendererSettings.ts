@@ -736,10 +736,10 @@ export class RendererSettings {
      * Set a boolean indicating between the use of supply routes labels in all segments (false) or
      * to only set 2 labels one at the north and the other one at the south of the graphic (true).
      * @param TwoLabelOnly
-     * @deprecated
+     * @deprecated functionally disabled
      */
     public setTwoLabelOnly(TwoLabelOnly: boolean): void {
-        this._TwoLabelOnly = TwoLabelOnly;
+        // this._TwoLabelOnly = TwoLabelOnly;
     }
 
     /**
