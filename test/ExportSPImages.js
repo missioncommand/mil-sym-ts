@@ -25,6 +25,7 @@ async function exportTestImages(filename) {
     toZip.push(...createSPImages());
     toZip.push(...createSector1TestImages());
     toZip.push(...createSector2TestImages());
+    toZip.push(...createFrameTestImages());
 
     for (const file of toZip) {
         zip.file(file.filename, file.file);
@@ -252,7 +253,7 @@ function createStatusTestImages() {
 
 function createAmplifierTestImages() {
     let res = []
-    for (const amp of [11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 31, 32, 33, 34, 35, 36, 37, 41, 42, 51, 52, 61, 62]) {
+    for (const amp of [11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 31, 32, 33, 34, 35, 36, 37, 41, 42, 51, 52, 61, 62, 71]) {
         for (const basicID of unitTestIDs) {
             let id = VERSION + "0300000000000000000000000000";
 
@@ -284,7 +285,7 @@ function createAmplifierTestImages() {
                         continue;
                     }
                 }
-            } else {
+            } else if (amp < 70) {
                 // auxiliary equipment indicator
                 if (!msi.getModifiers().includes(Modifiers.AG_AUX_EQUIP_INDICATOR)) {
                     if (amp == 61) {
@@ -294,10 +295,27 @@ function createAmplifierTestImages() {
                         continue;
                     }
                 }
+            } else {
+                // Leadership Indicator
+                if (SymbolID.getSymbolSet(id) != 27) {
+                    // Confirm not added - only one leadership indicator in E (71)
+                    ampName = "71 no leadership indicator expected";
+                } else {
+                    // Test leadership indicator with multiple affiliations below
+                    continue;
+                }
             }
             const modFolder = "Amplifier/" + ampName + "/";
             res.push({ filename: modFolder + SymbolID.getMainIconID(id) + ".svg", file: renderAndSave(id) });
         }
+    }
+
+    for (const aff of [0, 1, 2, 3, 4, 5, 6]) {
+        let id = VERSION + "0327007111020100000000000000";
+        id = SymbolID.setAffiliation(id, aff);
+        let ampName = "71 Leader Individual - 27110201";
+        const modFolder = "Amplifier/" + ampName + "/";
+        res.push({ filename: modFolder + parseAffiliation(aff) + ".svg", file: renderAndSave(id) });
     }
     return res
 }
@@ -364,10 +382,6 @@ function createSector1TestImages() {
     sector1Mods.set("46", -1);
     sector1Mods.set("47", -1);
     sector1Mods.set("50", 64);
-    sector1Mods.set("51", 65);
-    sector1Mods.set("52", -1); // No need to test all sigint
-    sector1Mods.set("53", -1); // No need to test all sigint
-    sector1Mods.set("54", -1); // No need to test all sigint
     sector1Mods.set("60", 14);
 
     for (const basicID of unitTestIDs) {
@@ -433,11 +447,7 @@ function createSector2TestImages() {
     sector2Mods.set("45", -1);
     sector2Mods.set("46", -1);
     sector2Mods.set("47", -1);
-    sector2Mods.set("50", -1); // No need to test all sigint
-    sector2Mods.set("51", 1);
-    sector2Mods.set("52", -1); // No need to test all sigint
-    sector2Mods.set("53", -1); // No need to test all sigint
-    sector2Mods.set("54", -1); // No need to test all sigint
+    sector2Mods.set("50", -1);
     sector2Mods.set("60", 10);
 
     for (const basicID of unitTestIDs) {
@@ -456,7 +466,7 @@ function createSector2TestImages() {
 
     // Common modifiers
     for (const sector2Mod of Array(36).keys()) {
-        let id = VERSION + "03100000110100000010000000";
+        let id = VERSION + "03100000110100000001000000";
         id = SymbolID.setModifier2(id, sector2Mod);
 
         let modFolder = "Common Mods/Sector 2/";
@@ -513,6 +523,26 @@ function createSPImages() {
 
         let symbolSetFolder = "svg/" + symbolSetName + "/";
         res.push({ filename: symbolSetFolder + SymbolID.getMainIconID(id) + ".svg", file: renderAndSave(id) });
+    }
+    return res
+}
+
+function createFrameTestImages() {
+    let res = []
+    for (const frame of ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) {
+        for (const basicID of unitTestIDs) {
+            let id = VERSION + "0300000000000000000000000000";
+            id = SymbolID.setEntityCode(id, Number.parseInt(basicID.substring(2)));
+            id = SymbolID.setSymbolSet(id, Number.parseInt(basicID.substring(0, 2)));
+
+            // Set frame shape
+            id = id.substring(0, 22) + frame + id.substring(23);
+
+            const frameName = frame + " " + parseFrameShape(frame);
+
+            let symbolSetFolder = "Frame Shape/" + frameName + "/";
+            res.push({ filename: symbolSetFolder + SymbolID.getMainIconID(id) + ".svg", file: renderAndSave(id) });
+        }
     }
     return res
 }
@@ -714,6 +744,35 @@ function parseAmp(amp) {
             return "Short towed array";
         case SymbolID.Mobility_LongTowedArray:
             return "Long towed Array";
+        case SymbolID.Leadership_Individual:
+            return "Leader Individual";
+        default:
+            return "UNKNOWN";
+    }
+}
+
+function parseFrameShape(frameShape) {
+    switch (frameShape) {
+        case SymbolID.FrameShape_Unknown:
+            return "Default frame";
+        case SymbolID.FrameShape_Space:
+            return "Space";
+        case SymbolID.FrameShape_Air:
+            return "Air";
+        case SymbolID.FrameShape_LandUnit:
+            return "Land Unit";
+        case SymbolID.FrameShape_LandEquipment_SeaSurface:
+            return "Sea Surface";
+        case SymbolID.FrameShape_LandInstallation:
+            return "Land Installation";
+        case SymbolID.FrameShape_DismountedIndividuals:
+            return "Dismounted Individuals";
+        case SymbolID.FrameShape_SeaSubsurface:
+            return "Sea Subsurface";
+        case SymbolID.FrameShape_Activity_Event:
+            return "Activity Event";
+        case SymbolID.FrameShape_Cyberspace:
+            return "CyberSpace";
         default:
             return "UNKNOWN";
     }
