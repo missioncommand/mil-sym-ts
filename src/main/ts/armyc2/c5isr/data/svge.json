@@ -8491,6 +8491,14 @@
     "SVG": "<g id=\"0_37_0\">        <path d=\"M437.342,274.815c0,174.435-58.379,315.841-130.394,315.841   c-72.011,0-130.391-141.406-130.391-315.841\" fill=\"#80E0FF\" stroke=\"#000000\" stroke-width=\"17\"/>    </g>"
   },
   {
+    "id": "25344300",
+    "X": "116.57955842570482",
+    "Y": "129.23285490495024",
+    "Width": "148.85192612540772",
+    "Height": "145.67166762248186",
+    "SVG": "<g id=\"25344300\">          <text fill=\"#000000\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"svg_10\" stroke=\"#000000\" stroke-width=\"0\" text-anchor=\"middle\" x=\"193.5\" xml:space=\"preserve\" y=\"214\">D</text>          <rect fill=\"#000000\" height=\"7\" id=\"svg_11\" stroke=\"#000000\" stroke-width=\"0\" transform=\"rotate(-43.0246 144.612 248.406)\" width=\"70.16\" x=\"109.53\" y=\"244.91\"/>          <rect fill=\"#000000\" height=\"7\" id=\"svg_12\" stroke=\"#000000\" stroke-width=\"0\" transform=\"rotate(44.9937 146.248 153.756)\" width=\"62.38\" x=\"115.06\" y=\"150.26\"/>          <path d=\"m157.5,235l26.5,0l-13,-22\" fill=\"#000000\" id=\"svg_16\" stroke=\"#000000\" stroke-width=\"0\" transform=\"rotate(45.9602 170.75 224)\"/>          <path d=\"m160.25,188l26.5,0l-13,-22\" fill=\"#000000\" id=\"svg_17\" stroke=\"#000000\" stroke-width=\"0\" transform=\"rotate(23.1986 173.5 177)\"/>          <path d=\"m202.25,190l26.5,0l-13,-22\" fill=\"#000000\" id=\"svg_18\" stroke=\"#000000\" stroke-width=\"0\" transform=\"rotate(-14.5345 215.5 179)\"/>          <path d=\"m201.25,234l26.5,0l-13,-22\" fill=\"#000000\" id=\"svg_19\" stroke=\"#000000\" stroke-width=\"0\" transform=\"rotate(-42.2737 214.5 223)\"/>          <rect fill=\"#000000\" height=\"7\" id=\"svg_20\" stroke=\"#000000\" stroke-width=\"0\" transform=\"rotate(44.9937 241.502 249.997)\" width=\"58.85\" x=\"212.08\" y=\"246.5\"/>          <rect fill=\"#000000\" height=\"7\" id=\"svg_21\" stroke=\"#000000\" stroke-width=\"0\" transform=\"rotate(3.53992 241.41 155.95) matrix(0.616744 -0.787164 0.787164 0.616744 -31.3861 247.437)\" width=\"64.46\" x=\"208.03\" y=\"154.81\"/>     </g>"
+  },
+  {
     "id": "50031",
     "X": "269.890625",
     "Y": "291.890625",
