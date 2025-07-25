@@ -294,7 +294,7 @@ export class SVGTextInfo {
 		if (this.angle == 0)
         	se = '<text x="' + x + '" y="' + y + '"';
 		else 
-			se += '<text transform="translate(' + x + ',' + y + ') rotate(' + this.angle + ')"'
+			se = '<text transform="translate(' + x + ',' + y + ') rotate(' + this.angle + ')"'
         se += ' font-family="' + this._fontName + '"';
         se += ' font-size="' + this._fontSize + 'px"';
         se += ' font-weight="' + this._fontStyle + '"';
