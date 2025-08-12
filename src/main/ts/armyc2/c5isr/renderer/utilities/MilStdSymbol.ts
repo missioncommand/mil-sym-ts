@@ -355,7 +355,7 @@ export class MilStdSymbol {
                 else if (modifier === (Modifiers.AM_DISTANCE)
                         || modifier === (Modifiers.AN_AZIMUTH)
                         || modifier === (Modifiers.X_ALTITUDE_DEPTH)) {
-                        let value: string | null = this.getModifier_AM_AN_X(modifier, index);
+                        let value: string = String(this.getModifier_AM_AN_X(modifier, index));
                         if (value != null && value !== "null" && value !== "") {
                             return value;
                         }
@@ -450,7 +450,7 @@ export class MilStdSymbol {
      * @param index {@link Integer} array location
      * @return {@link Double}
      */
-    public getModifier_AM_AN_X(modifier: string, index: int): string | null {
+    public getModifier_AM_AN_X(modifier: string, index: int): number | null {
         let modifiers: Array<number>;
         if (modifier === (Modifiers.AM_DISTANCE)) {
             modifiers = this._AM_Distance;
@@ -469,7 +469,7 @@ export class MilStdSymbol {
             let value: number = 0;
             value = modifiers[index];
             if (value != null) {
-                return value.toString();
+                return value;
             }
             else {
                 return null;
