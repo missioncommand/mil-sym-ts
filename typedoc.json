@@ -7,6 +7,7 @@
         "src/main/ts/armyc2/c5isr/graphics2d/Rectangle2D.ts",
         "src/main/ts/armyc2/c5isr/graphics2d/Font.ts",
         "src/main/ts/armyc2/c5isr/graphics2d/TexturePaint.ts",
+        "src/main/ts/armyc2/c5isr/JavaLineArray/BasicShapes.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/AffiliationColors.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/DistanceUnit.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/GENCLookup.ts",
