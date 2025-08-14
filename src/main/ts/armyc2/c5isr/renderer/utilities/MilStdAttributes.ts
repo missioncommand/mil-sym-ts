@@ -205,6 +205,9 @@ export class MilStdAttributes {
 
                 list.push(MilStdAttributes.EngagementBarColor);
             }
+            list.push(MilStdAttributes.FontFamily);
+            list.push(MilStdAttributes.FontStyle);
+            list.push(MilStdAttributes.FontStyle);
 
         }
         else {
@@ -295,6 +298,12 @@ export class MilStdAttributes {
             case MilStdAttributes.AltitudeUnits: {
                 return "Altitude Units";
             }
+            case MilStdAttributes.FontFamily:
+                return "Font Family";
+            case MilStdAttributes.FontStyle:
+                return "Font Style";
+            case MilStdAttributes.FontSize:
+                return "Font Size";
 
             default: {
                 return "unrecognized attribute";
@@ -381,6 +390,12 @@ export class MilStdAttributes {
             case "ALTITUDEUNITS": {
                 return MilStdAttributes.AltitudeUnits;
             }
+            case "FONTFAMILY":
+                return MilStdAttributes.FontFamily;
+            case "FONTSTYLE":
+                return MilStdAttributes.FontStyle;
+            case "FONTSIZE":
+                return MilStdAttributes.FontSize;
 
             default: {
                 return null;
