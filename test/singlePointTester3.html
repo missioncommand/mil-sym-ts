@@ -161,6 +161,12 @@
             //attributes.set(C5Ren.MilStdAttributes.LineColor,"#00FF00");
             //attributes.set(C5Ren.MilStdAttributes.FillColor,"#0000FF00");
             //attributes.set(C5Ren.MilStdAttributes.IconColor,"#00FF00");
+
+            //font override check
+            /*attributes.set(MilStdAttributes.FontFamily,"sans-serif");
+            //var type = String.valueOf(C5Ren.Font.BOLD); 
+            attributes.set(MilStdAttributes.FontStyle,C5Ren.Font.BOLD.toString());
+            attributes.set(MilStdAttributes.FontSize,"12");//*/
         
             var si = C5Ren.MilStdIconRenderer.getInstance().RenderSVG(symbolID,modifiers,attributes);
             //var si2 = C5Ren.MilStdIconRenderer.getInstance().RenderSVG("130310000016570000000000000000",modifiers,attributes);
@@ -354,6 +360,12 @@
 		start = new Date().getTime();
 		
         var attrib = new Map();
+
+        //font override check
+        /*C5Ren.RendererSettings.getInstance().setDeviceDPI(96);
+        attrib.set(MilStdAttributes.FontFamily,"sans-serif");
+        attrib.set(MilStdAttributes.FontStyle,C5Ren.Font.BOLD.toString());
+        attrib.set(MilStdAttributes.FontSize,"12");//*/
 
         var si;
 

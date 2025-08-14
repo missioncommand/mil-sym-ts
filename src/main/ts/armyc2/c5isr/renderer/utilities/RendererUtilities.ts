@@ -269,7 +269,7 @@ export class RendererUtilities {
     public static getRecommendedTextOutlineWidth():number
     {
         let dpi:number = RendererSettings.getInstance().getDeviceDPI();
-        return Math.max(dpi/48,2);
+        return Math.max(dpi/48,2.5);
     }
 
     /**

@@ -149,6 +149,17 @@ export class MilStdAttributes {
      */
     public static readonly PatternScale: string = "PATTERNSCALE";
 
+    /**
+     * like "arial"
+     */
+    public static readonly FontFamily: string = "FONTFAMILY";
+    /**
+     * Like Font.BOLD
+     */
+    public static readonly FontStyle: string = "FONTSTYLE";
+
+    public static readonly FontSize: string = "FONTSIZE";
+
 
     /**
      * No Longer relevant
