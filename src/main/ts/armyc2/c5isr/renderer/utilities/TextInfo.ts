@@ -14,6 +14,9 @@ import { Canvas, CanvasRenderingContext2D, createCanvas } from 'canvas';
  *
  */
 export class TextInfo {
+	protected _fontName: string = "sans-serif";
+	protected _fontStyle: number = Font.BOLD;
+	protected _fontSize: number = 12;
 	protected _text: string = "";
 	protected _location: Point2D;
 	protected _bounds: Rectangle2D;
@@ -52,9 +55,27 @@ export class TextInfo {
 		}
 
 		if(typeof font === 'string')
+		{
 			ctx.font = font;
+			//Parse font string
+			let temp:string[] = font.split(' ');
+			this._fontStyle = parseInt(temp[0]);
+			this._fontSize = parseInt(temp[1].replace("px",""));
+			for(let i = 2; i < temp.length; i++)
+			{
+				if(i===2)
+					this._fontName = temp[i];
+				else
+					this._fontName += " " + temp[i];
+			}
+		}
 		else
+		{
+			this._fontName = font.getName();
+			this._fontStyle = font.getType();
+			this._fontSize = font.getSize();
 			ctx.font = font.toString();
+		}
 
 		this._text = text;
 		tm = ctx.measureText(text);
@@ -146,6 +167,21 @@ export class TextInfo {
 
 	public getDescent(): double {
 		return this._descent;
+	}
+
+	public getFontName():string
+	{
+		return this._fontName;
+	}
+
+	public getFontSize():number
+	{
+		return this._fontSize;
+	}
+
+	public getFontStyle():number
+	{
+		return this._fontStyle;
 	}
 
 	public strokeText = function(context:OffscreenCanvasRenderingContext2D){

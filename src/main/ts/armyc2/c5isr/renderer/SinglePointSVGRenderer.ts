@@ -803,6 +803,16 @@ export class SinglePointSVGRenderer {
                 {
                     borderPadding = RendererUtilities.findWidestStrokeWidth(siIcon.getSVG());
                 }
+
+                //Oceanographic / Bottom Feature - essentially italic serif fonts need more vertical space
+                //pixel sizes above 150 it's fine, which is weird
+                if(SymbolUtilities.getBasicSymbolID(symbolID).startsWith("461206"))
+                {
+                    let va = siIcon.getBbox().getHeight() * 0.025;
+                    let ha = siIcon.getBbox().getWidth() * 0.025;//some also need to be slightly wider
+                    siIcon.getBbox().setRect(siIcon.getBbox().getX(),siIcon.getBbox().getY() - va,siIcon.getBbox().getWidth() + ha,siIcon.getBbox().getHeight() + va);
+                }
+
                 top = Math.floor(siIcon.getBbox().getY());
                 left = Math.floor(siIcon.getBbox().getX());
                 width = Math.ceil(siIcon.getBbox().getWidth() + (siIcon.getBbox().getX() - left));

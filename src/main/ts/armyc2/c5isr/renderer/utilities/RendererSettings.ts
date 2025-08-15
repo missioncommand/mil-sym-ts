@@ -47,7 +47,7 @@ export class RendererSettings {
     private static _TextBackgroundAutoColorThreshold: int = 160;
 
     //if TextBackgroundMethod_OUTLINE is set, This value determines the width of that outline.
-    private static _TextOutlineWidth: int = 2;
+    private static _TextOutlineWidth: number = 2.5;
 
     //label foreground color, uses line color of symbol if null.
     private static _ColorLabelForeground: Color; //Color.BLACK;

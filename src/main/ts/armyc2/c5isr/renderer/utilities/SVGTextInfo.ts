@@ -267,6 +267,21 @@ export class SVGTextInfo {
 		return this._descent;
 	}
 
+	public getFontName():string
+	{
+		return this._fontName;
+	}
+
+	public getFontSize():number
+	{
+		return this._fontSize;
+	}
+
+	public getFontStyle():string
+	{
+		return this._fontStyle;
+	}
+
 	/**
 	 * 
 	 * @param textColor hex color string
