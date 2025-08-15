@@ -22,7 +22,7 @@ export class RectUtilities {
 	 * @return {@link Rectangle2D}
 	 */
 	public static copyRect(rect: Rectangle2D): Rectangle2D {
-		return new Rectangle2D(rect.getX() as int, rect.getY() as int, (rect.getWidth() + 0.5) as int, (rect.getHeight() + 0.5) as int);
+		return new Rectangle2D(Math.floor(rect.getX()), Math.floor(rect.getY()), Math.ceil(rect.getWidth()), Math.ceil(rect.getHeight()));
 	}
 
 	/**
