@@ -21035,6 +21035,14 @@
     "SVG": "<g id=\"10361\">        <text font-family=\"sans-serif\" font-size=\"60\" x=\"239\" y=\"344\">MSE</text>    </g>"
   },
   {
+    "id": "45110505",
+    "X": "112.3550033569336",
+    "Y": "197.9029998779297",
+    "Width": "183.2229995727539",
+    "Height": "5.0",
+    "SVG": "<g id=\"45110505\">        <line fill=\"none\" id=\"main\" stroke=\"#000000\" stroke-width=\"5\" x1=\"112.355\" x2=\"295.578\" y1=\"200.403\" y2=\"200.403\"/>    </g>"
+  },
+  {
     "id": "45110504",
     "X": "116.13996124267578",
     "Y": "116.8928451538086",
@@ -21905,6 +21913,14 @@
     "Width": "142.22802734375",
     "Height": "265.98431396484375",
     "SVG": "<g id=\"25321709\">        <rect fill=\"none\" height=\"170.972\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-miterlimit=\"8\" stroke-width=\"7\" width=\"128.229\" x=\"242.408\" y=\"138.849\"/>        <polygon fill=\"none\" points=\"306.521,395.5    242.408,310.015 370.636,310.015  \" stroke=\"#000000\" stroke-linecap=\"round\" stroke-miterlimit=\"8\" stroke-width=\"7\"/>        <line fill=\"none\" stroke=\"#000000\" stroke-width=\"7\" x1=\"242.408\" x2=\"370.636\" y1=\"288.311\" y2=\"288.311\"/>        <polyline fill=\"none\" points=\"306.521,232.028 257.795,155.458 355.248,155.458    306.521,232.028 306.521,280.758  \" stroke=\"#000000\" stroke-width=\"6\"/>    </g>"
+  },
+  {
+    "id": "25321708",
+    "X": "234.40805053710938",
+    "Y": "135.3489990234375",
+    "Width": "142.22802734375",
+    "Height": "265.98431396484375",
+    "SVG": "<g id=\"25321708\">        <rect fill=\"none\" height=\"170.972\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-miterlimit=\"8\" stroke-width=\"7\" width=\"128.229\" x=\"241.408\" y=\"138.849\"/>        <polygon fill=\"none\" points=\"305.521,395.5    241.408,310.015 369.636,310.015  \" stroke=\"#000000\" stroke-linecap=\"round\" stroke-miterlimit=\"8\" stroke-width=\"7\"/>        <line fill=\"none\" stroke=\"#000000\" stroke-width=\"7\" x1=\"241.408\" x2=\"369.636\" y1=\"288.311\" y2=\"288.311\"/>        <text font-family=\"sans-serif\" font-size=\"100\" x=\"278\" y=\"246\">II</text>    </g>"
   },
   {
     "id": "25341",
