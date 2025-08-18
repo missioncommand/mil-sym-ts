@@ -25,6 +25,7 @@ import { Modifiers } from "../../renderer/utilities/Modifiers";
 import { SymbolUtilities } from "../../renderer/utilities/SymbolUtilities";
 import { ShapeInfo } from "../../renderer/utilities/ShapeInfo";
 import { Font } from "../../graphics2d/Font";
+import { Rectangle2D } from "../../graphics2d/Rectangle2D";
 
 export class Shape3DHandler {
     /**
@@ -73,7 +74,7 @@ export class Shape3DHandler {
         if (symbolAttributes.get(MilStdAttributes.FillColor) == null) {
             var defaultColor = SymbolUtilities.getFillColorOfAffiliation(symbolCode);
             if (defaultColor == null) {
-                defaultColor = new Color(Color.BLACK);
+                defaultColor = new Color(Color.WHITE);
             }
             defaultColor.setAlpha(170);
             symbolAttributes.set(MilStdAttributes.FillColor, defaultColor.toHexString(true));
@@ -448,8 +449,7 @@ export class Shape3DHandler {
         bbox: string,
         symbolModifiers: Map<string, string>,
         symbolAttributes: Map<string, string>,
-        format: int): string
-    {
+        format: int): string {
         let normalize: boolean = true;
         //Double controlLat = 0.0;
         //Double controlLong = 0.0;
@@ -460,14 +460,31 @@ export class Shape3DHandler {
 
         let rect: Rectangle;
         let coordinates: string[] = controlPoints.split(" ");
-        let shapes: Array<ShapeInfo> = new Array<ShapeInfo>();
-        let modifiers: Array<ShapeInfo> = new Array<ShapeInfo>();
+        let shapes: Array<ShapeInfo3D> = new Array<ShapeInfo3D>();
+        let modifiers: Array<ShapeInfo3D> = new Array<ShapeInfo3D>();
         //ArrayList<Point2D> pixels = new ArrayList<Point2D>();
         let geoCoords: Array<Point2D> = new Array<Point2D>();
         let len: int = coordinates.length;
         //diagnostic create geoCoords here
         let coordsUL: Point2D = null;
         const symbolCode = "";
+
+        // 3D default colors
+        if (symbolAttributes.get(MilStdAttributes.LineColor) == null) {
+            var defaultColor = SymbolUtilities.getLineColorOfAffiliation(symbolCode);
+            if (defaultColor == null) {
+                defaultColor = new Color(Color.BLACK);
+            }
+            symbolAttributes.set(MilStdAttributes.LineColor, defaultColor.toHexString());
+        }
+        if (symbolAttributes.get(MilStdAttributes.FillColor) == null) {
+            var defaultColor = SymbolUtilities.getFillColorOfAffiliation(symbolCode);
+            if (defaultColor == null) {
+                defaultColor = new Color(Color.WHITE);
+            }
+            defaultColor.setAlpha(170);
+            symbolAttributes.set(MilStdAttributes.FillColor, defaultColor.toHexString(true));
+        }
 
         for (let i: int = 0; i < len; i++) {
             let coordPair: string[] = coordinates[i].split(",");
@@ -614,46 +631,89 @@ export class Shape3DHandler {
             mSymbol.setSymbolShapes(shapeInfos);
             mSymbol.setModifierShapes(modifierShapeInfos);
             mSymbol.set_WasClipped(tg.get_WasClipped());
-            shapes = mSymbol.getSymbolShapes();
-            modifiers = mSymbol.getModifierShapes();
 
-            if (format === WebRenderer.OUTPUT_FORMAT_JSON) {
-                jsonOutput += ("{\"type\":\"symbol\",");
-                jsonContent = MultiPointHandler.JSONize(shapes, modifiers, ipc, true, normalize);
-                jsonOutput += (jsonContent);
-                jsonOutput += ("}");
-            } else if (format === WebRenderer.OUTPUT_FORMAT_KML) {
+            // Convert 2D shape to 3D
+            // Confirm there are at least two altitudes per shape
+            let altitudes = mSymbol.getModifiers_AM_AN_X(Modifiers.X_ALTITUDE_DEPTH);
+            if (altitudes.length === 1) {
+                altitudes = [0, altitudes[0]];
+            }
+            const lastAlt = altitudes[altitudes.length - 1];
+            const nextToLastAlt = altitudes[altitudes.length - 2];
+            while (altitudes.length < mSymbol.getSymbolShapes().length * 2) {
+                altitudes.push(nextToLastAlt, lastAlt);
+            }
+            for (let shapeIndex = 0; shapeIndex < mSymbol.getSymbolShapes().length; shapeIndex++) {
+                const minAlt = altitudes[shapeIndex * 2];
+                const maxAlt = altitudes[(shapeIndex * 2) + 1];
+                const oldShape = mSymbol.getSymbolShapes()[shapeIndex];
+
+                var bottomShape = new ShapeInfo3D();
+                bottomShape.setShapeType(oldShape.getShapeType());
+                bottomShape.setStroke(oldShape.getStroke());
+                bottomShape.setLineColor(oldShape.getLineColor());
+                bottomShape.setFillColor(oldShape.getFillColor());
+                bottomShape.setPatternFillImage(oldShape.getPatternFillImageInfo());
+                bottomShape.setPolylines([]);
+                var topShape = new ShapeInfo3D();
+                topShape.setShapeType(oldShape.getShapeType());
+                topShape.setStroke(oldShape.getStroke());
+                topShape.setLineColor(oldShape.getLineColor());
+                topShape.setFillColor(oldShape.getFillColor());
+                topShape.setPatternFillImage(oldShape.getPatternFillImageInfo());
+                topShape.setPolylines([]);
+
+                for (let polyLineIndex = 0; polyLineIndex < oldShape.getPolylines().length; polyLineIndex++) {
+                    const polyline = oldShape.getPolylines()[polyLineIndex];
+                    bottomShape.getPolylines().push([]);
+                    topShape.getPolylines().push([]);
+                    for (let ptIndex = 0; ptIndex < polyline.length; ptIndex++) {
+                        const pt = polyline[ptIndex];
+                        const pt2 = polyline[(ptIndex + 1) % polyline.length];
+                        bottomShape.getPolylines()[polyLineIndex].push(new Point3D(pt, minAlt));
+                        topShape.getPolylines()[polyLineIndex].push(new Point3D(pt, maxAlt));
+
+                        var sideShape = new ShapeInfo3D();
+                        sideShape.setShapeType(oldShape.getShapeType());
+                        sideShape.setStroke(oldShape.getStroke());
+                        sideShape.setLineColor(oldShape.getLineColor());
+                        sideShape.setFillColor(oldShape.getFillColor());
+                        sideShape.setPatternFillImage(oldShape.getPatternFillImageInfo());
+                        sideShape.setPolylines([[new Point3D(pt, minAlt), new Point3D(pt2, minAlt), new Point3D(pt2, maxAlt), new Point3D(pt, maxAlt), new Point3D(pt, minAlt)]]);
+                        shapes.push(sideShape);
+                    }
+                }
+                shapes.push(bottomShape);
+                shapes.push(topShape);
+            }
+
+            const modifierAlt = Math.max(...altitudes.splice(0, mSymbol.getSymbolShapes().length * 2));
+            for (const oldShape of mSymbol.getModifierShapes()) {
+                var modShape = new ShapeInfo3D();
+                modShape.setModifierString(oldShape.getModifierString());
+                modShape.setModifierPosition(new Point3D(oldShape.getModifierPosition(), modifierAlt));
+                modShape.setModifierAngle(oldShape.getModifierAngle());
+                modShape.setTextJustify(oldShape.getTextJustify());
+                modShape.setModifierImage(oldShape.getModifierImageInfo());
+
+                modifiers.push(modShape);
+            }
+
+            if (format === WebRenderer.OUTPUT_FORMAT_KML) {
                 var textColor = mSymbol.getTextColor();
-                if(textColor==null)
-                    textColor=mSymbol.getLineColor();
+                if (textColor == null)
+                    textColor = mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
-                jsonOutput += jsonContent;
+                jsonOutput = Shape3DHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, altitudeMode);
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
-                /*
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
-                jsonContent = GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
-                jsonOutput += (jsonContent);
-                jsonOutput += (",\"properties\":{\"id\":\"");
-                jsonOutput += (id);
-                jsonOutput += ("\",\"name\":\"");
-                jsonOutput += (name);
-                jsonOutput += ("\",\"description\":\"");
-                jsonOutput += (description);
-                jsonOutput += ("\",\"symbolID\":\"");
-                jsonOutput += (symbolCode);
-                jsonOutput += ("\",\"wasClipped\":\"");
-                jsonOutput += (mSymbol.get_WasClipped()).toString();
-                jsonOutput += ("\"}}");         */
-
-                jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
-                jsonContent = MultiPointHandler.GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
+                jsonContent = Shape3DHandler.GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
                 jsonOutput += (jsonContent);
 
                 //moving meta data properties to the last feature with no coords as feature collection doesn't allow properties
                 jsonOutput = jsonOutput.slice(0, -1);
                 if (jsonContent.length > 2)
-                    jsonOutput += ","
+                    jsonOutput += ",";
                 jsonOutput += ("{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
 
                 jsonOutput += (",\"properties\":{\"id\":\"");
@@ -666,14 +726,7 @@ export class Shape3DHandler {
                 jsonOutput += (symbolCode);
                 jsonOutput += ("\",\"wasClipped\":\"");
                 jsonOutput += (mSymbol.get_WasClipped()).toString();
-                //jsonOutput += ("\"}}");
-
                 jsonOutput += ("\"}}]}");
-            } else if (format === WebRenderer.OUTPUT_FORMAT_GEOSVG) {
-                let textColor = mSymbol.getTextColor() ? mSymbol.getTextColor().toHexString(false) : "";
-                let backgroundColor = mSymbol.getTextBackgroundColor() ? mSymbol.getTextBackgroundColor().toHexString(false) : "";
-                //returns an svg with a geoTL and geoBR value to use to place the canvas on the map
-                jsonOutput = MultiPointHandlerSVG.GeoSVGize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, backgroundColor, mSymbol.get_WasClipped());
             }
         } catch (exc) {
             if (exc instanceof Error) {
@@ -684,38 +737,13 @@ export class Shape3DHandler {
                 jsonOutput += (st);
                 jsonOutput += ("\"}");
 
-                ErrorLogger.LogException("MultiPointHandler", "RenderBasicSymbol", exc);
+                ErrorLogger.LogException("Shape3DHandler", "RenderBasic3DShape", exc);
             } else {
                 throw exc;
             }
         }
 
-        /*
-        let debug: boolean = false;
-        if (debug === true) {
-            console.log("Symbol Code: " + symbolCode);
-            console.log("Scale: " + scale);
-            console.log("BBOX: " + bbox);
-            if (controlPoints != null) {
-                console.log("Geo Points: " + controlPoints);
-            }
-            if (tgl != null && tgl.get_Pixels() != null)//pixels != null
-            {
-                console.log("Pixel: " + tgl.get_Pixels().toString());
-            }
-            if (bbox != null) {
-                console.log("geo bounds: " + bbox);
-            }
-            if (rect != null) {
-                console.log("pixel bounds: " + rect.toString());
-            }
-            if (jsonOutput != null) {
-                console.log(jsonOutput.toString());
-            }
-        }
-            */
-
-        ErrorLogger.LogMessage("MultiPointHandler", "RenderBasicShape()", "exit RenderBasicShape", LogLevel.FINER);
+        ErrorLogger.LogMessage("Shape3DHandler", "RenderBasic3DShape()", "exit RenderBasic3DShape", LogLevel.FINER);
         return jsonOutput.toString();
     }
 
