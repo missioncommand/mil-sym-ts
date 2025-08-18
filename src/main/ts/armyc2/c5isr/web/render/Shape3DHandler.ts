@@ -14,11 +14,15 @@ import { MilStdAttributes } from "../../renderer/utilities/MilStdAttributes";
 import { MilStdSymbol } from "../../renderer/utilities/MilStdSymbol";
 import { RendererSettings } from "../../renderer/utilities/RendererSettings";
 import { RendererUtilities } from "../../renderer/utilities/RendererUtilities";
+import { ShapeInfo3D } from "./utilities/ShapeInfo3D";
 import { PointConverter } from "./PointConverter";
 import { JavaRendererUtilities } from "./utilities/JavaRendererUtilities";
 import { WebRenderer } from "./WebRenderer";
+import { Point3D } from "./utilities/Point3D";
 import { type int, type double } from "../../graphics2d/BasicTypes";
 import { BasicStroke } from "../../graphics2d/BasicStroke";
+import { Modifiers } from "../../renderer/utilities/Modifiers";
+import { SymbolUtilities } from "../../renderer/utilities/SymbolUtilities";
 import { ShapeInfo } from "../../renderer/utilities/ShapeInfo";
 import { Font } from "../../graphics2d/Font";
 
@@ -50,21 +54,49 @@ export class Shape3DHandler {
         let rect: Rectangle;
         let coordinates: string[] = controlPoints.split(" ");
         let tgl: TGLight = new TGLight();
-        let shapes: Array<ShapeInfo> = new Array<ShapeInfo>();
-        let modifiers: Array<ShapeInfo> = new Array<ShapeInfo>();
+        let shapes: Array<ShapeInfo3D> = new Array<ShapeInfo3D>();
+        let modifiers: Array<ShapeInfo3D> = new Array<ShapeInfo3D>();
         //ArrayList<Point2D> pixels = new ArrayList<Point2D>();
         let geoCoords: Array<Point2D> = new Array<Point2D>();
         let len: int = coordinates.length;
         //diagnostic create geoCoords here
         let coordsUL: Point2D = null;
 
+        // 3D default colors
+        if (symbolAttributes.get(MilStdAttributes.LineColor) == null) {
+            var defaultColor = SymbolUtilities.getLineColorOfAffiliation(symbolCode);
+            if (defaultColor == null) {
+                defaultColor = new Color(Color.BLACK);
+            }
+            symbolAttributes.set(MilStdAttributes.LineColor, defaultColor.toHexString());
+        }
+        if (symbolAttributes.get(MilStdAttributes.FillColor) == null) {
+            var defaultColor = SymbolUtilities.getFillColorOfAffiliation(symbolCode);
+            if (defaultColor == null) {
+                defaultColor = new Color(Color.BLACK);
+            }
+            defaultColor.setAlpha(170);
+            symbolAttributes.set(MilStdAttributes.FillColor, defaultColor.toHexString(true));
+        }
+
+        if (!JavaRendererUtilities.is3dSymbol(symbolCode)) {
+            const basicID: string = SymbolUtilities.getBasicSymbolID(symbolCode);
+            const errorMsg = "Basic ID: " + basicID + " is not a 3D Symbol";
+            let ErrorOutput: string = "";
+            ErrorOutput += ("{\"type\":\"error\",\"error\":\"There was an error creating the 3D MilStdSymbol " + symbolCode + " - ID: " + id + " - ");
+            ErrorOutput += errorMsg; //reason for error
+            ErrorOutput += ("\"}");
+            ErrorLogger.LogMessage("Shape3DHandler", "RenderMilStd3dSymbol", errorMsg, LogLevel.FINE);
+            return ErrorOutput;
+        }
+
         let symbolIsValid: string = MultiPointHandler.canRenderMultiPoint(symbolCode, symbolModifiers, len);
         if (symbolIsValid !== "true") {
             let ErrorOutput: string = "";
-            ErrorOutput += ("{\"type\":\"error\",\"error\":\"There was an error creating the MilStdSymbol " + symbolCode + " - ID: " + id + " - ");
+            ErrorOutput += ("{\"type\":\"error\",\"error\":\"There was an error creating the 3D MilStdSymbol " + symbolCode + " - ID: " + id + " - ");
             ErrorOutput += symbolIsValid; //reason for error
             ErrorOutput += ("\"}");
-            ErrorLogger.LogMessage("MultiPointHandler", "RenderSymbol", symbolIsValid, LogLevel.FINE);
+            ErrorLogger.LogMessage("Shape3DHandler", "RenderMilStd3dSymbol", symbolIsValid, LogLevel.FINE);
             return ErrorOutput;
         }
 
@@ -246,11 +278,11 @@ export class Shape3DHandler {
 
             //String fillColor = null;
             let mSymbol: MilStdSymbol = new MilStdSymbol(symbolCode, null, geoCoords, null);
-            
+
             if (format == WebRenderer.OUTPUT_FORMAT_GEOSVG) {
                 // Use dash array and hatch pattern fill for SVG output
-                symbolAttributes.set(MilStdAttributes.UseDashArray, 'true')
-                symbolAttributes.set(MilStdAttributes.UsePatternFill, "true")
+                symbolAttributes.set(MilStdAttributes.UseDashArray, 'true');
+                symbolAttributes.set(MilStdAttributes.UsePatternFill, "true");
             }
 
             if (symbolModifiers != null || symbolAttributes != null) {
@@ -265,46 +297,96 @@ export class Shape3DHandler {
                 clsRenderer.renderWithPolylines(mSymbol, ipc, bboxCoords);
             }
 
-            shapes = mSymbol.getSymbolShapes();
-            modifiers = mSymbol.getModifierShapes();
+            // Convert 2D shape to 3D
+            if (MSLookup.getInstance().getMSLInfo(symbolCode).getDrawRule() === DrawRules.CORRIDOR1) {
+                // Remove circles from air corridor for 3d
+                // Set line color for other shapes
+                for (let i = 0; i < mSymbol.getSymbolShapes().length - 1; i++) {
+                    mSymbol.getSymbolShapes()[i].setLineColor(mSymbol.getSymbolShapes()[mSymbol.getSymbolShapes().length - 1].getLineColor());
+                }
+                mSymbol.setSymbolShapes(mSymbol.getSymbolShapes().slice(0, -1).reverse());
+            }
+            // Confirm there are at least two altitudes per shape
+            let altitudes = mSymbol.getModifiers_AM_AN_X(Modifiers.X_ALTITUDE_DEPTH);
+            if (altitudes.length === 1) {
+                altitudes = [0, altitudes[0]];
+            }
+            const lastAlt = altitudes[altitudes.length - 1];
+            const nextToLastAlt = altitudes[altitudes.length - 2];
+            while (altitudes.length < mSymbol.getSymbolShapes().length * 2) {
+                altitudes.push(nextToLastAlt, lastAlt);
+            }
+            for (let shapeIndex = 0; shapeIndex < mSymbol.getSymbolShapes().length; shapeIndex++) {
+                const minAlt = altitudes[shapeIndex * 2];
+                const maxAlt = altitudes[(shapeIndex * 2) + 1];
+                const oldShape = mSymbol.getSymbolShapes()[shapeIndex];
 
-            if (format === WebRenderer.OUTPUT_FORMAT_JSON) {
-                jsonOutput += ("{\"type\":\"symbol\",");
-                jsonContent = MultiPointHandler.JSONize(shapes, modifiers, ipc, true, normalize);
-                jsonOutput += (jsonContent);
-                jsonOutput += ("}");
-            } else if (format === WebRenderer.OUTPUT_FORMAT_KML) {
+                var bottomShape = new ShapeInfo3D();
+                bottomShape.setShapeType(oldShape.getShapeType());
+                bottomShape.setStroke(oldShape.getStroke());
+                bottomShape.setLineColor(oldShape.getLineColor());
+                bottomShape.setFillColor(oldShape.getFillColor());
+                bottomShape.setPatternFillImage(oldShape.getPatternFillImageInfo());
+                bottomShape.setPolylines([]);
+                var topShape = new ShapeInfo3D();
+                topShape.setShapeType(oldShape.getShapeType());
+                topShape.setStroke(oldShape.getStroke());
+                topShape.setLineColor(oldShape.getLineColor());
+                topShape.setFillColor(oldShape.getFillColor());
+                topShape.setPatternFillImage(oldShape.getPatternFillImageInfo());
+                topShape.setPolylines([]);
+
+                for (let polyLineIndex = 0; polyLineIndex < oldShape.getPolylines().length; polyLineIndex++) {
+                    const polyline = oldShape.getPolylines()[polyLineIndex];
+                    bottomShape.getPolylines().push([]);
+                    topShape.getPolylines().push([]);
+                    for (let ptIndex = 0; ptIndex < polyline.length; ptIndex++) {
+                        const pt = polyline[ptIndex];
+                        const pt2 = polyline[(ptIndex + 1) % polyline.length];
+                        bottomShape.getPolylines()[polyLineIndex].push(new Point3D(pt, minAlt));
+                        topShape.getPolylines()[polyLineIndex].push(new Point3D(pt, maxAlt));
+
+                        var sideShape = new ShapeInfo3D();
+                        sideShape.setShapeType(oldShape.getShapeType());
+                        sideShape.setStroke(oldShape.getStroke());
+                        sideShape.setLineColor(oldShape.getLineColor());
+                        sideShape.setFillColor(oldShape.getFillColor());
+                        sideShape.setPatternFillImage(oldShape.getPatternFillImageInfo());
+                        sideShape.setPolylines([[new Point3D(pt, minAlt), new Point3D(pt2, minAlt), new Point3D(pt2, maxAlt), new Point3D(pt, maxAlt), new Point3D(pt, minAlt)]]);
+                        shapes.push(sideShape);
+                    }
+                }
+                shapes.push(bottomShape);
+                shapes.push(topShape);
+            }
+
+            const modifierAlt = Math.max(...altitudes.splice(0, mSymbol.getSymbolShapes().length * 2));
+            for (const oldShape of mSymbol.getModifierShapes()) {
+                var modShape = new ShapeInfo3D();
+                modShape.setModifierString(oldShape.getModifierString());
+                modShape.setModifierPosition(new Point3D(oldShape.getModifierPosition(), modifierAlt));
+                modShape.setModifierAngle(oldShape.getModifierAngle());
+                modShape.setTextJustify(oldShape.getTextJustify());
+                modShape.setModifierImage(oldShape.getModifierImageInfo());
+
+                modifiers.push(modShape);
+            }
+
+            if (format === WebRenderer.OUTPUT_FORMAT_KML) {
                 var textColor = mSymbol.getTextColor();
-                if(textColor==null)
-                    textColor=mSymbol.getLineColor();
+                if (textColor == null)
+                    textColor = mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
-                jsonOutput += jsonContent;
+                jsonOutput = Shape3DHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, altitudeMode);
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
-                /*
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
-                jsonContent = GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
-                jsonOutput += (jsonContent);
-                jsonOutput += (",\"properties\":{\"id\":\"");
-                jsonOutput += (id);
-                jsonOutput += ("\",\"name\":\"");
-                jsonOutput += (name);
-                jsonOutput += ("\",\"description\":\"");
-                jsonOutput += (description);
-                jsonOutput += ("\",\"symbolID\":\"");
-                jsonOutput += (symbolCode);
-                jsonOutput += ("\",\"wasClipped\":\"");
-                jsonOutput += (mSymbol.get_WasClipped()).toString();
-                jsonOutput += ("\"}}");         */
-
-                jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
-                jsonContent = MultiPointHandler.GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
+                jsonContent = Shape3DHandler.GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
                 jsonOutput += (jsonContent);
 
                 //moving meta data properties to the last feature with no coords as feature collection doesn't allow properties
                 jsonOutput = jsonOutput.slice(0, -1);
                 if (jsonContent.length > 2)
-                    jsonOutput += ","
+                    jsonOutput += ",";
                 jsonOutput += ("{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
 
                 jsonOutput += (",\"properties\":{\"id\":\"");
@@ -317,74 +399,44 @@ export class Shape3DHandler {
                 jsonOutput += (symbolCode);
                 jsonOutput += ("\",\"wasClipped\":\"");
                 jsonOutput += (mSymbol.get_WasClipped()).toString();
-                //jsonOutput += ("\"}}");
-
                 jsonOutput += ("\"}}]}");
-            } else if (format === WebRenderer.OUTPUT_FORMAT_GEOSVG) {
-                let textColor = mSymbol.getTextColor() ? mSymbol.getTextColor().toHexString(false) : "";
-                let backgroundColor = mSymbol.getTextBackgroundColor() ? mSymbol.getTextBackgroundColor().toHexString(false) : "";
-                //returns an svg with a geoTL and geoBR value to use to place the canvas on the map
-                jsonOutput = MultiPointHandlerSVG.GeoSVGize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, backgroundColor, mSymbol.get_WasClipped());
             }
         } catch (exc) {
             if (exc instanceof Error) {
                 let st: string = JavaRendererUtilities.getStackTrace(exc);
                 jsonOutput = "";
-                jsonOutput += ("{\"type\":\"error\",\"error\":\"There was an error creating the MilStdSymbol " + symbolCode + ": " + "- ");
+                jsonOutput += ("{\"type\":\"error\",\"error\":\"There was an error creating the 3D MilStdSymbol " + symbolCode + ": " + "- ");
                 jsonOutput += (exc.message + " - ");
                 jsonOutput += (st);
                 jsonOutput += ("\"}");
 
-                ErrorLogger.LogException("MultiPointHandler", "RenderSymbol", exc);
+                ErrorLogger.LogException("Shape3DHandler", "RenderMilStd3dSymbol", exc);
             } else {
                 throw exc;
             }
         }
 
-        /*
-        let debug: boolean = false;
-        if (debug === true) {
-            console.log("Symbol Code: " + symbolCode);
-            console.log("Scale: " + scale);
-            console.log("BBOX: " + bbox);
-            if (controlPoints != null) {
-                console.log("Geo Points: " + controlPoints);
-            }
-            if (tgl != null && tgl.get_Pixels() != null)//pixels != null
-            {
-                console.log("Pixel: " + tgl.get_Pixels().toString());
-            }
-            if (bbox != null) {
-                console.log("geo bounds: " + bbox);
-            }
-            if (rect != null) {
-                console.log("pixel bounds: " + rect.toString());
-            }
-            if (jsonOutput != null) {
-                console.log(jsonOutput.toString());
-            }
-        }
-            */
-
-        ErrorLogger.LogMessage("MultiPointHandler", "RenderSymbol()", "exit RenderSymbol", LogLevel.FINER);
+        ErrorLogger.LogMessage("Shape3DHandler", "RenderMilStd3dSymbol()", "exit RenderMilStd3dSymbol", LogLevel.FINER);
         return jsonOutput.toString();
-
     }
 
     /**
      * 3D Version of {@link MultiPointHandler.KMLize()}
      */
-    private static KMLize(id: string, name: string,
+    private static KMLize(id: string,
+        name: string,
         description: string,
         symbolCode: string,
-        shapes: Array<ShapeInfo>,
-        modifiers: Array<ShapeInfo>,
+        shapes: Array<ShapeInfo3D>,
+        modifiers: Array<ShapeInfo3D>,
         ipc: IPointConversion,
-        normalize: boolean, textColor: Color): string {
+        normalize: boolean,
+        textColor: Color,
+        altitudeMode: string): string {
 
         let kml: string = "";
 
-        let tempModifier: ShapeInfo;
+        let tempModifier: ShapeInfo3D;
 
         let cdataStart: string = "<![CDATA[";
         let cdataEnd: string = "]]>";
@@ -394,8 +446,7 @@ export class Shape3DHandler {
         kml += ("<name>" + cdataStart + name + cdataEnd + "</name>");
         kml += ("<visibility>1</visibility>");
         for (let i: int = 0; i < len; i++) {
-
-            let shapesToAdd: string = MultiPointHandler.ShapeToKMLString(name, description, symbolCode, shapes[i], ipc, normalize);
+            let shapesToAdd: string = Shape3DHandler.ShapeToKMLString(name, description, symbolCode, shapes[i], ipc, normalize, altitudeMode);
             kml += (shapesToAdd);
         }
 
@@ -409,7 +460,7 @@ export class Shape3DHandler {
             //assume kml text is going to be centered
             //AdjustModifierPointToCenter(tempModifier);
 
-            let labelsToAdd: string = MultiPointHandler.LabelToKMLString(tempModifier, ipc, normalize, textColor);
+            let labelsToAdd: string = Shape3DHandler.LabelToKMLString(tempModifier, ipc, normalize, textColor, altitudeMode);
             kml += (labelsToAdd);
         }
 
@@ -423,9 +474,10 @@ export class Shape3DHandler {
     private static ShapeToKMLString(name: string,
         description: string,
         symbolCode: string,
-        shapeInfo: ShapeInfo,
+        shapeInfo: ShapeInfo3D,
         ipc: IPointConversion,
-        normalize: boolean): string {
+        normalize: boolean,
+        altitudeMode: string): string {
 
         let kml: string = "";
 
@@ -451,15 +503,13 @@ export class Shape3DHandler {
 
         lineColor = shapeInfo.getLineColor();
         if (lineColor != null) {
-            googleLineColor = RendererUtilities.colorToHexString(shapeInfo.getLineColor(), false).substring(1);
+            googleLineColor = RendererUtilities.colorToHexString(shapeInfo.getLineColor(), true).substring(1);
+            googleLineColor = JavaRendererUtilities.ARGBtoABGR(googleLineColor);
 
             stroke = shapeInfo.getStroke();
-
             if (stroke != null) {
                 lineWidth = stroke.getLineWidth() as int;
             }
-
-            googleLineColor = JavaRendererUtilities.ARGBtoABGR(googleLineColor);
 
             kml += ("<LineStyle>");
             kml += ("<color>" + googleLineColor + "</color>");
@@ -474,7 +524,7 @@ export class Shape3DHandler {
             kml += ("<PolyStyle>");
 
             if (fillColor != null) {
-                googleFillColor = RendererUtilities.colorToHexString(shapeInfo.getFillColor(), false).substring(1);
+                googleFillColor = RendererUtilities.colorToHexString(shapeInfo.getFillColor(), true).substring(1);
                 googleFillColor = JavaRendererUtilities.ARGBtoABGR(googleFillColor);
                 kml += ("<color>" + googleFillColor + "</color>");
                 kml += ("<colorMode>normal</colorMode>");
@@ -494,22 +544,22 @@ export class Shape3DHandler {
 
         kml += ("</Style>");
 
-        let shapesArray: Point2D[][] = shapeInfo.getPolylines();
+        let shapesArray: Point3D[][] = shapeInfo.getPolylines();
         let len: int = shapesArray.length;
         kml += ("<MultiGeometry>");
 
         for (let i: int = 0; i < len; i++) {
-            let shape: Point2D[] = shapesArray[i];
+            let shape: Point3D[] = shapesArray[i];
             normalize = MultiPointHandler.normalizePoints(shape, ipc);
             if (lineColor != null && fillColor == null) {
-                kml += ("<LineString>");
+                kml += ("<Polygon>");
                 kml += ("<tessellate>1</tessellate>");
-                kml += ("<altitudeMode>clampToGround</altitudeMode>");
-                kml += ("<coordinates>");
+                kml += ("<altitudeMode>" + altitudeMode + "</altitudeMode>");
+                kml += ("<outerBoundaryIs><LinearRing><coordinates>");
                 let n: int = shape.length;
                 //for (int j = 0; j < shape.length; j++) 
                 for (let j: int = 0; j < n; j++) {
-                    let coord: Point2D = shape[j] as Point2D;
+                    let coord: Point3D = shape[j] as Point3D;
                     let geoCoord: Point2D = ipc.PixelsToGeo(coord);
                     if (normalize) {
                         geoCoord = MultiPointHandler.NormalizeCoordToGECoord(geoCoord);
@@ -517,25 +567,29 @@ export class Shape3DHandler {
 
                     let latitude: double = Math.round(geoCoord.getY() * 100000000.0) / 100000000.0;
                     let longitude: double = Math.round(geoCoord.getX() * 100000000.0) / 100000000.0;
+                    let altitude: double = coord.getZ();
 
                     kml += (longitude);
                     kml += (",");
                     kml += (latitude);
+                    kml += (",");
+                    kml += (altitude);
                     if (j < shape.length - 1) {
 
                         kml += (" ");
                     }
-
                 }
 
-                kml += ("</coordinates>");
-                kml += ("</LineString>");
+                kml += ("</coordinates></LinearRing></outerBoundaryIs>");
+                kml += ("</Polygon>");
             }
 
             if (fillColor != null) {
 
                 if (i === 0) {
                     kml += ("<Polygon>");
+                    kml += ("<tessellate>1</tessellate>");
+                    kml += ("<altitudeMode>" + altitudeMode + "</altitudeMode>");
                 }
                 //kml += ("<outerBoundaryIs>");
                 if (i === 1 && len > 1) {
@@ -544,38 +598,17 @@ export class Shape3DHandler {
                     kml += ("<outerBoundaryIs>");
                 }
                 kml += ("<LinearRing>");
-                kml += ("<altitudeMode>clampToGround</altitudeMode>");
-                kml += ("<tessellate>1</tessellate>");
                 kml += ("<coordinates>");
 
-                //this section is a workaround for a google earth bug. Issue 417 was closed
-                //for linestrings but they did not fix the smae issue for fills. If Google fixes the issue
-                //for fills then this section will need to be commented or it will induce an error.
-                let lastLongitude: double = Number.MIN_VALUE;
-                if (normalize === false && MultiPointHandler.IsOnePointSymbolCode(symbolCode)) {
-                    let n: int = shape.length;
-                    //for (int j = 0; j < shape.length; j++) 
-                    for (let j: int = 0; j < n; j++) {
-                        let coord: Point2D = shape[j] as Point2D;
-                        let geoCoord: Point2D = ipc.PixelsToGeo(coord);
-                        let longitude: double = geoCoord.getX();
-                        if (lastLongitude !== Number.MIN_VALUE) {
-                            if (Math.abs(longitude - lastLongitude) > 180) {
-                                normalize = true;
-                                break;
-                            }
-                        }
-                        lastLongitude = longitude;
-                    }
-                }
                 let n: int = shape.length;
                 //for (int j = 0; j < shape.length; j++) 
                 for (let j: int = 0; j < n; j++) {
-                    let coord: Point2D = shape[j] as Point2D;
+                    let coord: Point3D = shape[j] as Point3D;
                     let geoCoord: Point2D = ipc.PixelsToGeo(coord);
 
                     let latitude: double = Math.round(geoCoord.getY() * 100000000.0) / 100000000.0;
                     let longitude: double = Math.round(geoCoord.getX() * 100000000.0) / 100000000.0;
+                    let altitude: double = coord.getZ();
 
                     //fix for fill crossing DTL
                     if (normalize) {
@@ -587,6 +620,8 @@ export class Shape3DHandler {
                     kml += (longitude);
                     kml += (",");
                     kml += (latitude);
+                    kml += (",");
+                    kml += (altitude);
                     if (j < shape.length - 1) {
 
                         kml += (" ");
@@ -616,11 +651,11 @@ export class Shape3DHandler {
     /**
      * 3D Version of {@link MultiPointHandler.LabelToKMLString()}
      */
-    private static LabelToKMLString(shapeInfo: ShapeInfo, ipc: IPointConversion, normalize: boolean, textColor: Color): string {
+    private static LabelToKMLString(shapeInfo: ShapeInfo3D, ipc: IPointConversion, normalize: boolean, textColor: Color, altitudeMode: string): string {
         let kml: string = "";
 
         //Point2D coord = (Point2D) new Point2D(shapeInfo.getGlyphPosition().getX(), shapeInfo.getGlyphPosition().getY());
-        let coord: Point2D = new Point2D(shapeInfo.getModifierPosition().getX(), shapeInfo.getModifierPosition().getY()) as Point2D;
+        let coord: Point3D = new Point3D(shapeInfo.getModifierPosition().getX(), shapeInfo.getModifierPosition().getY(), shapeInfo.getModifierPosition().getZ());
         let geoCoord: Point2D = ipc.PixelsToGeo(coord);
         //M. Deutch 9-26-11
         if (normalize) {
@@ -628,6 +663,7 @@ export class Shape3DHandler {
         }
         let latitude: double = Math.round(geoCoord.getY() * 100000000.0) / 100000000.0;
         let longitude: double = Math.round(geoCoord.getX() * 100000000.0) / 100000000.0;
+        let altitude: double = coord.getZ();
         let angle: number = Math.round(shapeInfo.getModifierAngle());
 
         let text: string = shapeInfo.getModifierString();
@@ -656,12 +692,14 @@ export class Shape3DHandler {
             kml += ("</LabelStyle>");
             kml += ("</Style>");
             kml += ("<Point>");
-            kml += ("<extrude>1</extrude>");
-            kml += ("<altitudeMode>relativeToGround</altitudeMode>");
+            kml += ("<extrude>0</extrude>");
+            kml += ("<altitudeMode>" + altitudeMode + "</altitudeMode>");
             kml += ("<coordinates>");
             kml += (longitude);
             kml += (",");
             kml += (latitude);
+            kml += (",");
+            kml += (altitude);
             kml += ("</coordinates>");
             kml += ("</Point>");
             kml += ("</Placemark>");
@@ -675,22 +713,18 @@ export class Shape3DHandler {
     /**
      * 3D Version of {@link MultiPointHandler.GeoJSONize()}
      */
-    private static GeoJSONize(shapes: Array<ShapeInfo>, modifiers: Array<ShapeInfo>, ipc: IPointConversion, normalize: boolean, textColor: Color, textBackgroundColor: Color): string {
-
-        let jstr: string = "";
-        let tempModifier: ShapeInfo;
+    private static GeoJSONize(shapes: Array<ShapeInfo3D>, modifiers: Array<ShapeInfo3D>, ipc: IPointConversion, normalize: boolean, textColor: Color, textBackgroundColor: Color): string {
+        let tempModifier: ShapeInfo3D;
         let fc: string = "";//JSON feature collection
 
         fc += ("[");
 
         let len: int = shapes.length;
-        for (let i: int = 0; i < len; i++) 
-        {
-
+        for (let i: int = 0; i < len; i++) {
             let shapesToAdd: string = null;
-            let tempShape:ShapeInfo = shapes[i];
-            if(tempShape != null && tempShape !== undefined) {
-                shapesToAdd = MultiPointHandler.ShapeToGeoJSONString(tempShape, ipc, normalize);
+            let tempShape: ShapeInfo3D = shapes[i];
+            if (tempShape != null && tempShape !== undefined) {
+                shapesToAdd = Shape3DHandler.ShapeToGeoJSONString(tempShape, ipc, normalize);
                 if (shapesToAdd != null && shapesToAdd.length > 0) {
                     fc += (shapesToAdd);
                     if (i < len - 1) {
@@ -707,9 +741,9 @@ export class Shape3DHandler {
 
             let modifiersToAdd: string;
             if (modifiers[j].getModifierImage() != null) {
-                modifiersToAdd = MultiPointHandler.ImageToGeoJSONString(tempModifier, ipc, normalize);
+                modifiersToAdd = Shape3DHandler.ImageToGeoJSONString(tempModifier, ipc, normalize);
             } else {
-                modifiersToAdd = MultiPointHandler.LabelToGeoJSONString(tempModifier, ipc, normalize, textColor, textBackgroundColor);
+                modifiersToAdd = Shape3DHandler.LabelToGeoJSONString(tempModifier, ipc, normalize, textColor, textBackgroundColor);
             }
             if (modifiersToAdd.length > 0) {
                 if (fc.length > 1)
@@ -725,7 +759,7 @@ export class Shape3DHandler {
     /**
      * 3D Version of {@link MultiPointHandler.ShapeToGeoJSONString()}
      */
-    private static ShapeToGeoJSONString(shapeInfo: ShapeInfo, ipc: IPointConversion, normalize: boolean): string {
+    private static ShapeToGeoJSONString(shapeInfo: ShapeInfo3D, ipc: IPointConversion, normalize: boolean): string {
         let JSONed: string = "";
         let properties: string = "";
         let geometry: string = "";
@@ -751,8 +785,6 @@ export class Shape3DHandler {
 
         if (stroke != null) {
             lineWidth = Math.trunc(stroke.getLineWidth());
-            //lineWidth++;
-            //console.log("lineWidth: " + lineWidth.toString());
         }
 
         //generate JSON properties for feature
@@ -807,26 +839,12 @@ export class Shape3DHandler {
         }
 
         if (lineCap === BasicStroke.CAP_SQUARE) {
-
             properties += ("\"stroke-linecap\":\"square\",");
+        } else if (lineCap === BasicStroke.CAP_ROUND) {
+            properties += ("\"stroke-linecap\":\"round\",");
+        } else if (lineCap === BasicStroke.CAP_BUTT) {
+            properties += ("\"stroke-linecap\":\"butt\",");
         }
-
-        else {
-            if (lineCap === BasicStroke.CAP_ROUND) {
-
-                properties += ("\"stroke-linecap\":\"round\",");
-            }
-
-            else {
-                if (lineCap === BasicStroke.CAP_BUTT) {
-
-                    properties += ("\"stroke-linecap\":\"butt\",");
-                }
-
-            }
-
-        }
-
 
         strokeWidth = lineWidth.toString();
         properties += ("\"stroke-width\":" + strokeWidth);
@@ -849,7 +867,7 @@ export class Shape3DHandler {
 
             //console.log("Pixel Coords:");
             for (let j: int = 0; j < pointList.length; j++) {
-                let coord: Point2D = pointList[j] as Point2D;
+                let coord: Point3D = pointList[j] as Point3D;
                 let geoCoord: Point2D = ipc.PixelsToGeo(coord);
                 //M. Deutch 9-27-11
                 if (normalize) {
@@ -857,6 +875,7 @@ export class Shape3DHandler {
                 }
                 let latitude: double = Math.round(geoCoord.getY() * 100000000.0) / 100000000.0;
                 let longitude: double = Math.round(geoCoord.getX() * 100000000.0) / 100000000.0;
+                let altitude: double = coord.getZ();
 
                 //fix for fill crossing DTL
                 if (normalize && fillColor != null) {
@@ -868,7 +887,7 @@ export class Shape3DHandler {
                 //diagnostic M. Deutch 10-18-11
                 //set the point as geo so that the 
                 //coord.setLocation(longitude, latitude);
-                coord = new Point2D(longitude, latitude);
+                coord = new Point3D(longitude, latitude, altitude);
                 pointList[j] = coord;
                 //end section
 
@@ -876,6 +895,8 @@ export class Shape3DHandler {
                 geometry += (longitude);
                 geometry += (",");
                 geometry += (latitude);
+                geometry += (",");
+                geometry += (altitude);
                 geometry += ("]");
 
                 if (j < (pointList.length - 1)) {
@@ -903,8 +924,7 @@ export class Shape3DHandler {
     /**
      * 3D Version of {@link MultiPointHandler.ImageToGeoJSONString()}
      */
-    private static ImageToGeoJSONString(shapeInfo: ShapeInfo, ipc: IPointConversion, normalize: boolean): string {
-
+    private static ImageToGeoJSONString(shapeInfo: ShapeInfo3D, ipc: IPointConversion, normalize: boolean): string {
         let JSONed: string = "";
         let properties: string = "";
         let geometry: string = "";
@@ -912,7 +932,7 @@ export class Shape3DHandler {
         //AffineTransform at = shapeInfo.getAffineTransform();
         //Point2D coord = (Point2D)new Point2D(at.getTranslateX(), at.getTranslateY());
         //Point2D coord = (Point2D) new Point2D(shapeInfo.getGlyphPosition().getX(), shapeInfo.getGlyphPosition().getY());
-        let coord: Point2D = new Point2D(shapeInfo.getModifierPosition().getX(), shapeInfo.getModifierPosition().getY()) as Point2D;
+        let coord: Point3D = new Point3D(shapeInfo.getModifierPosition().getX(), shapeInfo.getModifierPosition().getY(), shapeInfo.getModifierPosition().getZ());
         let geoCoord: Point2D = ipc.PixelsToGeo(coord);
         //M. Deutch 9-27-11
         if (normalize) {
@@ -920,6 +940,7 @@ export class Shape3DHandler {
         }
         let latitude: double = Math.round(geoCoord.getY() * 100000000.0) / 100000000.0;
         let longitude: double = Math.round(geoCoord.getX() * 100000000.0) / 100000000.0;
+        let altitude: double = coord.getZ();
         let angle: double = shapeInfo.getModifierAngle();
         coord.setLocation(longitude, latitude);
 
@@ -943,6 +964,8 @@ export class Shape3DHandler {
             JSONed += (longitude);
             JSONed += (",");
             JSONed += (latitude);
+            JSONed += (",");
+            JSONed += (altitude);
             JSONed += ("]");
             JSONed += ("}}");
 
@@ -956,7 +979,7 @@ export class Shape3DHandler {
     /**
      * 3D Version of {@link MultiPointHandler.LabelToGeoJSONString()}
      */
-    private static LabelToGeoJSONString(shapeInfo: ShapeInfo, ipc: IPointConversion, normalize: boolean, textColor: Color, textBackgroundColor: Color): string {
+    private static LabelToGeoJSONString(shapeInfo: ShapeInfo3D, ipc: IPointConversion, normalize: boolean, textColor: Color, textBackgroundColor: Color): string {
 
         let JSONed: string = "";
         let properties: string = "";
@@ -970,7 +993,7 @@ export class Shape3DHandler {
         //AffineTransform at = shapeInfo.getAffineTransform();
         //Point2D coord = (Point2D)new Point2D(at.getTranslateX(), at.getTranslateY());
         //Point2D coord = (Point2D) new Point2D(shapeInfo.getGlyphPosition().getX(), shapeInfo.getGlyphPosition().getY());
-        let coord: Point2D = new Point2D(shapeInfo.getModifierPosition().getX(), shapeInfo.getModifierPosition().getY()) as Point2D;
+        let coord: Point3D = new Point3D(shapeInfo.getModifierPosition().getX(), shapeInfo.getModifierPosition().getY(), shapeInfo.getModifierPosition().getZ());
         let geoCoord: Point2D = ipc.PixelsToGeo(coord);
         //M. Deutch 9-27-11
         if (normalize) {
@@ -978,6 +1001,7 @@ export class Shape3DHandler {
         }
         let latitude: double = Math.round(geoCoord.getY() * 100000000.0) / 100000000.0;
         let longitude: double = Math.round(geoCoord.getX() * 100000000.0) / 100000000.0;
+        let altitude: double = coord.getZ();
         let angle: double = shapeInfo.getModifierAngle();
         coord.setLocation(longitude, latitude);
 
@@ -990,17 +1014,11 @@ export class Shape3DHandler {
         let strJustify: string = "left";
         if (justify === 0) {
             strJustify = "left";
-        } else {
-            if (justify === 1) {
-                strJustify = "center";
-            } else {
-                if (justify === 2) {
-                    strJustify = "right";
-                }
-            }
-
+        } else if (justify === 1) {
+            strJustify = "center";
+        } else if (justify === 2) {
+            strJustify = "right";
         }
-
 
         let RS: RendererSettings = RendererSettings.getInstance();
 
@@ -1042,6 +1060,8 @@ export class Shape3DHandler {
             JSONed += (longitude);
             JSONed += (",");
             JSONed += (latitude);
+            JSONed += (",");
+            JSONed += (altitude);
             JSONed += ("]");
             JSONed += ("}}");
 
