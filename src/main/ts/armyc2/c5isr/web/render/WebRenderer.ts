@@ -25,6 +25,7 @@ import { mdlGeodesic } from "../../JavaTacticalRenderer/mdlGeodesic"
 import { POINT2 } from "../../JavaLineArray/POINT2";
 import { ref } from "../../JavaLineArray/ref"
 import { BasicShapes } from "../../JavaLineArray/BasicShapes";
+import { Shape3DHandler } from "./Shape3DHandler";
 
 
 /**
@@ -249,28 +250,39 @@ export class WebRenderer /* extends Applet */ {
 
             JavaRendererUtilities.addAltModeToModifiersString(attributes, altitudeMode);
 
-            
-            output = MultiPointHandler.RenderSymbol(id, name, description, symbolCode, controlPoints,
-                scale, bbox, modifiers, attributes, format);
+            if (altitudeMode !== "clampToGround"
+                && (format === WebRenderer.OUTPUT_FORMAT_KML || format === WebRenderer.OUTPUT_FORMAT_GEOJSON)
+                && JavaRendererUtilities.is3dSymbol(symbolCode)
+                && modifiers.get(Modifiers.X_ALTITUDE_DEPTH)) {
+                if (!(altitudeMode))
+                    altitudeMode = "absolute";
 
-            //DEBUGGING
-            if (ErrorLogger.getLevel().intValue() <= LogLevel.FINER.intValue()) {
-                console.log("");
-                let sb: string = "";
-                sb += ("\nID: " + id + "\n");
-                sb += ("Name: " + name + "\n");
-                sb += ("Description: " + description + "\n");
-                sb += ("SymbolID: " + symbolCode + "\n");
-                sb += ("Scale: " + scale.toString() + "\n");
-                sb += ("BBox: " + bbox + "\n");
-                sb += ("Coords: " + controlPoints + "\n");
-                sb += ("Modifiers: " + modifiers + "\n");
-                ErrorLogger.LogMessage("WebRenderer", "RenderSymbol", sb.toString(), LogLevel.FINER);
+                output = this.RenderMilStd3dSymbol(id, name, description, symbolCode, controlPoints, altitudeMode, scale, bbox, modifiers, attributes, format);
             }
-            if (ErrorLogger.getLevel().intValue() <= LogLevel.FINEST.intValue()) {
-                let briefOutput: string = output.replaceAll("</Placemark>", "</Placemark>\n");
-                briefOutput = output.replaceAll("(?s)<description[^>]*>.*?</description>", "<description></description>");
-                ErrorLogger.LogMessage("WebRenderer", "RenderSymbol", "Output:\n" + briefOutput, LogLevel.FINEST);
+
+            if (output === "") {
+                output = MultiPointHandler.RenderSymbol(id, name, description, symbolCode, controlPoints,
+                    scale, bbox, modifiers, attributes, format);
+
+                //DEBUGGING
+                if (ErrorLogger.getLevel().intValue() <= LogLevel.FINER.intValue()) {
+                    console.log("");
+                    let sb: string = "";
+                    sb += ("\nID: " + id + "\n");
+                    sb += ("Name: " + name + "\n");
+                    sb += ("Description: " + description + "\n");
+                    sb += ("SymbolID: " + symbolCode + "\n");
+                    sb += ("Scale: " + scale.toString() + "\n");
+                    sb += ("BBox: " + bbox + "\n");
+                    sb += ("Coords: " + controlPoints + "\n");
+                    sb += ("Modifiers: " + modifiers + "\n");
+                    ErrorLogger.LogMessage("WebRenderer", "RenderSymbol", sb.toString(), LogLevel.FINER);
+                }
+                if (ErrorLogger.getLevel().intValue() <= LogLevel.FINEST.intValue()) {
+                    let briefOutput: string = output.replaceAll("</Placemark>", "</Placemark>\n");
+                    briefOutput = output.replaceAll("(?s)<description[^>]*>.*?</description>", "<description></description>");
+                    ErrorLogger.LogMessage("WebRenderer", "RenderSymbol", "Output:\n" + briefOutput, LogLevel.FINEST);
+                }
             }
         
 
@@ -338,6 +350,78 @@ export class WebRenderer /* extends Applet */ {
         return output;
     }
 
+    /**
+     * Renders all 3d multi-point symbols, creating KML or GeoJSON that can be 
+     * used to draw it on a Google map.
+     * 3D version of {@link RenderSymbol()}
+     * @param id A unique identifier used to identify the symbol by Google map. 
+     * The id will be the folder name that contains the graphic.
+     * @param name a string used to display to the user as the name of the 
+     * graphic being created.
+     * @param description a brief description about the graphic being made and 
+     * what it represents.
+     * @param symbolCode A 20-30 digit symbolID corresponding to one of the
+     * graphics in the MIL-STD-2525D
+     * @param controlPoints The 2D vertices of the graphics that make up the
+     * graphic.  Passed in the format of a string, using decimal degrees 
+     * separating lat and lon by a comma, separating coordinates by a space.  
+     * The following format shall be used "x1,y1[,z1] [xn,yn[,zn]]..."
+     * @param altitudeMode Indicates whether the symbol should interpret 
+     * altitudes as above sea level or above ground level. Options are 
+     * "clampToGround", "relativeToGround" (from surface of earth), "absolute" 
+     * (sea level), "relativeToSeaFloor" (from the bottom of major bodies of 
+     * water).
+     * @param scale A number corresponding to how many meters one meter of our 
+     * map represents. A value "50000" would mean 1:50K which means for every 
+     * meter of our map it represents 50000 meters of real world distance.
+     * @param bbox The viewable area of the map.  Passed in the format of a
+     * string "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
+     * but can speed up rendering in some cases.
+     * example: "-50.4,23.6,-42.2,24.2"
+     * @param modifiers {@link Map}, keyed using constants from Modifiers.
+     * Pass in comma delimited String for modifiers with multiple values like AM, AN &amp; X
+     * @param attributes {@link Map}, keyed using constants from MilStdAttributes.
+     * @param format An enumeration: 2 for GeoJSON.
+     * @return A JSON string representation of the graphic.
+     */
+    public static RenderMilStd3dSymbol(id: string, name: string, description: string,
+        symbolCode: string, controlPoints: string, altitudeMode: string,
+        scale: double, bbox: string, modifiers: Map<string, string>, attributes: Map<string, string>, format: int): string {
+        let output: string = "";
+        try {
+            output = Shape3DHandler.RenderMilStd3dSymbol(id, name, description, symbolCode, controlPoints, altitudeMode,
+                scale, bbox, modifiers, attributes, format);
+
+            //DEBUGGING
+            if (ErrorLogger.getLevel().intValue() <= LogLevel.FINER.intValue()) {
+                console.log("");
+                let sb: string = "";
+                sb += ("\nID: " + id + "\n");
+                sb += ("Name: " + name + "\n");
+                sb += ("Description: " + description + "\n");
+                sb += ("SymbolID: " + symbolCode + "\n");
+                sb += ("Scale: " + scale.toString() + "\n");
+                sb += ("BBox: " + bbox + "\n");
+                sb += ("Coords: " + controlPoints + "\n");
+                sb += ("Modifiers: " + modifiers + "\n");
+                ErrorLogger.LogMessage("WebRenderer", "RenderMilStd3dSymbol", sb.toString(), LogLevel.FINER);
+            }
+            if (ErrorLogger.getLevel().intValue() <= LogLevel.FINEST.intValue()) {
+                let briefOutput: string = output.replaceAll("</Placemark>", "</Placemark>\n");
+                briefOutput = output.replaceAll("(?s)<description[^>]*>.*?</description>", "<description></description>");
+                ErrorLogger.LogMessage("WebRenderer", "RenderMilStd3dSymbol", "Output:\n" + briefOutput, LogLevel.FINEST);
+            }
+        } catch (ea) {
+            if (ea instanceof Error) {
+                output = "{\"type\":'error',error:'There was an error creating the 3D MilStdSymbol - " + ea.toString() + "'}";
+                ErrorLogger.LogException("WebRenderer", "RenderMilStd3dSymbol", ea, LogLevel.WARNING);
+            } else {
+                throw ea;
+            }
+        }
+
+        return output;
+    }
 
     /**
      * Renders all MilStd 2525 multi-point symbols, creating MilStdSymbol that contains the

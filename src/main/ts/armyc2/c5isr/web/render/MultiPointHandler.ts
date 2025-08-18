@@ -213,7 +213,7 @@ export class MultiPointHandler {
      * @return the upper left corner of the MBR containing the geographic
      * coordinates
      */
-    private static getGeoUL(geoCoords: Array<Point2D>): Point2D {
+    static getGeoUL(geoCoords: Array<Point2D>): Point2D {
         let ptGeo: Point2D;
         try {
             let j: int = 0;
@@ -266,7 +266,7 @@ export class MultiPointHandler {
         }
         return ptGeo;
     }
-    private static getBboxFromCoords(geoCoords: Array<Point2D>): string {
+    static getBboxFromCoords(geoCoords: Array<Point2D>): string {
         //var ptGeo = null;
         let bbox: string;
         try {
@@ -323,7 +323,7 @@ export class MultiPointHandler {
         return bbox;
     }
 
-    private static crossesIDL(geoCoords: Array<Point2D>): boolean {
+    static crossesIDL(geoCoords: Array<Point2D>): boolean {
         let result: boolean = false;
         let pt2d: Point2D = MultiPointHandler.getControlPoint(geoCoords);
         let left: double = pt2d.getX();
@@ -463,7 +463,7 @@ export class MultiPointHandler {
      * @param origScale
      * @return
      */
-    private static getReasonableScale(bbox: string, origScale: double): double {
+    static getReasonableScale(bbox: string, origScale: double): double {
         try {
             let bounds: string[] = bbox.split(",");
             let left: double = parseFloat(bounds[0]);
@@ -1626,7 +1626,7 @@ export class MultiPointHandler {
      * @param symbol An existing MilStdSymbol
      * @return
      */
-    private static populateModifiers(saModifiers: Map<string, string>, saAttributes: Map<string, string>, symbol: MilStdSymbol): boolean {
+    static populateModifiers(saModifiers: Map<string, string>, saAttributes: Map<string, string>, symbol: MilStdSymbol): boolean {
         let modifiers: Map<string, string> = new Map();
         let attributes: Map<string, string> = saAttributes;
 
@@ -2018,7 +2018,7 @@ export class MultiPointHandler {
         return jstr;
     }
 
-    private static getIdealTextBackgroundColor(fgColor: Color): Color {
+    static getIdealTextBackgroundColor(fgColor: Color): Color {
         //ErrorLogger.LogMessage("SymbolDraw","getIdealtextBGColor", "in function", Level.SEVERE);
         try {
             //an array of three elements containing the
@@ -2460,7 +2460,7 @@ export class MultiPointHandler {
 
     }
 
-    private static normalizePoints(shape: Array<Point2D>, ipc: IPointConversion): boolean {
+    static normalizePoints(shape: Array<Point2D>, ipc: IPointConversion): boolean {
         let geoCoords: Point2D[] = new Array();
         let n: int = shape.length;
         //for (int j = 0; j < shape.length; j++) 
@@ -2477,6 +2477,9 @@ export class MultiPointHandler {
         return normalize;
     }
 
+    /**
+     * @deprecated
+     */
     private static IsOnePointSymbolCode(symbolCode: string): boolean {
         let basicCode: string = SymbolUtilities.getBasicSymbolID(symbolCode);
         //TODO: Revisit for basic shapes
