@@ -642,6 +642,25 @@ export class WebRenderer /* extends Applet */ {
         return output;
     }
 
+    public static RenderBasic3DShape(id: string, name: string, description: string,
+        basicShapeType: int, controlPoints: string, altitudeMode: string,
+        scale: double, bbox: string, modifiers: Map<string, string>, attributes: Map<string, string>, format: int): string {
+        let output: string = "";
+        try {
+            output = Shape3DHandler.RenderBasic3DShape(id, name, description, basicShapeType, controlPoints, altitudeMode,
+                scale, bbox, modifiers, attributes, format);
+        } catch (ea) {
+            if (ea instanceof Error) {
+                output = "{\"type\":'error',error:'There was an error creating the 3D MilStdSymbol - " + ea.toString() + "'}";
+                ErrorLogger.LogException("WebRenderer", "RenderBasic3DShape", ea, LogLevel.WARNING);
+            } else {
+                throw ea;
+            }
+        }
+
+        return output;
+    }
+
     /**
      * Given a symbol code meant for a single point symbol, returns the
      * anchor point at which to display that image based off the image returned

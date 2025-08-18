@@ -29,6 +29,7 @@ export { ShapeInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ShapeIn
 export { MilStdSymbol } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MilStdSymbol";
 
 export { BasicShapes } from "./src/main/ts/armyc2/c5isr/JavaLineArray/BasicShapes"
+export { Basic3DShapes } from "./src/main/ts/armyc2/c5isr/web/render/utilities/Basic3DShapes"
 
 export type { IPointConversion } from "./src/main/ts/armyc2/c5isr/renderer/utilities/IPointConversion";
 export { PointConverter3D } from "./src/main/ts/armyc2/c5isr/renderer/utilities/PointConverter3D";

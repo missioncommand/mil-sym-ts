@@ -421,6 +421,305 @@ export class Shape3DHandler {
     }
 
     /**
+     *
+     * @param id
+     * @param name
+     * @param description
+     * @param basicShapeType
+     * @param controlPoints
+     * @param scale
+     * @param bbox
+     * @param symbolModifiers {@link Map}, keyed using constants from
+     * Modifiers. Pass in comma delimited String for modifiers with multiple
+     * values like AM, AN &amp; X
+     * @param symbolAttributes {@link Map}, keyed using constants from
+     * MilStdAttributes. pass in double[] for AM, AN and X; Strings for the
+     * rest.
+     * @param format
+     * @return
+     */
+    public static RenderBasic3DShape(id: string,
+        name: string,
+        description: string,
+        basicShapeType: int,
+        controlPoints: string,
+        altitudeMode: string,
+        scale: number,
+        bbox: string,
+        symbolModifiers: Map<string, string>,
+        symbolAttributes: Map<string, string>,
+        format: int): string
+    {
+        let normalize: boolean = true;
+        //Double controlLat = 0.0;
+        //Double controlLong = 0.0;
+        //Double metPerPix = GeoPixelConversion.metersPerPixel(scale);
+        //String bbox2=getBoundingRectangle(controlPoints,bbox);
+        let jsonOutput: string = "";
+        let jsonContent: string = "";
+
+        let rect: Rectangle;
+        let coordinates: string[] = controlPoints.split(" ");
+        let shapes: Array<ShapeInfo> = new Array<ShapeInfo>();
+        let modifiers: Array<ShapeInfo> = new Array<ShapeInfo>();
+        //ArrayList<Point2D> pixels = new ArrayList<Point2D>();
+        let geoCoords: Array<Point2D> = new Array<Point2D>();
+        let len: int = coordinates.length;
+        //diagnostic create geoCoords here
+        let coordsUL: Point2D = null;
+        const symbolCode = "";
+
+        for (let i: int = 0; i < len; i++) {
+            let coordPair: string[] = coordinates[i].split(",");
+            let latitude: number = parseFloat(coordPair[1].trim());
+            let longitude: number = parseFloat(coordPair[0].trim());
+            geoCoords.push(new Point2D(longitude, latitude));
+        }
+        let tgPoints: Array<POINT2>;
+        let ipc: IPointConversion;
+
+        //Deutch moved section 6-29-11
+        let left: number = 0.0;
+        let right: number = 0.0;
+        let top: number = 0.0;
+        let bottom: number = 0.0;
+        let temp: Point2D;
+        let ptGeoUL: Point2D;
+        let width: int = 0;
+        let height: int = 0;
+        let leftX: int = 0;
+        let topY: int = 0;
+        let bottomY: int = 0;
+        let rightX: int = 0;
+        let j: int = 0;
+        let bboxCoords: Array<Point2D>;
+        if (bbox != null && bbox !== "") {
+            let bounds: string[];
+            if (bbox.includes(" "))//trapezoid
+            {
+                bboxCoords = new Array<Point2D>();
+                let x: double = 0;
+                let y: double = 0;
+                let coords: string[] = bbox.split(" ");
+                let arrCoord: string[];
+                for (let coord of coords) {
+                    arrCoord = coord.split(",");
+                    x = parseFloat(arrCoord[0]);
+                    y = parseFloat(arrCoord[1]);
+                    bboxCoords.push(new Point2D(x, y));
+                }
+                //use the upper left corner of the MBR containing geoCoords
+                //to set the converter
+                ptGeoUL = MultiPointHandler.getGeoUL(bboxCoords);
+                left = ptGeoUL.getX();
+                top = ptGeoUL.getY();
+                let bbox2: string = MultiPointHandler.getBboxFromCoords(bboxCoords);
+                scale = MultiPointHandler.getReasonableScale(bbox2, scale);
+                ipc = new PointConverter(left, top, scale);
+                let ptPixels: Point2D;
+                let ptGeo: Point2D;
+                let n: int = bboxCoords.length;
+                //for (j = 0; j < bboxCoords.length; j++) 
+                for (j = 0; j < n; j++) {
+                    ptGeo = bboxCoords[j];
+                    ptPixels = ipc.GeoToPixels(ptGeo);
+                    x = ptPixels.getX();
+                    y = ptPixels.getY();
+                    if (x < 20) {
+                        x = 20;
+                    }
+                    if (y < 20) {
+                        y = 20;
+                    }
+                    ptPixels.setLocation(x, y);
+                    //end section
+                    bboxCoords[j] = ptPixels;
+                }
+            } else//rectangle
+            {
+                bounds = bbox.split(",");
+                left = parseFloat(bounds[0]);
+                right = parseFloat(bounds[2]);
+                top = parseFloat(bounds[3]);
+                bottom = parseFloat(bounds[1]);
+                scale = MultiPointHandler.getReasonableScale(bbox, scale);
+                ipc = new PointConverter(left, top, scale);
+            }
+
+            let pt2d: Point2D;
+            if (bboxCoords == null) {
+                pt2d = new Point2D(left, top);
+                temp = ipc.GeoToPixels(pt2d);
+
+                leftX = temp.getX() as int;
+                topY = temp.getY() as int;
+
+                pt2d = new Point2D(right, bottom);
+                temp = ipc.GeoToPixels(pt2d);
+
+                bottomY = temp.getY() as int;
+                rightX = temp.getX() as int;
+
+                width = Math.abs(rightX - leftX) as int;
+                height = Math.abs(bottomY - topY) as int;
+
+                rect = new Rectangle(leftX, topY, width, height);
+            }
+        } else {
+            rect = null;
+        }
+
+        if (ipc == null) {
+            let ptCoordsUL: Point2D = MultiPointHandler.getGeoUL(geoCoords);
+            ipc = new PointConverter(ptCoordsUL.getX(), ptCoordsUL.getY(), scale);
+        }
+        
+        let geoCoords2: Array<Point2D> = new Array<Point2D>();
+        geoCoords2.push(new Point2D(left, top));
+        geoCoords2.push(new Point2D(right, bottom));
+
+        //        if (normalize) {
+        //            NormalizeGECoordsToGEExtents(0, 360, geoCoords2);
+        //        }
+
+        try {
+
+            //String fillColor = null;
+            let mSymbol: MilStdSymbol = new MilStdSymbol(symbolCode, null, geoCoords, null);
+            
+            if (format == WebRenderer.OUTPUT_FORMAT_GEOSVG) {
+                // Use dash array and hatch pattern fill for SVG output
+                symbolAttributes.set(MilStdAttributes.UseDashArray, 'true')
+                symbolAttributes.set(MilStdAttributes.UsePatternFill, "true")
+            }
+
+            if (symbolModifiers != null || symbolAttributes != null) {
+                MultiPointHandler.populateModifiers(symbolModifiers, symbolAttributes, mSymbol);
+            } else {
+                mSymbol.setFillColor(null);
+            }
+
+            let tg: TGLight = clsRenderer.createTGLightFromMilStdSymbolBasicShape(mSymbol, ipc, basicShapeType);
+            let shapeInfos: Array<ShapeInfo> = [];
+            let modifierShapeInfos: Array<ShapeInfo> = [];
+            let clipArea: Point2D[] | Rectangle | Rectangle2D;
+            if (bboxCoords == null) {
+                clipArea = rect;
+            } else {
+                clipArea = bboxCoords;
+            }
+            if (clsRenderer.intersectsClipArea(tg, ipc, clipArea)) {
+                clsRenderer.render_GE(tg, shapeInfos, modifierShapeInfos, ipc, clipArea);
+            }
+            mSymbol.setSymbolShapes(shapeInfos);
+            mSymbol.setModifierShapes(modifierShapeInfos);
+            mSymbol.set_WasClipped(tg.get_WasClipped());
+            shapes = mSymbol.getSymbolShapes();
+            modifiers = mSymbol.getModifierShapes();
+
+            if (format === WebRenderer.OUTPUT_FORMAT_JSON) {
+                jsonOutput += ("{\"type\":\"symbol\",");
+                jsonContent = MultiPointHandler.JSONize(shapes, modifiers, ipc, true, normalize);
+                jsonOutput += (jsonContent);
+                jsonOutput += ("}");
+            } else if (format === WebRenderer.OUTPUT_FORMAT_KML) {
+                var textColor = mSymbol.getTextColor();
+                if(textColor==null)
+                    textColor=mSymbol.getLineColor();
+
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonOutput += jsonContent;
+            } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
+                /*
+                jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
+                jsonContent = GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
+                jsonOutput += (jsonContent);
+                jsonOutput += (",\"properties\":{\"id\":\"");
+                jsonOutput += (id);
+                jsonOutput += ("\",\"name\":\"");
+                jsonOutput += (name);
+                jsonOutput += ("\",\"description\":\"");
+                jsonOutput += (description);
+                jsonOutput += ("\",\"symbolID\":\"");
+                jsonOutput += (symbolCode);
+                jsonOutput += ("\",\"wasClipped\":\"");
+                jsonOutput += (mSymbol.get_WasClipped()).toString();
+                jsonOutput += ("\"}}");         */
+
+                jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
+                jsonContent = MultiPointHandler.GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
+                jsonOutput += (jsonContent);
+
+                //moving meta data properties to the last feature with no coords as feature collection doesn't allow properties
+                jsonOutput = jsonOutput.slice(0, -1);
+                if (jsonContent.length > 2)
+                    jsonOutput += ","
+                jsonOutput += ("{\"type\": \"Feature\",\"geometry\": { \"type\": \"Polygon\",\"coordinates\": [ ]}");
+
+                jsonOutput += (",\"properties\":{\"id\":\"");
+                jsonOutput += (id);
+                jsonOutput += ("\",\"name\":\"");
+                jsonOutput += (name);
+                jsonOutput += ("\",\"description\":\"");
+                jsonOutput += (description);
+                jsonOutput += ("\",\"symbolID\":\"");
+                jsonOutput += (symbolCode);
+                jsonOutput += ("\",\"wasClipped\":\"");
+                jsonOutput += (mSymbol.get_WasClipped()).toString();
+                //jsonOutput += ("\"}}");
+
+                jsonOutput += ("\"}}]}");
+            } else if (format === WebRenderer.OUTPUT_FORMAT_GEOSVG) {
+                let textColor = mSymbol.getTextColor() ? mSymbol.getTextColor().toHexString(false) : "";
+                let backgroundColor = mSymbol.getTextBackgroundColor() ? mSymbol.getTextBackgroundColor().toHexString(false) : "";
+                //returns an svg with a geoTL and geoBR value to use to place the canvas on the map
+                jsonOutput = MultiPointHandlerSVG.GeoSVGize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, backgroundColor, mSymbol.get_WasClipped());
+            }
+        } catch (exc) {
+            if (exc instanceof Error) {
+                let st: string = JavaRendererUtilities.getStackTrace(exc);
+                jsonOutput = "";
+                jsonOutput += ("{\"type\":\"error\",\"error\":\"There was an error creating the MilStdSymbol " + symbolCode + ": " + "- ");
+                jsonOutput += (exc.message + " - ");
+                jsonOutput += (st);
+                jsonOutput += ("\"}");
+
+                ErrorLogger.LogException("MultiPointHandler", "RenderBasicSymbol", exc);
+            } else {
+                throw exc;
+            }
+        }
+
+        /*
+        let debug: boolean = false;
+        if (debug === true) {
+            console.log("Symbol Code: " + symbolCode);
+            console.log("Scale: " + scale);
+            console.log("BBOX: " + bbox);
+            if (controlPoints != null) {
+                console.log("Geo Points: " + controlPoints);
+            }
+            if (tgl != null && tgl.get_Pixels() != null)//pixels != null
+            {
+                console.log("Pixel: " + tgl.get_Pixels().toString());
+            }
+            if (bbox != null) {
+                console.log("geo bounds: " + bbox);
+            }
+            if (rect != null) {
+                console.log("pixel bounds: " + rect.toString());
+            }
+            if (jsonOutput != null) {
+                console.log(jsonOutput.toString());
+            }
+        }
+            */
+
+        ErrorLogger.LogMessage("MultiPointHandler", "RenderBasicShape()", "exit RenderBasicShape", LogLevel.FINER);
+        return jsonOutput.toString();
+    }
+
+    /**
      * 3D Version of {@link MultiPointHandler.KMLize()}
      */
     private static KMLize(id: string,
