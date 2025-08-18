@@ -633,7 +633,7 @@ export class WebRenderer /* extends Applet */ {
         } catch (ea) {
             if (ea instanceof Error) {
                 output = "{\"type\":'error',error:'There was an error creating the MilStdSymbol - " + ea.toString() + "'}";
-                ErrorLogger.LogException("WebRenderer", "RenderSymbol", ea, LogLevel.WARNING);
+                ErrorLogger.LogException("WebRenderer", "RenderBasicShape", ea, LogLevel.WARNING);
             } else {
                 throw ea;
             }

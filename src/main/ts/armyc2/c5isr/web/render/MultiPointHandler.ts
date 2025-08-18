@@ -3771,7 +3771,7 @@ export class MultiPointHandler {
                 jsonOutput += (st);
                 jsonOutput += ("\"}");
 
-                ErrorLogger.LogException("MultiPointHandler", "RenderBasicSymbol", exc);
+                ErrorLogger.LogException("MultiPointHandler", "RenderBasicShape", exc);
             } else {
                 throw exc;
             }
