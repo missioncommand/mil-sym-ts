@@ -26,6 +26,7 @@ import { SymbolUtilities } from "../../renderer/utilities/SymbolUtilities";
 import { ShapeInfo } from "../../renderer/utilities/ShapeInfo";
 import { Font } from "../../graphics2d/Font";
 import { Rectangle2D } from "../../graphics2d/Rectangle2D";
+import { Basic3DShapes } from "./utilities/Basic3DShapes";
 
 export class Shape3DHandler {
     /**
@@ -637,6 +638,9 @@ export class Shape3DHandler {
             let altitudes = mSymbol.getModifiers_AM_AN_X(Modifiers.X_ALTITUDE_DEPTH);
             if (altitudes.length === 1) {
                 altitudes = [0, altitudes[0]];
+            }
+            if (basicShapeType === Basic3DShapes.ROUTE){
+                altitudes = altitudes.slice(0, 2)
             }
             const lastAlt = altitudes[altitudes.length - 1];
             const nextToLastAlt = altitudes[altitudes.length - 2];

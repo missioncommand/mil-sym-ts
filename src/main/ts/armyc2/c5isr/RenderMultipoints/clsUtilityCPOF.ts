@@ -411,6 +411,59 @@ export class clsUtilityCPOF {
                     break;
                 }
 
+                case TacticalLines.BS_3D_ROUTE:
+                case TacticalLines.BS_3D_TRACK: {
+                    let am = tg.get_AM().split(",");
+                    while (am.length < tg.LatLongs.length - 1) {
+                        am.push(am[am.length - 1]);
+                    }
+                    for (let i = 0; i < tg.LatLongs.length - 1; i++) {
+                        let a12: ref<number[]> = new ref();
+                        let a21: ref<number[]> = new ref();
+                        let pt0: POINT2 = tg.LatLongs[i];
+                        let pt1: POINT2 = tg.LatLongs[i + 1];
+                        width.value = new Array<number>(1);
+                        attitude.value = new Array<number>(1);
+
+                        mdlGeodesic.geodesic_distance(pt0, pt1, a12, a21);
+                        attitude.value[0] = a12.value[0];
+
+                        if (SymbolUtilities.isNumber(am[i])) {
+                            width.value[0] = parseFloat(am[i]);
+                        }
+
+                        //get the upper left corner                    
+                        pt00 = mdlGeodesic.geodesic_coordinate(pt0, width.value[0] / 2, attitude.value[0] - 90);
+                        pt00 = clsUtilityCPOF.PointLatLongToPixels(pt00, converter);
+
+                        pt00.style = 0;
+                        tg.Pixels.push(pt00);
+
+                        //second corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt0, width.value[0] / 2, attitude.value[0] + 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        //third corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width.value[0] / 2, attitude.value[0] + 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        //fourth corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width.value[0] / 2, attitude.value[0] - 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        pt00 = new POINT2(pt00);
+                        pt00.style = 5;
+                        tg.Pixels.push(pt00);
+                    }
+                    break;
+                }
+
                 case TacticalLines.RECTANGULAR_TARGET: {
                     let pts: POINT2[] = new Array<POINT2>(4); // 4 Corners
 
@@ -729,7 +782,7 @@ export class clsUtilityCPOF {
                 if (currentPt.style === 5 || currentPt.style === 10) {
                     beginLine = true;
                     //unless there are doubled points with style=5
-                    if (linetype === TacticalLines.RANGE_FAN_FILL && k < tg.Pixels.length - 1) {
+                    if ((linetype === TacticalLines.RANGE_FAN_FILL || linetype === TacticalLines.BS_3D_ROUTE || linetype === TacticalLines.BS_3D_TRACK) && k < tg.Pixels.length - 1) {
                         shapes.push(shape);
                         shape = new Shape2(Shape2.SHAPE_TYPE_POLYLINE);
                     }

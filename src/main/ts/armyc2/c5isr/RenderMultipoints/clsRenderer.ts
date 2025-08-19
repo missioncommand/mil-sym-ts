@@ -361,6 +361,9 @@ export class clsRenderer {
             switch (lineType) {
                 case TacticalLines.PBS_CIRCLE:
                 case TacticalLines.BBS_POINT:
+                case TacticalLines.BS_3D_ROUTE:
+                case TacticalLines.BS_3D_TRACK:
+                case TacticalLines.BS_ORBIT:
                     let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
                     if (AM != null && AM.length > 0) {
                         let strAM: string = String(AM[0]);
@@ -374,6 +377,19 @@ export class clsRenderer {
                     break;
                 default:
                     break;
+            }
+            if (lineType === TacticalLines.BS_3D_TRACK) {
+                let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                if (AM != null) {
+                    let strAM: string = "";
+                    for (let j: int = 0; j < AM.length; j++) {
+                        strAM += AM[j].toString();
+                        if (j < AM.length - 1) {
+                            strAM += ",";
+                        }
+                    }
+                    tg.set_AM(strAM);
+                }
             }
             if (lineType == TacticalLines.PBS_RECTANGLE || lineType == TacticalLines.PBS_SQUARE) {
                 let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);

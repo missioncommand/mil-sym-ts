@@ -2071,7 +2071,9 @@ export class SymbolUtilities {
             case TacticalLines.BBS_LINE:
             case TacticalLines.BBS_POINT:
             case TacticalLines.BBS_RECTANGLE:
-            case TacticalLines.BS_BBOX: {
+            case TacticalLines.BS_BBOX:
+            case TacticalLines.BS_3D_ROUTE:
+            case TacticalLines.BS_3D_TRACK: {
                 return true;
             }
             default: {

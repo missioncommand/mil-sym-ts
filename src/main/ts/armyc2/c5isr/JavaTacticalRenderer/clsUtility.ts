@@ -1353,6 +1353,8 @@ export class clsUtility {
                 case TacticalLines.FSA_RECTANGULAR:
                 case TacticalLines.SHIP_AOI_RECTANGULAR:
                 case TacticalLines.DEFENDED_AREA_RECTANGULAR:
+                case TacticalLines.BS_3D_ROUTE:
+                case TacticalLines.BS_3D_TRACK:
                 case TacticalLines.FFA_RECTANGULAR:
                 case TacticalLines.RFA_RECTANGULAR:
                 case TacticalLines.NFA_RECTANGULAR:

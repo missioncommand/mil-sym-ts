@@ -1,4 +1,5 @@
 import { BasicShapes } from "../../../JavaLineArray/BasicShapes";
+import { TacticalLines } from "../../../JavaLineArray/TacticalLines";
 
 export class Basic3DShapes {
 
@@ -6,7 +7,7 @@ export class Basic3DShapes {
 
     public static readonly ORBIT: never; // TODO
 
-    public static readonly ROUTE: never; // TODO
+    public static readonly ROUTE = TacticalLines.BS_3D_ROUTE;
 
     public static readonly POLYGON = BasicShapes.AREA;
 
@@ -16,5 +17,5 @@ export class Basic3DShapes {
 
     public static readonly CAKE: never; // TODO
 
-    public static readonly TRACK: never; // TODO
+    public static readonly TRACK = TacticalLines.BS_3D_TRACK;
 }
