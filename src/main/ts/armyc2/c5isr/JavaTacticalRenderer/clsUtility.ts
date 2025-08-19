@@ -834,6 +834,8 @@ export class clsUtility {
                                 case TacticalLines.RANGE_FAN:
                                 case TacticalLines.RANGE_FAN_SECTOR:
                                 case TacticalLines.RADAR_SEARCH:
+                                case TacticalLines.BS_3D_RADARC:
+                                case TacticalLines.BS_3D_CAKE:
                                 case TacticalLines.BBS_AREA:
                                 case TacticalLines.BBS_RECTANGLE: {
                                     shape.setFillColor(null);
@@ -1348,6 +1350,8 @@ export class clsUtility {
                 case TacticalLines.RANGE_FAN_FILL:
                 case TacticalLines.RANGE_FAN_SECTOR:
                 case TacticalLines.RADAR_SEARCH:
+                case TacticalLines.BS_3D_RADARC:
+                case TacticalLines.BS_3D_CAKE:
                 case TacticalLines.PAA_RECTANGULAR:
                 case TacticalLines.RECTANGULAR_TARGET:
                 case TacticalLines.FSA_RECTANGULAR:

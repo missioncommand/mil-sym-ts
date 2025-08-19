@@ -11,11 +11,11 @@ export class Basic3DShapes {
 
     public static readonly POLYGON = BasicShapes.AREA;
 
-    public static readonly RADARC: never; // TODO
+    public static readonly RADARC = TacticalLines.BS_3D_RADARC;
 
     public static readonly POLYARC: never; // TODO
 
-    public static readonly CAKE: never; // TODO
+    public static readonly CAKE = TacticalLines.BS_3D_CAKE;
 
     public static readonly TRACK = TacticalLines.BS_3D_TRACK;
 }

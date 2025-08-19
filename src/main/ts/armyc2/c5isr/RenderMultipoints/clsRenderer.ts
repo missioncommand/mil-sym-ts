@@ -346,6 +346,94 @@ export class clsRenderer {
                     tg.set_AN(strAN);
                 }
             }
+            if (lineType === TacticalLines.BS_3D_CAKE) {
+                let AM: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                let AN: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AN_AZIMUTH);
+                if (AM != null) {
+                    let strAM: string = "";
+                    for (let j: int = 0; j < AM.length; j++) {
+                        strAM += AM[j].toString();
+                        if (j < AM.length - 1) {
+                            strAM += ",";
+                        }
+                    }
+                    tg.set_AM(strAM);
+                }
+                if (AN != null) {
+                    let strAN: string = "";
+                    for (let j: int = 0; j < AN.length; j++) {
+                        strAN += AN[j];
+                        if (j < AN.length - 1) {
+                            strAN += ",";
+                        }
+                    }
+                    tg.set_AN(strAN);
+                }
+                if (AM != null && AN != null) {
+                    let numSectors: int = AN.length / 2;
+                    let left: double = 0;
+                    let right: double = 0;
+                    let min: double = 0;
+                    let max: double = 0;
+                    //construct left,right,min,max from the arraylists
+                    let strLeftRightMinMax: string = "";
+                    for (let j: int = 0; j < numSectors; j++) {
+                        left = AN[2 * j];
+                        right = AN[2 * j + 1];
+                        min = AM[2 * j];
+                        max = AM[2 * j + 1];
+                        strLeftRightMinMax += left.toString() + "," + right.toString() + "," + min.toString() + "," + max.toString();
+                        if (j < numSectors - 1) {
+                            strLeftRightMinMax += ",";
+                        }
+
+                    }
+                    let len: int = strLeftRightMinMax.length;
+                    let c: string = strLeftRightMinMax.substring(len - 1, len);
+                    if (c === ",") {
+                        strLeftRightMinMax = strLeftRightMinMax.substring(0, len - 1);
+                    }
+                    tg.set_LRMM(strLeftRightMinMax);
+                }
+            }
+            if (lineType === TacticalLines.BS_3D_RADARC) {
+                let AM: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                let AN: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AN_AZIMUTH);
+                if (AM != null) {
+                    let strAM: string = "";
+                    for (let j: int = 0; j < AM.length && j < 2; j++) {
+                        strAM += AM[j].toString();
+                        if (j < AM.length - 1) {
+                            strAM += ",";
+                        }
+                    }
+                    tg.set_AM(strAM);
+                }
+                if (AN != null) {
+                    let strAN: string = "";
+                    for (let j: int = 0; j < AN.length && j < 2; j++) {
+                        strAN += AN[j];
+                        if (j < AN.length - 1) {
+                            strAN += ",";
+                        }
+                    }
+                    tg.set_AN(strAN);
+                }
+                if (AM != null && AN != null) {
+                    let left: double = 0;
+                    let right: double = 0;
+                    let min: double = 0;
+                    let max: double = 0;
+                    //construct left,right,min,max from the arraylists
+                    let strLeftRightMinMax: string = "";
+                    left = AN[0];
+                    right = AN[1];
+                    min = AM[0];
+                    max = AM[1];
+                    strLeftRightMinMax += left.toString() + "," + right.toString() + "," + min.toString() + "," + max.toString();
+                    tg.set_LRMM(strLeftRightMinMax);
+                }
+            }
             switch (lineType) {
                 case TacticalLines.BBS_AREA:
                 case TacticalLines.BBS_LINE:
@@ -1765,7 +1853,9 @@ export class clsRenderer {
                     switch (linetype) {
                         case TacticalLines.RANGE_FAN:
                         case TacticalLines.RANGE_FAN_SECTOR:
-                        case TacticalLines.RADAR_SEARCH: {
+                        case TacticalLines.RADAR_SEARCH:
+                        case TacticalLines.BS_3D_RADARC:
+                        case TacticalLines.BS_3D_CAKE: {
                             if (tg.get_FillColor() == null || tg.get_FillColor().getAlpha() < 2) {
                                 break;
                             }
@@ -2245,7 +2335,9 @@ export class clsRenderer {
                         switch (linetype) {
                             case TacticalLines.RANGE_FAN:
                             case TacticalLines.RANGE_FAN_SECTOR:
-                            case TacticalLines.RADAR_SEARCH: {
+                            case TacticalLines.RADAR_SEARCH:
+                            case TacticalLines.BS_3D_RADARC:
+                            case TacticalLines.BS_3D_CAKE: {
                                 if (tg.get_FillColor() == null || tg.get_FillColor().getAlpha() < 2) {
                                     break;
                                 }

@@ -951,7 +951,7 @@ export class clsUtilityCPOF {
             tg1.Pixels.push(tg.Pixels[1]);
             tg1.set_LineType(TacticalLines.RANGE_FAN_FILL);
 
-            if (tg.get_LineType() === TacticalLines.RANGE_FAN_SECTOR || tg.get_LineType() === TacticalLines.RADAR_SEARCH) {
+            if (tg.get_LineType() === TacticalLines.RANGE_FAN_SECTOR || tg.get_LineType() === TacticalLines.RADAR_SEARCH || tg.get_LineType() === TacticalLines.BS_3D_RADARC || tg.get_LineType() === TacticalLines.BS_3D_CAKE) {
                 tg1.set_LRMM(tg.get_LRMM());
                 return tg1;
             } else {
