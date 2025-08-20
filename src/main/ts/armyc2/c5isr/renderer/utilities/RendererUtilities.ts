@@ -290,9 +290,9 @@ export class RendererUtilities {
         let strokeOpacity: string = "";
         let fillOpacity: string = "";
 
-        let ss: int = SymbolID.getSymbolSet(symbolID);
-
-        let affiliation: int = SymbolID.getAffiliation(symbolID);
+        let ss: number = SymbolID.getSymbolSet(symbolID);
+        let ver: number = SymbolID.getVersion(symbolID);
+        let affiliation: number = SymbolID.getAffiliation(symbolID);
         let defaultFillColor: string;
 
         returnSVG = svg;
@@ -320,8 +320,9 @@ export class RendererUtilities {
                 SymbolID.getFrameShape(symbolID)===SymbolID.FrameShape_LandInstallation)
             {
                 let i1 = returnSVG.indexOf("<rect") + 5;
-                if(SymbolID.getAffiliation(symbolID)===SymbolID.StandardIdentity_Affiliation_Neutral)
+                if(ver >= SymbolID.Version_2525E && affiliation == SymbolID.StandardIdentity_Affiliation_AssumedFriend)
                     i1 = returnSVG.indexOf("<rect",i1) + 5;
+                //make sure installation indicator matches line color
                 returnSVG = returnSVG.substring(0,i1) + " fill=\"" + hexStrokeColor + "\"" + returnSVG.substring(i1);
             }
         }
@@ -329,8 +330,9 @@ export class RendererUtilities {
                 SymbolID.getFrameShape(symbolID)===SymbolID.FrameShape_LandInstallation)
         {
             let i1 = returnSVG.indexOf("<rect") + 5;
-            if(SymbolID.getAffiliation(symbolID)===SymbolID.StandardIdentity_Affiliation_Neutral)
+            if(ver >= SymbolID.Version_2525E && affiliation == SymbolID.StandardIdentity_Affiliation_AssumedFriend)
                 i1 = returnSVG.indexOf("<rect",i1) + 5;
+            //No line color change so make sure installation indicator stays black
             returnSVG = returnSVG.substring(0,i1) + " fill=\"#000000\"" + returnSVG.substring(i1);
         }
         if (fillColor != null) {
