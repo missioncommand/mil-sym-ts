@@ -233,12 +233,13 @@ export class SymbolID {
     public static readonly FrameShape_Space: string = '1';
     public static readonly FrameShape_Air: string = '2';
     public static readonly FrameShape_LandUnit: string = '3';
-    public static readonly FrameShape_LandEquipment_SeaSurface: string = '4';
+    public static readonly FrameShape_LandEquipment: string = '4';
     public static readonly FrameShape_LandInstallation: string = '5';
     public static readonly FrameShape_DismountedIndividuals: string = '6';
     public static readonly FrameShape_SeaSubsurface: string = '7';
     public static readonly FrameShape_Activity_Event: string = '8';
     public static readonly FrameShape_Cyberspace: string = '9';
+    public static readonly FrameShape_SeaSurface: string = 'A';
 
 
     /**
@@ -1055,13 +1056,12 @@ export class SymbolID {
             case SymbolID.SymbolSet_Space:
             case SymbolID.SymbolSet_SpaceMissile:
             case SymbolID.SymbolSet_SignalsIntelligence_Space: {
-                if (ss === SymbolID.SymbolSet_SignalsIntelligence && SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E) {
-
-                    return SymbolID.FrameShape_LandEquipment_SeaSurface;
+                if (ss === SymbolID.SymbolSet_SignalsIntelligence && SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E) 
+                {
+                    return SymbolID.FrameShape_LandEquipment;
                 }
-
-                else {
-
+                else 
+                {
                     return SymbolID.FrameShape_Space;
                 }
 
@@ -1074,13 +1074,17 @@ export class SymbolID {
             }
 
             case SymbolID.SymbolSet_LandEquipment:
-            case SymbolID.SymbolSet_SeaSurface:
-            case SymbolID.SymbolSet_SignalsIntelligence_SeaSurface: {
-                return SymbolID.FrameShape_LandEquipment_SeaSurface;
+            {
+                return SymbolID.FrameShape_LandEquipment;
             }
 
             case SymbolID.SymbolSet_LandInstallation: {
                 return SymbolID.FrameShape_LandInstallation;
+            }
+
+            case SymbolID.SymbolSet_SeaSurface:
+            case SymbolID.SymbolSet_SignalsIntelligence_SeaSurface: {
+                return SymbolID.FrameShape_SeaSurface;
             }
 
             case SymbolID.SymbolSet_SeaSubsurface:
@@ -1108,6 +1112,21 @@ export class SymbolID {
         }
     }
 
+    /**
+     *
+     * @param symbolID
+     * @param frameShape like SymbolID.FrameShape_LandEquipment
+     * @return
+     */
+        public static setFrameShape(symbolID:string, frameShape:string):string
+        {
+            if(symbolID != null && symbolID.length >= 23)
+            {
+                return symbolID.substring(0,22) + frameShape + symbolID.substring(23);
+            }
+            else
+                return symbolID;
+        }
 
     /**
      * Gets the Frame Shape override from position 23.

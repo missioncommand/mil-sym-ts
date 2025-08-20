@@ -335,7 +335,7 @@ export class SVGLookup
             }
             if (SymbolID.getSymbolSet(symbolID) === SymbolID.SymbolSet_SeaSurface &&
                 SymbolID.getEntityCode(symbolID) === 150000 &&  //Own Ship
-                (frameShape === SymbolID.FrameShape_LandEquipment_SeaSurface || frameShape === SymbolID.FrameShape_Unknown)) {
+                (frameShape === SymbolID.FrameShape_SeaSurface || frameShape === SymbolID.FrameShape_Unknown)) {
                 return "octagon";
             }
             if(context === SymbolID.StandardIdentity_Context_Restricted_Target_Reality ||

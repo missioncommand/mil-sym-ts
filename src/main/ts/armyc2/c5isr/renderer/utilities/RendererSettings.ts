@@ -80,6 +80,25 @@ export class RendererSettings {
     private static _CenterOnHQStaff: boolean = true;
 
 
+    /**
+     * Text modifiers/amplifiers are placed where they belong even if there's empty space
+     * from other modifiers that weren't populated
+     */
+    public static ModifierPlacement_STRICT:number = 0;
+    /**
+     * Text modifiers/amplifiers will collapse vertically towards the center to eliminate
+     * empty space from modifiers that weren't populated.
+     */
+    public static ModifierPlacement_FLEXIBLE:number = 1;
+    /**
+     * Same as flexible but the modifier letter is put at the beginning of the value string
+     * to prevent confusion from modifiers not being in their strict location.
+     * if P (IFF/SIF) is set to "2:1234", it would be rendered as "P:2:1234"
+     */
+    //public static ModifierPlacement_FLEXIBLE_PREFIX:number = 2;
+    
+    private static _ModifierPlacementApproach:number = 0;
+
     public static OperationalConditionModifierType_SLASH: int = 0;
     public static OperationalConditionModifierType_BAR: int = 1;
     private static _OCMType: int = 1;
@@ -692,6 +711,16 @@ export class RendererSettings {
 
     public getKMLLabelScale(): float {
         return RendererSettings._KMLLabelScale;
+    }
+
+    public getSPModifierPlacement():number
+    {
+        return RendererSettings._ModifierPlacementApproach;
+    }
+
+    public setSPModifierPlacement(modifierPlacementApproach:number)
+    {
+        RendererSettings._ModifierPlacementApproach = modifierPlacementApproach;
     }
 
     /**

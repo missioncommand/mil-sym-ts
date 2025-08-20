@@ -553,19 +553,19 @@ export class SymbolUtilities {
                                 }
 
                                 case SymbolID.StandardIdentity_Affiliation_Hostile_Faker: {
-                                    retColor = AffiliationColors.HostileGraphicLineColor;//Color.RED;//0xff0000;	// Red
+                                    retColor = AffiliationColors.HostileUnitLineColor;//Color.RED;//0xff0000;	// Red
                                     break;
                                 }
 
                                 case SymbolID.StandardIdentity_Affiliation_Suspect_Joker: {
                                     if (symStd >= SymbolID.Version_2525E) {
 
-                                        retColor = AffiliationColors.SuspectGraphicLineColor;
+                                        retColor = AffiliationColors.SuspectUnitLineColor;
                                     }
                                     //255,188,1
                                     else {
 
-                                        retColor = AffiliationColors.HostileGraphicLineColor;
+                                        retColor = AffiliationColors.HostileUnitLineColor;
                                     }
                                     //Color.RED;//0xff0000;	// Red
                                     break;
@@ -1799,7 +1799,8 @@ export class SymbolUtilities {
                 switch (fs) {
                     case SymbolID.FrameShape_LandUnit:
                     case SymbolID.FrameShape_LandInstallation:
-                    case SymbolID.FrameShape_LandEquipment_SeaSurface:
+                    case SymbolID.FrameShape_LandEquipment:
+                    case SymbolID.FrameShape_SeaSurface:
                     case SymbolID.FrameShape_Activity_Event:
                     case SymbolID.FrameShape_Cyberspace: {
                         rh = 1.44;
@@ -1835,7 +1836,8 @@ export class SymbolUtilities {
                         switch (fs) {
                             case SymbolID.FrameShape_LandUnit:
                             case SymbolID.FrameShape_LandInstallation:
-                            case SymbolID.FrameShape_LandEquipment_SeaSurface:
+                            case SymbolID.FrameShape_LandEquipment:
+                            case SymbolID.FrameShape_SeaSurface:
                             case SymbolID.FrameShape_Activity_Event:
                             case SymbolID.FrameShape_Cyberspace: {
                                 rh = 1.1;
@@ -1853,7 +1855,8 @@ export class SymbolUtilities {
                         switch (fs) {
                             case SymbolID.FrameShape_LandUnit:
                             case SymbolID.FrameShape_LandInstallation:
-                            case SymbolID.FrameShape_LandEquipment_SeaSurface:
+                            case SymbolID.FrameShape_LandEquipment:
+                            case SymbolID.FrameShape_SeaSurface:
                             case SymbolID.FrameShape_Activity_Event:
                             case SymbolID.FrameShape_Cyberspace: {
                                 rh = 1.44;
@@ -1985,7 +1988,8 @@ export class SymbolUtilities {
                 switch (fs) {
                     case SymbolID.FrameShape_LandUnit:
                     case SymbolID.FrameShape_LandInstallation:
-                    case SymbolID.FrameShape_LandEquipment_SeaSurface:
+                    case SymbolID.FrameShape_LandEquipment:
+                    case SymbolID.FrameShape_SeaSurface:
                     case SymbolID.FrameShape_Activity_Event:
                     case SymbolID.FrameShape_Cyberspace: {
                         rw = 1.44;
@@ -2010,7 +2014,9 @@ export class SymbolUtilities {
                             break;
                         }
 
-                        case SymbolID.FrameShape_LandEquipment_SeaSurface: {
+                        case SymbolID.FrameShape_LandEquipment:
+                        case SymbolID.FrameShape_SeaSurface:
+                        {
                             rw = 1.2;
                             break;
                         }
@@ -2030,9 +2036,11 @@ export class SymbolUtilities {
                         switch (fs) {
                             case SymbolID.FrameShape_LandUnit:
                             case SymbolID.FrameShape_LandInstallation:
-                            case SymbolID.FrameShape_LandEquipment_SeaSurface:
+                            case SymbolID.FrameShape_LandEquipment:
+                            case SymbolID.FrameShape_SeaSurface:
                             case SymbolID.FrameShape_Activity_Event:
-                            case SymbolID.FrameShape_Cyberspace: {
+                            case SymbolID.FrameShape_Cyberspace: 
+                            {
                                 rw = 1.44;
                                 break;
                             }

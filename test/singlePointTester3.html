@@ -167,6 +167,9 @@
             //var type = String.valueOf(C5Ren.Font.BOLD); 
             attributes.set(MilStdAttributes.FontStyle,C5Ren.Font.BOLD.toString());
             attributes.set(MilStdAttributes.FontSize,"12");//*/
+
+            //flexible modifier placement test
+            attributes.set(C5Ren.MilStdAttributes.ModifierPlacement,C5Ren.RendererSettings.ModifierPlacement_FLEXIBLE);
         
             var si = C5Ren.MilStdIconRenderer.getInstance().RenderSVG(symbolID,modifiers,attributes);
             //var si2 = C5Ren.MilStdIconRenderer.getInstance().RenderSVG("130310000016570000000000000000",modifiers,attributes);
@@ -742,12 +745,13 @@ Frame Shape: <select id = lbFrame>
     <option>1-Space</option>
     <option>2-Air</option>
     <option>3-Land Unit</option>
-    <option>4-Equip/Sea</option>
+    <option>4-Equipment</option>
     <option>5-Land Inst.</option>
     <option>6-Dis. Ind.</option>
 	<option>7-Sea Sub.</option>
     <option>8-Activity</option>
     <option>9-Cyber</option>
+    <option>A-SeaSurface</option>
 </select>
 Size: <input id="tbSize" type="number" value="100" style="width: 4em"><br/>
 Keep Unit Ratio: <input id="cbKeepUnitRatio" type="checkbox" checked><br/>
