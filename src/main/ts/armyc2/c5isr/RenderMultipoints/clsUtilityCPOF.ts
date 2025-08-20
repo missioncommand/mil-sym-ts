@@ -204,7 +204,8 @@ export class clsUtilityCPOF {
                 case TacticalLines.TVAR_RECTANGULAR:
                 case TacticalLines.KILLBOXBLUE_RECTANGULAR:
                 case TacticalLines.KILLBOXPURPLE_RECTANGULAR:
-                case TacticalLines.RECTANGULAR_TARGET: {
+                case TacticalLines.RECTANGULAR_TARGET:
+                case TacticalLines.BS_ORBIT: {
                     if (tg.LatLongs.length >= 2) {
                         //get the length and the attitude in mils
                         pt0 = tg.LatLongs[0];
@@ -408,6 +409,37 @@ export class clsUtilityCPOF {
                     tg.Pixels.push(ptTemp);
 
                     tg.Pixels.push(pt00);
+                    break;
+                }
+
+                case TacticalLines.BS_ORBIT: {
+                    ptTemp = mdlGeodesic.geodesic_coordinate(pt0, width.value[0] / 2, attitude.value[0] - 90);
+                    ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                    ptTemp.style = 0;
+                    tg.Pixels.push(ptTemp);
+
+                    ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width.value[0] / 2, attitude.value[0] - 90);
+                    pPoints = new Array<POINT2>(3);
+                    pPoints[0] = new POINT2(pt1);
+                    pPoints[1] = new POINT2(ptTemp);
+                    pPoints[2] = new POINT2(ptTemp);
+                    let pPoints2 = mdlGeodesic.GetGeodesicArc(pPoints);
+                    for (j = 0; j < pPoints2.length / 2; j++) {
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(pPoints2[j], converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+                    }
+
+                    ptTemp = mdlGeodesic.geodesic_coordinate(pt0, width.value[0] / 2, attitude.value[0] + 90);
+                    pPoints[0] = new POINT2(pt0);
+                    pPoints[1] = new POINT2(ptTemp);
+                    pPoints[2] = new POINT2(ptTemp);
+                    pPoints2 = mdlGeodesic.GetGeodesicArc(pPoints);
+                    for (j = 0; j < pPoints2.length / 2; j++) {
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(pPoints2[j], converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+                    }
                     break;
                 }
 

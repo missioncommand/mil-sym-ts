@@ -5,7 +5,7 @@ export class Basic3DShapes {
 
     public static readonly CYLINDER = BasicShapes.CIRCLE;
 
-    public static readonly ORBIT: never; // TODO
+    public static readonly ORBIT = TacticalLines.BS_ORBIT;
 
     public static readonly ROUTE = TacticalLines.BS_3D_ROUTE;
 
