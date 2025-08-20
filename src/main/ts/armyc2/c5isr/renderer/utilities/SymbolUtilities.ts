@@ -553,19 +553,19 @@ export class SymbolUtilities {
                                 }
 
                                 case SymbolID.StandardIdentity_Affiliation_Hostile_Faker: {
-                                    retColor = AffiliationColors.HostileUnitLineColor;//Color.RED;//0xff0000;	// Red
+                                    retColor = AffiliationColors.HostileUnitFillColor;//Color.RED;//0xff0000;	// Red
                                     break;
                                 }
 
                                 case SymbolID.StandardIdentity_Affiliation_Suspect_Joker: {
                                     if (symStd >= SymbolID.Version_2525E) {
 
-                                        retColor = AffiliationColors.SuspectUnitLineColor;
+                                        retColor = AffiliationColors.SuspectUnitFillColor;
                                     }
                                     //255,188,1
                                     else {
 
-                                        retColor = AffiliationColors.HostileUnitLineColor;
+                                        retColor = AffiliationColors.HostileUnitFillColor;
                                     }
                                     //Color.RED;//0xff0000;	// Red
                                     break;
