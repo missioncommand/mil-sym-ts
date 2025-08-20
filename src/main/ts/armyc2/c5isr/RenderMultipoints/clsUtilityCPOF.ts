@@ -219,6 +219,16 @@ export class clsUtilityCPOF {
                     break;
                 }
 
+                case TacticalLines.BS_POLYARC: {
+                    if (SymbolUtilities.isNumber(tg.get_AM())) {
+                        length.value[0] = parseFloat(tg.get_AM());
+                    }
+                    let an = tg.get_AN().split(",");
+                    attitude.value[0] = parseFloat(an[0]);
+                    attitude.value[1] = parseFloat(an[1]);
+                    break;
+                }
+
                 default: {
                     break;
                 }
@@ -668,6 +678,30 @@ export class clsUtilityCPOF {
 
                 case TacticalLines.RANGE_FAN_FILL: {  //circular range fan calls Change1TacticalAreas twice
                     clsUtilityCPOF.GetSectorRangeFan(tg, converter);
+                    break;
+                }
+
+                case TacticalLines.BS_POLYARC: {
+                    let pPointsArc: Array<POINT2> = new Array();
+                    let pPoints: Array<POINT2> = new Array();
+                    pPoints.push(pt0);
+                    pPoints.push(mdlGeodesic.geodesic_coordinate(pt0, length.value[0], attitude.value[0]));
+                    pPoints.push(mdlGeodesic.geodesic_coordinate(pt0, length.value[0], attitude.value[1]));
+                    mdlGeodesic.GetGeodesicArc2(pPoints, pPointsArc);
+
+                    for (let i = 0; i < pPointsArc.length; i++) {
+                        ptTemp = new POINT2(pPointsArc[i]);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        tg.Pixels.push(ptTemp);
+                    }
+
+                    for (let i = 1; i < tg.LatLongs.length; i++) {
+                        ptTemp = new POINT2(tg.LatLongs[i]);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        tg.Pixels.push(ptTemp);
+                    }
+
+                    tg.Pixels.push(tg.Pixels[0]);
                     break;
                 }
 

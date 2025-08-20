@@ -13,7 +13,7 @@ export class Basic3DShapes {
 
     public static readonly RADARC = TacticalLines.BS_3D_RADARC;
 
-    public static readonly POLYARC: never; // TODO
+    public static readonly POLYARC = TacticalLines.BS_POLYARC;
 
     public static readonly CAKE = TacticalLines.BS_3D_CAKE;
 

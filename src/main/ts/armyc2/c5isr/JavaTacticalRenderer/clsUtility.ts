@@ -1374,7 +1374,8 @@ export class clsUtility {
                 case TacticalLines.TVAR_RECTANGULAR:
                 case TacticalLines.KILLBOXBLUE_RECTANGULAR:
                 case TacticalLines.KILLBOXPURPLE_RECTANGULAR:
-                case TacticalLines.BS_ORBIT: {
+                case TacticalLines.BS_ORBIT:
+                case TacticalLines.BS_POLYARC: {
                     return true;
                 }
 

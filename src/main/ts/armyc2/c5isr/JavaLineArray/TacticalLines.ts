@@ -47,6 +47,7 @@ export class TacticalLines {
     public static readonly BS_3D_RADARC = 16000003;
     public static readonly BS_3D_CAKE = 16000004;
     public static readonly BS_ORBIT = 16000005;
+    public static readonly BS_POLYARC = 16000006;
 
     public static readonly PZ: number = 22138000;
     public static readonly LZ: number = 22137000;

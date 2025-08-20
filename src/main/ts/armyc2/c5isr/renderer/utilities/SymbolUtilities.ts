@@ -2076,7 +2076,8 @@ export class SymbolUtilities {
             case TacticalLines.BS_3D_TRACK:
             case TacticalLines.BS_3D_RADARC:
             case TacticalLines.BS_3D_CAKE:
-            case TacticalLines.BS_ORBIT: {
+            case TacticalLines.BS_ORBIT:
+            case TacticalLines.BS_POLYARC: {
                 return true;
             }
             default: {

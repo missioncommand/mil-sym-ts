@@ -434,6 +434,24 @@ export class clsRenderer {
                     tg.set_LRMM(strLeftRightMinMax);
                 }
             }
+            if (lineType === TacticalLines.BS_POLYARC) {
+                let AM: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
+                let AN: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AN_AZIMUTH);
+                if (AM != null && AM.length > 0) {
+                    let strAM: string = AM[0].toString();
+                    tg.set_AM(strAM);
+                }
+                if (AN != null) {
+                    let strAN: string = "";
+                    for (let j: int = 0; j < AN.length && j < 2; j++) {
+                        strAN += AN[j];
+                        if (j < AN.length - 1) {
+                            strAN += ",";
+                        }
+                    }
+                    tg.set_AN(strAN);
+                }                   
+            }
             switch (lineType) {
                 case TacticalLines.BBS_AREA:
                 case TacticalLines.BBS_LINE:
