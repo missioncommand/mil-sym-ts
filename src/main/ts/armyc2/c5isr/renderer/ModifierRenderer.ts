@@ -4441,7 +4441,7 @@ export class ModifierRenderer implements SettingsEventListener {
                 if(modifiers.has(Modifiers.Z_SPEED))
                 {
                     y = -2;
-                    if(!strict && !modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                    if(!strict && !modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
                         y++;
                     temp = modifiers.get(Modifiers.Z_SPEED);
                     if(temp != null && temp !== "")
@@ -4777,9 +4777,9 @@ export class ModifierRenderer implements SettingsEventListener {
                     {
                         if(!modifiers.has(Modifiers.Z_SPEED)  ||
                                 modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
-                            y = y--;
-                        else if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
-                            y = y--;
+                            y++;
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                            y++;
                     }
                     temp = "";
                     if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
@@ -4831,7 +4831,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     {
                         if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
                             y--;
-                        else if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
                             y--;
                     }
 
@@ -4924,7 +4924,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     {
                         if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
                             y--;
-                        else if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
                             y--;
                     }
 
@@ -5021,7 +5021,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     {
                         if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
                             y--;
-                        else if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
                             y--;
                     }
 
@@ -5059,7 +5059,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     {
                         if(!modifiers.has(Modifiers.G_STAFF_COMMENTS))
                             y++;
-                        else if(!modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        if(!modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
                             y++;
                     }
 
@@ -5961,7 +5961,7 @@ export class ModifierRenderer implements SettingsEventListener {
                         if(!(modifiers.has(Modifiers.G_STAFF_COMMENTS)  ||
                                 modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)))
                             y++;
-                        else if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
                             y++;
                     }
                     temp = "";
@@ -6078,7 +6078,7 @@ export class ModifierRenderer implements SettingsEventListener {
                         if(!(modifiers.has(Modifiers.G_STAFF_COMMENTS)  ||
                                 modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)))
                             y++;
-                        else if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
                             y++;
                     }
                     temp = "";
