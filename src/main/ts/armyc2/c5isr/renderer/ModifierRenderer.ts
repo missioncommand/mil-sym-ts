@@ -6427,6 +6427,7 @@ export class ModifierRenderer implements SettingsEventListener {
                 }
 
                 //Do left side labels
+                x=-1;
                 if(modifiers.has(Modifiers.V_EQUIP_TYPE))
                 {
                     y = 0;//center
