@@ -4775,8 +4775,8 @@ export class ModifierRenderer implements SettingsEventListener {
                     y = -3;
                     if(!strict)
                     {
-                        if(!modifiers.has(Modifiers.Z_SPEED)  ||
-                                modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        if(!(modifiers.has(Modifiers.Z_SPEED)  ||
+                                modifiers.has(Modifiers.X_ALTITUDE_DEPTH)))
                             y++;
                         if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
                             y++;
