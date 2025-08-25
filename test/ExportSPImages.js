@@ -74,6 +74,38 @@ function createUnitModTestImages() {
         modFolder = "Modifiers/Unit/";
         res.push({ filename: modFolder + SymbolID.getMainIconID(id) + ".svg", file: renderAndSave(id, modifiers, attributes) });
     }
+    
+    modifiers.delete(Modifiers.G_STAFF_COMMENTS);
+    modifiers.delete(Modifiers.AQ_GUARDED_UNIT);
+    modifiers.delete(Modifiers.M_HIGHER_FORMATION);
+    modifiers.delete(Modifiers.T_UNIQUE_DESIGNATION_1);
+    modifiers.delete(Modifiers.V_EQUIP_TYPE);
+    modifiers.delete(Modifiers.W_DTG_1);
+    modifiers.delete(Modifiers.X_ALTITUDE_DEPTH);
+    modifiers.delete(Modifiers.Y_LOCATION);
+    modifiers.delete(Modifiers.Z_SPEED);
+    for (const basicID of unitTestIDs) {
+        if (basicID.startsWith("36"))
+            continue;
+
+        id = VERSION + "0300272600000000000000000840";
+
+        id = SymbolID.setEntityCode(id, Number.parseInt(basicID.substring(2)));
+        id = SymbolID.setSymbolSet(id, Number.parseInt(basicID.substring(0, 2)));
+
+        msi = MSLookup.getInstance().getMSLInfo(basicID, SymbolID.getVersion(id));
+        if (msi.getModifiers().includes(Modifiers.R_MOBILITY_INDICATOR)) {
+            id = SymbolID.setAmplifierDescriptor(id, 31);
+        } else if (msi.getModifiers().includes(Modifiers.AG_AUX_EQUIP_INDICATOR)) {
+            id = SymbolID.setAmplifierDescriptor(id, 61);
+        }
+
+        modFolder = "Modifiers/Flexible Placement/";
+        attributes.set(MilStdAttributes.ModifierPlacement, RendererSettings.ModifierPlacement_FLEXIBLE)
+        res.push({ filename: modFolder + SymbolID.getMainIconID(id) + "_flex.svg", file: renderAndSave(id, modifiers, attributes) });
+        attributes.set(MilStdAttributes.ModifierPlacement, RendererSettings.ModifierPlacement_STRICT)
+        res.push({ filename: modFolder + SymbolID.getMainIconID(id) + "_strict.svg", file: renderAndSave(id, modifiers, attributes) });
+    }
     return res
 }
 
