@@ -153,6 +153,7 @@ export class SinglePointSVGRenderer {
             let icon: boolean = false;
             let asIcon: boolean = false;
             let noFrame: boolean = false;
+            let frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null = null;
 
             let ver: int = SymbolID.getVersion(symbolID);
 
@@ -381,9 +382,17 @@ export class SinglePointSVGRenderer {
 
                 hasDisplayModifiers = ModifierRenderer.hasDisplayModifiers(symbolID, modifiers);
                 hasTextModifiers = ModifierRenderer.hasTextModifiers(symbolID, modifiers);
+
+                if(hasDisplayModifiers || hasTextModifiers)
+                {
+                    let cv:any = RendererUtilities.getCanvas(2,2);
+                    frc = RendererUtilities.getContext(cv);
+                }
+
+
                 //process display modifiers
                 if (hasDisplayModifiers) {
-                    newSDI = ModifierRenderer.processUnitDisplayModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
+                    newSDI = ModifierRenderer.processUnitDisplayModifiers(si, symbolID, modifiers, attributes, frc);
                     if (newSDI != null) {
                         si = newSDI as SVGSymbolInfo;
                         newSDI = null;
@@ -394,7 +403,7 @@ export class SinglePointSVGRenderer {
             //process text modifiers
             if (hasTextModifiers) 
             {
-                newSDI = ModifierRenderer.processSPTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
+                newSDI = ModifierRenderer.processSPTextModifiers(si, symbolID, modifiers, attributes, frc);
             }
 
             if (newSDI != null) {
@@ -775,17 +784,24 @@ export class SinglePointSVGRenderer {
                 hasTextModifiers = false;
                 hasDisplayModifiers = false;
             }
+
             //process display modifiers
+            let frc:any;
+            if(hasDisplayModifiers || hasTextModifiers)
+            {
+                let cv:any = RendererUtilities.getCanvas(2,2);
+                frc = RendererUtilities.getContext(cv);
+            }
             if (asIcon === false && (hasTextModifiers || hasDisplayModifiers)) {
                 let sdiTemp: SymbolDimensionInfo;
                 let cLineColor: Color = RendererUtilities.getColorFromHexString(lineColor);
 
                 if (SymbolUtilities.isSPWithSpecialModifierLayout(symbolID))//(SymbolUtilitiesD.isTGSPWithSpecialModifierLayout(symbolID))
                 {
-                    sdiTemp = ModifierRenderer.ProcessTGSPWithSpecialModifierLayout(si, symbolID, modifiers, attributes, cLineColor, this._fontRenderContext);
+                    sdiTemp = ModifierRenderer.ProcessTGSPWithSpecialModifierLayout(si, symbolID, modifiers, attributes, cLineColor, frc);
                 }
                 else {
-                    sdiTemp = ModifierRenderer.ProcessTGSPModifiers(si, symbolID, modifiers, attributes, cLineColor, this._fontRenderContext);
+                    sdiTemp = ModifierRenderer.ProcessTGSPModifiers(si, symbolID, modifiers, attributes, cLineColor, frc);
                 }
                 siNew = (sdiTemp instanceof SVGSymbolInfo ? sdiTemp as SVGSymbolInfo : null);
             }

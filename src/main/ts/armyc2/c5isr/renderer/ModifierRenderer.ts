@@ -125,7 +125,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
         let RS: RendererSettings = RendererSettings.getInstance();
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont, frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -1765,12 +1765,12 @@ export class ModifierRenderer implements SettingsEventListener {
      * @param attributes
      * @return
      */
-    public static processUnknownTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
+    public static processUnknownTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo {
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
 
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont,frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -2339,12 +2339,12 @@ export class ModifierRenderer implements SettingsEventListener {
 
     }
 
-    public static processSPTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
+    public static processSPTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo {
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
 
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont, frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -2455,13 +2455,13 @@ export class ModifierRenderer implements SettingsEventListener {
         return newsdi;
     }
 
-    public static ProcessTGSPWithSpecialModifierLayout(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, lineColor: Color, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo | null {
+    public static ProcessTGSPWithSpecialModifierLayout(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, lineColor: Color, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo | null {
 
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
 
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont,frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -3627,14 +3627,14 @@ export class ModifierRenderer implements SettingsEventListener {
     /**
      * Process modifiers for action points
      */
-    public static ProcessTGSPModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, lineColor: Color, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
+    public static ProcessTGSPModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, lineColor: Color, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo {
 
         // <editor-fold defaultstate="collapsed" desc="Variables">
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
 
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont,frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -6811,19 +6811,28 @@ export class ModifierRenderer implements SettingsEventListener {
 
     }
 
-    private static getFontHeightandDescent(font:Font):number[]
+    /**
+     * 
+     * @param font Font to be used
+     * @param ctx OPTIONAL: If use want to re-use a context for performance
+     * @returns 
+     */
+    private static getFontHeightandDescent(font:Font, ctx:OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null = null):number[]
     {
         let hd:number[] = [0,0];
         let osc:any;
-        let ctx:any;//OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
+        //let ctx:any;//OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
         let tm:TextMetrics | any;//node-canvas doesn't fully implement TextMetics so must set to any
 
-        if(this.OSCDefined)
-            osc = new OffscreenCanvas(10,10);
-        else
-            osc = createCanvas(10,10);
-        
-        ctx = osc.getContext("2d");
+        if(ctx === null)
+        {
+            if(this.OSCDefined)
+                osc = new OffscreenCanvas(2,2);
+            else
+                osc = createCanvas(2,2);
+            
+            ctx = osc.getContext("2d");
+        }   
 
         if(font != null)
         {
