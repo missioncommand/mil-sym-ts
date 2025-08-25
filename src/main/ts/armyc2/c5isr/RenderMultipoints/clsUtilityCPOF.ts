@@ -453,7 +453,7 @@ export class clsUtilityCPOF {
                     break;
                 }
 
-                case TacticalLines.BS_3D_ROUTE: {
+                case TacticalLines.BS_ROUTE: {
                     let am = tg.get_AM().split(",");
                     while (am.length < tg.LatLongs.length - 1) {
                         am.push(am[am.length - 1]);
@@ -505,7 +505,7 @@ export class clsUtilityCPOF {
                     break;
                 }
 
-                case TacticalLines.BS_3D_TRACK: {
+                case TacticalLines.BS_TRACK: {
                     let am = tg.get_AM().split(",");
                     while (am.length < 2 * (tg.LatLongs.length - 1)) {
                         am.push(am[am.length - 1]);
@@ -908,7 +908,7 @@ export class clsUtilityCPOF {
                 if (currentPt.style === 5 || currentPt.style === 10) {
                     beginLine = true;
                     //unless there are doubled points with style=5
-                    if ((linetype === TacticalLines.RANGE_FAN_FILL || linetype === TacticalLines.BS_3D_ROUTE || linetype === TacticalLines.BS_3D_TRACK) && k < tg.Pixels.length - 1) {
+                    if ((linetype === TacticalLines.RANGE_FAN_FILL || linetype === TacticalLines.BS_ROUTE || linetype === TacticalLines.BS_TRACK) && k < tg.Pixels.length - 1) {
                         shapes.push(shape);
                         shape = new Shape2(Shape2.SHAPE_TYPE_POLYLINE);
                     }
@@ -1077,7 +1077,7 @@ export class clsUtilityCPOF {
             tg1.Pixels.push(tg.Pixels[1]);
             tg1.set_LineType(TacticalLines.RANGE_FAN_FILL);
 
-            if (tg.get_LineType() === TacticalLines.RANGE_FAN_SECTOR || tg.get_LineType() === TacticalLines.RADAR_SEARCH || tg.get_LineType() === TacticalLines.BS_3D_RADARC || tg.get_LineType() === TacticalLines.BS_3D_CAKE) {
+            if (tg.get_LineType() === TacticalLines.RANGE_FAN_SECTOR || tg.get_LineType() === TacticalLines.RADAR_SEARCH || tg.get_LineType() === TacticalLines.BS_RADARC || tg.get_LineType() === TacticalLines.BS_CAKE) {
                 tg1.set_LRMM(tg.get_LRMM());
                 return tg1;
             } else {
@@ -1738,8 +1738,8 @@ export class clsUtilityCPOF {
                 case TacticalLines.ASR_ONEWAY:
                 case TacticalLines.ASR_TWOWAY:
                 case TacticalLines.ASR_ALT:
-                case TacticalLines.ROUTE_ONEWAY:
-                case TacticalLines.ROUTE_ALT:
+                case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+                case TacticalLines.TRAFFIC_ROUTE_ALT:
                 case TacticalLines.DHA_REVD:
                 case TacticalLines.DHA:
                 case TacticalLines.KILL_ZONE:
@@ -1756,7 +1756,7 @@ export class clsUtilityCPOF {
 
                 case TacticalLines.MSR: //post clip these so there are identical points regardless whether segment data is set 10-5-16
                 case TacticalLines.ASR:
-                case TacticalLines.ROUTE:
+                case TacticalLines.TRAFFIC_ROUTE:
                 case TacticalLines.BOUNDARY: {
                     return false;
                 }
@@ -1873,9 +1873,9 @@ export class clsUtilityCPOF {
             case TacticalLines.ASR_ONEWAY:
             case TacticalLines.ASR_TWOWAY:
             case TacticalLines.ASR_ALT:
-            case TacticalLines.ROUTE:
-            case TacticalLines.ROUTE_ONEWAY:
-            case TacticalLines.ROUTE_ALT: {
+            case TacticalLines.TRAFFIC_ROUTE:
+            case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+            case TacticalLines.TRAFFIC_ROUTE_ALT: {
                 //undo any fill
                 let shape: Shape2;
                 if (shapes != null && shapes.length > 0) {
@@ -2337,8 +2337,8 @@ export class clsUtilityCPOF {
                 case TacticalLines.ASR_ONEWAY:
                 case TacticalLines.ASR_TWOWAY:
                 case TacticalLines.ASR_ALT:
-                case TacticalLines.ROUTE_ONEWAY:
-                case TacticalLines.ROUTE_ALT: {
+                case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+                case TacticalLines.TRAFFIC_ROUTE_ALT: {
                     //added because of segment data 4-22-13
                     //removed from this case block since we now post-clip these because of segment color data 10-5-16
                     //                case TacticalLines.MSR:

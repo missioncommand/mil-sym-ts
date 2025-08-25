@@ -346,7 +346,7 @@ export class clsRenderer {
                     tg.set_AN(strAN);
                 }
             }
-            if (lineType === TacticalLines.BS_3D_CAKE) {
+            if (lineType === TacticalLines.BS_CAKE) {
                 let AM: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
                 let AN: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AN_AZIMUTH);
                 if (AM != null) {
@@ -396,7 +396,7 @@ export class clsRenderer {
                     tg.set_LRMM(strLeftRightMinMax);
                 }
             }
-            if (lineType === TacticalLines.BS_3D_RADARC) {
+            if (lineType === TacticalLines.BS_RADARC) {
                 let AM: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
                 let AN: Array<number> = milStd.getModifiers_AM_AN_X(Modifiers.AN_AZIMUTH);
                 if (AM != null) {
@@ -467,8 +467,8 @@ export class clsRenderer {
             switch (lineType) {
                 case TacticalLines.PBS_CIRCLE:
                 case TacticalLines.BBS_POINT:
-                case TacticalLines.BS_3D_ROUTE:
-                case TacticalLines.BS_3D_TRACK:
+                case TacticalLines.BS_ROUTE:
+                case TacticalLines.BS_TRACK:
                 case TacticalLines.BS_ORBIT:
                     let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
                     if (AM != null && AM.length > 0) {
@@ -484,7 +484,7 @@ export class clsRenderer {
                 default:
                     break;
             }
-            if (lineType === TacticalLines.BS_3D_TRACK) {
+            if (lineType === TacticalLines.BS_TRACK) {
                 let AM: Array<double> = milStd.getModifiers_AM_AN_X(Modifiers.AM_DISTANCE);
                 if (AM != null) {
                     let strAM: string = "";
@@ -1872,8 +1872,8 @@ export class clsRenderer {
                         case TacticalLines.RANGE_FAN:
                         case TacticalLines.RANGE_FAN_SECTOR:
                         case TacticalLines.RADAR_SEARCH:
-                        case TacticalLines.BS_3D_RADARC:
-                        case TacticalLines.BS_3D_CAKE: {
+                        case TacticalLines.BS_RADARC:
+                        case TacticalLines.BS_CAKE: {
                             if (tg.get_FillColor() == null || tg.get_FillColor().getAlpha() < 2) {
                                 break;
                             }
@@ -2354,8 +2354,8 @@ export class clsRenderer {
                             case TacticalLines.RANGE_FAN:
                             case TacticalLines.RANGE_FAN_SECTOR:
                             case TacticalLines.RADAR_SEARCH:
-                            case TacticalLines.BS_3D_RADARC:
-                            case TacticalLines.BS_3D_CAKE: {
+                            case TacticalLines.BS_RADARC:
+                            case TacticalLines.BS_CAKE: {
                                 if (tg.get_FillColor() == null || tg.get_FillColor().getAlpha() < 2) {
                                     break;
                                 }
@@ -2494,15 +2494,15 @@ export class clsRenderer {
                 }
 
                 case 330500: {
-                    return TacticalLines.ROUTE;
+                    return TacticalLines.TRAFFIC_ROUTE;
                 }
 
                 case 330501: {
-                    return TacticalLines.ROUTE_ONEWAY;
+                    return TacticalLines.TRAFFIC_ROUTE_ONEWAY;
                 }
 
                 case 330502: {
-                    return TacticalLines.ROUTE_ALT;
+                    return TacticalLines.TRAFFIC_ROUTE_ALT;
                 }
 
                 case 344100: {

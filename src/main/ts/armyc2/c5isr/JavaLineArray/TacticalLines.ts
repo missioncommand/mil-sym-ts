@@ -43,11 +43,11 @@ export class TacticalLines {
     public static readonly BS_BBOX = 15000004;
 
     public static readonly BS_ORBIT = 16000001;
-    public static readonly BS_3D_ROUTE = 16000002;
-    public static readonly BS_3D_RADARC = 16000003;
+    public static readonly BS_ROUTE = 16000002;
+    public static readonly BS_RADARC = 16000003;
     public static readonly BS_POLYARC = 16000004;
-    public static readonly BS_3D_CAKE = 16000005;
-    public static readonly BS_3D_TRACK = 16000006;
+    public static readonly BS_CAKE = 16000005;
+    public static readonly BS_TRACK = 16000006;
 
     public static readonly PZ: number = 22138000;
     public static readonly LZ: number = 22137000;
@@ -176,8 +176,8 @@ export class TacticalLines {
     public static readonly ASR_ONEWAY: number = 25330401;
     public static readonly ASR_ALT: number = 25330403;
     public static readonly ASR_TWOWAY: number = 25330402;
-    public static readonly ROUTE_ONEWAY: number = 25330501;
-    public static readonly ROUTE_ALT: number = 25330502;
+    public static readonly TRAFFIC_ROUTE_ONEWAY: number = 25330501;
+    public static readonly TRAFFIC_ROUTE_ALT: number = 25330502;
     public static readonly BEARING: number = 26400000;
     public static readonly BEARING_EW: number = 220101;
     public static readonly BEARING_J: number = 220107;
@@ -517,7 +517,7 @@ export class TacticalLines {
     public static readonly GENERIC_AREA: number = 25120700;
     public static readonly HOL: number = 25141800;
     public static readonly BHL: number = 2514190;
-    public static readonly ROUTE: number = 25330500;
+    public static readonly TRAFFIC_ROUTE: number = 25330500;
     public static readonly FPOL: number = 25344100;
     public static readonly RPOL: number = 25344200;
 

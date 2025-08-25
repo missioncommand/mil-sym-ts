@@ -834,8 +834,8 @@ export class clsUtility {
                                 case TacticalLines.RANGE_FAN:
                                 case TacticalLines.RANGE_FAN_SECTOR:
                                 case TacticalLines.RADAR_SEARCH:
-                                case TacticalLines.BS_3D_RADARC:
-                                case TacticalLines.BS_3D_CAKE:
+                                case TacticalLines.BS_RADARC:
+                                case TacticalLines.BS_CAKE:
                                 case TacticalLines.BBS_AREA:
                                 case TacticalLines.BBS_RECTANGLE: {
                                     shape.setFillColor(null);
@@ -974,9 +974,9 @@ export class clsUtility {
                 case TacticalLines.ASR_ONEWAY:
                 case TacticalLines.ASR_TWOWAY:
                 case TacticalLines.ASR_ALT:
-                case TacticalLines.ROUTE:
-                case TacticalLines.ROUTE_ONEWAY:
-                case TacticalLines.ROUTE_ALT: {
+                case TacticalLines.TRAFFIC_ROUTE:
+                case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+                case TacticalLines.TRAFFIC_ROUTE_ALT: {
                     result = true;
                     break;
                 }
@@ -1350,15 +1350,15 @@ export class clsUtility {
                 case TacticalLines.RANGE_FAN_FILL:
                 case TacticalLines.RANGE_FAN_SECTOR:
                 case TacticalLines.RADAR_SEARCH:
-                case TacticalLines.BS_3D_RADARC:
-                case TacticalLines.BS_3D_CAKE:
+                case TacticalLines.BS_RADARC:
+                case TacticalLines.BS_CAKE:
                 case TacticalLines.PAA_RECTANGULAR:
                 case TacticalLines.RECTANGULAR_TARGET:
                 case TacticalLines.FSA_RECTANGULAR:
                 case TacticalLines.SHIP_AOI_RECTANGULAR:
                 case TacticalLines.DEFENDED_AREA_RECTANGULAR:
-                case TacticalLines.BS_3D_ROUTE:
-                case TacticalLines.BS_3D_TRACK:
+                case TacticalLines.BS_ROUTE:
+                case TacticalLines.BS_TRACK:
                 case TacticalLines.FFA_RECTANGULAR:
                 case TacticalLines.RFA_RECTANGULAR:
                 case TacticalLines.NFA_RECTANGULAR:
@@ -1718,8 +1718,8 @@ export class clsUtility {
                 case TacticalLines.ASR_ONEWAY:
                 case TacticalLines.ASR_TWOWAY:
                 case TacticalLines.ASR_ALT:
-                case TacticalLines.ROUTE_ONEWAY:
-                case TacticalLines.ROUTE_ALT:
+                case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+                case TacticalLines.TRAFFIC_ROUTE_ALT:
                 case TacticalLines.ATWALL: {
                     break;
                 }
@@ -2187,7 +2187,7 @@ export class clsUtility {
             switch (linetype) {
                 case TacticalLines.MSR:
                 case TacticalLines.ASR:
-                case TacticalLines.ROUTE:
+                case TacticalLines.TRAFFIC_ROUTE:
                 case TacticalLines.BOUNDARY: {
                     if (tg.get_H() == null || tg.get_H().length === 0) {
 
@@ -2239,7 +2239,7 @@ export class clsUtility {
             switch (linetype) {
                 case TacticalLines.MSR:
                 case TacticalLines.ASR:
-                case TacticalLines.ROUTE:
+                case TacticalLines.TRAFFIC_ROUTE:
                 case TacticalLines.BOUNDARY: {
                     if (tg.get_H() == null || tg.get_H().length === 0) {
 
@@ -2305,7 +2305,7 @@ export class clsUtility {
             switch (linetype) {
                 case TacticalLines.ASR:
                 case TacticalLines.MSR:
-                case TacticalLines.ROUTE:
+                case TacticalLines.TRAFFIC_ROUTE:
                 case TacticalLines.BOUNDARY: {
                     break;
                 }
