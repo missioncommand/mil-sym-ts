@@ -737,6 +737,11 @@ export class clsUtilityCPOF {
                 }
 
                 case TacticalLines.BS_POLYARC: {
+                    // Polyarc points should be counterclockwise 
+                    if (clsUtilityCPOF.CalculateSignedAreaOfPolygon(tg.LatLongs) < 0) {
+                        tg.LatLongs = [tg.LatLongs[0]].concat(tg.LatLongs.slice(1).reverse());
+                    }
+
                     let pPointsArc: Array<POINT2> = new Array();
                     let pPoints: Array<POINT2> = new Array();
                     pPoints.push(pt0);
@@ -2834,4 +2839,21 @@ export class clsUtilityCPOF {
         }
     }
 
+    /**
+     * Calculating the signed area will tell you which direction the points are going.  
+     * Negative = Clock-wise, Positive = counter clock-wise
+     * A = 1/2 * (x1*y2 - x2*y1 + x2*y3 - x3*y2 + ... + xn*y1 - x1*yn)
+     */
+    static CalculateSignedAreaOfPolygon(coords: POINT2[]): number {
+        var signedArea = 0;
+        const len = coords.length;
+        for (var i = 0; i < len; i++) {
+            const x1 = coords[i].getX();
+            const y1 = coords[i].getY();
+            const x2 = coords[(i + 1) % len].getX();
+            const y2 = coords[(i + 1) % len].getY();
+            signedArea += (x1 * y2 - x2 * y1);
+        }
+        return signedArea / 2;
+    }
 }
