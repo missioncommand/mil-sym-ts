@@ -153,6 +153,7 @@ export class SinglePointSVGRenderer {
             let icon: boolean = false;
             let asIcon: boolean = false;
             let noFrame: boolean = false;
+            let frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null = null;
 
             let ver: int = SymbolID.getVersion(symbolID);
 
@@ -381,9 +382,17 @@ export class SinglePointSVGRenderer {
 
                 hasDisplayModifiers = ModifierRenderer.hasDisplayModifiers(symbolID, modifiers);
                 hasTextModifiers = ModifierRenderer.hasTextModifiers(symbolID, modifiers);
+
+                if(hasDisplayModifiers || hasTextModifiers)
+                {
+                    let cv:any = RendererUtilities.getCanvas(2,2);
+                    frc = RendererUtilities.getContext(cv);
+                }
+
+
                 //process display modifiers
                 if (hasDisplayModifiers) {
-                    newSDI = ModifierRenderer.processUnitDisplayModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
+                    newSDI = ModifierRenderer.processUnitDisplayModifiers(si, symbolID, modifiers, attributes, frc);
                     if (newSDI != null) {
                         si = newSDI as SVGSymbolInfo;
                         newSDI = null;
@@ -394,179 +403,7 @@ export class SinglePointSVGRenderer {
             //process text modifiers
             if (hasTextModifiers) 
             {
-                if(modifiers == null)
-                    modifiers = new Map<string,string>();
-                let ss: int = SymbolID.getSymbolSet(symbolID);
-                switch (ss) {
-                    case SymbolID.SymbolSet_LandUnit:
-                    case SymbolID.SymbolSet_LandCivilianUnit_Organization: {
-                        if (ver >= SymbolID.Version_2525E) {
-
-                            newSDI = ModifierRenderer.processLandUnitTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        else {
-
-                            newSDI = ModifierRenderer.processLandUnitTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_LandEquipment:
-                    case SymbolID.SymbolSet_SignalsIntelligence_Land: {
-                        if (ver >= SymbolID.Version_2525E) {
-
-                            newSDI = ModifierRenderer.processLandEquipmentTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        else {
-
-                            newSDI = ModifierRenderer.processLandEquipmentTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_LandInstallation: {
-                        if (ver >= SymbolID.Version_2525E) {
-
-                            newSDI = ModifierRenderer.processLandInstallationTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        else {
-
-                            newSDI = ModifierRenderer.processLandInstallationTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_DismountedIndividuals: {
-                        newSDI = ModifierRenderer.processDismountedIndividualsTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_Space:
-                    case SymbolID.SymbolSet_SpaceMissile:
-                    case SymbolID.SymbolSet_Air:
-                    case SymbolID.SymbolSet_AirMissile:
-                    case SymbolID.SymbolSet_SignalsIntelligence_Air: {
-                        if (ver >= SymbolID.Version_2525E) {
-
-                            newSDI = ModifierRenderer.processAirSpaceUnitTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        else {
-
-                            newSDI = ModifierRenderer.processAirSpaceUnitTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_SignalsIntelligence_Space: {
-                        if (ver < SymbolID.Version_2525E) {
-
-                            newSDI = ModifierRenderer.processAirSpaceUnitTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        else//SIGINT in 2525E+ uses modifer places based on frame shape
-                        {
-                            let frameShape: string = SymbolID.getFrameShape(symbolID);
-                            if (frameShape === SymbolID.FrameShape_Space || frameShape === SymbolID.FrameShape_Air) {
-
-                                newSDI = ModifierRenderer.processAirSpaceUnitTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                            }
-
-                            else {
-                                if (frameShape === SymbolID.FrameShape_LandEquipment_SeaSurface) {
-                                    //sea surface, but can't tell which so default land equip
-                                    newSDI = ModifierRenderer.processLandEquipmentTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                                }
-
-                                else {
-                                    if (frameShape === SymbolID.FrameShape_SeaSubsurface) {
-
-                                        newSDI = ModifierRenderer.processSeaSubSurfaceTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                                    }
-
-                                    else {
-                                        //default land equipment
-                                        newSDI = ModifierRenderer.processLandEquipmentTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                                    }
-
-                                }
-
-                            }
-
-                        }
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_SeaSurface:
-                    case SymbolID.SymbolSet_SignalsIntelligence_SeaSurface: {
-                        if (ver >= SymbolID.Version_2525E) {
-
-                            newSDI = ModifierRenderer.processSeaSurfaceTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        else {
-
-                            newSDI = ModifierRenderer.processSeaSurfaceTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_SeaSubsurface:
-                    case SymbolID.SymbolSet_SignalsIntelligence_SeaSubsurface: {
-                        if (ver >= SymbolID.Version_2525E) {
-
-                            newSDI = ModifierRenderer.processSeaSubSurfaceTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        else {
-
-                            newSDI = ModifierRenderer.processSeaSubSurfaceTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_Activities: {
-                        if (ver >= SymbolID.Version_2525E) {
-
-                            newSDI = ModifierRenderer.processActivitiesTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        else {
-
-                            newSDI = ModifierRenderer.processActivitiesTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        }
-
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_CyberSpace: {
-                        if (ver >= SymbolID.Version_2525E)
-                            newSDI = ModifierRenderer.processCyberSpaceTextModifiersE(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        else
-                            newSDI = ModifierRenderer.processCyberSpaceTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                        break;
-                    }
-
-                    case SymbolID.SymbolSet_MineWarfare: {
-                        break;
-                    }
-                    //no modifiers
-                    case SymbolID.SymbolSet_Unknown:
-                    default: { //in theory, will never get here
-                        newSDI = ModifierRenderer.processUnknownTextModifiers(si, symbolID, modifiers, attributes, this._fontRenderContext);
-                    }
-
-                }
-
+                newSDI = ModifierRenderer.processSPTextModifiers(si, symbolID, modifiers, attributes, frc);
             }
 
             if (newSDI != null) {
@@ -947,17 +784,24 @@ export class SinglePointSVGRenderer {
                 hasTextModifiers = false;
                 hasDisplayModifiers = false;
             }
+
             //process display modifiers
+            let frc:any;
+            if(hasDisplayModifiers || hasTextModifiers)
+            {
+                let cv:any = RendererUtilities.getCanvas(2,2);
+                frc = RendererUtilities.getContext(cv);
+            }
             if (asIcon === false && (hasTextModifiers || hasDisplayModifiers)) {
                 let sdiTemp: SymbolDimensionInfo;
                 let cLineColor: Color = RendererUtilities.getColorFromHexString(lineColor);
 
                 if (SymbolUtilities.isSPWithSpecialModifierLayout(symbolID))//(SymbolUtilitiesD.isTGSPWithSpecialModifierLayout(symbolID))
                 {
-                    sdiTemp = ModifierRenderer.ProcessTGSPWithSpecialModifierLayout(si, symbolID, modifiers, attributes, cLineColor, this._fontRenderContext);
+                    sdiTemp = ModifierRenderer.ProcessTGSPWithSpecialModifierLayout(si, symbolID, modifiers, attributes, cLineColor, frc);
                 }
                 else {
-                    sdiTemp = ModifierRenderer.ProcessTGSPModifiers(si, symbolID, modifiers, attributes, cLineColor, this._fontRenderContext);
+                    sdiTemp = ModifierRenderer.ProcessTGSPModifiers(si, symbolID, modifiers, attributes, cLineColor, frc);
                 }
                 siNew = (sdiTemp instanceof SVGSymbolInfo ? sdiTemp as SVGSymbolInfo : null);
             }

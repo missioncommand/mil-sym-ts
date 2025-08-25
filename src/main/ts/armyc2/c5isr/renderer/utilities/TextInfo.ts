@@ -42,9 +42,9 @@ export class TextInfo {
 		{
 			let osc:OffscreenCanvas | Canvas
 			if(this.OSCDefined)
-				osc = new OffscreenCanvas(10,10);
+				osc = new OffscreenCanvas(2,2);
 			else
-				osc = createCanvas(10,10);
+				osc = createCanvas(2,2);
 			
 			ctx = osc.getContext("2d");
 			

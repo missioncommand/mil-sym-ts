@@ -160,6 +160,8 @@ export class MilStdAttributes {
 
     public static readonly FontSize: string = "FONTSIZE";
 
+    public static readonly ModifierPlacement:string = "MODIFIERPLACEMENT";
+
 
     /**
      * No Longer relevant
@@ -208,6 +210,7 @@ export class MilStdAttributes {
             list.push(MilStdAttributes.FontFamily);
             list.push(MilStdAttributes.FontStyle);
             list.push(MilStdAttributes.FontStyle);
+            list.push(MilStdAttributes.ModifierPlacement);
 
         }
         else {

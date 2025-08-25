@@ -42,6 +42,7 @@ import { Canvas, CanvasRenderingContext2D, createCanvas } from 'canvas';
 import { SVGLookup } from "./utilities/SVGLookup";
 import { SVGInfo } from "./utilities/SVGInfo";
 import { ErrorLogger } from "./utilities/ErrorLogger";
+import { Modifier } from "./utilities/Modifier";
 
 
 /**
@@ -124,7 +125,7 @@ export class ModifierRenderer implements SettingsEventListener {
 
         let RS: RendererSettings = RendererSettings.getInstance();
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont, frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -1764,12 +1765,12 @@ export class ModifierRenderer implements SettingsEventListener {
      * @param attributes
      * @return
      */
-    public static processUnknownTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
+    public static processUnknownTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo {
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
 
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont,frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -2338,998 +2339,12 @@ export class ModifierRenderer implements SettingsEventListener {
 
     }
 
-    /**
-     * @param sdi
-     * @param symbolID
-     * @param modifiers
-     * @param attributes
-     * @return
-     */
-    public static processLandUnitTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-
+    public static processSPTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo {
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
 
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-        let ss: int = SymbolID.getSymbolSet(symbolID);
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-            //modifiers[Modifiers.CC_COUNTRY_CODE] = symbolID.substring(12,14);
-        }
-
-        //            int y0 = 0;//W            E/F
-        //            int y1 = 0;//X/Y          G
-        //            int y2 = 0;//V/AD/AE      H/AF
-        //            int y3 = 0;//T            M CC
-        //            int y4 = 0;//Z            J/K/L/N/P
-        //
-        //            y0 = bounds.y - 0;
-        //            y1 = bounds.y - labelHeight;
-        //            y2 = bounds.y - (labelHeight + (int)bufferText) * 2;
-        //            y3 = bounds.y - (labelHeight + (int)bufferText) * 3;
-        //            y4 = bounds.y - (labelHeight + (int)bufferText) * 4;
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-
-        //if(Modifiers.X_ALTITUDE_DEPTH in modifiers || Modifiers.Y_LOCATION in modifiers)
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            let xm: string;
-            let
-                ym: string;
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) && SymbolUtilities.hasModifier(symbolID, Modifiers.X_ALTITUDE_DEPTH)) {
-                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);// xm = modifiers.X;
-            }
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                ym = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-            if (xm == null && ym != null) {
-                modifierValue = ym;
-            }
-            else {
-                if (xm != null && ym == null) {
-                    modifierValue = xm;
-                }
-                else {
-                    if (xm != null && ym != null) {
-                        modifierValue = xm + "  " + ym;
-                    }
-                }
-
-            }
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above center 
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) && SymbolUtilities.hasModifier(symbolID, Modifiers.G_STAFF_COMMENTS)) {
-            modifierValue = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //just above H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //just below center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-                modifierValue += modifiers.get(Modifiers.M_HIGHER_FORMATION);
-            }
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.Z_SPEED)) {
-            modifierValue = modifiers.get(Modifiers.Z_SPEED);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below T
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING)
-            || modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)//
-            || modifiers.has(Modifiers.P_IFF_SIF_AIS))//
-        {
-            modifierValue = "";
-
-            let jm: string;
-            let
-                km: string;
-            let
-                pm: string;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-            if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)) {
-                km = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS);
-            }
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
-                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-
-            if (jm != null && jm !== "") {
-                modifierValue = modifierValue + jm;
-            }
-            if (km != null && km !== "") {
-                modifierValue = modifierValue + " " + km;
-            }
-            if (pm != null && pm !== "") {
-                modifierValue = modifierValue + " " + pm;
-            }
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below M
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above X/Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.F_REINFORCED_REDUCED) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string;
-            let
-                F: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.F_REINFORCED_REDUCED)) {
-                F = modifiers.get(Modifiers.F_REINFORCED_REDUCED);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue = E;
-            }
-
-            if (F != null && F !== "") {
-                if (F.toUpperCase() === ("R")) {
-                    F = "(+)";
-                }
-                else if (F.toUpperCase() === ("D")) {
-                    F = "(-)";
-                }
-                else if (F.toUpperCase() === ("RD")) {
-                    F = "(" + String.fromCharCode(177) + ")";
-                }
-            }
-
-            if (F != null && F !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + F;
-                }
-                else {
-                    modifierValue = F;
-                }
-            }
-
-            if (AS != null && AS !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + AS;
-                }
-                else {
-                    modifierValue = AS;
-                }
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.AA_SPECIAL_C2_HQ) && SymbolUtilities.hasModifier(symbolID, Modifiers.AA_SPECIAL_C2_HQ)) {
-            modifierValue = modifiers.get(Modifiers.AA_SPECIAL_C2_HQ);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //centered horizontally
-                x = ((symbolBounds.getX() + (symbolBounds.getWidth() * 0.5)) - (labelWidth * 0.5)) as int;
-
-                //centered vertically
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-
-    }
-
-    public static processLandUnitTextModifiersE(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color = RendererUtilities.getIdealOutlineColor(textColor);
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        //Rectangle2D imageBounds = new Rectangle(0,0, sdi.getImage().getWidth(), sdi.getImage().getHeight());
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-        let ss: int = SymbolID.getSymbolSet(symbolID);
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-            //modifiers[Modifiers.CC_COUNTRY_CODE] = symbolID.substring(12,14);
-        }
-
-        //            int y0 = 0;//W            E/F
-        //            int y1 = 0;//X/Y          G/AQ
-        //            int y2 = 0;//V/AD/AE      H/AF
-        //            int y3 = 0;//T            M CC
-        //            int y4 = 0;//Z            J/K/L/N/P
-        //
-        //            y0 = bounds.y - 0;
-        //            y1 = bounds.y - labelHeight;
-        //            y2 = bounds.y - (labelHeight + (int)bufferText) * 2;
-        //            y3 = bounds.y - (labelHeight + (int)bufferText) * 3;
-        //            y4 = bounds.y - (labelHeight + (int)bufferText) * 4;
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-
-        //if(Modifiers.X_ALTITUDE_DEPTH in modifiers || Modifiers.Y_LOCATION in modifiers)
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            let xm: string;
-            let ym: string;
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) && SymbolUtilities.hasModifier(symbolID, Modifiers.X_ALTITUDE_DEPTH)) {
-                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);// xm = modifiers.X;
-            }
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                ym = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-            if (xm == null && ym != null) {
-                modifierValue = ym;
-            }
-            else {
-                if (xm != null && ym == null) {
-                    modifierValue = xm;
-                }
-                else {
-                    if (xm != null && ym != null) {
-                        modifierValue = xm + "  " + ym;
-                    }
-                }
-
-            }
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-            modifierValue = null;
-
-            let gm: string;
-            let aqm: string;
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS) && SymbolUtilities.hasModifier(symbolID, Modifiers.G_STAFF_COMMENTS)) {
-                gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);// xm = modifiers.X;
-            }
-            if (modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-                aqm = modifiers.get(Modifiers.AQ_GUARDED_UNIT);// ym = modifiers.Y;
-            }
-            if (gm == null && aqm != null) {
-                modifierValue = aqm;
-            }
-            else {
-                if (gm != null && aqm == null) {
-                    modifierValue = gm;
-                }
-                else {
-                    if (gm != null && aqm != null) {
-                        modifierValue = gm + "  " + aqm;
-                    }
-                }
-
-            }
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) || modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-            modifierValue = null;
-            let hm: string;
-            let afm: string;
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-            if (modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-                afm = modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
-            }
-            if (hm == null && afm != null) {
-                modifierValue = afm;
-            }
-            else {
-                if (hm != null && afm == null) {
-                    modifierValue = hm;
-                }
-                else {
-                    if (hm != null && afm != null) {
-                        modifierValue = hm + "  " + afm;
-                    }
-                }
-
-            }
-
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE) || modifiers.has(Modifiers.AD_PLATFORM_TYPE) || modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
-            modifierValue = "";
-
-            let vm: string;
-            let
-                adm: string;
-            let
-                aem: string;
-
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-                vm = modifiers.get(Modifiers.V_EQUIP_TYPE);
-            }
-            if (modifiers.has(Modifiers.AD_PLATFORM_TYPE)) {
-                adm = modifiers.get(Modifiers.AD_PLATFORM_TYPE);
-            }
-            if (modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
-                aem = modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
-            }
-            if (vm != null && vm !== "") {
-                modifierValue = modifierValue + vm;
-            }
-            if (adm != null && adm !== "") {
-                modifierValue = modifierValue + " " + adm;
-            }
-            if (aem != null && aem !== "") {
-                modifierValue = modifierValue + " " + aem;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.C_QUANTITY) ||
-            modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) 
-        {
-
-            modifierValue = null;
-
-            let cm: string;
-            let tm: string;
-
-            if (modifiers.has(Modifiers.C_QUANTITY)) {
-                cm = modifiers.get(Modifiers.C_QUANTITY);// xm = modifiers.X;
-            }
-            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                tm = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);// ym = modifiers.Y;
-            }
-
-            modifierValue = cm + " " + tm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-                modifierValue += modifiers.get(Modifiers.M_HIGHER_FORMATION);
-            }
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.Z_SPEED)) {
-            modifierValue = modifiers.get(Modifiers.Z_SPEED);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below T
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING)
-            || modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)//
-            || modifiers.has(Modifiers.L_SIGNATURE_EQUIP)
-            || modifiers.has(Modifiers.P_IFF_SIF_AIS))//
-        {
-            modifierValue = "";
-
-            let jm: string;
-            let
-                km: string;
-            let
-                lm: string;
-            let
-                pm: string;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-            if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)) {
-                km = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS);
-            }
-            if (modifiers.has(Modifiers.L_SIGNATURE_EQUIP)) {
-                lm = modifiers.get(Modifiers.L_SIGNATURE_EQUIP);
-            }
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
-                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-
-            if (jm != null && jm !== "") {
-                modifierValue = modifierValue + jm;
-            }
-            if (km != null && km !== "") {
-                modifierValue = modifierValue + " " + km;
-            }
-            if (lm != null && lm !== "") {
-                modifierValue = modifierValue + " " + lm;
-            }
-            if (pm != null && pm !== "") {
-                modifierValue = modifierValue + " " + pm;
-            }
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below M
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above X/Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.F_REINFORCED_REDUCED) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string;
-            let
-                F: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.F_REINFORCED_REDUCED)) {
-                F = modifiers.get(Modifiers.F_REINFORCED_REDUCED);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue = E;
-            }
-
-            if (F != null && F !== "") {
-                if (F.toUpperCase() === ("R")) {
-                    F = "(+)";
-                }
-                else {
-                    if (F.toUpperCase() === ("D")) {
-                        F = "(-)";
-                    }
-                    else {
-                        if (F.toUpperCase() === ("RD")) {
-                            F = "(" + String.fromCharCode(177) + ")";
-                        }
-                    }
-
-                }
-
-            }
-
-            if (F != null && F !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + F;
-                }
-                else {
-                    modifierValue = F;
-                }
-            }
-
-            if (AS != null && AS !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + AS;
-                }
-                else {
-                    modifierValue = AS;
-                }
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.AA_SPECIAL_C2_HQ) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.AA_SPECIAL_C2_HQ)) {
-            modifierValue = modifiers.get(Modifiers.AA_SPECIAL_C2_HQ);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                x = ((symbolBounds.getX() + (symbolBounds.getWidth() * 0.5)) - (labelWidth * 0.5)) as int;
-
-                y = (symbolBounds.getHeight()) as int;//checkpoint, get box above the point
-                y = ((y * 0.5) + ((labelHeight - descent) * 0.5)) as int;
-                y = symbolBounds.getY() as int + y;
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-
-    }
-
-    public static processAirSpaceUnitTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont, frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -3398,700 +2413,29 @@ export class ModifierRenderer implements SettingsEventListener {
             modifiers.set(Modifiers.AS_COUNTRY, cc);
         }
 
-        //            int y0 = 0;//             T
-        //            int y1 = 0;//             P
-        //            int y2 =                  V
-        //            int y3 = 0;//             Z/X
-        //            int y4 = 0;//             G/H
-        //
+
         // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
         let modifierValue: string;
         let tiTemp: TextInfo;
 
-        if (SymbolUtilities.isAir(symbolID)) {
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+        let mods:Array<Modifier> = ModifierRenderer.getLabelPositionIndexes(symbolID, modifiers, attributes);
 
-                let gm: string = "";
-                let hm: string = "";
-                if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                    gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-                }
-
-
-                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-
-                    hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                }
-
-
-                modifierValue = gm + " " + hm;
-                modifierValue = modifierValue.trim();
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //below Z/X
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-            if (modifiers.has(Modifiers.Z_SPEED) || modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                modifierValue = "";
-                let zm: string = "";
-                let xm: string = "";
-                if (modifiers.has(Modifiers.Z_SPEED)) {
-
-                    zm = modifiers.get(Modifiers.Z_SPEED);
-                }
-
-
-                if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-
-                    xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-                }
-
-
-                modifierValue = zm + " " + xm;
-                modifierValue = modifierValue.trim();
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //below V
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-                modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //center
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-        
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
-                modifierValue = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //above V
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //above P
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) || modifiers.has(Modifiers.AS_COUNTRY))
-                {
-                    modifierValue = null;
-                    modifierValue = "";
-                    let em: string = "";
-                    let asm: string = "";
-        
-                    if(modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER))
-                        em = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-        
-                    if(modifiers.has(Modifiers.AS_COUNTRY))
-                        asm = modifiers.get(Modifiers.AS_COUNTRY);
-        
-                    modifierValue = em + " " + asm;
-                    modifierValue = modifierValue.trim();
-
-                if (modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //above T
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 3);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-                }
-            }
-        }
-        else //space
+        let mod:Modifier = null;
+        for(let i = 0; i < mods.length; i++)
         {
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-
-                let gm: string = "";
-                let hm: string = "";
-                if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                    gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-                }
-
-
-                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-
-                    hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                }
-
-
-                modifierValue = gm + " " + hm;
-                modifierValue = modifierValue.trim();
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //below Z/X
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-            if (modifiers.has(Modifiers.Z_SPEED) || modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                modifierValue = "";
-                let zm: string = "";
-                let xm: string = "";
-                if (modifiers.has(Modifiers.Z_SPEED)) {
-
-                    zm = modifiers.get(Modifiers.Z_SPEED);
-                }
-
-
-                if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-
-                    xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-                }
-
-
-                modifierValue = zm + " " + xm;
-                modifierValue = modifierValue.trim();
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //below center
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-                modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //above vertical center
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, 0, false, 1);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-                if (modifierValue != null && modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //above V
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) || modifiers.has(Modifiers.AS_COUNTRY))
-                {
-                    modifierValue = null;
-                    modifierValue = "";
-                    let em: string = "";
-                    let asm: string = "";
-        
-                    if(modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER))
-                        em = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-        
-                    if(modifiers.has(Modifiers.AS_COUNTRY))
-                        asm = modifiers.get(Modifiers.AS_COUNTRY);
-        
-                    modifierValue = em + " " + asm;
-                    modifierValue = modifierValue.trim();
-
-                if (modifierValue !== "") {
-                    tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                    labelBounds = tiTemp.getTextBounds();
-                    labelWidth = labelBounds.getWidth() as int;
-
-                    //on right
-                    x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                    //above T
-                    y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 3);
-
-                    tiTemp.setLocation(x, y);
-                    tiArray.push(tiTemp);
-
-                }
-            }
-        }
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processAirSpaceUnitTextModifiersE(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-        //                              AO
-        //                              B/C
-        //            int y0 = 0;//W            AS
-        //            int y1 = 0;//AR           T/Y
-        //            int y2 =     AD           V/AF
-        //            int y3 = 0;//             P/X/Z
-        //            int y4 = 0;//             G/H/J
-        //
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-        //if(Modifiers.C_QUANTITY in modifiers
-        let ad:number = SymbolID.getAmplifierDescriptor(symbolID);
-        if (modifiers.has(Modifiers.C_QUANTITY) && !(ad > 0 && ad < 30))//if C and no echelon
-        {
-            let text: string = modifiers.get(Modifiers.C_QUANTITY);
-            if (text != null) {
-                //bounds = armyc2.c5isr.renderer.utilities.RendererUtilities.getTextOutlineBounds(_modifierFont, text, new SO.Point(0,0));
-                tiTemp = new TextInfo(text, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-                x = Math.round((symbolBounds.getX() + (symbolBounds.getWidth() * 0.5)) - (labelWidth * 0.5)) as int;
-                y = Math.round(symbolBounds.getY() - bufferY - descent) as int;
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || 
-            modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
-            modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-
-            let gm: string = "";
-            let hm: string = "";
-            let jm: string = "";
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                gm = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-
-                hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-
-                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-
-
-            modifierValue = gm + " " + hm;
-            modifierValue = modifierValue.trim();
-            modifierValue += " " + jm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below P
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.P_IFF_SIF_AIS) || 
-            modifiers.has(Modifiers.Z_SPEED) || 
-            modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-            modifierValue = null;
-            let pm: string = "";
-            let zm: string = "";
-            let xm: string = "";
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
-
-                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-
-                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-            }
-            if (modifiers.has(Modifiers.Z_SPEED)) {
-
-                zm = modifiers.get(Modifiers.Z_SPEED);
-            }
-
-
-            modifierValue = pm + " " + xm;
-            modifierValue = modifierValue.trim();
-            modifierValue += " " + zm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE) || modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-            modifierValue = null;
-            let vm: string = "";
-            let afm: string = "";
-
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-
-                vm = modifiers.get(Modifiers.V_EQUIP_TYPE);
-            }
-
-
-            if (modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-
-                afm = modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
-            }
-
-
-            modifierValue = vm + " " + afm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) || modifiers.has(Modifiers.Y_LOCATION)) {
-            
-            let tm = "";
-            let ym = "";
-
-            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-
-                tm = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-            }
-
-
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-
-                ym = modifiers.get(Modifiers.Y_LOCATION);
-            }
-            
-            modifierValue = tm + " " + ym;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.AS_COUNTRY) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-            modifierValue = null;
-            let em: string = "";
-            let asm: string = "";
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-
-                em = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-
-                asm = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-
-            modifierValue = em + " " + asm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above T
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.AD_PLATFORM_TYPE)) {
-            modifierValue = null;
-
-            modifierValue = modifiers.get(Modifiers.AD_PLATFORM_TYPE);
-            
-
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true,0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-
-            modifierValue = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above AD
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true,1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.W_DTG_1)) {
-
-                modifierValue = modifiers.get(Modifiers.W_DTG_1);
-            }
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above AR
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true,2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
+            mod = mods.at(i);
+
+            tiTemp = new TextInfo(mod.getText(), 0, 0, modifierFont, frc);
+            labelBounds = tiTemp.getTextBounds();
+            labelWidth = labelBounds.getWidth();
+
+            //on left
+            x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, mod.getIndexX(), modifierFontHeight);
+            //above center V
+            y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, mod.getCentered(), mod.getIndexY());
+
+            tiTemp.setLocation(x, y);
+            tiArray.push(tiTemp);
         }
 
         // </editor-fold>
@@ -4111,4610 +2455,13 @@ export class ModifierRenderer implements SettingsEventListener {
         return newsdi;
     }
 
-    public static processLandEquipmentTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //                                 C
-        //            int y0 = 0;//W/AR         AS
-        //            int y1 = 0;//X/Y          G/AQ
-        //            int y2 = 0;//V/AD/AE      H/AF
-        //            int y3 = 0;//T            M
-        //            int y4 = 0;//Z            J/N/L/P
-        //
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-        //if(Modifiers.C_QUANTITY in modifiers
-        if (modifiers.has(Modifiers.C_QUANTITY)) {
-            let text: string = modifiers.get(Modifiers.C_QUANTITY);
-            if (text != null) {
-                //bounds = armyc2.c5isr.renderer.utilities.RendererUtilities.getTextOutlineBounds(_modifierFont, text, new SO.Point(0,0));
-                tiTemp = new TextInfo(text, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-                x = Math.round((symbolBounds.getX() + (symbolBounds.getWidth() * 0.5)) - (labelWidth * 0.5)) as int;
-                y = Math.round(symbolBounds.getY() - bufferY - descent) as int;
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        //if(Modifiers.X_ALTITUDE_DEPTH in modifiers || Modifiers.Y_LOCATION in modifiers)
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            let xm: string;
-            let
-                ym: string;
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);// xm = modifiers.X;
-            }
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                ym = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-            if (xm == null && ym != null) {
-                modifierValue = ym;
-            }
-            else {
-                if (xm != null && ym == null) {
-                    modifierValue = xm;
-                }
-                else {
-                    if (xm != null && ym != null) {
-                        modifierValue = xm + "  " + ym;
-                    }
-                }
-
-            }
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //just above center  V/AD/AE
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-            modifierValue = "";
-            let mg: string = "";
-            let maq: string = "";
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                mg = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-            if (modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-
-                maq = modifiers.get(Modifiers.AQ_GUARDED_UNIT);
-            }
-
-
-            modifierValue = mg + " " + maq;
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) || modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-            modifierValue = "";
-            let hm: string = "";
-            let
-                afm: string = "";
-
-            hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-            if (modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-                afm = modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
-            }
-
-            modifierValue = hm + " " + afm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.Z_SPEED)) {
-            modifierValue = modifiers.get(Modifiers.Z_SPEED);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below T
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING)
-            || modifiers.has(Modifiers.L_SIGNATURE_EQUIP)//
-            || modifiers.has(Modifiers.N_HOSTILE)//
-            || modifiers.has(Modifiers.P_IFF_SIF_AIS))//
-        {
-            modifierValue = null;
-
-            let jm: string;
-            let
-                lm: string;
-            let
-                nm: string;
-            let
-                pm: string;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-            if (modifiers.has(Modifiers.L_SIGNATURE_EQUIP) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.L_SIGNATURE_EQUIP)) {
-                lm = modifiers.get(Modifiers.L_SIGNATURE_EQUIP);
-            }
-            if (modifiers.has(Modifiers.N_HOSTILE) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.N_HOSTILE)) {
-                nm = modifiers.get(Modifiers.N_HOSTILE);
-            }
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.P_IFF_SIF_AIS)) {
-                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-
-            modifierValue = "";
-            if (jm != null && jm !== "") {
-                modifierValue = modifierValue + jm;
-            }
-            if (lm != null && lm !== "") {
-                modifierValue = modifierValue + " " + lm;
-            }
-            if (nm != null && nm !== "") {
-                modifierValue = modifierValue + " " + nm;
-            }
-            if (pm != null && pm !== "") {
-                modifierValue = modifierValue + " " + pm;
-            }
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1) ||
-            modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-            modifierValue = "";
-            let mw: string = "";
-            let mar: string = "";
-
-            if (modifiers.has(Modifiers.W_DTG_1))
-                mw = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-
-                mar = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
-            }
-
-
-            modifierValue = mw + " " + mar;
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above X/Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.AS_COUNTRY) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-            modifierValue = "";
-            let E: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue += E;
-            }
-
-            if (AS != null && AS !== "") {
-                modifierValue = modifierValue + " " + AS;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above G/AQ
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE) ||
-            modifiers.has(Modifiers.AD_PLATFORM_TYPE) ||
-            modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
-            let mv: string;
-            let
-                mad: string;
-            let
-                mae: string;
-
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-                mv = modifiers.get(Modifiers.V_EQUIP_TYPE);
-            }
-            if (modifiers.has(Modifiers.AD_PLATFORM_TYPE)) {
-                mad = modifiers.get(Modifiers.AD_PLATFORM_TYPE);
-            }
-            if (modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
-                mae = modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
-            }
-
-            modifierValue = "";
-            if (mv != null && mv !== "") {
-                modifierValue = modifierValue + mv;
-            }
-            if (mad != null && mad !== "") {
-                modifierValue = modifierValue + " " + mad;
-            }
-            if (mae != null && mae !== "") {
-                modifierValue = modifierValue + " " + mae;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processLandEquipmentTextModifiersE(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //                                 C
-        //            int y0 = 0;//W/           AS
-        //            int y1 = 0;//X/Y          G/AQ
-        //            int y2 = 0;//V/AD/AE      
-        //            int y3 = 0;//T            H/AF
-        //            int y4 = 0;//Z            J/K/L/N/P
-        //
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-        //if(Modifiers.C_QUANTITY in modifiers//moved to left in Ech1
-        /*if (modifiers.has(Modifiers.C_QUANTITY)) {
-            let text: string = modifiers.get(Modifiers.C_QUANTITY);
-            if (text != null) {
-                //bounds = armyc2.c5isr.renderer.utilities.RendererUtilities.getTextOutlineBounds(_modifierFont, text, new SO.Point(0,0));
-                tiTemp = new TextInfo(text, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-                x = Math.round((symbolBounds.getX() + (symbolBounds.getWidth() * 0.5)) - (labelWidth * 0.5)) as int;
-                y = Math.round(symbolBounds.getY() - bufferY - descent) as int;
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }//*/
-
-        //if(Modifiers.X_ALTITUDE_DEPTH in modifiers || Modifiers.Y_LOCATION in modifiers)
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            let xm: string;
-            let
-                ym: string;
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);// xm = modifiers.X;
-            }
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                ym = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-            if (xm == null && ym != null) {
-                modifierValue = ym;
-            }
-            else {
-                if (xm != null && ym == null) {
-                    modifierValue = xm;
-                }
-                else {
-                    if (xm != null && ym != null) {
-                        modifierValue = xm + "  " + ym;
-                    }
-                }
-
-            }
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //just above V/AD/AE
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-            modifierValue = "";
-            let mg: string = "";
-            let maq: string = "";
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                mg = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-            if (modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-
-                maq = modifiers.get(Modifiers.AQ_GUARDED_UNIT);
-            }
-
-
-            modifierValue = mg + " " + maq;
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //just above center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) || modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-            modifierValue = "";
-            let hm: string = "";
-            let
-                afm: string = "";
-
-            hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                hm = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-            if (modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-                afm = modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
-            }
-
-            modifierValue = hm + " " + afm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //just below G/AQ
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) || 
-            modifiers.has(Modifiers.C_QUANTITY)) {
-            
-            let cm: string;
-            let tm: string;
-
-            if (modifiers.has(Modifiers.C_QUANTITY)) {
-                cm = modifiers.get(Modifiers.C_QUANTITY);// xm = modifiers.X;
-            }
-            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                tm = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);// ym = modifiers.Y;
-            }
-
-            modifierValue = cm + " " + tm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //just below V/AD/AE
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.Z_SPEED)) {
-            modifierValue = modifiers.get(Modifiers.Z_SPEED);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below T
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING)
-            || modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)//
-            || modifiers.has(Modifiers.L_SIGNATURE_EQUIP)//
-            || modifiers.has(Modifiers.P_IFF_SIF_AIS))//
-        {
-            modifierValue = null;
-
-            let jm: string;
-            let
-                km: string;
-            let
-                lm: string;
-            let
-                pm: string;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-            if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)) {
-                km = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS);
-            }
-            if (modifiers.has(Modifiers.L_SIGNATURE_EQUIP) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.L_SIGNATURE_EQUIP)) {
-                lm = modifiers.get(Modifiers.L_SIGNATURE_EQUIP);
-            }
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.P_IFF_SIF_AIS)) {
-                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-
-            modifierValue = "";
-            if (jm != null && jm !== "") {
-                modifierValue = modifierValue + jm;
-            }
-            if (km != null && km !== "") {
-                modifierValue = modifierValue + km;
-            }
-            if (lm != null && lm !== "") {
-                modifierValue = modifierValue + " " + lm;
-            }
-            if (pm != null && pm !== "") {
-                modifierValue = modifierValue + " " + pm;
-            }
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below H/AF
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above X/Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE) ||
-            modifiers.has(Modifiers.AD_PLATFORM_TYPE) ||
-            modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
-            let mv: string;
-            let
-                mad: string;
-            let
-                mae: string;
-
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-                mv = modifiers.get(Modifiers.V_EQUIP_TYPE);
-            }
-            if (modifiers.has(Modifiers.AD_PLATFORM_TYPE)) {
-                mad = modifiers.get(Modifiers.AD_PLATFORM_TYPE);
-            }
-            if (modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
-                mae = modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
-            }
-
-            modifierValue = "";
-            if (mv != null && mv !== "") {
-                modifierValue = modifierValue + mv;
-            }
-            if (mad != null && mad !== "") {
-                modifierValue = modifierValue + " " + mad;
-            }
-            if (mae != null && mae !== "") {
-                modifierValue = modifierValue + " " + mae;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.AS_COUNTRY) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-            modifierValue = "";
-            let E: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue += E;
-            }
-
-            if (AS != null && AS !== "") {
-                modifierValue = modifierValue + " " + AS;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processLandInstallationTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();//new Array<TextInfo>(modifiers.size);
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //
-        //            int y0 = 0;//
-        //            int y1 = 0;//W            G
-        //            int y2 = 0;//X/Y          H
-        //            int y3 = 0;//T            J/K/P
-        //            int y4 = 0;//
-        //
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-            modifierValue = "";
-
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                modifierValue = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below center X/Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING)
-            || modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)//
-            || modifiers.has(Modifiers.P_IFF_SIF_AIS))//
-        {
-            modifierValue = null;
-
-            let jm: string;
-            let
-                km: string;
-            let
-                pm: string;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-            if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.K_COMBAT_EFFECTIVENESS)) {
-                km = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS);
-            }
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.P_IFF_SIF_AIS)) {
-                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-
-            modifierValue = "";
-            if (jm != null && jm !== "") {
-                modifierValue = modifierValue + jm;
-            }
-            if (km != null && km !== "") {
-                modifierValue = modifierValue + " " + km;
-            }
-            if (pm != null && pm !== "") {
-                modifierValue = modifierValue + " " + pm;
-            }
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = "";
-            let mw: string = "";
-            let mar: string = "";
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above center X/Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) || modifiers.has(Modifiers.AS_COUNTRY))
-            {
-                modifierValue = "";
-                let em: string = "";
-                let asm: string = "";
-    
-                if(modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER))
-                    em = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-    
-                if(modifiers.has(Modifiers.AS_COUNTRY))
-                    asm = modifiers.get(Modifiers.AS_COUNTRY);
-    
-                modifierValue = em + " " + asm;
-                modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) ||
-            modifiers.has(Modifiers.Y_LOCATION)) {
-            let mx: string;
-            let
-                my: string;
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                mx = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-            }
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                my = modifiers.get(Modifiers.Y_LOCATION);
-            }
-
-
-            modifierValue = "";
-            if (mx != null && mx !== "") {
-                modifierValue = modifierValue + mx;
-            }
-            if (my != null && my !== "") {
-                modifierValue = modifierValue + " " + my;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processLandInstallationTextModifiersE(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //
-        //            int y0 = 0;// W            AS
-        //            int y1 = 0;//X/Y           G/AQ
-        //            int y2 = 0;//              H
-        //            int y3 = 0;//C/AE          M
-        //            int y4 = 0;//T             J/K/P
-        //
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-            modifierValue = "";
-            let mg: string = "";
-            let maq: string = "";
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                mg = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-            if (modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-
-                maq = modifiers.get(Modifiers.AQ_GUARDED_UNIT);
-            }
-
-
-            modifierValue = mg + " " + maq;
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.C_QUANTITY) || 
-            modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)) {
-
-            modifierValue = "";
-            let mc = "";
-            let mae = "";
-
-            if(modifiers.has(Modifiers.C_QUANTITY))
-                mc = modifiers.get(Modifiers.C_QUANTITY);
-            if(modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
-                mae = modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
-
-            modifierValue = mc + " " + mae;
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //just below center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below C/AE
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-                modifierValue += modifiers.get(Modifiers.M_HIGHER_FORMATION);
-            }
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING)
-            || modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)//
-            || modifiers.has(Modifiers.P_IFF_SIF_AIS))//
-        {
-            modifierValue = null;
-
-            let jm: string;
-            let
-                km: string;
-            let
-                pm: string;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-            if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.K_COMBAT_EFFECTIVENESS)) {
-                km = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS);
-            }
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.P_IFF_SIF_AIS)) {
-                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-
-            modifierValue = "";
-            if (jm != null && jm !== "") {
-                modifierValue = modifierValue + jm;
-            }
-            if (km != null && km !== "") {
-                modifierValue = modifierValue + " " + km;
-            }
-            if (pm != null && pm !== "") {
-                modifierValue = modifierValue + " " + pm;
-            }
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below M
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = "";
-            let mw: string = "";
-            let mar: string = "";
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above X/Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.AS_COUNTRY) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-            modifierValue = "";
-            let E: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue += E;
-            }
-
-            if (AS != null && AS !== "") {
-                modifierValue = modifierValue + " " + AS;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) ||
-            modifiers.has(Modifiers.Y_LOCATION)) {
-            let mx: string;
-            let
-                my: string;
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                mx = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-            }
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                my = modifiers.get(Modifiers.Y_LOCATION);
-            }
-
-
-            modifierValue = "";
-            if (mx != null && mx !== "") {
-                modifierValue = modifierValue + mx;
-            }
-            if (my != null && my !== "") {
-                modifierValue = modifierValue + " " + my;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above vertical center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processDismountedIndividualsTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //
-        //            int y0 = 0;//W/           AS
-        //            int y1 = 0;//X/Y          G
-        //            int y2 = 0;//V/AF         H
-        //            int y3 = 0;//T            M
-        //            int y4 = 0;//Z            J/K/P
-        //
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-
-        //if(Modifiers.X_ALTITUDE_DEPTH in modifiers || Modifiers.Y_LOCATION in modifiers)
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            let xm: string;
-            let
-                ym: string;
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                xm = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);// xm = modifiers.X;
-            }
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                ym = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-            if (xm == null && ym != null) {
-                modifierValue = ym;
-            }
-            else {
-                if (xm != null && ym == null) {
-                    modifierValue = xm;
-                }
-                else {
-                    if (xm != null && ym != null) {
-                        modifierValue = xm + "  " + ym;
-                    }
-                }
-
-            }
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-            modifierValue = null;
-
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-
-                modifierValue = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = null;
-            let hm: string = "";
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-
-                modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-                modifierValue += modifiers.get(Modifiers.M_HIGHER_FORMATION);
-            }
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.Z_SPEED)) {
-            modifierValue = modifiers.get(Modifiers.Z_SPEED);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below T
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING)
-            || modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)//
-            || modifiers.has(Modifiers.P_IFF_SIF_AIS))//
-        {
-            modifierValue = null;
-
-            let jm: string;
-            let
-                km: string;
-            let
-                pm: string;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                jm = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-            if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.K_COMBAT_EFFECTIVENESS)) {
-                km = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS);
-            }
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS) && SymbolUtilities.canSymbolHaveModifier(symbolID, Modifiers.P_IFF_SIF_AIS)) {
-                pm = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-
-            modifierValue = "";
-            if (jm != null && jm !== "") {
-                modifierValue = modifierValue + jm;
-            }
-            if (km != null && km !== "") {
-                modifierValue = modifierValue + " " + km;
-            }
-            if (pm != null && pm !== "") {
-                modifierValue = modifierValue + " " + pm;
-            }
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below M
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = null;
-
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above X/Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE) ||
-            modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-            let mv: string;
-            let
-                maf: string;
-
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-                mv = modifiers.get(Modifiers.V_EQUIP_TYPE);
-            }
-            if (modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)) {
-                maf = modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
-            }
-
-
-            modifierValue = "";
-            if (mv != null && mv !== "") {
-                modifierValue = modifierValue + mv;
-            }
-            if (maf != null && maf !== "") {
-                modifierValue = modifierValue + " " + maf;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.AS_COUNTRY) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-            modifierValue = "";
-            let E: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue += E;
-            }
-
-            if (AS != null && AS !== "") {
-                modifierValue = modifierValue + " " + AS;
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processSeaSurfaceTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
+    public static ProcessTGSPWithSpecialModifierLayout(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, lineColor: Color, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo | null {
 
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
 
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //            int y0 = 0;//AQ/AR        E/T
-        //            int y1 = 0;//              V
-        //            int y2 =                   P
-        //            int y3 = 0;//             G/H
-        //            int y4 = 0;//             Y/Z
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-            modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
-            modifierValue = modifierValue = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) ||
-            modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = "";
-            let mg: string = "";
-            let
-                mh: string = "";
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-                mg += modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                mh += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            modifierValue = mg + " " + mh;
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below P
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.Y_LOCATION)
-            || modifiers.has(Modifiers.Z_SPEED))//
-        {
-            modifierValue = null;
-
-            let ym: string = "";
-            let
-                zm: string = "";
-
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                ym = modifiers.get(Modifiers.Y_LOCATION);
-            }
-            if (modifiers.has(Modifiers.Z_SPEED)) {
-                zm = modifiers.get(Modifiers.Z_SPEED);
-            }
-
-            modifierValue = ym + " " + zm;
-
-            modifierValue = modifierValue.trim();
-
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -3);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.AQ_GUARDED_UNIT) ||
-            modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-            modifierValue = null;
-
-            let maq: string = "";
-            let
-                mar: string = "";
-            if (modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-
-                maq = modifiers.get(Modifiers.AQ_GUARDED_UNIT);
-            }
-
-
-            if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-
-                mar = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
-            }
-
-
-            modifierValue = maq + " " + mar;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                /*//on left
-                x = (bounds.getX() - labelWidth - bufferXL) as int;
-                //across from T
-                y = (bounds.getHeight()) as int;
-                y = ((y * 0.5) + (labelHeight * 0.5)) as int;
-                y = y - ((labelHeight + bufferText) * 2);
-                y = bounds.getY() as int + y;
-                if (y <= bounds.getY() + labelHeight) //unless T is higher than top of the symbol
-                {
-                    y = bounds.getY() as int + labelHeight;
-                }//*/
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //top left
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string = "";
-            let AS: string = "";
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            modifierValue = E + " " + AS;
-            modifierValue = modifierValue.trim();
-
-
-            if ( modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 3);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-
-    }
-
-    public static processSeaSurfaceTextModifiersE(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //            int y0 = 0;//AQ/AR        E/T
-        //            int y1 = 0;//              V
-        //            int y2 =                   P
-        //            int y3 = 0;//             G/H
-        //            int y4 = 0;//             Y/Z
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-            modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
-            modifierValue = modifierValue = modifiers.get(Modifiers.P_IFF_SIF_AIS);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) ||
-            modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = "";
-            let mg: string = "";
-            let
-                mh: string = "";
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-                mg += modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                mh += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            modifierValue = mg + " " + mh;
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below P
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.Y_LOCATION)
-            || modifiers.has(Modifiers.Z_SPEED))//
-        {
-            modifierValue = null;
-
-            let ym: string = "";
-            let
-                zm: string = "";
-
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                ym = modifiers.get(Modifiers.Y_LOCATION);
-            }
-            if (modifiers.has(Modifiers.Z_SPEED)) {
-                zm = modifiers.get(Modifiers.Z_SPEED);
-            }
-
-            modifierValue = ym + " " + zm;
-
-            modifierValue = modifierValue.trim();
-
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -3);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.AQ_GUARDED_UNIT) ||
-            modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-            modifierValue = null;
-
-            let maq: string = "";
-            let
-                mar: string = "";
-            if (modifiers.has(Modifiers.AQ_GUARDED_UNIT)) {
-
-                maq = modifiers.get(Modifiers.AQ_GUARDED_UNIT);
-            }
-
-
-            if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-
-                mar = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
-            }
-
-
-            modifierValue = maq + " " + mar;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                /*//on left
-                x = (bounds.getX() - labelWidth - bufferXL) as int;
-                //across from T
-                y = (bounds.getHeight()) as int;
-                y = ((y * 0.5) + (labelHeight * 0.5)) as int;
-                y = y - ((labelHeight + bufferText) * 2);
-                y = bounds.getY() as int + y;
-                if (y <= bounds.getY() + labelHeight) //unless T is higher than top of the symbol
-                {
-                    y = bounds.getY() as int + labelHeight;
-                }//*/
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //top left
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string = "";
-            let AS: string = "";
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            modifierValue = E + " " + AS;
-            modifierValue = modifierValue.trim();
-
-
-            if ( modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 3);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-
-    }
-
-    public static processSeaSubSurfaceTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //            int y0 = 0;//AR           T
-        //            int y1 = 0;//             V
-        //            int y2 =                  X
-        //            int y3 = 0;//             G
-        //            int y4 = 0;//             H
-        //
-
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string = "";
-            let T: string = "";
-            let AS: string = "";
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                T = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            modifierValue = E + " " + T;
-            modifierValue = modifierValue.trim() + " " + AS;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //on top
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-
-                modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
-            }
-
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below T
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-            modifierValue = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //centered below V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-            modifierValue = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below X
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-
-                modifierValue = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
-            }
-
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //on top
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processSeaSubSurfaceTextModifiersE(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //                                      E/AS
-        //            int y0 = 0;//AQ/AR        T
-        //            int y1 = 0;//              V
-        //            int y2 =                   P
-        //            int y3 = 0;//             G/H
-        //            int y4 = 0;//             Y/Z
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-            modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above vertical center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
-                
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH) ||
-            modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
-            modifierValue = "";
-            let mx: string = "";
-            let
-                mp: string = "";
-
-            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                modifierValue = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-            }
-
-            if (modifiers.has(Modifiers.P_IFF_SIF_AIS)) {
-                modifierValue += " " + modifiers.get(Modifiers.P_IFF_SIF_AIS);
-            }
-
-            modifierValue = modifierValue.trim();
-
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below vertical center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS) ||
-            modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = "";
-            let mg: string = "";
-            let
-                mh: string = "";
-
-            if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-                mg += modifiers.get(Modifiers.G_STAFF_COMMENTS);
-            }
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                mh += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            modifierValue = mg + " " + mh;
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below P
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.Y_LOCATION)
-            || modifiers.has(Modifiers.Z_SPEED))//
-        {
-            modifierValue = null;
-
-            let ym: string = "";
-            let
-                zm: string = "";
-
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                ym = modifiers.get(Modifiers.Y_LOCATION);
-            }
-            if (modifiers.has(Modifiers.Z_SPEED)) {
-                zm = modifiers.get(Modifiers.Z_SPEED);
-            }
-
-            modifierValue = ym + " " + zm;
-
-            modifierValue = modifierValue.trim();
-
-
-            if (modifierValue.length > 2 && modifierValue.charAt(0) === ' ') {
-                modifierValue = modifierValue.substring(1);
-            }
-
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below G/H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -3);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR)) {
-            modifierValue = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                /*//on left
-                x = (bounds.getX() - labelWidth - bufferXL) as int;
-                //oppoiste AS unless that's higher than the top of the symbol
-                y = (bounds.getY() + ((bounds.getHeight() / 2) - bufferText - descent - (labelHeight * 2))) as int;
-                if (y <= bounds.getY() + labelHeight) {
-                    y = bounds.getY() as int + labelHeight - descent;
-                }//*/
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below top left
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-            modifierValue = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below top left
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) 
-        {
-            modifierValue = null;
-            let E: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-
-            if (E != null && E !== "") {
-                modifierValue = E;
-            }
-
-            if (AS != null && AS !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + AS;
-                }
-                else {
-                    modifierValue = AS;
-                }
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //top right
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 3);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-
-                modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-            }
-
-
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //top right
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processActivitiesTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //            int y0 = 0;//W            E/AS
-        //            int y1 = 0;//Y            G
-        //            int y2 =                  H
-        //            int y3 = 0;//             J
-        //            int y4 = 0;//
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-
-        if (modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                modifierValue = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-            modifierValue = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING))//
-        {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                modifierValue = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string = "";
-            let
-                AS: string = "";
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            modifierValue = E + " " + AS;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, false, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processActivitiesTextModifiersE(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //            int y0 = 0;//W            E/AS
-        //            int y1 = 0;//Y            T
-        //            int y2 =                  G
-        //            int y3 = 0;//             H
-        //            int y4 = 0;//             J
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-
-        if (modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                modifierValue = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above vertical center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above vertical center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-            modifierValue = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above vertical center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below G
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.J_EVALUATION_RATING))//
-        {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.J_EVALUATION_RATING)) {
-                modifierValue = modifiers.get(Modifiers.J_EVALUATION_RATING);
-            }
-
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.C_QUANTITY)) {
-            modifierValue = modifiers.get(Modifiers.C_QUANTITY);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string = "";
-            let
-                AS: string = "";
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            modifierValue = E + " " + AS;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processCyberSpaceTextModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //            int y0 = 0;//W            E/F/AS
-        //            int y1 = 0;//Y            G
-        //            int y2 =     V            H
-        //            int y3 = 0;//T            M
-        //            int y4 = 0;//             K/L
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-
-        if (modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                modifierValue = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-            modifierValue = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) ||
-            modifiers.has(Modifiers.V_EQUIP_TYPE))
-        {
-            let tm:string = "",
-                    vm:string = "";
-
-            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
-            {
-                tm = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-            }
-            if (modifiers.has(Modifiers.V_EQUIP_TYPE))
-            {
-                vm = modifiers.get(Modifiers.V_EQUIP_TYPE);
-            }
-
-            modifierValue = tm + " " + vm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-                modifierValue += modifiers.get(Modifiers.M_HIGHER_FORMATION);
-            }
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)//
-            || modifiers.has(Modifiers.L_SIGNATURE_EQUIP))//
-        {
-            modifierValue = null;
-
-            let km: string;
-            let
-                lm: string;
-
-            if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)) {
-                km = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS);
-            }
-            if (modifiers.has(Modifiers.L_SIGNATURE_EQUIP)) {
-                lm = modifiers.get(Modifiers.L_SIGNATURE_EQUIP);
-            }
-
-            modifierValue = km + " " + lm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below M
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.F_REINFORCED_REDUCED) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string;
-            let
-                F: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.F_REINFORCED_REDUCED)) {
-                F = modifiers.get(Modifiers.F_REINFORCED_REDUCED);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue = E;
-            }
-
-            if (F != null && F !== "") {
-                if (F.toUpperCase() === ("R")) {
-                    F = "(+)";
-                }
-                else {
-                    if (F.toUpperCase() === ("D")) {
-                        F = "(-)";
-                    }
-                    else {
-                        if (F.toUpperCase() === ("RD")) {
-                            F = "(" + String.fromCharCode(177) + ")";
-                        }
-                    }
-
-                }
-
-            }
-
-            if (F != null && F !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + F;
-                }
-                else {
-                    modifierValue = F;
-                }
-            }
-
-            if (AS != null && AS !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + AS;
-                }
-                else {
-                    modifierValue = AS;
-                }
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //top right
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static processCyberSpaceTextModifiersE(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
-        let modifierFontHeight: number = hd[0];
-        let modifierFontDescent: number = hd[1];
-
-        let bufferXL: int = 7;
-        let bufferXR: int = 7;
-        let bufferY: int = 2;
-        let bufferText: int = 2;
-        let x: int = 0;
-        let y: int = 0;//best y
-
-        let newsdi: SymbolDimensionInfo;
-        let alpha: float = -1;
-
-        let textColor: Color = Color.BLACK;
-        let textBackgroundColor: Color;
-
-        let tiArray: Array<TextInfo> = new Array<TextInfo>();
-
-        let descent: int = (modifierFontDescent) as int;
-
-        if (attributes.has(MilStdAttributes.Alpha)) {
-            alpha = parseFloat(attributes.get(MilStdAttributes.Alpha)) / 255;
-        }
-
-        let labelBounds: Rectangle2D;
-        let labelWidth: int = 0;
-        let labelHeight: int = 0;
-
-        let bounds: Rectangle2D = sdi.getSymbolBounds();
-        let symbolBounds: Rectangle2D = (sdi.getSymbolBounds().clone()) as Rectangle2D;
-        let centerPoint: Point2D = sdi.getSymbolCenterPoint();
-        let imageBounds: Rectangle2D = sdi.getImageBounds().clone();
-        let imageBoundsOld: Rectangle2D = imageBounds.clone() as Rectangle2D;
-
-        let echelonText: string = SymbolUtilities.getEchelonText(SymbolID.getAmplifierDescriptor(symbolID));
-        let amText: string = SymbolUtilities.getStandardIdentityModifier(symbolID);
-
-        //adjust width of bounds for mobility/echelon/engagement bar which could be wider than the symbol
-        bounds = RectUtilities.toRectangle2D(imageBounds.getX(), bounds.getY(), imageBounds.getWidth(), bounds.getHeight());
-
-
-
-        //check if text is too tall:
-        let byLabelHeight: boolean = true;
-        labelHeight = (modifierFontHeight + 0.5) as int;/* RendererUtilities.measureTextHeight(RendererSettings.getModifierFontName(),
-         RendererSettings.getModifierFontSize(),
-         RendererSettings.getModifierFontStyle()).fullHeight;*/
-
-        let maxHeight: int = (bounds.getHeight()) as int;
-        if ((labelHeight * 3) > maxHeight) {
-            byLabelHeight = true;
-        }
-
-        //Affiliation Modifier being drawn as a display modifier
-        let affiliationModifier: string;
-        if (ModifierRenderer.RS.getDrawAffiliationModifierAsLabel() === true) {
-            affiliationModifier = SymbolUtilities.getStandardIdentityModifier(symbolID);
-        }
-        if (affiliationModifier != null) {   //Set affiliation modifier
-            modifiers.set(Modifiers.E_FRAME_SHAPE_MODIFIER, affiliationModifier);
-            //modifiers[Modifiers.E_FRAME_SHAPE_MODIFIER] = affiliationModifier;
-        }//*/
-
-        //Check for Valid Country Code
-        let cc: string = GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(symbolID));
-        if (cc != null && cc !== "") {
-            modifiers.set(Modifiers.AS_COUNTRY, cc);
-        }
-
-        //            int y0 = 0;//W            E/F/AS
-        //            int y1 = 0;//Y            G
-        //            int y2 =     V            H
-        //            int y3 = 0;//T            M
-        //            int y4 = 0;//             K/L
-        // <editor-fold defaultstate="collapsed" desc="Build Modifiers">
-        let modifierValue: string;
-        let tiTemp: TextInfo;
-
-
-        if (modifiers.has(Modifiers.Y_LOCATION)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.Y_LOCATION)) {
-                modifierValue = modifiers.get(Modifiers.Y_LOCATION);// ym = modifiers.Y;
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.G_STAFF_COMMENTS)) {
-            modifierValue = modifiers.get(Modifiers.G_STAFF_COMMENTS);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //above center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-            modifierValue = null;
-
-            if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                modifierValue = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-            }
-
-            if (modifierValue != null && modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //center
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-            modifierValue = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.V_EQUIP_TYPE)) {
-            modifierValue = modifiers.get(Modifiers.V_EQUIP_TYPE);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //below center V
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 0);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-            modifierValue = "";
-
-            if (modifiers.has(Modifiers.M_HIGHER_FORMATION)) {
-                modifierValue += modifiers.get(Modifiers.M_HIGHER_FORMATION);
-            }
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below center H
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -1);
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-        if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)//
-            || modifiers.has(Modifiers.L_SIGNATURE_EQUIP))//
-        {
-            modifierValue = null;
-
-            let km: string;
-            let
-                lm: string;
-
-            if (modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS)) {
-                km = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS);
-            }
-            if (modifiers.has(Modifiers.L_SIGNATURE_EQUIP)) {
-                lm = modifiers.get(Modifiers.L_SIGNATURE_EQUIP);
-            }
-
-            modifierValue = km + " " + lm;
-            modifierValue = modifierValue.trim();
-
-            if (modifierValue !== "") {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //below M
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, -2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-
-        }
-
-        if (modifiers.has(Modifiers.W_DTG_1)) {
-            modifierValue = modifiers.get(Modifiers.W_DTG_1);
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on left
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, false, modifierFontHeight);
-                //above Y
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-            }
-        }
-
-        if (modifiers.has(Modifiers.F_REINFORCED_REDUCED) ||
-            modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER) ||
-            modifiers.has(Modifiers.AS_COUNTRY)) {
-            modifierValue = null;
-            let E: string;
-            let
-                F: string;
-            let
-                AS: string;
-
-            if (modifiers.has(Modifiers.E_FRAME_SHAPE_MODIFIER)) {
-                E = modifiers.get(Modifiers.E_FRAME_SHAPE_MODIFIER);
-                modifiers.delete(Modifiers.E_FRAME_SHAPE_MODIFIER);
-            }
-            if (modifiers.has(Modifiers.F_REINFORCED_REDUCED)) {
-                F = modifiers.get(Modifiers.F_REINFORCED_REDUCED);
-            }
-            if (modifiers.has(Modifiers.AS_COUNTRY)) {
-                AS = modifiers.get(Modifiers.AS_COUNTRY);
-            }
-
-            if (E != null && E !== "") {
-                modifierValue = E;
-            }
-
-            if (F != null && F !== "") {
-                if (F.toUpperCase() === ("R")) {
-                    F = "(+)";
-                }
-                else {
-                    if (F.toUpperCase() === ("D")) {
-                        F = "(-)";
-                    }
-                    else {
-                        if (F.toUpperCase() === ("RD")) {
-                            F = "(" + String.fromCharCode(177) + ")";
-                        }
-                    }
-
-                }
-
-            }
-
-            if (F != null && F !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + F;
-                }
-                else {
-                    modifierValue = F;
-                }
-            }
-
-            if (AS != null && AS !== "") {
-                if (modifierValue != null && modifierValue !== "") {
-                    modifierValue = modifierValue + " " + AS;
-                }
-                else {
-                    modifierValue = AS;
-                }
-            }
-
-            if (modifierValue != null) {
-                tiTemp = new TextInfo(modifierValue, 0, 0, modifierFont, frc);
-                labelBounds = tiTemp.getTextBounds();
-                labelWidth = labelBounds.getWidth() as int;
-
-                //on right
-                x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, true, modifierFontHeight);
-                //top right
-                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, true, 2);
-
-
-                tiTemp.setLocation(x, y);
-                tiArray.push(tiTemp);
-
-            }
-        }
-
-
-        // </editor-fold>
-
-        //Shift Points and Draw
-        newsdi = ModifierRenderer.shiftUnitPointsAndDraw(tiArray,sdi,attributes);
-
-        // <editor-fold defaultstate="collapsed" desc="Cleanup">
-        tiArray = null;
-        tiTemp = null;
-        //tempShape = null;
-        imageBoundsOld = null;
-        //ctx = null;
-        //buffer = null;
-        // </editor-fold>
-
-        return newsdi;
-    }
-
-    public static ProcessTGSPWithSpecialModifierLayout(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, lineColor: Color, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo | null {
-
-        let ii: ImageInfo;
-        let ssi: SVGSymbolInfo;
-
-        let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont,frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -9880,14 +3627,14 @@ export class ModifierRenderer implements SettingsEventListener {
     /**
      * Process modifiers for action points
      */
-    public static ProcessTGSPModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, lineColor: Color, frc: OffscreenCanvasRenderingContext2D): SymbolDimensionInfo {
+    public static ProcessTGSPModifiers(sdi: SymbolDimensionInfo, symbolID: string, modifiers: Map<string, string>, attributes: Map<string, string>, lineColor: Color, frc: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D): SymbolDimensionInfo {
 
         // <editor-fold defaultstate="collapsed" desc="Variables">
         let ii: ImageInfo;
         let ssi: SVGSymbolInfo;
 
         let modifierFont: Font = this.getFont(attributes);//ModifierRenderer.RS.getLabelFont();
-        let hd:number[] = this.getFontHeightandDescent(modifierFont);
+        let hd:number[] = this.getFontHeightandDescent(modifierFont,frc);
         let modifierFontHeight: number = hd[0];
         let modifierFontDescent: number = hd[1];
 
@@ -10534,27 +4281,2235 @@ export class ModifierRenderer implements SettingsEventListener {
 
     }
 
+        /**
+     *
+     * @param symbolID
+     * @param modifiers
+     * @return int[] where {xposition (-1 left, 0 centered, 1 right), yposition (0 centered, 1+ goes up, 1- goes down),
+     * centered (0-no, 1-yes)} -999 means passed modifier is not supported by this symbol
+     */
+    private static getLabelPositionIndexes(symbolID:string, modifiers:Map<string,string>, attributes:Map<string,string>):Array<Modifier>
+    {
+        let mods:Array<Modifier> = null;
+        if(modifiers != null && modifiers.size > 0)
+            mods = new Array<Modifier>();
+        else
+            return null;
+
+        let ver:number = SymbolID.getVersion(symbolID);
+        let ss:number = SymbolID.getSymbolSet(symbolID);
+        let x:number = 0;
+        let y:number = 0;
+        let centered:boolean = true;
+        let p:number = RendererSettings.getInstance().getSPModifierPlacement();
+        let strict:boolean = (RendererSettings.getInstance().getSPModifierPlacement() == RendererSettings.ModifierPlacement_STRICT);
+        if(attributes != null && attributes.has(MilStdAttributes.ModifierPlacement))
+        {
+            let mp:string = attributes.get(MilStdAttributes.ModifierPlacement);
+            if(SymbolUtilities.isNumber(mp))
+            {
+                p = parseInt(mp);
+                if(p == 0)
+                    strict = true;
+                else
+                    strict = false;
+            }
+        }
+        let temp:string = null;
+        let sep:string = " ";
+        if(ss == SymbolID.SymbolSet_DismountedIndividuals) {
+            ver = SymbolID.Version_2525E;
+        }
+
+        if(ver < SymbolID.Version_2525E)
+        {
+            if(ss == SymbolID.SymbolSet_LandUnit ||
+                    ss == SymbolID.SymbolSet_LandCivilianUnit_Organization)
+            {
+                //Do top center label
+                x = 0;//centered
+                y = 9;//on top of symbol
+                if(modifiers.has(Modifiers.B_ECHELON))
+                {
+                    temp = modifiers.get(Modifiers.B_ECHELON);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("B", temp, x, y, centered));
+                }
+
+                //Do right side labels
+                x = 1;//on right
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    //if no "H', bring G and M closer to the center
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.F_REINFORCED_REDUCED) || modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        y--;
+                    temp = "";
+                    if(modifiers.has(Modifiers.F_REINFORCED_REDUCED))
+                        temp = modifiers.get(Modifiers.F_REINFORCED_REDUCED) + sep;
+                    if(modifiers.has(Modifiers.AS_COUNTRY))
+                        temp += modifiers.get(Modifiers.AS_COUNTRY);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("F AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.M_HIGHER_FORMATION);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("M", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING) ||
+                        modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) ||
+                        modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                        temp = modifiers.get(Modifiers.J_EVALUATION_RATING) + sep;
+                    if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS))
+                        temp += modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS) + sep;
+                    if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        temp += modifiers.get(Modifiers.P_IFF_SIF_AIS);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("J K P", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+                centered = false;
+
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = "";
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp += modifiers.get(Modifiers.Y_LOCATION);
+
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("X Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;//above center
+                    if(!strict && !(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Z_SPEED))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        y++;
+                    temp = modifiers.get(Modifiers.Z_SPEED);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier(Modifiers.J_EVALUATION_RATING, temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_LandEquipment ||
+                    ss == SymbolID.SymbolSet_SignalsIntelligence_Land)
+            {
+                //Do top center label
+                x = 0;//centered
+                y = 9;//on top of symbol
+                if(modifiers.has(Modifiers.C_QUANTITY))
+                {
+                    temp = modifiers.get(Modifiers.C_QUANTITY);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("C", temp, x, y, centered));
+                }
+
+                //Do right side labels
+                x = 1;//on right
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) || modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = "";
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
+                    if(modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                        temp += modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H AF", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    //if no "H', bring G and M closer to the center
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                {
+                    y = 1;//above center
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                        temp += modifiers.get(Modifiers.AQ_GUARDED_UNIT);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G AQ", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT)))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.AS_COUNTRY);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING) ||
+                        modifiers.has(Modifiers.L_SIGNATURE_EQUIP) ||
+                        modifiers.has(Modifiers.N_HOSTILE) ||
+                        modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -1;
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                        temp = modifiers.get(Modifiers.J_EVALUATION_RATING) + sep;
+                    if(modifiers.has(Modifiers.L_SIGNATURE_EQUIP))
+                        temp += modifiers.get(Modifiers.L_SIGNATURE_EQUIP) + sep;
+                    if(modifiers.has(Modifiers.N_HOSTILE))
+                        temp += modifiers.get(Modifiers.N_HOSTILE) + sep;
+                    if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        temp += modifiers.get(Modifiers.P_IFF_SIF_AIS);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("J L N P", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE) ||
+                        modifiers.has(Modifiers.AD_PLATFORM_TYPE) ||
+                        modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        temp = modifiers.get(Modifiers.V_EQUIP_TYPE) + sep;
+                    if(modifiers.has(Modifiers.AD_PLATFORM_TYPE))
+                        temp += modifiers.get(Modifiers.AD_PLATFORM_TYPE) + sep;
+                    if(modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                        temp += modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V AD AE", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = "";
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp += modifiers.get(Modifiers.Y_LOCATION);
+
+                    temp = temp.trim();
+                    mods.push(new Modifier("X Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1) || modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                {
+                    y = 2;//above center
+                    if(!strict && !(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Z_SPEED))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        y++;
+                    temp = modifiers.get(Modifiers.Z_SPEED);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Z", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_LandInstallation)
+            {
+                //No top center label
+
+                //Do right side labels
+                x = 1;//on right
+
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.AS_COUNTRY);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING) ||
+                        modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) ||
+                        modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -1;
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                        temp = modifiers.get(Modifiers.J_EVALUATION_RATING) + sep;
+                    if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS))
+                        temp += modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS) + sep;
+                    if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        temp += modifiers.get(Modifiers.P_IFF_SIF_AIS);
+                    temp = temp.trim();
+                    mods.push(new Modifier("J K P", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp += modifiers.get(Modifiers.Y_LOCATION);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("X Y", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 1;//above center
+
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W AR", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_Air ||
+                    ss == SymbolID.SymbolSet_AirMissile ||
+                    ss == SymbolID.SymbolSet_SignalsIntelligence_Air)
+            {
+                //No top center label
+
+
+                //Do right side labels
+                x = 1;//on right
+                centered = false;
+
+                if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.P_IFF_SIF_AIS);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("P", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        y--;
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 3;
+                    if(!strict)
+                    {
+                        if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                            y--;
+                        if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                            y--;
+                    }
+
+                    temp = modifiers.get(Modifiers.AS_COUNTRY );
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.V_EQUIP_TYPE);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Z_SPEED)  ||
+                        modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                {
+                    y = -2;//below center
+                    if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        y++;
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.Z_SPEED))
+                        temp = modifiers.get(Modifiers.Z_SPEED) + sep;
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp += modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Z X", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS) ||
+                        modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = -3;
+                    if(!strict)
+                    {
+                        if(!(modifiers.has(Modifiers.Z_SPEED)  ||
+                                modifiers.has(Modifiers.X_ALTITUDE_DEPTH)))
+                            y++;
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                            y++;
+                    }
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G H", temp, x, y, centered));
+                }
+
+                //No left side labels
+
+            }
+            else if(ss == SymbolID.SymbolSet_Space ||
+                    ss == SymbolID.SymbolSet_SpaceMissile ||
+                    ss == SymbolID.SymbolSet_SignalsIntelligence_Space)
+            {
+                //No top center label
+
+
+                //Do right side labels
+                x = 1;//on right
+                centered = false;
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.V_EQUIP_TYPE);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        y--;
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 3;
+                    if(!strict)
+                    {
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                            y--;
+                        if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                            y--;
+                    }
+
+                    temp = modifiers.get(Modifiers.AS_COUNTRY );
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Z_SPEED)  ||
+                        modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                {
+                    y = -1;//below center
+                    temp = "";
+                    if(modifiers.has(Modifiers.Z_SPEED))
+                        temp = modifiers.get(Modifiers.Z_SPEED) + sep;
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp += modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Z X", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS) ||
+                        modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = -2;
+                    if(!strict &&
+                            !(modifiers.has(Modifiers.Z_SPEED) || modifiers.has(Modifiers.X_ALTITUDE_DEPTH)))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G H", temp, x, y, centered));
+                }
+
+                //No left side labels
+            }
+            else if(ss == SymbolID.SymbolSet_SeaSurface ||
+                    ss == SymbolID.SymbolSet_SignalsIntelligence_SeaSurface)
+            {
+                //No top center label
+
+
+                //Do right side labels
+                x = 1;//on right
+                centered = true;
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = modifiers.get(Modifiers.V_EQUIP_TYPE);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    //if no "H', bring G and M closer to the center
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.P_IFF_SIF_AIS);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("P", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        y--;
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 3;
+                    if(!strict)
+                    {
+                        if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                            y--;
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                            y--;
+                    }
+
+                    temp = modifiers.get(Modifiers.AS_COUNTRY );
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Z_SPEED)  ||
+                        modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                {
+                    y = -1;//below center
+                    temp = "";
+                    if(modifiers.has(Modifiers.Z_SPEED))
+                        temp = modifiers.get(Modifiers.Z_SPEED) + sep;
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp += modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Z X", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS) ||
+                        modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = -2;
+                    if(!strict &&
+                            !(modifiers.has(Modifiers.Z_SPEED) || modifiers.has(Modifiers.X_ALTITUDE_DEPTH)))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G H", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;
+                centered = false;
+                if(modifiers.has(Modifiers.AQ_GUARDED_UNIT) || modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                {
+                    y = 3;//above center
+                    if(!strict)
+                        y--;
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                        temp = modifiers.get(Modifiers.AQ_GUARDED_UNIT) + sep;
+                    if(modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                        temp += modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AQ AR", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_SeaSubsurface ||
+                    ss == SymbolID.SymbolSet_SignalsIntelligence_SeaSubsurface)
+            {
+                //No top center label
+
+
+                //Do right side labels
+                x = 1;//on right
+                centered = false;
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                {
+                    y = 1;//center
+                    temp = modifiers.get(Modifiers.V_EQUIP_TYPE);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        y--;
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 3;
+                    if(!strict)
+                    {
+                        if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                            y--;
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                            y--;
+                    }
+
+                    temp = modifiers.get(Modifiers.AS_COUNTRY );
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                {
+                    y = -1;//below center
+
+                    temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("X", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                {
+                    y = -2;
+                    if(!strict && !(modifiers.has(Modifiers.X_ALTITUDE_DEPTH)))
+                        y++;
+                    temp = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = -3;//below center
+                    if(!strict)
+                    {
+                        if(!modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                            y++;
+                        if(!modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                            y++;
+                    }
+
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;
+                centered = false;
+                if(modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                {
+                    y = 3;//above center
+                    if(!strict)
+                    {
+                        y--;
+                    }
+
+                    temp = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AR", temp, x, y, centered));
+                }
+
+            }
+            else if(ss == SymbolID.SymbolSet_Activities)
+            {
+                //No top center label
+
+                //Do right side labels
+                x = 1;//on right
+                centered = false;
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                {
+                    y = 1;
+
+                    temp = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        y--;
+                    temp = modifiers.get(Modifiers.AS_COUNTRY);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        y++;
+                    temp = temp = modifiers.get(Modifiers.J_EVALUATION_RATING);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("J", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+                centered = false;
+
+                if(modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = modifiers.get(Modifiers.Y_LOCATION);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;//above center
+                    if(!strict && !modifiers.has(Modifiers.Y_LOCATION))
+                        y--;
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+            }
+            else if(ss == SymbolID.SymbolSet_CyberSpace)
+            {
+                //Do top center label
+                x = 0;//centered
+                y = 9;//on top of symbol
+                if(modifiers.has(Modifiers.B_ECHELON))
+                {
+                    temp = modifiers.get(Modifiers.B_ECHELON);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("B", temp, x, y, centered));
+                }
+
+                //Do right side labels
+                x = 1;//on right
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    //if no "H', bring G and M closer to the center
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.F_REINFORCED_REDUCED) || modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        y--;
+                    temp = "";
+                    if(modifiers.has(Modifiers.F_REINFORCED_REDUCED))
+                        temp = modifiers.get(Modifiers.F_REINFORCED_REDUCED) + sep;
+                    if(modifiers.has(Modifiers.AS_COUNTRY))
+                        temp += modifiers.get(Modifiers.AS_COUNTRY);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("F AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.M_HIGHER_FORMATION);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("M", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) ||
+                        modifiers.has(Modifiers.L_SIGNATURE_EQUIP))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS))
+                        temp = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS) + sep;
+                    if(modifiers.has(Modifiers.L_SIGNATURE_EQUIP))
+                        temp += modifiers.get(Modifiers.L_SIGNATURE_EQUIP);
+
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("K L", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+                centered = true;
+
+                if(modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 0;
+                    temp = modifiers.get(Modifiers.Y_LOCATION);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Y", temp, x, y, centered));
+                }
+                else if (!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) || modifiers.has(Modifiers.V_EQUIP_TYPE))
+                {
+                    y = -1;//below center
+                    temp = "";
+                    if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1) + sep;
+                    if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        temp += modifiers.get(Modifiers.V_EQUIP_TYPE);
+
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T V", temp, x, y, centered));
+                }
+
+            }
+            /*else if(ver == SymbolID.SymbolSet_MineWarfare)
+            {
+                //no modifiers
+            }//*/
+            //else//SymbolSet Unknown
+                //processUnknownTextModifiers
+        }
+        else// if(ver >= SymbolID.Version_2525E)
+        {
+            let fs:string = SymbolID.getFrameShape(symbolID);
+            if(ss == SymbolID.SymbolSet_LandUnit ||
+                    ss == SymbolID.SymbolSet_LandCivilianUnit_Organization ||
+                    (ss == SymbolID.SymbolSet_SignalsIntelligence && fs == SymbolID.FrameShape_LandUnit))
+            {
+                //Do top center label
+                x = 0;//centered
+                y = 9;//on top of symbol
+                if(modifiers.has(Modifiers.B_ECHELON))
+                {
+                    temp = modifiers.get(Modifiers.B_ECHELON);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("B", temp, x, y, centered));
+                }
+
+                //Do right side labels
+                x = 1;//on right
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
+                        modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = "";
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
+                    if(modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                        temp += modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H AF", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    //if no "H', bring G and M closer to the center
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                {
+                    y = 1;//above center
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                        temp += modifiers.get(Modifiers.AQ_GUARDED_UNIT);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G AQ", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.F_REINFORCED_REDUCED) || modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT)))
+                        y--;
+                    temp = "";
+                    if(modifiers.has(Modifiers.F_REINFORCED_REDUCED))
+                        temp = modifiers.get(Modifiers.F_REINFORCED_REDUCED) + sep;
+                    if(modifiers.has(Modifiers.AS_COUNTRY))
+                        temp += modifiers.get(Modifiers.AS_COUNTRY);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("F AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.M_HIGHER_FORMATION);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("M", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING) ||
+                        modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) ||
+                        modifiers.has(Modifiers.L_SIGNATURE_EQUIP) ||
+                        modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                        temp = modifiers.get(Modifiers.J_EVALUATION_RATING) + sep;
+                    if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS))
+                        temp += modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS) + sep;
+                    if(modifiers.has(Modifiers.L_SIGNATURE_EQUIP))
+                        temp += modifiers.get(Modifiers.L_SIGNATURE_EQUIP) + sep;
+                    if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        temp += modifiers.get(Modifiers.P_IFF_SIF_AIS);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("J K L P", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE) ||
+                        modifiers.has(Modifiers.AD_PLATFORM_TYPE) ||
+                        modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        temp = modifiers.get(Modifiers.V_EQUIP_TYPE) + sep;
+                    if(modifiers.has(Modifiers.AD_PLATFORM_TYPE))
+                        temp += modifiers.get(Modifiers.AD_PLATFORM_TYPE) + sep;
+                    if(modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                        temp += modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V AD AE", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = "";
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp += modifiers.get(Modifiers.Y_LOCATION);
+
+                    temp = temp.trim();
+                    mods.push(new Modifier("X Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;//above center
+                    if(!strict && !(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.C_QUANTITY) || modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = -1;//below center
+                    temp = "";
+                    if(modifiers.has(Modifiers.C_QUANTITY))
+                        temp = modifiers.get(Modifiers.C_QUANTITY) + sep;
+                    if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        temp += modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("C T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Z_SPEED))
+                {
+                    y = -2;
+                    if(!strict && !(modifiers.has(Modifiers.C_QUANTITY) || modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)))
+                        y++;
+                    temp = modifiers.get(Modifiers.Z_SPEED);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Z", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_LandEquipment ||
+                    (ss == SymbolID.SymbolSet_SignalsIntelligence && fs == SymbolID.FrameShape_LandEquipment))
+            {
+                //Do top center label
+                x = 0;//centered
+                y = 9;//on top of symbol
+                if(modifiers.has(Modifiers.C_QUANTITY))
+                {
+                    temp = modifiers.get(Modifiers.C_QUANTITY);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("C", temp, x, y, centered));
+                }
+
+                //Do right side labels
+                x = 1;//on right
+                centered = false;
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                {
+                    y = 1;//above center
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                        temp += modifiers.get(Modifiers.AQ_GUARDED_UNIT);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G AQ", temp, x, y, centered));
+                }
+
+                if( modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT)))
+                        y--;
+                    temp = modifiers.get(Modifiers.AS_COUNTRY);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
+                        modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                {
+                    y = -1;
+                    temp = "";
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
+                    if(modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                        temp += modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H AF", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING) ||
+                        modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) ||
+                        modifiers.has(Modifiers.L_SIGNATURE_EQUIP) ||
+                        modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -2;
+                    if(!strict && !(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
+                            modifiers.has(Modifiers.AF_COMMON_IDENTIFIER)))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                        temp = modifiers.get(Modifiers.J_EVALUATION_RATING) + sep;
+                    if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS))
+                        temp += modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS) + sep;
+                    if(modifiers.has(Modifiers.L_SIGNATURE_EQUIP))
+                        temp += modifiers.get(Modifiers.L_SIGNATURE_EQUIP) + sep;
+                    if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        temp += modifiers.get(Modifiers.P_IFF_SIF_AIS);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("J K L P", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE) ||
+                        modifiers.has(Modifiers.AD_PLATFORM_TYPE) ||
+                        modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        temp = modifiers.get(Modifiers.V_EQUIP_TYPE) + sep;
+                    if(modifiers.has(Modifiers.AD_PLATFORM_TYPE))
+                        temp += modifiers.get(Modifiers.AD_PLATFORM_TYPE) + sep;
+                    if(modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                        temp += modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V AD AE", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = "";
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp += modifiers.get(Modifiers.Y_LOCATION);
+
+                    temp = temp.trim();
+                    mods.push(new Modifier("X Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;//above center
+                    if(!strict && !(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Z_SPEED))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        y++;
+                    temp = modifiers.get(Modifiers.Z_SPEED);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Z", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_LandInstallation)
+            {
+                //No top center label
+
+                //Do right side labels
+                x = 1;//on right
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    //if no "H', bring G and M closer to the center
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                {
+                    y = 1;//above center
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                        temp += modifiers.get(Modifiers.AQ_GUARDED_UNIT);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G AQ", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT)))
+                        y--;
+                    temp = modifiers.get(Modifiers.AS_COUNTRY);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.M_HIGHER_FORMATION);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("M", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING) ||
+                        modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) ||
+                        modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                        temp = modifiers.get(Modifiers.J_EVALUATION_RATING) + sep;
+                    if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS))
+                        temp += modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS) + sep;
+                    if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        temp += modifiers.get(Modifiers.P_IFF_SIF_AIS);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("J K P", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+                centered = false;
+
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = "";
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp += modifiers.get(Modifiers.Y_LOCATION);
+
+                    temp = temp.trim();
+                    mods.push(new Modifier("X Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;//above center
+                    if(!strict && !(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.C_QUANTITY) || modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                {
+                    y = -1;//below center
+                    temp = "";
+                    if(modifiers.has(Modifiers.C_QUANTITY))
+                        temp = modifiers.get(Modifiers.C_QUANTITY) + sep;
+                    if(modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                        temp += modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
+
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("C AE", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = -2;
+                    if(!strict && !(modifiers.has(Modifiers.C_QUANTITY) || modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME)))
+                        y++;
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_Space ||
+                    ss == SymbolID.SymbolSet_SpaceMissile ||
+                    ss == SymbolID.SymbolSet_Air ||
+                    ss == SymbolID.SymbolSet_AirMissile ||
+                    (ss == SymbolID.SymbolSet_SignalsIntelligence &&
+                            (fs == SymbolID.FrameShape_Space || fs == SymbolID.FrameShape_Air)))
+            {
+                //No top center label
+                x = 0;//centered
+                y = 9;//on top of symbol
+
+                if(modifiers.has(Modifiers.C_QUANTITY))
+                {
+                    temp = modifiers.get(Modifiers.C_QUANTITY);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("C", temp, x, y, centered));
+                }
+                else if(modifiers.has(Modifiers.B_ECHELON))
+                {
+                    temp = modifiers.get(Modifiers.B_ECHELON);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("B", temp, x, y, centered));
+                }
+
+
+                //Do right side labels
+                x = 1;//on right
+                centered = true;
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE) || modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                {
+                    y = 0;//
+                    temp = "";
+                    if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        temp = modifiers.get(Modifiers.V_EQUIP_TYPE) + sep;
+                    if(modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                        temp += modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V AF", temp, x, y, centered));
+                }
+                else
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) || modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;//above center
+                    temp = "";
+                    if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1) + sep;
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp += modifiers.get(Modifiers.Y_LOCATION);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) || modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+                    temp = modifiers.get(Modifiers.AS_COUNTRY);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.P_IFF_SIF_AIS)  ||
+                        modifiers.has(Modifiers.X_ALTITUDE_DEPTH)  ||
+                        modifiers.has(Modifiers.Z_SPEED))
+                {
+                    y = -1;//below center
+                    temp = "";
+                    if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        temp = modifiers.get(Modifiers.P_IFF_SIF_AIS) + sep;
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                    if(modifiers.has(Modifiers.Z_SPEED))
+                        temp = modifiers.get(Modifiers.Z_SPEED);
+
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("P X Z", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS) ||
+                        modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
+                        modifiers.has(Modifiers.J_EVALUATION_RATING))
+                {
+                    y = -2;//below center
+                    if(!(modifiers.has(Modifiers.P_IFF_SIF_AIS)  ||
+                            modifiers.has(Modifiers.X_ALTITUDE_DEPTH)  ||
+                            modifiers.has(Modifiers.Z_SPEED)))
+                        y++;
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
+                    if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                        temp += modifiers.get(Modifiers.J_EVALUATION_RATING);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G H J", temp, x, y, centered));
+                }
+
+                //No left side labels
+                x = -1;//on right
+                centered = true;
+
+                if(modifiers.has(Modifiers.AD_PLATFORM_TYPE))
+                {
+                    y = 0;//
+                    temp = temp += modifiers.get(Modifiers.AD_PLATFORM_TYPE);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AD", temp, x, y, centered));
+                }
+                else
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AR", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                        y--;
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_SeaSurface ||
+                    (ss == SymbolID.SymbolSet_SignalsIntelligence && fs == SymbolID.FrameShape_SeaSurface))
+            {
+                //No top center label
+
+
+                //Do right side labels
+                x = 1;//on right
+                centered = false;
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.V_EQUIP_TYPE);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        y--;
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 3;
+                    if(!strict)
+                    {
+                        if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                            y--;
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                            y--;
+                    }
+
+                    temp = modifiers.get(Modifiers.AS_COUNTRY );
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.P_IFF_SIF_AIS);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("P", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS)  ||
+                        modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = -2;//below center
+                    if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        y++;
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G H", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Y_LOCATION) ||
+                        modifiers.has(Modifiers.Z_SPEED))
+                {
+                    y = -3;
+                    if(!strict)
+                    {
+                        if(!(modifiers.has(Modifiers.G_STAFF_COMMENTS)  ||
+                                modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)))
+                            y++;
+                        if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                            y++;
+                    }
+                    temp = "";
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp = modifiers.get(Modifiers.Y_LOCATION) + sep;
+                    if(modifiers.has(Modifiers.Z_SPEED))
+                        temp += modifiers.get(Modifiers.Z_SPEED);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Y Z", temp, x, y, centered));
+                }
+
+                //No left side labels
+                x = -1;
+                centered = false;
+                if(modifiers.has(Modifiers.AQ_GUARDED_UNIT) ||
+                        modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                {
+                    y = 2;
+                    if(!strict)
+                    {
+                        y--;
+                    }
+                    temp = "";
+                    if(modifiers.has(Modifiers.AQ_GUARDED_UNIT))
+                        temp = modifiers.get(Modifiers.AQ_GUARDED_UNIT) + sep;
+                    if(modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                        temp += modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AQ AR", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_SeaSubsurface ||
+                    (ss == SymbolID.SymbolSet_SignalsIntelligence && fs == SymbolID.FrameShape_SeaSubsurface))
+            {
+                //No top center label
+
+
+                //Do right side labels
+                x = 1;//on right
+                centered = false;
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.V_EQUIP_TYPE);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        y--;
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 3;
+                    if(!strict)
+                    {
+                        if(!modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                            y--;
+                        if(!modifiers.has(Modifiers.V_EQUIP_TYPE))
+                            y--;
+                    }
+
+                    temp = modifiers.get(Modifiers.AS_COUNTRY );
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.P_IFF_SIF_AIS);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("P", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS)  ||
+                        modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = -2;//below center
+                    if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        y++;
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                        temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        temp += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    temp = temp.trim();
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G H", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Y_LOCATION) ||
+                        modifiers.has(Modifiers.Z_SPEED))
+                {
+                    y = -3;
+                    if(!strict)
+                    {
+                        if(!(modifiers.has(Modifiers.G_STAFF_COMMENTS)  ||
+                                modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)))
+                            y++;
+                        if(!modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                            y++;
+                    }
+                    temp = "";
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp = modifiers.get(Modifiers.Y_LOCATION) + sep;
+                    if(modifiers.has(Modifiers.Z_SPEED))
+                        temp += modifiers.get(Modifiers.Z_SPEED);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Y Z", temp, x, y, centered));
+                }
+
+                //No left side labels
+                x = -1;
+                centered = false;
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                {
+                    y = 1;
+                    temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("X", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AR_SPECIAL_DESIGNATOR))
+                {
+                    y = 2;
+                    if(!strict && !modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                    {
+                        y--;
+                    }
+                    temp = modifiers.get(Modifiers.AR_SPECIAL_DESIGNATOR);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AR", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_DismountedIndividuals)
+            {
+                //No top center label
+
+
+                //Do right side labels
+                x = 1;//on right
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !(modifiers.has(Modifiers.G_STAFF_COMMENTS)))
+                        y--;
+                    temp = modifiers.get(Modifiers.AS_COUNTRY);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.M_HIGHER_FORMATION);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("M", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING) ||
+                        modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) ||
+                        modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                        temp = modifiers.get(Modifiers.J_EVALUATION_RATING) + sep;
+                    if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS))
+                        temp += modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS) + sep;
+                    if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
+                        temp += modifiers.get(Modifiers.P_IFF_SIF_AIS);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("J K P", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE) ||
+                        modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+
+                    temp = "";
+                    if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                        temp = modifiers.get(Modifiers.V_EQUIP_TYPE) + sep;
+                    if(modifiers.has(Modifiers.AF_COMMON_IDENTIFIER))
+                        temp += modifiers.get(Modifiers.AF_COMMON_IDENTIFIER);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V AF", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = "";
+                    if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
+                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                    if(modifiers.has(Modifiers.Y_LOCATION))
+                        temp += modifiers.get(Modifiers.Y_LOCATION);
+
+                    temp = temp.trim();
+                    mods.push(new Modifier("X Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;//above center
+                    if(!strict && !(modifiers.has(Modifiers.X_ALTITUDE_DEPTH) || modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.Z_SPEED))
+                {
+                    y = -2;
+                    if(!strict && !(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)))
+                        y++;
+                    temp = modifiers.get(Modifiers.Z_SPEED);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Z", temp, x, y, centered));
+                }
+            }
+            else if(ss == SymbolID.SymbolSet_Activities)
+            {
+                //No top center label
+
+
+                //Do right side labels
+                x = 1;//on right
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)))
+                        y--;
+                    temp = modifiers.get(Modifiers.AS_COUNTRY);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.J_EVALUATION_RATING))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        y++;
+                    temp = modifiers.get(Modifiers.J_EVALUATION_RATING);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("J", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x = -1;//on left
+
+                if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = modifiers.get(Modifiers.Y_LOCATION);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;//above center
+                    if(!strict && !(modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.C_QUANTITY))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.C_QUANTITY);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("C", temp, x, y, centered));
+                }
+
+            }
+            else if(ss == SymbolID.SymbolSet_CyberSpace ||
+                    (ss == SymbolID.SymbolSet_SignalsIntelligence && fs == SymbolID.FrameShape_Cyberspace))
+            {
+                //Do top center label
+                x = 0;//centered
+                y = 9;//on top of symbol
+                if(modifiers.has(Modifiers.B_ECHELON))
+                {
+                    temp = modifiers.get(Modifiers.B_ECHELON);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("B", temp, x, y, centered));
+                }
+
+                //Do right side labels
+                x = 1;//on right
+                if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+                    temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("H", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
+                {
+                    y = 1;//above center
+                    temp = modifiers.get(Modifiers.G_STAFF_COMMENTS);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("G", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.F_REINFORCED_REDUCED) || modifiers.has(Modifiers.AS_COUNTRY))
+                {
+                    y = 2;
+                    if(!strict && !(modifiers.has(Modifiers.G_STAFF_COMMENTS)))
+                        y--;
+                    temp = "";
+                    if(modifiers.has(Modifiers.F_REINFORCED_REDUCED))
+                        temp = modifiers.get(Modifiers.F_REINFORCED_REDUCED) + sep;
+                    if(modifiers.has(Modifiers.AS_COUNTRY))
+                        temp += modifiers.get(Modifiers.AS_COUNTRY);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("F AS", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.M_HIGHER_FORMATION);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("M", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS) || modifiers.has(Modifiers.L_SIGNATURE_EQUIP))
+                {
+                    y = -2;
+                    if(!strict && !modifiers.has(Modifiers.M_HIGHER_FORMATION))
+                        y++;
+                    temp = "";
+                    if(modifiers.has(Modifiers.K_COMBAT_EFFECTIVENESS))
+                        temp = modifiers.get(Modifiers.K_COMBAT_EFFECTIVENESS) + sep;
+                    if(modifiers.has(Modifiers.L_SIGNATURE_EQUIP))
+                        temp += modifiers.get(Modifiers.L_SIGNATURE_EQUIP);
+                    temp = temp.trim();
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("K L", temp, x, y, centered));
+                }
+
+                //Do left side labels
+                x=-1;
+                if(modifiers.has(Modifiers.V_EQUIP_TYPE))
+                {
+                    y = 0;//center
+                    centered = true;//vertically centered, only matters for labels on left and right side
+
+                    temp = modifiers.get(Modifiers.V_EQUIP_TYPE);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("V", temp, x, y, centered));
+                }
+                else if(!strict)
+                {
+                    centered = false;
+                }
+
+                if(modifiers.has(Modifiers.Y_LOCATION))
+                {
+                    y = 1;
+                    temp = modifiers.get(Modifiers.Y_LOCATION);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("Y", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.W_DTG_1))
+                {
+                    y = 2;//above center
+                    if(!strict && !(modifiers.has(Modifiers.Y_LOCATION)))
+                        y--;
+
+                    temp = modifiers.get(Modifiers.W_DTG_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("W", temp, x, y, centered));
+                }
+
+                if(modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                {
+                    y = -1;//below center
+                    temp = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("T", temp, x, y, centered));
+                }
+            }
+            /*else if(ver == SymbolID.SymbolSet_MineWarfare)
+            {
+                //no modifiers
+            }//*/
+            //else//SymbolSet Unknown
+            //processUnknownTextModifiers
+        }
+
+        return mods;
+    }
+
     /**
      * 
      * @param bounds bounds of the core icon
      * @param labelWidth height of the label to be placed
      * @param buffer additional horizontal spacing buffer between label and symbol if desired
-     * @param onRight if true, label on right side of symbol. On left if false.
+     * @param location if true, label on right side of symbol. On left if false.
+     * @param modifierFontHeight 
      * @returns 
      */
-    private static getLabelXPosition(bounds:Rectangle2D, labelWidth:number, onRight:boolean, modifierFontHeight:number):number 
+    private static getLabelXPosition(bounds:Rectangle2D, labelWidth:number, location:number, modifierFontHeight:number):number 
     {
         let x:number = 0;
         let buffer:number = modifierFontHeight/2;
-        if(onRight)
+        if(location === 1)
         {
             //x = (int)(bounds.getX() + bounds.getWidth() + bufferXR);
             x = bounds.getX() + bounds.getWidth() + buffer;
         }
-        else//left
+        else if (location === -1)
         {
             //x = (int) (bounds.getX() - labelWidth - bufferXL);
             x = bounds.x - labelWidth - buffer;
+        }
+        else if (location === 0)
+        {
+            x = Math.round((bounds.getX() + (bounds.getWidth() * 0.5)) - (labelWidth * 0.5)) as int;
         }
         return x;
     }
@@ -10613,6 +6568,12 @@ export class ModifierRenderer implements SettingsEventListener {
                         y = y + ((labelHeight + bufferText) * 2) - (descent);
                         y = bounds.getY() + y;
                         break;
+                    case -3://3 below center
+                        y = (bounds.getHeight());
+                        y = ((y * 0.5) + (labelHeight * 0.5));
+                        y = y + ((labelHeight + bufferText) * 3) - (descent);
+                        y = bounds.getY() + y;
+                        break;
                 }
             }
             else//split between top and bottom
@@ -10638,6 +6599,10 @@ export class ModifierRenderer implements SettingsEventListener {
                         y = (bounds.getY() + (bounds.getHeight() / 2) + ((labelHeight*3 - descent + bufferText)));
                         break;
                 }
+            }
+            if(location === 9)
+            {
+                y = Math.round(bounds.getY() - bufferText - descent);
             }
         }
         return y;
@@ -10846,19 +6811,28 @@ export class ModifierRenderer implements SettingsEventListener {
 
     }
 
-    private static getFontHeightandDescent(font:Font):number[]
+    /**
+     * 
+     * @param font Font to be used
+     * @param ctx OPTIONAL: If use want to re-use a context for performance
+     * @returns 
+     */
+    private static getFontHeightandDescent(font:Font, ctx:OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null = null):number[]
     {
         let hd:number[] = [0,0];
         let osc:any;
-        let ctx:any;//OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
+        //let ctx:any;//OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
         let tm:TextMetrics | any;//node-canvas doesn't fully implement TextMetics so must set to any
 
-        if(this.OSCDefined)
-            osc = new OffscreenCanvas(10,10);
-        else
-            osc = createCanvas(10,10);
-        
-        ctx = osc.getContext("2d");
+        if(ctx === null)
+        {
+            if(this.OSCDefined)
+                osc = new OffscreenCanvas(2,2);
+            else
+                osc = createCanvas(2,2);
+            
+            ctx = osc.getContext("2d");
+        }   
 
         if(font != null)
         {
