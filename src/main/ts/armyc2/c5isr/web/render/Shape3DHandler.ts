@@ -81,6 +81,9 @@ export class Shape3DHandler {
             symbolAttributes.set(MilStdAttributes.FillColor, defaultColor.toHexString(true));
         }
 
+        if (altitudeMode == undefined || altitudeMode == "clampToGround")
+            altitudeMode = "absolute"
+
         if (!JavaRendererUtilities.is3dSymbol(symbolCode)) {
             const basicID: string = SymbolUtilities.getBasicSymbolID(symbolCode);
             const errorMsg = "Basic ID: " + basicID + " is not a 3D Symbol";
@@ -486,6 +489,9 @@ export class Shape3DHandler {
             defaultColor.setAlpha(170);
             symbolAttributes.set(MilStdAttributes.FillColor, defaultColor.toHexString(true));
         }
+
+        if (altitudeMode == undefined || altitudeMode == "clampToGround")
+            altitudeMode = "absolute"
 
         for (let i: int = 0; i < len; i++) {
             let coordPair: string[] = coordinates[i].split(",");

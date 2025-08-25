@@ -254,9 +254,6 @@ export class WebRenderer /* extends Applet */ {
                 && (format === WebRenderer.OUTPUT_FORMAT_KML || format === WebRenderer.OUTPUT_FORMAT_GEOJSON)
                 && JavaRendererUtilities.is3dSymbol(symbolCode)
                 && modifiers.get(Modifiers.X_ALTITUDE_DEPTH)) {
-                if (!(altitudeMode))
-                    altitudeMode = "absolute";
-
                 output = this.RenderMilStd3dSymbol(id, name, description, symbolCode, controlPoints, altitudeMode, scale, bbox, modifiers, attributes, format);
             }
 
