@@ -453,8 +453,7 @@ export class clsUtilityCPOF {
                     break;
                 }
 
-                case TacticalLines.BS_3D_ROUTE:
-                case TacticalLines.BS_3D_TRACK: {
+                case TacticalLines.BS_3D_ROUTE: {
                     let am = tg.get_AM().split(",");
                     while (am.length < tg.LatLongs.length - 1) {
                         am.push(am[am.length - 1]);
@@ -464,37 +463,93 @@ export class clsUtilityCPOF {
                         let a21: ref<number[]> = new ref();
                         let pt0: POINT2 = tg.LatLongs[i];
                         let pt1: POINT2 = tg.LatLongs[i + 1];
-                        width.value = new Array<number>(1);
-                        attitude.value = new Array<number>(1);
+                        let width: number;
+                        let attitude: number;
 
                         mdlGeodesic.geodesic_distance(pt0, pt1, a12, a21);
-                        attitude.value[0] = a12.value[0];
+                        attitude = a12.value[0];
 
                         if (SymbolUtilities.isNumber(am[i])) {
-                            width.value[0] = parseFloat(am[i]);
+                            width = parseFloat(am[i]);
                         }
 
                         //get the upper left corner                    
-                        pt00 = mdlGeodesic.geodesic_coordinate(pt0, width.value[0] / 2, attitude.value[0] - 90);
+                        pt00 = mdlGeodesic.geodesic_coordinate(pt0, width / 2, attitude - 90);
                         pt00 = clsUtilityCPOF.PointLatLongToPixels(pt00, converter);
 
                         pt00.style = 0;
                         tg.Pixels.push(pt00);
 
                         //second corner (clockwise from center)
-                        ptTemp = mdlGeodesic.geodesic_coordinate(pt0, width.value[0] / 2, attitude.value[0] + 90);
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt0, width / 2, attitude + 90);
                         ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
                         ptTemp.style = 0;
                         tg.Pixels.push(ptTemp);
 
                         //third corner (clockwise from center)
-                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width.value[0] / 2, attitude.value[0] + 90);
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width / 2, attitude + 90);
                         ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
                         ptTemp.style = 0;
                         tg.Pixels.push(ptTemp);
 
                         //fourth corner (clockwise from center)
-                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width.value[0] / 2, attitude.value[0] - 90);
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width / 2, attitude - 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        pt00 = new POINT2(pt00);
+                        pt00.style = 5;
+                        tg.Pixels.push(pt00);
+                    }
+                    break;
+                }
+
+                case TacticalLines.BS_3D_TRACK: {
+                    let am = tg.get_AM().split(",");
+                    while (am.length < 2 * (tg.LatLongs.length - 1)) {
+                        am.push(am[am.length - 1]);
+                    }
+                    for (let i = 0; i < tg.LatLongs.length - 1; i++) {
+                        let a12: ref<number[]> = new ref();
+                        let a21: ref<number[]> = new ref();
+                        let pt0: POINT2 = tg.LatLongs[i];
+                        let pt1: POINT2 = tg.LatLongs[i + 1];
+                        let leftWidth: number;
+                        let rightWidth: number;
+                        let attitude: number;
+
+                        mdlGeodesic.geodesic_distance(pt0, pt1, a12, a21);
+                        attitude = a12.value[0];
+
+                        if (SymbolUtilities.isNumber(am[2 * i])) {
+                            leftWidth = parseFloat(am[2 * i]);
+                        }
+                        if (SymbolUtilities.isNumber(am[2 * i + 1])) {
+                            rightWidth = parseFloat(am[2 * i + 1]);
+                        }
+
+                        //get the upper left corner                    
+                        pt00 = mdlGeodesic.geodesic_coordinate(pt0, leftWidth, attitude - 90);
+                        pt00 = clsUtilityCPOF.PointLatLongToPixels(pt00, converter);
+
+                        pt00.style = 0;
+                        tg.Pixels.push(pt00);
+
+                        //second corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt0, rightWidth, attitude + 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        //third corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, rightWidth, attitude + 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        //fourth corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, leftWidth, attitude - 90);
                         ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
                         ptTemp.style = 0;
                         tg.Pixels.push(ptTemp);

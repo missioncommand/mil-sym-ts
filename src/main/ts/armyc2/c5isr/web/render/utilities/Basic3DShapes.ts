@@ -61,7 +61,7 @@ export class Basic3DShapes {
      * 
      * Anchor Points: This shape requires at least two anchor points
      * 
-     * Modifiers (for each segment): width ({@link Modifiers.AM_DISTANCE}), and min and max altitude ({@link Modifiers.X_ALTITUDE_DEPTH}).
+     * Modifiers (for each segment): left and right width ({@link Modifiers.AM_DISTANCE}), and min and max altitude ({@link Modifiers.X_ALTITUDE_DEPTH}).
      */
     public static readonly TRACK = TacticalLines.BS_3D_TRACK;
 }
