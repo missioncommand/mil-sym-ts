@@ -365,7 +365,7 @@ export class Shape3DHandler {
                 shapes.push(topShape);
             }
 
-            const modifierAlt = Math.max(...altitudes.splice(0, mSymbol.getSymbolShapes().length * 2));
+            const modifierAlt = Math.max(...altitudes.slice(0, mSymbol.getSymbolShapes().length * 2));
             for (const oldShape of mSymbol.getModifierShapes()) {
                 var modShape = new ShapeInfo3D();
                 modShape.setModifierString(oldShape.getModifierString());
@@ -697,7 +697,7 @@ export class Shape3DHandler {
                 shapes.push(topShape);
             }
 
-            const modifierAlt = Math.max(...altitudes.splice(0, mSymbol.getSymbolShapes().length * 2));
+            const modifierAlt = Math.max(...altitudes.slice(0, mSymbol.getSymbolShapes().length * 2));
             for (const oldShape of mSymbol.getModifierShapes()) {
                 var modShape = new ShapeInfo3D();
                 modShape.setModifierString(oldShape.getModifierString());
@@ -1263,8 +1263,6 @@ export class Shape3DHandler {
      */
     private static ImageToGeoJSONString(shapeInfo: ShapeInfo3D, ipc: IPointConversion, normalize: boolean): string {
         let JSONed: string = "";
-        let properties: string = "";
-        let geometry: string = "";
 
         //AffineTransform at = shapeInfo.getAffineTransform();
         //Point2D coord = (Point2D)new Point2D(at.getTranslateX(), at.getTranslateY());
@@ -1317,10 +1315,7 @@ export class Shape3DHandler {
      * 3D Version of {@link MultiPointHandler.LabelToGeoJSONString()}
      */
     private static LabelToGeoJSONString(shapeInfo: ShapeInfo3D, ipc: IPointConversion, normalize: boolean, textColor: Color, textBackgroundColor: Color): string {
-
         let JSONed: string = "";
-        let properties: string = "";
-        let geometry: string = "";
 
         let outlineColor: Color = MultiPointHandler.getIdealTextBackgroundColor(textColor);
         if (textBackgroundColor != null) {
