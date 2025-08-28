@@ -2421,21 +2421,24 @@ export class ModifierRenderer implements SettingsEventListener {
         let mods:Array<Modifier> = ModifierRenderer.getLabelPositionIndexes(symbolID, modifiers, attributes);
 
         let mod:Modifier = null;
-        for(let i = 0; i < mods.length; i++)
+        if(mods != null)
         {
-            mod = mods.at(i);
+            for(let i = 0; i < mods.length; i++)
+            {
+                mod = mods.at(i);
 
-            tiTemp = new TextInfo(mod.getText(), 0, 0, modifierFont, frc);
-            labelBounds = tiTemp.getTextBounds();
-            labelWidth = labelBounds.getWidth();
+                tiTemp = new TextInfo(mod.getText(), 0, 0, modifierFont, frc);
+                labelBounds = tiTemp.getTextBounds();
+                labelWidth = labelBounds.getWidth();
 
-            //on left
-            x = ModifierRenderer.getLabelXPosition(bounds, labelWidth, mod.getIndexX(), modifierFontHeight);
-            //above center V
-            y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, mod.getCentered(), mod.getIndexY());
+                //on left
+                x = ModifierRenderer.getLabelXPosition(bounds, sdi.getSymbolCenterPoint(), labelWidth, mod.getIndexX(), modifierFontHeight);
+                //above center V
+                y = ModifierRenderer.getLabelYPosition(bounds, labelHeight, descent, bufferText, mod.getCentered(), mod.getIndexY());
 
-            tiTemp.setLocation(x, y);
-            tiArray.push(tiTemp);
+                tiTemp.setLocation(x, y);
+                tiArray.push(tiTemp);
+            }
         }
 
         // </editor-fold>
@@ -6487,13 +6490,14 @@ export class ModifierRenderer implements SettingsEventListener {
     /**
      * 
      * @param bounds bounds of the core icon
+     * @param centerPoint the center/anchor point of the symbol.
      * @param labelWidth height of the label to be placed
      * @param buffer additional horizontal spacing buffer between label and symbol if desired
      * @param location if true, label on right side of symbol. On left if false.
      * @param modifierFontHeight 
      * @returns 
      */
-    private static getLabelXPosition(bounds:Rectangle2D, labelWidth:number, location:number, modifierFontHeight:number):number 
+    private static getLabelXPosition(bounds:Rectangle2D, centerPoint:Point2D, labelWidth:number, location:number, modifierFontHeight:number):number 
     {
         let x:number = 0;
         let buffer:number = modifierFontHeight/2;
@@ -6509,7 +6513,11 @@ export class ModifierRenderer implements SettingsEventListener {
         }
         else if (location === 0)
         {
-            x = Math.round((bounds.getX() + (bounds.getWidth() * 0.5)) - (labelWidth * 0.5)) as int;
+            //x = Math.round((bounds.getX() + (bounds.getWidth() * 0.5)) - (labelWidth * 0.5));
+            if(centerPoint != null)
+                x = centerPoint.getX() - (labelWidth * 0.5);
+            else
+                x = Math.round((bounds.getX() + (bounds.getWidth() * 0.5)) - (labelWidth * 0.5));
         }
         return x;
     }

@@ -219,7 +219,7 @@ export class MilStdAttributes {
             }
             list.push(MilStdAttributes.FontFamily);
             list.push(MilStdAttributes.FontStyle);
-            list.push(MilStdAttributes.FontStyle);
+            list.push(MilStdAttributes.FontSize);
             list.push(MilStdAttributes.ModifierPlacement);
 
         }
