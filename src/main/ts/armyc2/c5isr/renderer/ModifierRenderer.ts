@@ -727,7 +727,9 @@ export class ModifierRenderer implements SettingsEventListener {
             {
                 ebTop = echelonBounds.getY() as int - ebHeight - barOffset;
             }
-            else if(ModifierRenderer.isCOnTop(symbolID) && modifiers.has(Modifiers.C_QUANTITY))//OR frame in air/space
+            else if((ModifierRenderer.isCOnTop(symbolID) && modifiers.has(Modifiers.C_QUANTITY))||
+                SymbolID.getContext(symbolID) == SymbolID.StandardIdentity_Context_Exercise ||
+                SymbolID.getContext(symbolID) == SymbolID.StandardIdentity_Context_Simulation)//OR frame in air/space
             {
                 ebTop = symbolBounds.getY() as int - ebHeight * 2.4;
             }
@@ -787,11 +789,11 @@ export class ModifierRenderer implements SettingsEventListener {
                 y = Math.round(symbolBounds.getMinY() - amOffset) as int;
                 x = (echelonBounds.getMinX() + echelonBounds.getWidth() + amOffset) as int;
             }
-            if (ebBounds != null
+            /*if (ebBounds != null
                 && ((ebBounds.getMinX() + ebBounds.getWidth() > symbolBounds.getMinX() + symbolBounds.getWidth()))) {
                 y = Math.round(symbolBounds.getMinY() - amOffset) as int;
                 x = (ebBounds.getMinX() + ebBounds.getWidth() + amOffset + RendererSettings.getInstance().getTextOutlineWidth()) as int;
-            }
+            }//*/
             else {
                 y = Math.round(symbolBounds.getMinY() - amOffset) as int;
                 x = (Math.round(symbolBounds.getMinX() + symbolBounds.getWidth() + amOffset + RendererSettings.getInstance().getTextOutlineWidth())) as int;
