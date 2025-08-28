@@ -365,16 +365,17 @@ export class Shape3DHandler {
                 shapes.push(topShape);
             }
 
-            const modifierAlt = Math.max(...altitudes.slice(0, mSymbol.getSymbolShapes().length * 2));
-            for (const oldShape of mSymbol.getModifierShapes()) {
-                var modShape = new ShapeInfo3D();
-                modShape.setModifierString(oldShape.getModifierString());
-                modShape.setModifierPosition(new Point3D(oldShape.getModifierPosition(), modifierAlt));
-                modShape.setModifierAngle(oldShape.getModifierAngle());
-                modShape.setTextJustify(oldShape.getTextJustify());
-                modShape.setModifierImage(oldShape.getModifierImageInfo());
-
-                modifiers.push(modShape);
+            if (mSymbol.getSymbolShapes().length > 0 && mSymbol.getModifierShapes().length > 0) {
+                const modifierAlt = Math.max(...altitudes.slice(0, mSymbol.getSymbolShapes().length * 2));
+                for (const oldShape of mSymbol.getModifierShapes()) {
+                    var modShape = new ShapeInfo3D();
+                    modShape.setModifierString(oldShape.getModifierString());
+                    modShape.setModifierPosition(new Point3D(oldShape.getModifierPosition(), modifierAlt));
+                    modShape.setModifierAngle(oldShape.getModifierAngle());
+                    modShape.setTextJustify(oldShape.getTextJustify());
+                    modShape.setModifierImage(oldShape.getModifierImageInfo());
+                    modifiers.push(modShape);
+                }
             }
 
             if (format === WebRenderer.OUTPUT_FORMAT_KML) {
@@ -697,16 +698,17 @@ export class Shape3DHandler {
                 shapes.push(topShape);
             }
 
-            const modifierAlt = Math.max(...altitudes.slice(0, mSymbol.getSymbolShapes().length * 2));
-            for (const oldShape of mSymbol.getModifierShapes()) {
-                var modShape = new ShapeInfo3D();
-                modShape.setModifierString(oldShape.getModifierString());
-                modShape.setModifierPosition(new Point3D(oldShape.getModifierPosition(), modifierAlt));
-                modShape.setModifierAngle(oldShape.getModifierAngle());
-                modShape.setTextJustify(oldShape.getTextJustify());
-                modShape.setModifierImage(oldShape.getModifierImageInfo());
-
-                modifiers.push(modShape);
+            if (mSymbol.getSymbolShapes().length > 0 && mSymbol.getModifierShapes().length > 0) {
+                const modifierAlt = Math.max(...altitudes.slice(0, mSymbol.getSymbolShapes().length * 2));
+                for (const oldShape of mSymbol.getModifierShapes()) {
+                    var modShape = new ShapeInfo3D();
+                    modShape.setModifierString(oldShape.getModifierString());
+                    modShape.setModifierPosition(new Point3D(oldShape.getModifierPosition(), modifierAlt));
+                    modShape.setModifierAngle(oldShape.getModifierAngle());
+                    modShape.setTextJustify(oldShape.getTextJustify());
+                    modShape.setModifierImage(oldShape.getModifierImageInfo());
+                    modifiers.push(modShape);
+                }
             }
 
             if (format === WebRenderer.OUTPUT_FORMAT_KML) {

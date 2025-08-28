@@ -89,7 +89,7 @@ export class clsUtilityCPOF {
             let pt1: POINT2 = new POINT2(0, 0);
             radius.value = new Array<number>(1);
             width.value = new Array<number>(1);
-            attitude.value = new Array<number>(1);
+            attitude.value = new Array<number>(2);
             length.value = new Array<number>(1);
             switch (lineType) {
                 case TacticalLines.CIRCULAR:
