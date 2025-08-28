@@ -726,7 +726,9 @@ export class clsUtilityCPOF {
                     break;
                 }
 
-                case TacticalLines.RADAR_SEARCH: {
+                case TacticalLines.RADAR_SEARCH:
+                case TacticalLines.BS_RADARC:
+                case TacticalLines.BS_CAKE: {
                     clsUtilityCPOF.GetSectorRangeFan(tg, converter);
                     break;
                 }
@@ -908,7 +910,7 @@ export class clsUtilityCPOF {
                 if (currentPt.style === 5 || currentPt.style === 10) {
                     beginLine = true;
                     //unless there are doubled points with style=5
-                    if ((linetype === TacticalLines.RANGE_FAN_FILL || linetype === TacticalLines.BS_ROUTE || linetype === TacticalLines.BS_TRACK) && k < tg.Pixels.length - 1) {
+                    if ((linetype === TacticalLines.RANGE_FAN_FILL || linetype === TacticalLines.BS_ROUTE || linetype === TacticalLines.BS_TRACK || linetype === TacticalLines.BS_CAKE) && k < tg.Pixels.length - 1) {
                         shapes.push(shape);
                         shape = new Shape2(Shape2.SHAPE_TYPE_POLYLINE);
                     }
@@ -1077,7 +1079,7 @@ export class clsUtilityCPOF {
             tg1.Pixels.push(tg.Pixels[1]);
             tg1.set_LineType(TacticalLines.RANGE_FAN_FILL);
 
-            if (tg.get_LineType() === TacticalLines.RANGE_FAN_SECTOR || tg.get_LineType() === TacticalLines.RADAR_SEARCH || tg.get_LineType() === TacticalLines.BS_RADARC || tg.get_LineType() === TacticalLines.BS_CAKE) {
+            if (tg.get_LineType() === TacticalLines.RANGE_FAN_SECTOR || tg.get_LineType() === TacticalLines.RADAR_SEARCH) {
                 tg1.set_LRMM(tg.get_LRMM());
                 return tg1;
             } else {

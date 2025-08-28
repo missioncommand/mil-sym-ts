@@ -1871,9 +1871,7 @@ export class clsRenderer {
                     switch (linetype) {
                         case TacticalLines.RANGE_FAN:
                         case TacticalLines.RANGE_FAN_SECTOR:
-                        case TacticalLines.RADAR_SEARCH:
-                        case TacticalLines.BS_RADARC:
-                        case TacticalLines.BS_CAKE: {
+                        case TacticalLines.RADAR_SEARCH: {
                             if (tg.get_FillColor() == null || tg.get_FillColor().getAlpha() < 2) {
                                 break;
                             }
@@ -2353,9 +2351,7 @@ export class clsRenderer {
                         switch (linetype) {
                             case TacticalLines.RANGE_FAN:
                             case TacticalLines.RANGE_FAN_SECTOR:
-                            case TacticalLines.RADAR_SEARCH:
-                            case TacticalLines.BS_RADARC:
-                            case TacticalLines.BS_CAKE: {
+                            case TacticalLines.RADAR_SEARCH: {
                                 if (tg.get_FillColor() == null || tg.get_FillColor().getAlpha() < 2) {
                                     break;
                                 }
