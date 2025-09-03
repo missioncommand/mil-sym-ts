@@ -383,7 +383,7 @@ export class Shape3DHandler {
                 if (textColor == null)
                     textColor = mSymbol.getLineColor();
 
-                jsonOutput = Shape3DHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, altitudeMode);
+                jsonOutput = Shape3DHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, altitudeMode, mSymbol.get_WasClipped());
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
                 jsonContent = Shape3DHandler.GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
@@ -708,7 +708,7 @@ export class Shape3DHandler {
                 if (textColor == null)
                     textColor = mSymbol.getLineColor();
 
-                jsonOutput = Shape3DHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, altitudeMode);
+                jsonOutput = Shape3DHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, altitudeMode, mSymbol.get_WasClipped());
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
                 jsonContent = Shape3DHandler.GeoJSONize(shapes, modifiers, ipc, normalize, mSymbol.getTextColor(), mSymbol.getTextBackgroundColor());
@@ -763,21 +763,21 @@ export class Shape3DHandler {
         ipc: IPointConversion,
         normalize: boolean,
         textColor: Color,
-        altitudeMode: string): string {
-
+        altitudeMode: string, 
+        wasClipped: boolean): string {
         let kml: string = "";
-
         let tempModifier: ShapeInfo3D;
-
-        let cdataStart: string = "<![CDATA[";
-        let cdataEnd: string = "]]>";
-
         let len: int = shapes.length;
         kml += ("<Folder id=\"" + id + "\">");
-        kml += ("<name>" + cdataStart + name + cdataEnd + "</name>");
+        kml += ("<name>" + name + "</name>");
         kml += ("<visibility>1</visibility>");
+        kml += ("<description>" + description + "</description>");
+        kml += ("<ExtendedData>");
+        kml += ("<Data name=\"symbolID\"><value>" + symbolCode + "</value></Data>");
+        kml += ("<Data name=\"wasClipped\"><value>" + wasClipped + "</value></Data>");
+        kml += ("</ExtendedData>");
         for (let i: int = 0; i < len; i++) {
-            let shapesToAdd: string = Shape3DHandler.ShapeToKMLString(name, description, symbolCode, shapes[i], ipc, normalize, altitudeMode);
+            let shapesToAdd: string = Shape3DHandler.ShapeToKMLString(shapes[i], ipc, normalize, altitudeMode);
             kml += (shapesToAdd);
         }
 
@@ -802,34 +802,19 @@ export class Shape3DHandler {
     /**
      * 3D Version of {@link MultiPointHandler.ShapeToKMLString()}
      */
-    private static ShapeToKMLString(name: string,
-        description: string,
-        symbolCode: string,
-        shapeInfo: ShapeInfo3D,
+    private static ShapeToKMLString(shapeInfo: ShapeInfo3D,
         ipc: IPointConversion,
         normalize: boolean,
         altitudeMode: string): string {
-
         let kml: string = "";
-
         let lineColor: Color;
         let fillColor: Color;
         let googleLineColor: string;
         let googleFillColor: string;
-
-        //String lineStyleId = "lineColor";
-
         let stroke: BasicStroke;
         let lineWidth: int = 4;
 
-        symbolCode = JavaRendererUtilities.normalizeSymbolCode(symbolCode);
-
-        let cdataStart: string = "<![CDATA[";
-        let cdataEnd: string = "]]>";
-
-        kml += ("<Placemark>");//("<Placemark id=\"" + id + "_mg" + "\">");
-        kml += ("<description>" + cdataStart + "<b>" + name + "</b><br/>" + "\n" + description + cdataEnd + "</description>");
-        //kml += ("<Style id=\"" + lineStyleId + "\">");
+        kml += ("<Placemark>");
         kml += ("<Style>");
 
         lineColor = shapeInfo.getLineColor();

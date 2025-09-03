@@ -769,7 +769,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 /*
@@ -1371,7 +1371,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
@@ -1909,28 +1909,29 @@ export class MultiPointHandler {
 
     }
 
-    private static KMLize(id: string, name: string,
+    private static KMLize(id: string, 
+        name: string,
         description: string,
         symbolCode: string,
         shapes: Array<ShapeInfo>,
         modifiers: Array<ShapeInfo>,
         ipc: IPointConversion,
-        normalize: boolean, textColor: Color): string {
-
+        normalize: boolean,
+        textColor: Color,
+        wasClipped: boolean): string {
         let kml: string = "";
-
         let tempModifier: ShapeInfo;
-
-        let cdataStart: string = "<![CDATA[";
-        let cdataEnd: string = "]]>";
-
         let len: int = shapes.length;
         kml += ("<Folder id=\"" + id + "\">");
-        kml += ("<name>" + cdataStart + name + cdataEnd + "</name>");
+        kml += ("<name>" + name + "</name>");
         kml += ("<visibility>1</visibility>");
+        kml += ("<description>" + description + "</description>");
+        kml += ("<ExtendedData>");
+        kml += ("<Data name=\"symbolID\"><value>" + symbolCode + "</value></Data>");
+        kml += ("<Data name=\"wasClipped\"><value>" + wasClipped + "</value></Data>");
+        kml += ("</ExtendedData>");
         for (let i: int = 0; i < len; i++) {
-
-            let shapesToAdd: string = MultiPointHandler.ShapeToKMLString(name, description, symbolCode, shapes[i], ipc, normalize);
+            let shapesToAdd: string = MultiPointHandler.ShapeToKMLString(shapes[i], ipc, normalize);
             kml += (shapesToAdd);
         }
 
@@ -2501,33 +2502,18 @@ export class MultiPointHandler {
         return false;
     }
 
-    private static ShapeToKMLString(name: string,
-        description: string,
-        symbolCode: string,
-        shapeInfo: ShapeInfo,
+    private static ShapeToKMLString(shapeInfo: ShapeInfo,
         ipc: IPointConversion,
         normalize: boolean): string {
-
         let kml: string = "";
-
         let lineColor: Color;
         let fillColor: Color;
         let googleLineColor: string;
         let googleFillColor: string;
-
-        //String lineStyleId = "lineColor";
-
         let stroke: BasicStroke;
         let lineWidth: int = 4;
 
-        symbolCode = JavaRendererUtilities.normalizeSymbolCode(symbolCode);
-
-        let cdataStart: string = "<![CDATA[";
-        let cdataEnd: string = "]]>";
-
-        kml += ("<Placemark>");//("<Placemark id=\"" + id + "_mg" + "\">");
-        kml += ("<description>" + cdataStart + "<b>" + name + "</b><br/>" + "\n" + description + cdataEnd + "</description>");
-        //kml += ("<Style id=\"" + lineStyleId + "\">");
+        kml += ("<Placemark>");
         kml += ("<Style>");
 
         lineColor = shapeInfo.getLineColor();
@@ -2628,27 +2614,7 @@ export class MultiPointHandler {
                 kml += ("<altitudeMode>clampToGround</altitudeMode>");
                 kml += ("<tessellate>1</tessellate>");
                 kml += ("<coordinates>");
-
-                //this section is a workaround for a google earth bug. Issue 417 was closed
-                //for linestrings but they did not fix the smae issue for fills. If Google fixes the issue
-                //for fills then this section will need to be commented or it will induce an error.
-                let lastLongitude: double = Number.MIN_VALUE;
-                if (normalize === false && MultiPointHandler.IsOnePointSymbolCode(symbolCode)) {
-                    let n: int = shape.length;
-                    //for (int j = 0; j < shape.length; j++) 
-                    for (let j: int = 0; j < n; j++) {
-                        let coord: Point2D = shape[j] as Point2D;
-                        let geoCoord: Point2D = ipc.PixelsToGeo(coord);
-                        let longitude: double = geoCoord.getX();
-                        if (lastLongitude !== Number.MIN_VALUE) {
-                            if (Math.abs(longitude - lastLongitude) > 180) {
-                                normalize = true;
-                                break;
-                            }
-                        }
-                        lastLongitude = longitude;
-                    }
-                }
+                
                 let n: int = shape.length;
                 //for (int j = 0; j < shape.length; j++) 
                 for (let j: int = 0; j < n; j++) {
@@ -3714,7 +3680,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 /*
