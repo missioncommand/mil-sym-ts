@@ -1929,8 +1929,8 @@ export class MultiPointHandler {
         kml += ("<visibility>1</visibility>");
         kml += ("<description>" + cdataStart + description + cdataEnd + "</description>");
         kml += ("<ExtendedData>");
-        kml += ("<Data name=\"symbolID\"><value>" + cdataStart + symbolCode + cdataEnd + "</value></Data>");
-        kml += ("<Data name=\"wasClipped\"><value>" + cdataStart + wasClipped + cdataEnd + "</value></Data>");
+        kml += ("<Data name=\"symbolID\"><value>" + symbolCode + "</value></Data>");
+        kml += ("<Data name=\"wasClipped\"><value>" + wasClipped + "</value></Data>");
         kml += ("</ExtendedData>");
         for (let i: int = 0; i < len; i++) {
             let shapesToAdd: string = MultiPointHandler.ShapeToKMLString(shapes[i], ipc, normalize);
