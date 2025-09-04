@@ -1,7 +1,9 @@
 import { type int, type double } from "../../../graphics2d/BasicTypes";
 import { Point2D } from "../../../graphics2d/Point2D";
+import { DrawRules } from "../../../renderer/utilities/DrawRules";
 import { MilStdAttributes } from "../../../renderer/utilities/MilStdAttributes";
 import { Modifiers } from "../../../renderer/utilities/Modifiers";
+import { MSLookup } from "../../../renderer/utilities/MSLookup";
 
 /**
  *
@@ -276,61 +278,15 @@ export class JavaRendererUtilities {
 
     }//*/
 
-    /**
-     * Checks symbolID and if the relevant modifiers are present
-     *
-     * @param symbolCode
-     * @param modifiers
-     * @return
-     * @deprecated
-     */
-    public static is3dSymbol(symbolCode: string, modifiers: Map<string, string>): boolean {
-        let returnValue: boolean = false;
-
+    public static is3dSymbol(symbolCode: string): boolean {
         try {
-            let symbolId: string = symbolCode.substring(4, 10);
-
-            if (symbolId === "ACAI--" || // Airspace Coordination Area Irregular
-                symbolId === "ACAR--" || // Airspace Coordination Area Rectangular
-                symbolId === "ACAC--" || // Airspace Coordination Area Circular
-                symbolId === "AKPC--" || // Kill box circular
-                symbolId === "AKPR--" || // Kill box rectangular
-                symbolId === "AKPI--" || // Kill box irregular
-                symbolId === "ALC---" || // Air corridor
-                symbolId === "ALM---" || // 
-                symbolId === "ALS---" || // SAAFR
-                symbolId === "ALU---" || // UAV
-                symbolId === "ALL---" || // Low level transit route
-                symbolId === "AAR---"
-                || symbolId === "AAF---"
-                || symbolId === "AAH---"
-                || symbolId === "AAM---" || // MEZ
-                symbolId === "AAML--" || // LOMEZ
-                symbolId === "AAMH--") {
-
-                try {
-                    if (modifiers != null) {
-
-                        // These guys store array values.  Put in appropriate data strucutre
-                        // for MilStdSymbol.
-                        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                            let altitudes: string[] = modifiers.get(Modifiers.X_ALTITUDE_DEPTH).split(",");
-                            if (altitudes.length < 2) {
-                                returnValue = false;
-                            } else {
-                                returnValue = true;
-                            }
-                        }
-
-                    }
-                } catch (exc) {
-                    if (exc instanceof Error) {
-                        console.error(exc.message);
-                    } else {
-                        throw exc;
-                    }
-                }
-            }
+            let msi = MSLookup.getInstance().getMSLInfo(symbolCode);
+            let drawRule = msi.getDrawRule();
+            return drawRule === DrawRules.AREA1
+                || drawRule === DrawRules.AREA10
+                || drawRule === DrawRules.RECTANGULAR1
+                || drawRule === DrawRules.CIRCULAR1
+                || drawRule === DrawRules.CORRIDOR1;
         } catch (e) {
             if (e instanceof Error) {
                 console.error(e.message);
@@ -338,7 +294,7 @@ export class JavaRendererUtilities {
                 throw e;
             }
         }
-        return returnValue;
+        return false;
     }
 
     /**

@@ -89,7 +89,7 @@ export class clsUtilityCPOF {
             let pt1: POINT2 = new POINT2(0, 0);
             radius.value = new Array<number>(1);
             width.value = new Array<number>(1);
-            attitude.value = new Array<number>(1);
+            attitude.value = new Array<number>(2);
             length.value = new Array<number>(1);
             switch (lineType) {
                 case TacticalLines.CIRCULAR:
@@ -204,7 +204,8 @@ export class clsUtilityCPOF {
                 case TacticalLines.TVAR_RECTANGULAR:
                 case TacticalLines.KILLBOXBLUE_RECTANGULAR:
                 case TacticalLines.KILLBOXPURPLE_RECTANGULAR:
-                case TacticalLines.RECTANGULAR_TARGET: {
+                case TacticalLines.RECTANGULAR_TARGET:
+                case TacticalLines.BS_ORBIT: {
                     if (tg.LatLongs.length >= 2) {
                         //get the length and the attitude in mils
                         pt0 = tg.LatLongs[0];
@@ -215,6 +216,16 @@ export class clsUtilityCPOF {
                     if (SymbolUtilities.isNumber(tg.get_AM())) {
                         width.value[0] = parseFloat(tg.get_AM());
                     }
+                    break;
+                }
+
+                case TacticalLines.BS_POLYARC: {
+                    if (SymbolUtilities.isNumber(tg.get_AM())) {
+                        length.value[0] = parseFloat(tg.get_AM());
+                    }
+                    let an = tg.get_AN().split(",");
+                    attitude.value[0] = parseFloat(an[0]);
+                    attitude.value[1] = parseFloat(an[1]);
                     break;
                 }
 
@@ -411,6 +422,145 @@ export class clsUtilityCPOF {
                     break;
                 }
 
+                case TacticalLines.BS_ORBIT: {
+                    ptTemp = mdlGeodesic.geodesic_coordinate(pt0, width.value[0] / 2, attitude.value[0] - 90);
+                    ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                    ptTemp.style = 0;
+                    tg.Pixels.push(ptTemp);
+
+                    ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width.value[0] / 2, attitude.value[0] - 90);
+                    pPoints = new Array<POINT2>(3);
+                    pPoints[0] = new POINT2(pt1);
+                    pPoints[1] = new POINT2(ptTemp);
+                    pPoints[2] = new POINT2(ptTemp);
+                    let pPoints2 = mdlGeodesic.GetGeodesicArc(pPoints);
+                    for (j = 0; j < pPoints2.length / 2; j++) {
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(pPoints2[j], converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+                    }
+
+                    ptTemp = mdlGeodesic.geodesic_coordinate(pt0, width.value[0] / 2, attitude.value[0] + 90);
+                    pPoints[0] = new POINT2(pt0);
+                    pPoints[1] = new POINT2(ptTemp);
+                    pPoints[2] = new POINT2(ptTemp);
+                    pPoints2 = mdlGeodesic.GetGeodesicArc(pPoints);
+                    for (j = 0; j < pPoints2.length / 2; j++) {
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(pPoints2[j], converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+                    }
+                    break;
+                }
+
+                case TacticalLines.BS_ROUTE: {
+                    let am = tg.get_AM().split(",");
+                    while (am.length < tg.LatLongs.length - 1) {
+                        am.push(am[am.length - 1]);
+                    }
+                    for (let i = 0; i < tg.LatLongs.length - 1; i++) {
+                        let a12: ref<number[]> = new ref();
+                        let a21: ref<number[]> = new ref();
+                        let pt0: POINT2 = tg.LatLongs[i];
+                        let pt1: POINT2 = tg.LatLongs[i + 1];
+                        let width: number;
+                        let attitude: number;
+
+                        mdlGeodesic.geodesic_distance(pt0, pt1, a12, a21);
+                        attitude = a12.value[0];
+
+                        if (SymbolUtilities.isNumber(am[i])) {
+                            width = parseFloat(am[i]);
+                        }
+
+                        //get the upper left corner                    
+                        pt00 = mdlGeodesic.geodesic_coordinate(pt0, width / 2, attitude - 90);
+                        pt00 = clsUtilityCPOF.PointLatLongToPixels(pt00, converter);
+
+                        pt00.style = 0;
+                        tg.Pixels.push(pt00);
+
+                        //second corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt0, width / 2, attitude + 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        //third corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width / 2, attitude + 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        //fourth corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, width / 2, attitude - 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        pt00 = new POINT2(pt00);
+                        pt00.style = 5;
+                        tg.Pixels.push(pt00);
+                    }
+                    break;
+                }
+
+                case TacticalLines.BS_TRACK: {
+                    let am = tg.get_AM().split(",");
+                    while (am.length < 2 * (tg.LatLongs.length - 1)) {
+                        am.push(am[am.length - 1]);
+                    }
+                    for (let i = 0; i < tg.LatLongs.length - 1; i++) {
+                        let a12: ref<number[]> = new ref();
+                        let a21: ref<number[]> = new ref();
+                        let pt0: POINT2 = tg.LatLongs[i];
+                        let pt1: POINT2 = tg.LatLongs[i + 1];
+                        let leftWidth: number;
+                        let rightWidth: number;
+                        let attitude: number;
+
+                        mdlGeodesic.geodesic_distance(pt0, pt1, a12, a21);
+                        attitude = a12.value[0];
+
+                        if (SymbolUtilities.isNumber(am[2 * i])) {
+                            leftWidth = parseFloat(am[2 * i]);
+                        }
+                        if (SymbolUtilities.isNumber(am[2 * i + 1])) {
+                            rightWidth = parseFloat(am[2 * i + 1]);
+                        }
+
+                        //get the upper left corner                    
+                        pt00 = mdlGeodesic.geodesic_coordinate(pt0, leftWidth, attitude - 90);
+                        pt00 = clsUtilityCPOF.PointLatLongToPixels(pt00, converter);
+
+                        pt00.style = 0;
+                        tg.Pixels.push(pt00);
+
+                        //second corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt0, rightWidth, attitude + 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        //third corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, rightWidth, attitude + 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        //fourth corner (clockwise from center)
+                        ptTemp = mdlGeodesic.geodesic_coordinate(pt1, leftWidth, attitude - 90);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        ptTemp.style = 0;
+                        tg.Pixels.push(ptTemp);
+
+                        pt00 = new POINT2(pt00);
+                        pt00.style = 5;
+                        tg.Pixels.push(pt00);
+                    }
+                    break;
+                }
+
                 case TacticalLines.RECTANGULAR_TARGET: {
                     let pts: POINT2[] = new Array<POINT2>(4); // 4 Corners
 
@@ -576,13 +726,44 @@ export class clsUtilityCPOF {
                     break;
                 }
 
-                case TacticalLines.RADAR_SEARCH: {
+                case TacticalLines.RADAR_SEARCH:
+                case TacticalLines.BS_RADARC:
+                case TacticalLines.BS_CAKE: {
                     clsUtilityCPOF.GetSectorRangeFan(tg, converter);
                     break;
                 }
 
                 case TacticalLines.RANGE_FAN_FILL: {  //circular range fan calls Change1TacticalAreas twice
                     clsUtilityCPOF.GetSectorRangeFan(tg, converter);
+                    break;
+                }
+
+                case TacticalLines.BS_POLYARC: {
+                    // Polyarc points should be counterclockwise 
+                    if (clsUtilityCPOF.CalculateSignedAreaOfPolygon(tg.LatLongs) < 0) {
+                        tg.LatLongs = [tg.LatLongs[0]].concat(tg.LatLongs.slice(1).reverse());
+                    }
+
+                    let pPointsArc: Array<POINT2> = new Array();
+                    let pPoints: Array<POINT2> = new Array();
+                    pPoints.push(pt0);
+                    pPoints.push(mdlGeodesic.geodesic_coordinate(pt0, length.value[0], attitude.value[0]));
+                    pPoints.push(mdlGeodesic.geodesic_coordinate(pt0, length.value[0], attitude.value[1]));
+                    mdlGeodesic.GetGeodesicArc2(pPoints, pPointsArc);
+
+                    for (let i = 0; i < pPointsArc.length; i++) {
+                        ptTemp = new POINT2(pPointsArc[i]);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        tg.Pixels.push(ptTemp);
+                    }
+
+                    for (let i = 1; i < tg.LatLongs.length; i++) {
+                        ptTemp = new POINT2(tg.LatLongs[i]);
+                        ptTemp = clsUtilityCPOF.PointLatLongToPixels(ptTemp, converter);
+                        tg.Pixels.push(ptTemp);
+                    }
+
+                    tg.Pixels.push(tg.Pixels[0]);
                     break;
                 }
 
@@ -729,7 +910,7 @@ export class clsUtilityCPOF {
                 if (currentPt.style === 5 || currentPt.style === 10) {
                     beginLine = true;
                     //unless there are doubled points with style=5
-                    if (linetype === TacticalLines.RANGE_FAN_FILL && k < tg.Pixels.length - 1) {
+                    if ((linetype === TacticalLines.RANGE_FAN_FILL || linetype === TacticalLines.BS_ROUTE || linetype === TacticalLines.BS_TRACK || linetype === TacticalLines.BS_CAKE) && k < tg.Pixels.length - 1) {
                         shapes.push(shape);
                         shape = new Shape2(Shape2.SHAPE_TYPE_POLYLINE);
                     }
@@ -1559,8 +1740,8 @@ export class clsUtilityCPOF {
                 case TacticalLines.ASR_ONEWAY:
                 case TacticalLines.ASR_TWOWAY:
                 case TacticalLines.ASR_ALT:
-                case TacticalLines.ROUTE_ONEWAY:
-                case TacticalLines.ROUTE_ALT:
+                case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+                case TacticalLines.TRAFFIC_ROUTE_ALT:
                 case TacticalLines.DHA_REVD:
                 case TacticalLines.DHA:
                 case TacticalLines.KILL_ZONE:
@@ -1577,7 +1758,7 @@ export class clsUtilityCPOF {
 
                 case TacticalLines.MSR: //post clip these so there are identical points regardless whether segment data is set 10-5-16
                 case TacticalLines.ASR:
-                case TacticalLines.ROUTE:
+                case TacticalLines.TRAFFIC_ROUTE:
                 case TacticalLines.BOUNDARY: {
                     return false;
                 }
@@ -1694,9 +1875,9 @@ export class clsUtilityCPOF {
             case TacticalLines.ASR_ONEWAY:
             case TacticalLines.ASR_TWOWAY:
             case TacticalLines.ASR_ALT:
-            case TacticalLines.ROUTE:
-            case TacticalLines.ROUTE_ONEWAY:
-            case TacticalLines.ROUTE_ALT: {
+            case TacticalLines.TRAFFIC_ROUTE:
+            case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+            case TacticalLines.TRAFFIC_ROUTE_ALT: {
                 //undo any fill
                 let shape: Shape2;
                 if (shapes != null && shapes.length > 0) {
@@ -2158,8 +2339,8 @@ export class clsUtilityCPOF {
                 case TacticalLines.ASR_ONEWAY:
                 case TacticalLines.ASR_TWOWAY:
                 case TacticalLines.ASR_ALT:
-                case TacticalLines.ROUTE_ONEWAY:
-                case TacticalLines.ROUTE_ALT: {
+                case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+                case TacticalLines.TRAFFIC_ROUTE_ALT: {
                     //added because of segment data 4-22-13
                     //removed from this case block since we now post-clip these because of segment color data 10-5-16
                     //                case TacticalLines.MSR:
@@ -2660,4 +2841,21 @@ export class clsUtilityCPOF {
         }
     }
 
+    /**
+     * Calculating the signed area will tell you which direction the points are going.  
+     * Negative = Clock-wise, Positive = counter clock-wise
+     * A = 1/2 * (x1*y2 - x2*y1 + x2*y3 - x3*y2 + ... + xn*y1 - x1*yn)
+     */
+    static CalculateSignedAreaOfPolygon(coords: POINT2[]): number {
+        var signedArea = 0;
+        const len = coords.length;
+        for (var i = 0; i < len; i++) {
+            const x1 = coords[i].getX();
+            const y1 = coords[i].getY();
+            const x2 = coords[(i + 1) % len].getX();
+            const y2 = coords[(i + 1) % len].getY();
+            signedArea += (x1 * y2 - x2 * y1);
+        }
+        return signedArea / 2;
+    }
 }

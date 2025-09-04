@@ -213,7 +213,7 @@ export class MultiPointHandler {
      * @return the upper left corner of the MBR containing the geographic
      * coordinates
      */
-    private static getGeoUL(geoCoords: Array<Point2D>): Point2D {
+    static getGeoUL(geoCoords: Array<Point2D>): Point2D {
         let ptGeo: Point2D;
         try {
             let j: int = 0;
@@ -266,7 +266,7 @@ export class MultiPointHandler {
         }
         return ptGeo;
     }
-    private static getBboxFromCoords(geoCoords: Array<Point2D>): string {
+    static getBboxFromCoords(geoCoords: Array<Point2D>): string {
         //var ptGeo = null;
         let bbox: string;
         try {
@@ -323,7 +323,7 @@ export class MultiPointHandler {
         return bbox;
     }
 
-    private static crossesIDL(geoCoords: Array<Point2D>): boolean {
+    static crossesIDL(geoCoords: Array<Point2D>): boolean {
         let result: boolean = false;
         let pt2d: Point2D = MultiPointHandler.getControlPoint(geoCoords);
         let left: double = pt2d.getX();
@@ -463,7 +463,7 @@ export class MultiPointHandler {
      * @param origScale
      * @return
      */
-    private static getReasonableScale(bbox: string, origScale: double): double {
+    static getReasonableScale(bbox: string, origScale: double): double {
         try {
             let bounds: string[] = bbox.split(",");
             let left: double = parseFloat(bounds[0]);
@@ -769,7 +769,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 /*
@@ -1371,7 +1371,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
@@ -1626,7 +1626,7 @@ export class MultiPointHandler {
      * @param symbol An existing MilStdSymbol
      * @return
      */
-    private static populateModifiers(saModifiers: Map<string, string>, saAttributes: Map<string, string>, symbol: MilStdSymbol): boolean {
+    static populateModifiers(saModifiers: Map<string, string>, saAttributes: Map<string, string>, symbol: MilStdSymbol): boolean {
         let modifiers: Map<string, string> = new Map();
         let attributes: Map<string, string> = saAttributes;
 
@@ -1909,28 +1909,29 @@ export class MultiPointHandler {
 
     }
 
-    private static KMLize(id: string, name: string,
+    private static KMLize(id: string, 
+        name: string,
         description: string,
         symbolCode: string,
         shapes: Array<ShapeInfo>,
         modifiers: Array<ShapeInfo>,
         ipc: IPointConversion,
-        normalize: boolean, textColor: Color): string {
-
+        normalize: boolean,
+        textColor: Color,
+        wasClipped: boolean): string {
         let kml: string = "";
-
         let tempModifier: ShapeInfo;
-
-        let cdataStart: string = "<![CDATA[";
-        let cdataEnd: string = "]]>";
-
         let len: int = shapes.length;
         kml += ("<Folder id=\"" + id + "\">");
-        kml += ("<name>" + cdataStart + name + cdataEnd + "</name>");
+        kml += ("<name>" + name + "</name>");
         kml += ("<visibility>1</visibility>");
+        kml += ("<description>" + description + "</description>");
+        kml += ("<ExtendedData>");
+        kml += ("<Data name=\"symbolID\"><value>" + symbolCode + "</value></Data>");
+        kml += ("<Data name=\"wasClipped\"><value>" + wasClipped + "</value></Data>");
+        kml += ("</ExtendedData>");
         for (let i: int = 0; i < len; i++) {
-
-            let shapesToAdd: string = MultiPointHandler.ShapeToKMLString(name, description, symbolCode, shapes[i], ipc, normalize);
+            let shapesToAdd: string = MultiPointHandler.ShapeToKMLString(shapes[i], ipc, normalize);
             kml += (shapesToAdd);
         }
 
@@ -2018,7 +2019,7 @@ export class MultiPointHandler {
         return jstr;
     }
 
-    private static getIdealTextBackgroundColor(fgColor: Color): Color {
+    static getIdealTextBackgroundColor(fgColor: Color): Color {
         //ErrorLogger.LogMessage("SymbolDraw","getIdealtextBGColor", "in function", Level.SEVERE);
         try {
             //an array of three elements containing the
@@ -2460,7 +2461,7 @@ export class MultiPointHandler {
 
     }
 
-    private static normalizePoints(shape: Array<Point2D>, ipc: IPointConversion): boolean {
+    static normalizePoints(shape: Array<Point2D>, ipc: IPointConversion): boolean {
         let geoCoords: Point2D[] = new Array();
         let n: int = shape.length;
         //for (int j = 0; j < shape.length; j++) 
@@ -2477,6 +2478,9 @@ export class MultiPointHandler {
         return normalize;
     }
 
+    /**
+     * @deprecated
+     */
     private static IsOnePointSymbolCode(symbolCode: string): boolean {
         let basicCode: string = SymbolUtilities.getBasicSymbolID(symbolCode);
         //TODO: Revisit for basic shapes
@@ -2498,33 +2502,18 @@ export class MultiPointHandler {
         return false;
     }
 
-    private static ShapeToKMLString(name: string,
-        description: string,
-        symbolCode: string,
-        shapeInfo: ShapeInfo,
+    private static ShapeToKMLString(shapeInfo: ShapeInfo,
         ipc: IPointConversion,
         normalize: boolean): string {
-
         let kml: string = "";
-
         let lineColor: Color;
         let fillColor: Color;
         let googleLineColor: string;
         let googleFillColor: string;
-
-        //String lineStyleId = "lineColor";
-
         let stroke: BasicStroke;
         let lineWidth: int = 4;
 
-        symbolCode = JavaRendererUtilities.normalizeSymbolCode(symbolCode);
-
-        let cdataStart: string = "<![CDATA[";
-        let cdataEnd: string = "]]>";
-
-        kml += ("<Placemark>");//("<Placemark id=\"" + id + "_mg" + "\">");
-        kml += ("<description>" + cdataStart + "<b>" + name + "</b><br/>" + "\n" + description + cdataEnd + "</description>");
-        //kml += ("<Style id=\"" + lineStyleId + "\">");
+        kml += ("<Placemark>");
         kml += ("<Style>");
 
         lineColor = shapeInfo.getLineColor();
@@ -2625,27 +2614,7 @@ export class MultiPointHandler {
                 kml += ("<altitudeMode>clampToGround</altitudeMode>");
                 kml += ("<tessellate>1</tessellate>");
                 kml += ("<coordinates>");
-
-                //this section is a workaround for a google earth bug. Issue 417 was closed
-                //for linestrings but they did not fix the smae issue for fills. If Google fixes the issue
-                //for fills then this section will need to be commented or it will induce an error.
-                let lastLongitude: double = Number.MIN_VALUE;
-                if (normalize === false && MultiPointHandler.IsOnePointSymbolCode(symbolCode)) {
-                    let n: int = shape.length;
-                    //for (int j = 0; j < shape.length; j++) 
-                    for (let j: int = 0; j < n; j++) {
-                        let coord: Point2D = shape[j] as Point2D;
-                        let geoCoord: Point2D = ipc.PixelsToGeo(coord);
-                        let longitude: double = geoCoord.getX();
-                        if (lastLongitude !== Number.MIN_VALUE) {
-                            if (Math.abs(longitude - lastLongitude) > 180) {
-                                normalize = true;
-                                break;
-                            }
-                        }
-                        lastLongitude = longitude;
-                    }
-                }
+                
                 let n: int = shape.length;
                 //for (int j = 0; j < shape.length; j++) 
                 for (let j: int = 0; j < n; j++) {
@@ -3711,7 +3680,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor);
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 /*
@@ -3768,7 +3737,7 @@ export class MultiPointHandler {
                 jsonOutput += (st);
                 jsonOutput += ("\"}");
 
-                ErrorLogger.LogException("MultiPointHandler", "RenderBasicSymbol", exc);
+                ErrorLogger.LogException("MultiPointHandler", "RenderBasicShape", exc);
             } else {
                 throw exc;
             }

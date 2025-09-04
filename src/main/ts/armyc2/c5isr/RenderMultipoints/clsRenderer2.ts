@@ -42,7 +42,7 @@ export class clsRenderer2 {
         shapes: Array<Shape2>): void {
         try {
             let linetype: int = tg.get_LineType();
-            if (linetype !== TacticalLines.MSR && linetype !== TacticalLines.ASR && linetype !== TacticalLines.ROUTE) {
+            if (linetype !== TacticalLines.MSR && linetype !== TacticalLines.ASR && linetype !== TacticalLines.TRAFFIC_ROUTE) {
                 return;
             }
 
@@ -298,7 +298,7 @@ export class clsRenderer2 {
 
 
                     if (CELineArray.CIsChannel(lineType) === 0) {
-                        if (lineType === TacticalLines.ASR || lineType === TacticalLines.MSR || lineType === TacticalLines.ROUTE) {
+                        if (lineType === TacticalLines.ASR || lineType === TacticalLines.MSR || lineType === TacticalLines.TRAFFIC_ROUTE) {
                             clsRenderer2.getMSRShapes(tg, shapes);
                         }
                         else {
@@ -314,7 +314,7 @@ export class clsRenderer2 {
 
             //set CELineArray.shapes properties
             if (bolMeTOC <= 0) {
-                if (lineType !== TacticalLines.ASR && lineType !== TacticalLines.MSR && lineType !== TacticalLines.ROUTE) {
+                if (lineType !== TacticalLines.ASR && lineType !== TacticalLines.MSR && lineType !== TacticalLines.TRAFFIC_ROUTE) {
                     clsUtilityJTR.SetShapeProperties(tg, shapes);
                 }
 
