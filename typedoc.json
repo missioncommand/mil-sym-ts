@@ -17,6 +17,8 @@
         "src/main/ts/armyc2/c5isr/renderer/utilities/SymbolID.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/Color.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/RendererSettings.ts",
+        "src/main/ts/armyc2/c5isr/renderer/utilities/DrawRules.ts",
+        "src/main/ts/armyc2/c5isr/renderer/utilities/MODrawRules.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/MSLookup.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/MSInfo.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/SVGInfo.ts",
