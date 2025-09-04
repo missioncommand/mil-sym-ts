@@ -7,6 +7,7 @@ import { Rectangle2D } from "../graphics2d/Rectangle2D"
 
 import { ModifierRenderer } from "../renderer/ModifierRenderer"
 
+import { CanvasUtilities } from "../renderer/utilities/CanvasUtilities"
 import { Color } from "../renderer/utilities/Color"
 import { DrawRules } from "../renderer/utilities/DrawRules"
 import { ErrorLogger } from "../renderer/utilities/ErrorLogger"
@@ -385,8 +386,8 @@ export class SinglePointSVGRenderer {
 
                 if(hasDisplayModifiers || hasTextModifiers)
                 {
-                    let cv:any = RendererUtilities.getCanvas(2,2);
-                    frc = RendererUtilities.getContext(cv);
+                    let cv:any = CanvasUtilities.getCanvas(2,2);
+                    frc = CanvasUtilities.getContext(cv);
                 }
 
 
@@ -789,8 +790,8 @@ export class SinglePointSVGRenderer {
             let frc:any;
             if(hasDisplayModifiers || hasTextModifiers)
             {
-                let cv:any = RendererUtilities.getCanvas(2,2);
-                frc = RendererUtilities.getContext(cv);
+                let cv:any = CanvasUtilities.getCanvas(2,2);
+                frc = CanvasUtilities.getContext(cv);
             }
             if (asIcon === false && (hasTextModifiers || hasDisplayModifiers)) {
                 let sdiTemp: SymbolDimensionInfo;
