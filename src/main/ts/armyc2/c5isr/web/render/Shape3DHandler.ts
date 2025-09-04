@@ -770,7 +770,7 @@ export class Shape3DHandler {
         let cdataStart: string = "<![CDATA[";
         let cdataEnd: string = "]]>";
         let len: int = shapes.length;
-        kml += ("<Folder id=\"" + cdataStart + id + cdataEnd + "\">");
+        kml += ("<Folder id=\"" + id + "\">");
         kml += ("<name>" + cdataStart + name + cdataEnd + "</name>");
         kml += ("<visibility>1</visibility>");
         kml += ("<description>" + cdataStart + description + cdataEnd + "</description>");
