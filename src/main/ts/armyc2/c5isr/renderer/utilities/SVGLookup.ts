@@ -594,17 +594,7 @@ export class SVGLookup
         else //2525D or no Modifier 1 Indicator set
         {
             //SIDC positions 5-6 + 17-18 + "1"
-
-            if (SymbolID.getEntity(symbolID) >= 11) {
-
-                mod1ID = symbolID.substring(4, 6) + symbolID.substring(16, 18) + "1";
-            }
-
-            else {
-
-                mod1ID = symbolID.substring(4, 6) + "001";
-            }
-
+            mod1ID = symbolID.substring(4, 6) + symbolID.substring(16, 18) + "1";
 
             if (SymbolID.getSymbolSet(symbolID) === SymbolID.SymbolSet_LandUnit) {
                 switch (SymbolID.getModifier1(symbolID)) {
@@ -636,16 +626,7 @@ export class SVGLookup
         else //2525D or no Modifier 1 Indicator set
         {
             //SIDC positions 5-6 + 19-20 + "2"
-            if (SymbolID.getEntity(symbolID) >= 11) {
-
-                mod2ID = symbolID.substring(4, 6) + symbolID.substring(18, 20) + "2";
-            }
-
-            else {
-
-                mod2ID = symbolID.substring(4, 6) + "002";
-            }
-
+            mod2ID = symbolID.substring(4, 6) + symbolID.substring(18, 20) + "2";
 
             if (SymbolID.getSymbolSet(symbolID) === SymbolID.SymbolSet_LandUnit) {
                 switch (SymbolID.getModifier2(symbolID)) {
