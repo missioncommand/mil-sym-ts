@@ -4331,6 +4331,15 @@ export class ModifierRenderer implements SettingsEventListener {
             if(ss == SymbolID.SymbolSet_LandUnit ||
                     ss == SymbolID.SymbolSet_LandCivilianUnit_Organization)
             {
+
+                //Only Command & Control has AA; ec.equals("110000").  Always in the middle of the unit.
+                if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ))
+                {
+                    temp = modifiers.get(Modifiers.AA_SPECIAL_C2_HQ);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AA", temp, 0, 0, true));
+                }
+                    
                 //Do top center label
                 x = 0;//centered
                 y = 9;//on top of symbol
@@ -5293,6 +5302,14 @@ export class ModifierRenderer implements SettingsEventListener {
                     ss == SymbolID.SymbolSet_LandCivilianUnit_Organization ||
                     (ss == SymbolID.SymbolSet_SignalsIntelligence && fs == SymbolID.FrameShape_LandUnit))
             {
+                //Only Command & Control has AA; ec.equals("110000").  Always in the middle of the unit.
+                if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ))
+                {
+                    temp = modifiers.get(Modifiers.AA_SPECIAL_C2_HQ);
+                    if(temp != null && temp !== "")
+                        mods.push(new Modifier("AA", temp, 0, 0, true));
+                }
+
                 //Do top center label
                 x = 0;//centered
                 y = 9;//on top of symbol
