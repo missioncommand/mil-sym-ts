@@ -297,7 +297,8 @@ export class Shape3DHandler {
             }
 
             if (bboxCoords == null) {
-                clsRenderer.renderWithPolylines(mSymbol, ipc, rect);
+                let clipBounds: Rectangle = MultiPointHandler.getOverscanClipBounds(rect, ipc);
+                clsRenderer.renderWithPolylines(mSymbol, ipc, clipBounds);
             } else {
                 clsRenderer.renderWithPolylines(mSymbol, ipc, bboxCoords);
             }
