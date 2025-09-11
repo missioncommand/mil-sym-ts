@@ -134,6 +134,8 @@ export class RendererSettings {
        
     private _patternScale: double = 1.0;
 
+    private _overscanScale: double = 1.0;
+
     //acevedo - 12/8/17 - allow the setting of affiliation colors.
     private _friendlyUnitFillColor: Color = AffiliationColors.FriendlyUnitFillColor;
     /// <summary>
@@ -812,6 +814,21 @@ export class RendererSettings {
 
     public getPatternScale(): double {
         return this._patternScale;
+    }
+
+    /**
+     * Optionally expand multipoint rendering outside bounding box by a scale factor.
+     * Useful when panning map before rendering with updated bounding box.
+     * Only referenced when bounding box is a valid rectangle.
+     * For example, setting overscanScale to 3 would render all shapes within range 3 * the width and 3 * the height of the bounding box
+     * @param overscanScale default is 1 and minimum is 1
+     */
+    public setOverscanScale(overscanScale: double): void {
+        this._overscanScale = Math.max(overscanScale, 1);
+    }
+
+    public get_overscanScale(): double {
+        return this._overscanScale;
     }
 
     /**
