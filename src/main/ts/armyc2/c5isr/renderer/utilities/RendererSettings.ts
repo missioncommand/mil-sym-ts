@@ -827,7 +827,7 @@ export class RendererSettings {
         this._overscanScale = Math.max(overscanScale, 1);
     }
 
-    public get_overscanScale(): double {
+    public getOverscanScale(): double {
         return this._overscanScale;
     }
 
