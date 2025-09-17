@@ -27,11 +27,11 @@ export class Region
     public contains(x:number, y:number) {
         return this._gp.contains(x, y);
     };
-    public getBounds = function() {
+    public getBounds() {
         var rect = this._gp.getBounds();
         return  new Rectangle(rect.x, rect.y, rect.width, rect.height);
     };
-    public op = function(region:any, op:any) {
+    public op(region:any, op:any) {
         return false;
     };
 };

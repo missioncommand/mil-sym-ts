@@ -46,7 +46,7 @@ export class ShapeUtilties
     *			by the first two specified coordinates.
     * @since 1.2
     */
-    public static relativeCCW = function(x1:double, y1: double,  x2: double, y2: double,  px: double, py: double)
+    public static relativeCCW(x1:double, y1: double,  x2: double, y2: double,  px: double, py: double)
     {
         x2 -= x1;
         y2 -= y1;
@@ -80,7 +80,7 @@ export class ShapeUtilties
         return (ccw < 0.0) ? -1 : ((ccw > 0.0) ? 1 : 0);
     };
 
-    public static linesIntersect = function(x1:number,y1:number,x2:number,y2:number,x3:number,y3:number,x4:number,y4:number)   
+    public static linesIntersect(x1:number,y1:number,x2:number,y2:number,x3:number,y3:number,x4:number,y4:number)   
     {
         var rCCW1 = this.relativeCCW(x1,y1,
                     x2,y2,
@@ -117,7 +117,7 @@ export class ShapeUtilties
     * <code>src2</code>
     * @since 1.2
     */    
-     public static intersectRects = function(src1:Rectangle,src2:Rectangle):Rectangle
+     public static intersectRects(src1:Rectangle,src2:Rectangle):Rectangle
     {
         var x1 = Math.max(src1.getX(), src2.getX()),
         y1 = Math.max(src1.getY(), src2.getY()),
