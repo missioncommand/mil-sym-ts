@@ -112,7 +112,9 @@ export class Polygon {
         }
         catch(e)
         {
-            throw new Error("Polygon.copyOf - " + e.message);
+            if (e instanceof Error) {
+                throw new Error("Polygon.copyOf - " + e.message);
+            }
         }
         return arr;
     }

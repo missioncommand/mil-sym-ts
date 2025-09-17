@@ -164,7 +164,9 @@ export function isReady():boolean
   }
   catch(e)
   {
-    ErrorLogger.LogException("C5Ren","isReady()",e);
+    if (e instanceof Error) {
+      ErrorLogger.LogException("C5Ren","isReady()",e);
+    }
     return false;
   }
 }

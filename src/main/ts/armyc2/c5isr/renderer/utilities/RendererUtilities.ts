@@ -606,7 +606,7 @@ export class RendererUtilities {
           return json;
         } catch (error) 
         {
-            if(console)
+            if(console && error instanceof Error)
                 console.error(error.message);
             else
                 throw error;

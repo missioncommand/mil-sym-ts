@@ -740,7 +740,9 @@ export class SVGLookup
         }
         catch(e)
         {
-            ErrorLogger.LogException("SVGLookup","addCUstomSymbol",e);
+            if (e instanceof Error) {
+                ErrorLogger.LogException("SVGLookup","addCUstomSymbol",e);
+            }
         }
         return success;
     }

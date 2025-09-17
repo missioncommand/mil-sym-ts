@@ -204,7 +204,9 @@ export class MultiPointHandlerSVG {
             }
         }
         catch (err) {
-            ErrorLogger.LogException("MultiPointHandler", "GeoSVGize", err);
+            if (err instanceof Error) {
+                ErrorLogger.LogException("MultiPointHandler", "GeoSVGize", err);
+            }
         }
 
         if (paths && len > 0 && unionBounds) {

@@ -1752,7 +1752,9 @@ export class ModifierRenderer implements SettingsEventListener {
         }
         catch(exc)
         {
-            ErrorLogger.LogException("ModifierRenderer","processSpeedLeader",exc)
+            if (exc instanceof Error) {
+                ErrorLogger.LogException("ModifierRenderer","processSpeedLeader",exc)
+            }
         }
         return rsdi;
 
