@@ -1,6 +1,7 @@
 import { GeneralPath } from "../../armyc2/c5isr/graphics2d/GeneralPath";
 import { RectF } from "./RectF";
 import { Rectangle } from "../../armyc2/c5isr/graphics2d/Rectangle";
+import { Path } from "./Path";
 
 export class Region
 {
@@ -20,7 +21,7 @@ export class Region
         }
     }
     
-    public setPath(path, clipRegion) {
+    public setPath(path: Path, clipRegion: Region) {
         return true;
     };
     public contains(x:number, y:number) {

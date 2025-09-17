@@ -98,7 +98,7 @@ export class Polygon {
         }
     }
 
-    private copyOf<T>(original:Array<T>, length): Array<T>
+    private copyOf<T>(original:Array<T>, length: int): Array<T>
     {
         let arr:Array<T> = [];
 

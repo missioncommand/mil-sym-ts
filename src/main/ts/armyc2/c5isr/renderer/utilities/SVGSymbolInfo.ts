@@ -25,7 +25,7 @@ export class SVGSymbolInfo implements SymbolDimensionInfo {
 
     // https://web.dev/articles/base64-encoding
     // From https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem.
-    private bytesToBase64(bytes) 
+    private bytesToBase64(bytes: number[]) 
     {
         const binString = String.fromCodePoint(...bytes);
         return btoa(binString);

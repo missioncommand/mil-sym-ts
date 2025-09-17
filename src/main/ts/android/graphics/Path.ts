@@ -1,9 +1,11 @@
+import { RectF } from "./RectF";
 import { POINT2 } from "../../armyc2/c5isr/JavaLineArray/POINT2"
+import { type double, type int } from "../../armyc2/c5isr/graphics2d/BasicTypes";
 
 export class Path {
     private pts: Array<POINT2> = [];
 
-    public lineTo(x, y) {
+    public lineTo(x: double, y: double) {
         if (this.pts.length > 0)
         {
             var lastPt = this.pts[this.pts.length - 1];
@@ -12,7 +14,7 @@ export class Path {
         }
         this.pts.push(new POINT2(x, y));
     };
-    public moveTo(x, y) {
+    public moveTo(x: double, y: double) {
         if (this.pts.length > 0)
         {
             var lastPt = this.pts[this.pts.length - 1];
@@ -21,25 +23,25 @@ export class Path {
         }
         this.pts.push(new POINT2(x, y));
     };
-    public curveTo(x1, y1, x2, y2, x3, y3) {
+    public curveTo(x1: double, y1: double, x2: double, y2: double, x3: double, y3: double) {
         this.pts.push(new POINT2(x1, y1));
         this.pts.push(new POINT2(x2, y2));
         this.pts.push(new POINT2(x3, y3));
     };
-    public cubicTo(x1, y1, x2, y2, x3, y3) {
+    public cubicTo(x1: double, y1: double, x2: double, y2: double, x3: double, y3: double) {
         this.pts.push(new POINT2(x1, y1));
         this.pts.push(new POINT2(x2, y2));
         this.pts.push(new POINT2(x3, y3));
     };
-    public quadTo(x1, y1, x2, y2) {
+    public quadTo(x1: double, y1: double, x2: double, y2: double) {
         this.pts.push(new POINT2(x1, y1));
         this.pts.push(new POINT2(x2, y2));
     };
-    public addPath(path) {
+    public addPath(path: Path) {
         this.pts.push(...path.getPts());
         return;
     };
-    public computeBounds(rect, exact) {
+    public computeBounds(rect: RectF, exact: boolean) {
         var j = 0;
         var left = this.pts[0].x;
         var right = this.pts[0].x;
