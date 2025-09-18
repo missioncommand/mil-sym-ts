@@ -98,7 +98,7 @@ export class Polygon {
         }
     }
 
-    private copyOf<T>(original:Array<T>, length): Array<T>
+    private copyOf<T>(original:Array<T>, length: int): Array<T>
     {
         let arr:Array<T> = [];
 
@@ -112,7 +112,9 @@ export class Polygon {
         }
         catch(e)
         {
-            throw new Error("Polygon.copyOf - " + e.message);
+            if (e instanceof Error) {
+                throw new Error("Polygon.copyOf - " + e.message);
+            }
         }
         return arr;
     }

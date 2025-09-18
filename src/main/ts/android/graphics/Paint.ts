@@ -1,5 +1,6 @@
 import { Rect } from "./Rect";
 import { type float } from "../../armyc2/c5isr/graphics2d/BasicTypes";
+import { Typeface } from "./Typeface";
 
 export class Paint
 {
@@ -7,7 +8,7 @@ export class Paint
     {
 
     }
-    public getTextBounds(str:string, xstart:number, end:number, rect:Rect) {
+    public getTextBounds(str:string, xstart:number, end:number, rect:Rect): void {
         return null;
     };
     public setTextSize(size:float) {
@@ -16,10 +17,10 @@ export class Paint
     public setAntiAlias(b:boolean) {
         return;
     };
-    public setColor(color) {
+    public setColor(color: number) {
         return;
     };
-    public setTypeface(tf) {
+    public setTypeface(tf: Typeface) {
         return;
     };
 

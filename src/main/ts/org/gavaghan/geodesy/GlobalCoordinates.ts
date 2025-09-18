@@ -59,7 +59,7 @@ export class GlobalCoordinates {
         return this.mLongitude;
     }
 
-    public setLongitude(longitude): void {
+    public setLongitude(longitude: number): void {
         this.mLongitude = longitude;
         this.canonicalize();
     }

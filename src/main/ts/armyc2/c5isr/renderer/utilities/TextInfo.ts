@@ -184,10 +184,10 @@ export class TextInfo {
 		return this._fontStyle;
 	}
 
-	public strokeText = function(context:OffscreenCanvasRenderingContext2D){
-        context.strokeText(this.text,this.location.getX(),this.location.getY());
+	public strokeText(context:OffscreenCanvasRenderingContext2D){
+        context.strokeText(this._text,this._location.getX(),this._location.getY());
     };
-    public fillText = function(context:OffscreenCanvasRenderingContext2D){
-        context.fillText(this.text,this.location.getX(),this.location.getY());
+    public fillText(context:OffscreenCanvasRenderingContext2D){
+        context.fillText(this._text,this._location.getX(),this._location.getY());
     };
 }

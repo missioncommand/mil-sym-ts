@@ -347,7 +347,9 @@ export class Color {
 		}
 		catch(e)
 		{
-			console.log(e.message);
+			if (e instanceof Error) {
+				console.log(e.message);
+			}
 		}
 		return color;
 	}

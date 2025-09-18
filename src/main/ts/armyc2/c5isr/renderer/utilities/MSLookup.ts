@@ -901,7 +901,9 @@ export class MSLookup {
         }
         catch(e)
         {
-            ErrorLogger.LogException("MSLookup", "addCustomSymbol",e);
+            if (e instanceof Error) {
+                ErrorLogger.LogException("MSLookup", "addCustomSymbol",e);
+            }
         }
         return success;
         

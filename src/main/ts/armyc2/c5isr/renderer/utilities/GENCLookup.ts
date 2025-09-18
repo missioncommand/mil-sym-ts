@@ -87,7 +87,7 @@ export class GENCLookup {
                 }
                 
             } catch (e) {
-                if(console)
+                if(console && e instanceof Error)
                     console.log(e.message);
                 else
                     throw e;

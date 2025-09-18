@@ -712,15 +712,7 @@ export class Line2D {
      */
     public clone(): Line2D | null 
     {
-        try {
-            //return super.clone();
-            throw Error("Need to implement clone for Line2D");
-        } catch (e) {
-            {
-                // this shouldn't happen, since we are Cloneable
-                throw Error("Need to implement clone for Line2D" + e.message);
-            } 
-        }
+        throw Error("Need to implement clone for Line2D");
     }
 }
 

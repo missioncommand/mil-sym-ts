@@ -5,7 +5,7 @@ export class RoundedRectangle
     private radius:number;
     private rectangle:Rectangle
 
-    constructor(x,y,w,h,radius) 
+    constructor(x:number,y:number,w:number,h:number,radius:number) 
     {
 
         this.radius = radius;

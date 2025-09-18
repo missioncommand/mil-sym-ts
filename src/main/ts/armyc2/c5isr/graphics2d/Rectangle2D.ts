@@ -311,8 +311,8 @@ export class Rectangle2D {
         }
     }
 
-    public grow(size: int);
-    public grow(h: int, v: int);
+    public grow(size: int): void;
+    public grow(h: int, v: int): void;
     public grow(...args: unknown[]) {
         switch (args.length) {
             case 1:

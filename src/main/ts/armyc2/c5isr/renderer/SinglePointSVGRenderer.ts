@@ -961,7 +961,9 @@ export class SinglePointSVGRenderer {
         }
         catch (e)
         {
-            ErrorLogger.LogException("SinglePointSVGRenderer", "RenderModifier2-Getting Attributes", e);
+            if (e instanceof Error) {
+                ErrorLogger.LogException("SinglePointSVGRenderer", "RenderModifier2-Getting Attributes", e);
+            }
         }
 
         try
@@ -1049,7 +1051,9 @@ export class SinglePointSVGRenderer {
         }
         catch (e)
         {
-            ErrorLogger.LogException("SinglePointSVGRenderer", "RenderSP", e);
+            if (e instanceof Error) {
+                ErrorLogger.LogException("SinglePointSVGRenderer", "RenderSP", e);
+            }
         }
         return null;
     }

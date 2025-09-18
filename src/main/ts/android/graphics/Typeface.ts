@@ -4,7 +4,7 @@ export class Typeface
     {
 
     }
-    public create(str:string, t:any) {
+    public create(str:string, t:any): Typeface {
         return null;
     };
     public static readonly BOLD = 1;

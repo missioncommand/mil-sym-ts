@@ -1,6 +1,7 @@
 import { GeneralPath } from "../../armyc2/c5isr/graphics2d/GeneralPath";
 import { RectF } from "./RectF";
 import { Rectangle } from "../../armyc2/c5isr/graphics2d/Rectangle";
+import { Path } from "./Path";
 
 export class Region
 {
@@ -20,17 +21,17 @@ export class Region
         }
     }
     
-    public setPath(path, clipRegion) {
+    public setPath(path: Path, clipRegion: Region) {
         return true;
     };
     public contains(x:number, y:number) {
         return this._gp.contains(x, y);
     };
-    public getBounds = function() {
+    public getBounds() {
         var rect = this._gp.getBounds();
         return  new Rectangle(rect.x, rect.y, rect.width, rect.height);
     };
-    public op = function(region:any, op:any) {
+    public op(region:any, op:any) {
         return false;
     };
 };
