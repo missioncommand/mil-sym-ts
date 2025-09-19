@@ -318,9 +318,7 @@ export class RendererUtilities {
             if((SymbolID.getSymbolSet(symbolID)===SymbolID.SymbolSet_LandInstallation && SymbolID.getFrameShape(symbolID)==="0") || 
                 SymbolID.getFrameShape(symbolID)===SymbolID.FrameShape_LandInstallation)
             {
-                let i1 = returnSVG.indexOf("<rect") + 5;
-                if(ver >= SymbolID.Version_2525E && affiliation == SymbolID.StandardIdentity_Affiliation_AssumedFriend)
-                    i1 = returnSVG.indexOf("<rect",i1) + 5;
+                let i1 = this.findInstIndIndex(returnSVG)+5;//<rect 
                 //make sure installation indicator matches line color
                 returnSVG = returnSVG.substring(0,i1) + " fill=\"" + hexStrokeColor + "\"" + returnSVG.substring(i1);
             }
@@ -328,9 +326,7 @@ export class RendererUtilities {
         else if((SymbolID.getSymbolSet(symbolID)===SymbolID.SymbolSet_LandInstallation && SymbolID.getFrameShape(symbolID)==="0") || 
                 SymbolID.getFrameShape(symbolID)===SymbolID.FrameShape_LandInstallation)
         {
-            let i1 = returnSVG.indexOf("<rect") + 5;
-            if(ver >= SymbolID.Version_2525E && affiliation == SymbolID.StandardIdentity_Affiliation_AssumedFriend)
-                i1 = returnSVG.indexOf("<rect",i1) + 5;
+            let i1 = this.findInstIndIndex(returnSVG)+5;//<rect 
             //No line color change so make sure installation indicator stays black
             returnSVG = returnSVG.substring(0,i1) + " fill=\"#000000\"" + returnSVG.substring(i1);
         }
@@ -555,6 +551,33 @@ export class RendererUtilities {
             }
         }
         return largest * RendererUtilities.OUTLINE_SCALING_FACTOR;
+    }
+
+    public static findInstIndIndex(svg:string):number
+    {
+        let start:number = -1;
+        let stop:number = -1;
+        //let result:int[];
+
+        start = svg.indexOf("<rect");
+        stop = svg.indexOf(">",start);
+
+        let rect:string = svg.substring(start,stop+1);
+        if(rect.indexOf("fill")===-1)//no set fill so it's the indicator
+        {
+            //result = [start,stop];
+            return start;
+        }
+        else //it's the next rect
+        {
+            start = svg.indexOf("<rect",stop);
+            stop = svg.indexOf(">",start);
+            rect = svg.substring(start,stop+1);
+        }
+
+       //result = [start,stop];
+        return start;
+
     }
 
     public static getDistanceBetweenPoints(pt1:Point2D, pt2:Point2D):int
