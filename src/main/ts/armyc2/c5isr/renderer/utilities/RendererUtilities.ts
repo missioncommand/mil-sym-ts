@@ -586,6 +586,45 @@ export class RendererUtilities {
         return distance;
     }
 
+    /**
+     * A starting point for calculating map scale.
+     * The User may prefer a different calculation depending on how their maps works.
+     * @param mapPixelWidth Width of your map in pixels
+     * @param eastLon East Longitude of your map
+     * @param westLon West Longitude of your map
+     * @param dpi Dots Per Inch of your device.  If not included, will use default renderer value.
+     * @return Map scale value to use in the RenderSymbol function {@link armyc2.c5isr.web.render.WebRenderer#RenderSymbol(String, String, String, String, String, String, double, String, Map, Map, int)}
+     */
+    public static calculateMapScale(mapPixelWidth:number, eastLon:number, westLon:number, dpi:number = -1):number
+    {
+        let INCHES_PER_METER:number = 39.3700787;
+        let METERS_PER_DEG:number = 40075017.0 / 360.0; // Earth's circumference in meters / 360 degrees
+
+        try
+        {
+            if(dpi < 0)
+                dpi = RendererSettings.getInstance().getDeviceDPI();
+
+            let sizeSquare:number = Math.abs(eastLon - westLon);
+            if (sizeSquare > 180)
+                sizeSquare = 360 - sizeSquare;
+
+            // physical screen length (in meters) = pixels in screen / pixels per inch / inch per meter
+            let screenLength:number = mapPixelWidth / dpi / INCHES_PER_METER;
+            // meters on screen = degrees on screen * meters per degree
+            let metersOnScreen:number = sizeSquare * METERS_PER_DEG;
+
+            let scale:number = metersOnScreen/screenLength;
+            return scale;
+        }
+        catch(e)
+        {
+            if(e instanceof Error)
+                ErrorLogger.LogException("RendererUtilities","calculateMapScale",e,LogLevel.WARNING);
+        }
+        return 0;
+    }
+
     public static scaleIcon(symbolID:string, icon:SVGInfo):SVGInfo
     {
         let retVal:SVGInfo = icon;
