@@ -625,6 +625,24 @@
             var msInfo = C5Ren.MSLookup.getInstance().getMSLInfo("110345000016140700000000000840");
             var mods = msInfo.getModifiers();
 
+            //SectorModUtils test
+            try
+            {
+            var smu = C5Ren.SectorModUtils.getInstance();
+            var name = smu.getName(11,1,1,"01");
+            var al = smu.getSectorModList(11,1,1);
+            name = smu.getName(15,0,1,"100");
+            console.log(name);
+            }
+            catch(e)
+            {
+                if (e instanceof Error) {
+                //ErrorLogger.LogException("C5Ren","isReady()",e);
+                console.log(e.message);
+                }
+                return false;
+            }
+
 	}
 </script>
 </head>

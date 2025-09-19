@@ -19,6 +19,7 @@ export { MODrawRules } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MODra
 export { GENCLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/GENCLookup";
 export { MSLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSLookup";
 export { MSInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSInfo";
+export { SectorModUtils } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SectorModUtils";
 export { SVGInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SVGInfo";
 export { SVGLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SVGLookup";
 export { SVGSymbolInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SVGSymbolInfo";

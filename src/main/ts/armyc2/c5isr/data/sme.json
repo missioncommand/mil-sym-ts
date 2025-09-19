@@ -1,0 +1,3377 @@
+{
+    "sme": {
+      "secmods": 
+
+      [
+        {
+          "name": "00 Common",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unmanned Aircraft (UA)/ Unmanned Aerial Vehicle (UAV)/Unmanned Aircraft System (UAS)/Drone",
+          "category": "Mobility",
+          "code": "100"
+        },
+        {
+          "name": "Robotic",
+          "category": "Mobility",
+          "code": "101"
+        },
+        {
+          "name": "Fixed Wing",
+          "category": "Mobility",
+          "code": "102"
+        },
+        {
+          "name": "Rotary Wing",
+          "category": "Mobility",
+          "code": "103"
+        },
+        {
+          "name": "Tilt-Rotor",
+          "category": "Mobility",
+          "code": "104"
+        },
+        {
+          "name": "VSTOL/VTOL or Helicopter Equipped",
+          "category": "Mobility",
+          "code": "105"
+        },
+        {
+          "name": "Attack/Strike",
+          "category": "Capability",
+          "code": "106"
+        },
+        {
+          "name": "Armored",
+          "category": "Capability",
+          "code": "107"
+        },
+        {
+          "name": "Ballistic Missile/Ballistic Missile Defense Shooter",
+          "category": "Capability",
+          "code": "108"
+        },
+        {
+          "name": "Bridge/Bridging",
+          "category": "Capability",
+          "code": "109"
+        },
+        {
+          "name": "Cargo",
+          "category": "Capability",
+          "code": "110"
+        },
+        {
+          "name": "Utility",
+          "category": "Capability",
+          "code": "111"
+        },
+        {
+          "name": "Light",
+          "category": "Capability",
+          "code": "112"
+        },
+        {
+          "name": "Medium",
+          "category": "Capability",
+          "code": "113"
+        },
+        {
+          "name": "Heavy",
+          "category": "Capability",
+          "code": "114"
+        },
+        {
+          "name": "Cyberspace",
+          "category": "Capability",
+          "code": "115"
+        },
+        {
+          "name": "Command Post Node",
+          "category": "Capability",
+          "code": "116"
+        },
+        {
+          "name": "Joint Network Node",
+          "category": "Capability",
+          "code": "117"
+        },
+        {
+          "name": "Retransmission Site",
+          "category": "Capability",
+          "code": "118"
+        },
+        {
+          "name": "Brigade",
+          "category": "Support Level",
+          "code": "119"
+        },
+        {
+          "name": "Close Protection",
+          "category": "Capability",
+          "code": "120"
+        },
+        {
+          "name": "Combat",
+          "category": "Capability",
+          "code": "121"
+        },
+        {
+          "name": "Command and Control",
+          "category": "Capability",
+          "code": "122"
+        },
+        {
+          "name": "Crowd and Riot Control",
+          "category": "Capability",
+          "code": "123"
+        },
+        {
+          "name": "Explosive Ordnance Disposal",
+          "category": "Capability",
+          "code": "124"
+        },
+        {
+          "name": "Intelligence Surveillance Reconnaissance",
+          "category": "Capability",
+          "code": "125"
+        },
+        {
+          "name": "Maintenance",
+          "category": "Capability",
+          "code": "126"
+        },
+        {
+          "name": "Medevac/Medic/Medical",
+          "category": "Capability",
+          "code": "127"
+        },
+        {
+          "name": "Search and Rescue",
+          "category": "Capability",
+          "code": "128"
+        },
+        {
+          "name": "Security",
+          "category": "Capability",
+          "code": "129"
+        },
+        {
+          "name": "Sniper",
+          "category": "Capability",
+          "code": "130"
+        },
+        {
+          "name": "Special Operations Forces",
+          "category": "Capability",
+          "code": "131"
+        },
+        {
+          "name": "Special Weapons and Tactics (SWAT)",
+          "category": "Capability",
+          "code": "132"
+        },
+        {
+          "name": "Guided Missile",
+          "category": "Capability",
+          "code": "133"
+        },
+        {
+          "name": "Other Guided Missile",
+          "category": "Capability",
+          "code": "134"
+        },
+        {
+          "name": "Petroleum/Petroleum Oil and Lubricants",
+          "category": "Capability",
+          "code": "135"
+        },
+        {
+          "name": "Water",
+          "category": "Capability",
+          "code": "136"
+        },
+        {
+          "name": "Weapon(s)",
+          "category": "Capability",
+          "code": "137"
+        },
+        {
+          "name": "Chemical",
+          "category": "CBRN",
+          "code": "138"
+        },
+        {
+          "name": "Radiological",
+          "category": "CBRN",
+          "code": "140"
+        },
+        {
+          "name": "Nuclear",
+          "category": "CBRN",
+          "code": "141"
+        },
+        {
+          "name": "Decontamination",
+          "category": "CBRN",
+          "code": "142"
+        },
+        {
+          "name": "Civilian",
+          "category": "Organization",
+          "code": "143"
+        },
+        {
+          "name": "Government Organization/ Government Organization Member",
+          "category": "Organization",
+          "code": "144"
+        },
+        {
+          "name": "Accident",
+          "category": "Composite Loss or Incident Qualifier",
+          "code": "145"
+        },
+        {
+          "name": "Assassination",
+          "category": "Crime",
+          "code": "146"
+        },
+        {
+          "name": "Execution",
+          "category": "Crime",
+          "code": "147"
+        },
+        {
+          "name": "Kidnapping",
+          "category": "Crime",
+          "code": "148"
+        },
+        {
+          "name": "Piracy",
+          "category": "Crime",
+          "code": "149"
+        },
+        {
+          "name": "Rape",
+          "category": "Crime",
+          "code": "150"
+        },
+        {
+          "name": "Antisubmarine Warfare",
+          "category": "Mission Area",
+          "code": "151"
+        },
+        {
+          "name": "Escort",
+          "category": "Mission Area",
+          "code": "152"
+        },
+        {
+          "name": "Mine Countermeasures",
+          "category": "Mission Area",
+          "code": "153"
+        },
+        {
+          "name": "Mine Warfare",
+          "category": "Mission Area",
+          "code": "154"
+        },
+        {
+          "name": "Surface Warfare",
+          "category": "Mission area",
+          "code": "155"
+        },
+        {
+          "name": "Command",
+          "category": "Support Level",
+          "code": "156"
+        },
+        {
+          "name": "Company",
+          "category": "Support Level",
+          "code": "157"
+        },
+        {
+          "name": "Platoon/Detachment",
+          "category": "Support Level",
+          "code": "158"
+        },
+        {
+          "name": "Regiment/Group",
+          "category": "Support Level",
+          "code": "159"
+        },
+        {
+          "name": "Section",
+          "category": "Support Level",
+          "code": "160"
+        },
+        {
+          "name": "Squad",
+          "category": "Support Level",
+          "code": "161"
+        },
+        {
+          "name": "Team/Crew",
+          "category": "Support Level",
+          "code": "162"
+        },
+        {
+          "name": "Battalion",
+          "category": "Support Level",
+          "code": "163"
+        },
+        {
+          "name": "Directed Energy",
+          "category": "Capability",
+          "code": "164"
+        },
+        {
+          "name": "Hijacker",
+          "category": "Crime",
+          "code": "165"
+        },
+        {
+          "name": "Electromagnetic Warfare",
+          "category": "Capability",
+          "code": "166"
+        },
+        {
+          "name": "Laboratory",
+          "category": "Capability",
+          "code": "168"
+        },
+        {
+          "name": "Non-Governmental Organization",
+          "category": "Organization",
+          "code": "170"
+        },
+        {
+          "name": "Railway",
+          "category": "Capability",
+          "code": "171"
+        },
+        {
+          "name": "Clear",
+          "category": "Capability",
+          "code": "174"
+        },
+        {
+          "name": "Jamming",
+          "category": "Capability",
+          "code": "175"
+        },
+        {
+          "name": "Wired",
+          "category": "Capability",
+          "code": "176"
+        },
+        {
+          "name": "Wireless",
+          "category": "Capability",
+          "code": "177"
+        },
+        {
+          "name": "Low Altitude",
+          "category": "Capability",
+          "code": "178"
+        },
+        {
+          "name": "Medium Altitude",
+          "category": "Capability",
+          "code": "179"
+        },
+        {
+          "name": "Reserve",
+          "category": "",
+          "code": "182"
+        },
+        {
+          "name": "00 Common",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Airborne",
+          "category": "Mobility",
+          "code": "100"
+        },
+        {
+          "name": "Bicycle Equipped",
+          "category": "Mobility",
+          "code": "101"
+        },
+        {
+          "name": "Railway",
+          "category": "Capability",
+          "code": "102"
+        },
+        {
+          "name": "Ski",
+          "category": "Mobility",
+          "code": "103"
+        },
+        {
+          "name": "Tracked",
+          "category": "Mobility",
+          "code": "104"
+        },
+        {
+          "name": "Wheeled (Limited Cross Country)",
+          "category": "Mobility",
+          "code": "105"
+        },
+        {
+          "name": "Wheeled X (Cross Country)",
+          "category": "Mobility",
+          "code": "106"
+        },
+        {
+          "name": "Fixed Wing",
+          "category": "Mobility",
+          "code": "107"
+        },
+        {
+          "name": "Rotary Wing",
+          "category": "Mobility",
+          "code": "108"
+        },
+        {
+          "name": "Robotic",
+          "category": "Mobility",
+          "code": "109"
+        },
+        {
+          "name": "Autonomous Control",
+          "category": "Capability",
+          "code": "110"
+        },
+        {
+          "name": "Remotely Piloted",
+          "category": "Capability",
+          "code": "111"
+        },
+        {
+          "name": "Expendable",
+          "category": "Capability",
+          "code": "112"
+        },
+        {
+          "name": "Mountain",
+          "category": "Capability",
+          "code": "113"
+        },
+        {
+          "name": "Long Range",
+          "category": "Capability",
+          "code": "114"
+        },
+        {
+          "name": "Medium Range",
+          "category": "Capability",
+          "code": "115"
+        },
+        {
+          "name": "Short Range",
+          "category": "Capability",
+          "code": "116"
+        },
+        {
+          "name": "Close Range",
+          "category": "Capability",
+          "code": "117"
+        },
+        {
+          "name": "Heavy",
+          "category": "Capability",
+          "code": "118"
+        },
+        {
+          "name": "Medium",
+          "category": "Capability",
+          "code": "119"
+        },
+        {
+          "name": "Light and Medium",
+          "category": "Capability",
+          "code": "120"
+        },
+        {
+          "name": "Light",
+          "category": "Capability",
+          "code": "121"
+        },
+        {
+          "name": "Cyberspace",
+          "category": "Capability",
+          "code": "122"
+        },
+        {
+          "name": "Security Force Assistance",
+          "category": "Capability",
+          "code": "123"
+        },
+        {
+          "name": "Medical Bed",
+          "category": "Capability",
+          "code": "124"
+        },
+        {
+          "name": "Multifunctional",
+          "category": "Capability",
+          "code": "125"
+        },
+        {
+          "name": "Laboratory",
+          "category": "Capability",
+          "code": "127"
+        },
+        {
+          "name": "Over-snow (prime mover)",
+          "category": "Capability",
+          "code": "129"
+        },
+        {
+          "name": "Supply",
+          "category": "Capability",
+          "code": "131"
+        },
+        {
+          "name": "Electromagnetic Warfare",
+          "category": "Capability",
+          "code": "133"
+        },
+        {
+          "name": "Jamming",
+          "category": "Capability",
+          "code": "134"
+        },
+        {
+          "name": "Reserve",
+          "category": "",
+          "code": "135"
+        },
+        {
+          "name": "01 air",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Bomber",
+          "category": "Military Aircraft Type",
+          "code": "2"
+        },
+        {
+          "name": "Fighter",
+          "category": "Military Aircraft Type",
+          "code": "4"
+        },
+        {
+          "name": "Tanker",
+          "category": "Aircraft Type",
+          "code": "6"
+        },
+        {
+          "name": "Passenger",
+          "category": "Aircraft Type",
+          "code": "9"
+        },
+        {
+          "name": "Ultra Light",
+          "category": "Aircraft Type",
+          "code": "10"
+        },
+        {
+          "name": "Airborne Command Post (ACP)",
+          "category": "Military Aircraft Type",
+          "code": "11"
+        },
+        {
+          "name": "Airborne Early Warning (AEW)",
+          "category": "Military Aircraft Type",
+          "code": "12"
+        },
+        {
+          "name": "Electronic Combat (EC)/Jammer",
+          "category": "Military Mission Area",
+          "code": "16"
+        },
+        {
+          "name": "Patrol",
+          "category": "Mission Area",
+          "code": "17"
+        },
+        {
+          "name": "Reconnaissance",
+          "category": "Mission Area",
+          "code": "18"
+        },
+        {
+          "name": "Trainer",
+          "category": "Mission Area",
+          "code": "19"
+        },
+        {
+          "name": "Photographic (Reconnaissance)",
+          "category": "Mission Area",
+          "code": "20"
+        },
+        {
+          "name": "Personnel Recovery",
+          "category": "Mission Area",
+          "code": "21"
+        },
+        {
+          "name": "Communications",
+          "category": "Mission Area",
+          "code": "23"
+        },
+        {
+          "name": "Electronic Support (ES)",
+          "category": "Military Mission Area",
+          "code": "24"
+        },
+        {
+          "name": "Very Important Person (VIP) Transport",
+          "category": "Mission Area",
+          "code": "29"
+        },
+        {
+          "name": "Combat Search and Rescue (CSAR)",
+          "category": "Military Mission Area",
+          "code": "30"
+        },
+        {
+          "name": "Antisurface Warfare",
+          "category": "Military Mission Area",
+          "code": "32"
+        },
+        {
+          "name": "Fighter/Bomber",
+          "category": "Military Aircraft Type",
+          "code": "33"
+        },
+        {
+          "name": "Intensive Care",
+          "category": "Mission Area",
+          "code": "34"
+        },
+        {
+          "name": "Electromagnetic Attack (EA)",
+          "category": "Military Mission Area",
+          "code": "35"
+        },
+        {
+          "name": "Multi-Mission",
+          "category": "Mission Area",
+          "code": "36"
+        },
+        {
+          "name": "ASW Helo - LAMPS",
+          "category": "Mission Area",
+          "code": "38"
+        },
+        {
+          "name": "ASW Helo - SH-60R",
+          "category": "Mission Area",
+          "code": "39"
+        },
+        {
+          "name": "01 air",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Boom-Only",
+          "category": "Re-Fueling Capability",
+          "code": "4"
+        },
+        {
+          "name": "Drogue-Only",
+          "category": "Re-Fueling Capability",
+          "code": "5"
+        },
+        {
+          "name": "Boom and Drogue",
+          "category": "Re-Fueling Capability",
+          "code": "6"
+        },
+        {
+          "name": "Downlinked",
+          "category": "Track Link Availability",
+          "code": "11"
+        },
+        {
+          "name": "02 Air Missile",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Air",
+          "category": "Launch Origin",
+          "code": "1"
+        },
+        {
+          "name": "Surface",
+          "category": "Launch Origin",
+          "code": "2"
+        },
+        {
+          "name": "Subsurface",
+          "category": "Launch Origin",
+          "code": "3"
+        },
+        {
+          "name": "Space",
+          "category": "Launch Origin",
+          "code": "4"
+        },
+        {
+          "name": "Anti-Ballistic",
+          "category": "Missile Class",
+          "code": "5"
+        },
+        {
+          "name": "Ballistic",
+          "category": "Missile Class",
+          "code": "6"
+        },
+        {
+          "name": "Cruise",
+          "category": "Missile Class",
+          "code": "7"
+        },
+        {
+          "name": "Interceptor",
+          "category": "Missile Class",
+          "code": "8"
+        },
+        {
+          "name": "Hypersonic",
+          "category": "Missile Class",
+          "code": "9"
+        },
+        {
+          "name": "02 Air Missile",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Air",
+          "category": "Missile Destination",
+          "code": "1"
+        },
+        {
+          "name": "Surface",
+          "category": "Missile Destination",
+          "code": "2"
+        },
+        {
+          "name": "Subsurface",
+          "category": "Missile Destination",
+          "code": "3"
+        },
+        {
+          "name": "Space",
+          "category": "Missile Destination",
+          "code": "4"
+        },
+        {
+          "name": "Launched",
+          "category": "Missile Status",
+          "code": "5"
+        },
+        {
+          "name": "Patriot",
+          "category": "Missile Type-BMD",
+          "code": "7"
+        },
+        {
+          "name": "Standard Missile-2 (SM-2)",
+          "category": "Missile Type-AAW",
+          "code": "8"
+        },
+        {
+          "name": "Standard Missile-6 (SM-6)",
+          "category": "Missile Type-AAW",
+          "code": "9"
+        },
+        {
+          "name": "Evolved Sea Sparrow Missile (ESSM)",
+          "category": "Missile Type-AAW",
+          "code": "10"
+        },
+        {
+          "name": "Rolling Airframe Missile (RAM)",
+          "category": "Missile Type-AAW",
+          "code": "11"
+        },
+        {
+          "name": "Short Range",
+          "category": "Missile Range",
+          "code": "12"
+        },
+        {
+          "name": "Medium Range",
+          "category": "Missile Range",
+          "code": "13"
+        },
+        {
+          "name": "Intermediate Range",
+          "category": "Missile Range",
+          "code": "14"
+        },
+        {
+          "name": "Long Range",
+          "category": "Missile Range",
+          "code": "15"
+        },
+        {
+          "name": "Intercontinental",
+          "category": "Missile Range",
+          "code": "16"
+        },
+        {
+          "name": "05 Space",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Low Earth Orbit (LEO)",
+          "category": "Orbit",
+          "code": "1"
+        },
+        {
+          "name": "Medium Earth Orbit (MEO)",
+          "category": "Orbit",
+          "code": "2"
+        },
+        {
+          "name": "High Earth Orbit (HEO)",
+          "category": "Orbit",
+          "code": "3"
+        },
+        {
+          "name": "Geosynchronous Orbit (GSO)",
+          "category": "Orbit",
+          "code": "4"
+        },
+        {
+          "name": "Geostationary Orbit (GO)",
+          "category": "Orbit",
+          "code": "5"
+        },
+        {
+          "name": "Molniya Orbit (MO)",
+          "category": "Orbit",
+          "code": "6"
+        },
+        {
+          "name": "05 Space",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Optical",
+          "category": "Sensor",
+          "code": "1"
+        },
+        {
+          "name": "Infrared",
+          "category": "Sensor",
+          "code": "2"
+        },
+        {
+          "name": "Radar",
+          "category": "Sensor",
+          "code": "3"
+        },
+        {
+          "name": "Signals Intelligence (SIGINT)",
+          "category": "Sensor",
+          "code": "4"
+        },
+        {
+          "name": "High Power Microwave (ASAT)",
+          "category": "Capability",
+          "code": "7"
+        },
+        {
+          "name": "Laser (ASAT)",
+          "category": "Capability",
+          "code": "8"
+        },
+        {
+          "name": "Mine (ASAT)",
+          "category": "Capability",
+          "code": "9"
+        },
+        {
+          "name": "Maintenance",
+          "category": "Capability",
+          "code": "10"
+        },
+        {
+          "name": "Refuel",
+          "category": "Capability",
+          "code": "11"
+        },
+        {
+          "name": "Tug",
+          "category": "Capability",
+          "code": "12"
+        },
+        {
+          "name": "06 Space Missile",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Ballistic",
+          "category": "Missile Class",
+          "code": "1"
+        },
+        {
+          "name": "Space",
+          "category": "Launch Origin",
+          "code": "2"
+        },
+        {
+          "name": "Interceptor",
+          "category": "Missile Class",
+          "code": "3"
+        },
+        {
+          "name": "Hypersonic",
+          "category": "Missile Class",
+          "code": "4"
+        },
+        {
+          "name": "06 Space Missile",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Short Range",
+          "category": "Missile Range",
+          "code": "1"
+        },
+        {
+          "name": "Medium Range",
+          "category": "Missile Range",
+          "code": "2"
+        },
+        {
+          "name": "Intermediate Range",
+          "category": "Missile Range",
+          "code": "3"
+        },
+        {
+          "name": "Long Range",
+          "category": "Missile Range",
+          "code": "4"
+        },
+        {
+          "name": "Intercontinental",
+          "category": "Missile Range",
+          "code": "5"
+        },
+        {
+          "name": "Arrow",
+          "category": "Missile Type-BMD",
+          "code": "6"
+        },
+        {
+          "name": "Ground-Based Interceptor (GBI)",
+          "category": "Missile Type-BMD",
+          "code": "7"
+        },
+        {
+          "name": "Patriot",
+          "category": "Missile Type-BMD",
+          "code": "8"
+        },
+        {
+          "name": "Standard Missile Terminal Phase (SM-T)",
+          "category": "Missile Type-BMD",
+          "code": "9"
+        },
+        {
+          "name": "Standard Missile - 3 (SM-3)",
+          "category": "Missile Type-BMD",
+          "code": "10"
+        },
+        {
+          "name": "Terminal High Altitude Area Defense (THAAD)",
+          "category": "Missile Type-BMD",
+          "code": "11"
+        },
+        {
+          "name": "Space",
+          "category": "Launch Origin",
+          "code": "12"
+        },
+        {
+          "name": "Close Range (CRBM)",
+          "category": "Missile Range",
+          "code": "13"
+        },
+        {
+          "name": "Debris",
+          "category": "Missile Type-BMD",
+          "code": "14"
+        },
+        {
+          "name": "Unknown",
+          "category": "Missile Type-BMD",
+          "code": "15"
+        },
+        {
+          "name": "10 Land Unit",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Tactical Satellite Communications",
+          "category": "Capability",
+          "code": "1"
+        },
+        {
+          "name": "Area",
+          "category": "Capability",
+          "code": "2"
+        },
+        {
+          "name": "Biological",
+          "category": "Capability",
+          "code": "4"
+        },
+        {
+          "name": "Border",
+          "category": "Capability",
+          "code": "5"
+        },
+        {
+          "name": "Communications Contingency Package",
+          "category": "Capability",
+          "code": "11"
+        },
+        {
+          "name": "Construction",
+          "category": "Capability",
+          "code": "12"
+        },
+        {
+          "name": "Cross Cultural Communication",
+          "category": "Capability",
+          "code": "13"
+        },
+        {
+          "name": "Detention",
+          "category": "Capability",
+          "code": "16"
+        },
+        {
+          "name": "Direct Communications",
+          "category": "Capability",
+          "code": "17"
+        },
+        {
+          "name": "Diving",
+          "category": "Capability",
+          "code": "18"
+        },
+        {
+          "name": "Division",
+          "category": "Capability",
+          "code": "19"
+        },
+        {
+          "name": "Dog",
+          "category": "Capability",
+          "code": "20"
+        },
+        {
+          "name": "Drilling",
+          "category": "Capability",
+          "code": "21"
+        },
+        {
+          "name": "Electro-Optical",
+          "category": "Capability",
+          "code": "22"
+        },
+        {
+          "name": "Enhanced",
+          "category": "Capability",
+          "code": "23"
+        },
+        {
+          "name": "Fire Direction Center",
+          "category": "Capability",
+          "code": "25"
+        },
+        {
+          "name": "Force",
+          "category": "Capability",
+          "code": "26"
+        },
+        {
+          "name": "Forward",
+          "category": "Capability",
+          "code": "27"
+        },
+        {
+          "name": "Ground Station Module",
+          "category": "Capability",
+          "code": "28"
+        },
+        {
+          "name": "Landing Support",
+          "category": "Capability",
+          "code": "29"
+        },
+        {
+          "name": "Meteorological",
+          "category": "Capability",
+          "code": "32"
+        },
+        {
+          "name": "Missile",
+          "category": "Capability",
+          "code": "34"
+        },
+        {
+          "name": "Mobile Advisor and Support",
+          "category": "Capability",
+          "code": "35"
+        },
+        {
+          "name": "Mobile Subscriber Equipment",
+          "category": "Capability",
+          "code": "36"
+        },
+        {
+          "name": "Mobility Support",
+          "category": "Capability",
+          "code": "37"
+        },
+        {
+          "name": "Multinational",
+          "category": "Capability",
+          "code": "39"
+        },
+        {
+          "name": "Multinational Specialized Unit",
+          "category": "Capability",
+          "code": "40"
+        },
+        {
+          "name": "Multiple Rocket Launcher",
+          "category": "Capability",
+          "code": "41"
+        },
+        {
+          "name": "NATO Medical Role 1",
+          "category": "Capability",
+          "code": "42"
+        },
+        {
+          "name": "NATO Medical Role 2",
+          "category": "Capability",
+          "code": "43"
+        },
+        {
+          "name": "NATO Medical Role 3",
+          "category": "Capability",
+          "code": "44"
+        },
+        {
+          "name": "NATO Medical Role 4",
+          "category": "Capability",
+          "code": "45"
+        },
+        {
+          "name": "Naval",
+          "category": "Capability",
+          "code": "46"
+        },
+        {
+          "name": "Operations",
+          "category": "Capability",
+          "code": "49"
+        },
+        {
+          "name": "Radar",
+          "category": "Capability",
+          "code": "50"
+        },
+        {
+          "name": "Radio Frequency Identification (RFID) Interrogator/Sensor",
+          "category": "Capability",
+          "code": "51"
+        },
+        {
+          "name": "Sensor",
+          "category": "Capability",
+          "code": "55"
+        },
+        {
+          "name": "Signal Intelligence",
+          "category": "Capability",
+          "code": "57"
+        },
+        {
+          "name": "Single Rocket Launcher",
+          "category": "Capability",
+          "code": "59"
+        },
+        {
+          "name": "Smoke",
+          "category": "Capability",
+          "code": "60"
+        },
+        {
+          "name": "Sound Ranging",
+          "category": "Capability",
+          "code": "62"
+        },
+        {
+          "name": "Survey",
+          "category": "Capability",
+          "code": "65"
+        },
+        {
+          "name": "Tactical Exploitation",
+          "category": "Capability",
+          "code": "66"
+        },
+        {
+          "name": "Target Acquisition",
+          "category": "Capability",
+          "code": "67"
+        },
+        {
+          "name": "Topographic/Geospatial",
+          "category": "Capability",
+          "code": "68"
+        },
+        {
+          "name": "Video Imagery (Combat Camera)",
+          "category": "Capability",
+          "code": "70"
+        },
+        {
+          "name": "Mobility Assault",
+          "category": "Capability",
+          "code": "71"
+        },
+        {
+          "name": "Amphibious Warfare Ship",
+          "category": "Capability",
+          "code": "72"
+        },
+        {
+          "name": "Load Handling System",
+          "category": "Capability",
+          "code": "73"
+        },
+        {
+          "name": "Palletized Load System",
+          "category": "Capability",
+          "code": "74"
+        },
+        {
+          "name": "Support",
+          "category": "Capability",
+          "code": "77"
+        },
+        {
+          "name": "Route, Reconnaissance, and Clearance",
+          "category": "Capability",
+          "code": "79"
+        },
+        {
+          "name": "Assault",
+          "category": "Capability",
+          "code": "84"
+        },
+        {
+          "name": "Criminal Investigation Division",
+          "category": "Capability",
+          "code": "86"
+        },
+        {
+          "name": "Digital",
+          "category": "Capability",
+          "code": "87"
+        },
+        {
+          "name": "Network or Network Operations",
+          "category": "Capability",
+          "code": "88"
+        },
+        {
+          "name": "Airfield, Aerial Port of Debarkation, or Aerial Port of Embarkation",
+          "category": "Capability",
+          "code": "89"
+        },
+        {
+          "name": "Pipeline",
+          "category": "Capability",
+          "code": "90"
+        },
+        {
+          "name": "Postal",
+          "category": "Capability",
+          "code": "91"
+        },
+        {
+          "name": "Theater",
+          "category": "Support Level",
+          "code": "94"
+        },
+        {
+          "name": "Army or Theater Army",
+          "category": "Support Level",
+          "code": "95"
+        },
+        {
+          "name": "Corps",
+          "category": "Support Level",
+          "code": "96"
+        },
+        {
+          "name": "Headquarters or headquarters staff element",
+          "category": "Support Level",
+          "code": "98"
+        },
+        {
+          "name": "Multi-Domain Operations",
+          "category": "Capability",
+          "code": "99"
+        },
+        {
+          "name": "Electric Generation",
+          "category": "Capability",
+          "code": "A1"
+        },
+        {
+          "name": "Intercept",
+          "category": "Capability",
+          "code": "A3"
+        },
+        {
+          "name": "Intermodal",
+          "category": "Capability",
+          "code": "A4"
+        },
+        {
+          "name": "Non-Combative Generic Vessel",
+          "category": "Capability",
+          "code": "A6"
+        },
+        {
+          "name": "Search",
+          "category": "Capability",
+          "code": "A7"
+        },
+        {
+          "name": "10 Land Unit",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Arctic",
+          "category": "Mobility",
+          "code": "2"
+        },
+        {
+          "name": "Battle Damage Repair",
+          "category": "Capability",
+          "code": "3"
+        },
+        {
+          "name": "Casualty Staging",
+          "category": "Capability",
+          "code": "5"
+        },
+        {
+          "name": "Clearing",
+          "category": "Capability",
+          "code": "6"
+        },
+        {
+          "name": "Control",
+          "category": "Capability",
+          "code": "8"
+        },
+        {
+          "name": "Decontamination",
+          "category": "Capability",
+          "code": "9"
+        },
+        {
+          "name": "Demolition",
+          "category": "Capability",
+          "code": "10"
+        },
+        {
+          "name": "Dental",
+          "category": "Capability",
+          "code": "11"
+        },
+        {
+          "name": "Digital",
+          "category": "Capability",
+          "code": "12"
+        },
+        {
+          "name": "Enhanced Position Location Reporting System (EPLRS)",
+          "category": "Capability",
+          "code": "13"
+        },
+        {
+          "name": "High Altitude",
+          "category": "Capability",
+          "code": "16"
+        },
+        {
+          "name": "Intermodal",
+          "category": "Capability",
+          "code": "17"
+        },
+        {
+          "name": "Intensive Care",
+          "category": "Capability",
+          "code": "18"
+        },
+        {
+          "name": "Launcher",
+          "category": "Capability",
+          "code": "21"
+        },
+        {
+          "name": "Low Altitude",
+          "category": "Capability",
+          "code": "23"
+        },
+        {
+          "name": "Medium Altitude",
+          "category": "Capability",
+          "code": "25"
+        },
+        {
+          "name": "High to Medium Altitude",
+          "category": "Capability",
+          "code": "28"
+        },
+        {
+          "name": "Multi-Channel",
+          "category": "Capability",
+          "code": "29"
+        },
+        {
+          "name": "Optical (Flash)",
+          "category": "Capability",
+          "code": "30"
+        },
+        {
+          "name": "Pack Animal",
+          "category": "Capability",
+          "code": "31"
+        },
+        {
+          "name": "Patient Evacuation Coordination",
+          "category": "Capability",
+          "code": "32"
+        },
+        {
+          "name": "Preventive Maintenance",
+          "category": "Capability",
+          "code": "33"
+        },
+        {
+          "name": "Psychological",
+          "category": "Capability",
+          "code": "34"
+        },
+        {
+          "name": "Radio Relay Line of Sight",
+          "category": "Capability",
+          "code": "35"
+        },
+        {
+          "name": "Recovery",
+          "category": "Capability",
+          "code": "37"
+        },
+        {
+          "name": "Maintenance",
+          "category": "Capability",
+          "code": "38"
+        },
+        {
+          "name": "Rescue Coordination Center",
+          "category": "Capability",
+          "code": "39"
+        },
+        {
+          "name": "Riverine",
+          "category": "Mobility",
+          "code": "40"
+        },
+        {
+          "name": "Single Channel",
+          "category": "Capability",
+          "code": "41"
+        },
+        {
+          "name": "Strategic",
+          "category": "Capability",
+          "code": "44"
+        },
+        {
+          "name": "Support",
+          "category": "Capability",
+          "code": "45"
+        },
+        {
+          "name": "Tactical",
+          "category": "Capability",
+          "code": "46"
+        },
+        {
+          "name": "Towed",
+          "category": "Mobility",
+          "code": "47"
+        },
+        {
+          "name": "Troop",
+          "category": "Capability",
+          "code": "48"
+        },
+        {
+          "name": "Vertical or Short Take-Off and Landing (VTOL/VSTOL)",
+          "category": "Mobility",
+          "code": "49"
+        },
+        {
+          "name": "Veterinary",
+          "category": "Capability",
+          "code": "50"
+        },
+        {
+          "name": "High to Low Altitude",
+          "category": "Capability",
+          "code": "52"
+        },
+        {
+          "name": "Medium to Low Altitude",
+          "category": "Capability",
+          "code": "53"
+        },
+        {
+          "name": "Attack",
+          "category": "Capability",
+          "code": "54"
+        },
+        {
+          "name": "Refuel",
+          "category": "Capability",
+          "code": "55"
+        },
+        {
+          "name": "Utility",
+          "category": "Capability",
+          "code": "56"
+        },
+        {
+          "name": "Combat Search and Rescue",
+          "category": "Capability",
+          "code": "57"
+        },
+        {
+          "name": "Guerrilla",
+          "category": "Capability",
+          "code": "58"
+        },
+        {
+          "name": "Air Assault",
+          "category": "Mobility",
+          "code": "59"
+        },
+        {
+          "name": "Amphibious",
+          "category": "Mobility",
+          "code": "60"
+        },
+        {
+          "name": "Very Heavy",
+          "category": "Capability",
+          "code": "61"
+        },
+        {
+          "name": "Barge, Self-Propelled",
+          "category": "Mobility",
+          "code": "64"
+        },
+        {
+          "name": "Barge, Not Self-Propelled",
+          "category": "Mobility",
+          "code": "65"
+        },
+        {
+          "name": "Launch",
+          "category": "Mobility",
+          "code": "66"
+        },
+        {
+          "name": "Landing Craft",
+          "category": "Mobility",
+          "code": "67"
+        },
+        {
+          "name": "Landing Ship",
+          "category": "Mobility",
+          "code": "68"
+        },
+        {
+          "name": "Service Craft/Yard",
+          "category": "Mobility",
+          "code": "69"
+        },
+        {
+          "name": "Tug Harbor",
+          "category": "Mobility",
+          "code": "70"
+        },
+        {
+          "name": "Ocean Going Tug Boat",
+          "category": "Mobility",
+          "code": "71"
+        },
+        {
+          "name": "Surface Deployment and Distribution Command",
+          "category": "Capability",
+          "code": "72"
+        },
+        {
+          "name": "Noncombatant Generic Vessel",
+          "category": "Mobility",
+          "code": "73"
+        },
+        {
+          "name": "Composite",
+          "category": "Capability",
+          "code": "74"
+        },
+        {
+          "name": "Shelter",
+          "category": "Capability",
+          "code": "75"
+        },
+        {
+          "name": "Surgical",
+          "category": "Capability",
+          "code": "81"
+        },
+        {
+          "name": "Blood",
+          "category": "Capability",
+          "code": "82"
+        },
+        {
+          "name": "Combat and Operational Stress Control",
+          "category": "Capability",
+          "code": "83"
+        },
+        {
+          "name": "Jamming",
+          "category": "Capability",
+          "code": "84"
+        },
+        {
+          "name": "Optometry",
+          "category": "Capability",
+          "code": "86"
+        },
+        {
+          "name": "Preventive Medicine",
+          "category": "Capability",
+          "code": "87"
+        },
+        {
+          "name": "Air Defense",
+          "category": "Capability",
+          "code": "89"
+        },
+        {
+          "name": "Intercept",
+          "category": "Capability",
+          "code": "91"
+        },
+        {
+          "name": "Search",
+          "category": "Capability",
+          "code": "93"
+        },
+        {
+          "name": "Fire Direction Center",
+          "category": "Capability",
+          "code": "94"
+        },
+        {
+          "name": "Construction",
+          "category": "Capability",
+          "code": "95"
+        },
+        {
+          "name": "Dog",
+          "category": "Capability",
+          "code": "96"
+        },
+        {
+          "name": "11 Land Civilian Unit/Organization",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Murder Victims",
+          "category": "Crime",
+          "code": "3"
+        },
+        {
+          "name": "Displaced Persons/Refugees/Evacuees",
+          "category": "Organization",
+          "code": "9"
+        },
+        {
+          "name": "Foreign Fighter(s)",
+          "category": "Organization",
+          "code": "10"
+        },
+        {
+          "name": "Gang Member or Gang",
+          "category": "Organization",
+          "code": "11"
+        },
+        {
+          "name": "Leader or Leadership",
+          "category": "Organization",
+          "code": "13"
+        },
+        {
+          "name": "Unwilling/Coerced Recruit",
+          "category": "Organization",
+          "code": "15"
+        },
+        {
+          "name": "Willing Recruit",
+          "category": "Organization",
+          "code": "16"
+        },
+        {
+          "name": "Religious or Religious Organization",
+          "category": "Organization",
+          "code": "17"
+        },
+        {
+          "name": "Targeted Individual or Organization",
+          "category": "Organization",
+          "code": "18"
+        },
+        {
+          "name": "Terrorist or Terrorist Organization",
+          "category": "Organization",
+          "code": "19"
+        },
+        {
+          "name": "Speaker",
+          "category": "Organization",
+          "code": "20"
+        },
+        {
+          "name": "Other",
+          "category": "Composite Loss",
+          "code": "23"
+        },
+        {
+          "name": "Loot",
+          "category": "Crime",
+          "code": "24"
+        },
+        {
+          "name": "11 Land Civilian Unit/Organization",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Leader or Leadership",
+          "category": "Organization",
+          "code": "1"
+        },
+        {
+          "name": "15 Land Equipment",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Biological",
+          "category": "Sensor Type",
+          "code": "1"
+        },
+        {
+          "name": "Early Warning Radar",
+          "category": "Sensor Type",
+          "code": "3"
+        },
+        {
+          "name": "Intrusion",
+          "category": "Sensor Type",
+          "code": "4"
+        },
+        {
+          "name": "Upgraded Early Warning Radar",
+          "category": "Sensor Type",
+          "code": "7"
+        },
+        {
+          "name": "Multi-purpose Blade",
+          "category": "Capability",
+          "code": "12"
+        },
+        {
+          "name": "Tank-width Mine Plow",
+          "category": "Capability",
+          "code": "13"
+        },
+        {
+          "name": "15 Land Equipment",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Tractor Trailer",
+          "category": "Capability",
+          "code": "6"
+        },
+        {
+          "name": "20 Land Installations",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Biological",
+          "category": "CBRN Type",
+          "code": "1"
+        },
+        {
+          "name": "Coal",
+          "category": "Electric Power Type",
+          "code": "6"
+        },
+        {
+          "name": "Geothermal",
+          "category": "Electric Power Type",
+          "code": "7"
+        },
+        {
+          "name": "Hydroelectric",
+          "category": "Electric Power Type",
+          "code": "8"
+        },
+        {
+          "name": "Natural Gas",
+          "category": "Electric Power Type",
+          "code": "9"
+        },
+        {
+          "name": "Civilian Telephone",
+          "category": "Telecommunication Type",
+          "code": "12"
+        },
+        {
+          "name": "Civilian Television",
+          "category": "Telecommunication Type",
+          "code": "13"
+        },
+        {
+          "name": "Displaced Persons/Refugees/Evacuees Camp",
+          "category": "",
+          "code": "15"
+        },
+        {
+          "name": "Training Camp",
+          "category": "",
+          "code": "16"
+        },
+        {
+          "name": "20 Land Installations",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Biological Warfare Production",
+          "category": "Capability",
+          "code": "1"
+        },
+        {
+          "name": "Chemical Warfare Production",
+          "category": "Capability",
+          "code": "2"
+        },
+        {
+          "name": "Nuclear Warfare Production",
+          "category": "Capability",
+          "code": "3"
+        },
+        {
+          "name": "Radiological Warfare Production",
+          "category": "Capability",
+          "code": "4"
+        },
+        {
+          "name": "Atomic Energy Reactor",
+          "category": "Capability",
+          "code": "5"
+        },
+        {
+          "name": "Nuclear Material Production",
+          "category": "Capability",
+          "code": "6"
+        },
+        {
+          "name": "Nuclear Material Storage",
+          "category": "Capability",
+          "code": "7"
+        },
+        {
+          "name": "Weapons Grade Production",
+          "category": "Capability",
+          "code": "8"
+        },
+        {
+          "name": "Transportation",
+          "category": "Capability",
+          "code": "10"
+        },
+        {
+          "name": "Displaced Persons/Refugees/Evacuees Camp",
+          "category": "",
+          "code": "11"
+        },
+        {
+          "name": "Training Camp",
+          "category": "",
+          "code": "12"
+        },
+        {
+          "name": "25 Control Measures",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Wheeled limited cross country",
+          "category": "Mobility",
+          "code": "1"
+        },
+        {
+          "name": "Wheeled cross country",
+          "category": "Mobility",
+          "code": "2"
+        },
+        {
+          "name": "Tracked",
+          "category": "Mobility",
+          "code": "3"
+        },
+        {
+          "name": "Wheeled and tracked combination",
+          "category": "Mobility",
+          "code": "4"
+        },
+        {
+          "name": "Towed",
+          "category": "Mobility",
+          "code": "5"
+        },
+        {
+          "name": "Rail",
+          "category": "Mobility",
+          "code": "6"
+        },
+        {
+          "name": "Pack Animals",
+          "category": "Mobility",
+          "code": "9"
+        },
+        {
+          "name": "Sled",
+          "category": "Mobility",
+          "code": "8"
+        },
+        {
+          "name": "Pack Animals",
+          "category": "Mobility",
+          "code": "9"
+        },
+        {
+          "name": "Barge",
+          "category": "Mobility",
+          "code": "10"
+        },
+        {
+          "name": "Amphibious",
+          "category": "Mobility",
+          "code": "11"
+        },
+        {
+          "name": "No Vehicles",
+          "category": "Mobility",
+          "code": "12"
+        },
+        {
+          "name": "Unspecified Mine",
+          "category": "Obstacles",
+          "code": "13"
+        },
+        {
+          "name": "Antipersonnel Mine",
+          "category": "Obstacles",
+          "code": "14"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects",
+          "category": "Obstacles",
+          "code": "15"
+        },
+        {
+          "name": "Antitank Mine",
+          "category": "Obstacles",
+          "code": "16"
+        },
+        {
+          "name": "Antitank Mine with Antihandling Device",
+          "category": "Obstacles",
+          "code": "17"
+        },
+        {
+          "name": "Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "18"
+        },
+        {
+          "name": "Mine Cluster",
+          "category": "Obstacles",
+          "code": "19"
+        },
+        {
+          "name": "Antipersonnel Mine and Antipersonnel Mine with Directional Effects",
+          "category": "Obstacles",
+          "code": "20"
+        },
+        {
+          "name": "Antipersonnel Mine and Antitank Mine",
+          "category": "Obstacles",
+          "code": "21"
+        },
+        {
+          "name": "Antipersonnel Mine and Antitank Mine with Antihandling Device",
+          "category": "Obstacles",
+          "code": "22"
+        },
+        {
+          "name": "Antipersonnel Mine and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "23"
+        },
+        {
+          "name": "Antipersonnel Mine and Mine Cluster",
+          "category": "Obstacles",
+          "code": "24"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects and Antitank Mine",
+          "category": "Obstacles",
+          "code": "25"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects and Antitank Mine with Antihandling Device",
+          "category": "Obstacles",
+          "code": "26"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "27"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects and Mine Cluster",
+          "category": "Obstacles",
+          "code": "28"
+        },
+        {
+          "name": "Antitank Mine and Antitank Mine with Antihandling Device",
+          "category": "Obstacles",
+          "code": "29"
+        },
+        {
+          "name": "Antitank Mine and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "30"
+        },
+        {
+          "name": "Antitank Mine and Mine Cluster",
+          "category": "Obstacles",
+          "code": "31"
+        },
+        {
+          "name": "Antitank Mine with Antihandling Device and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "32"
+        },
+        {
+          "name": "Antitank Mine with Antihandling Device and Mine Cluster",
+          "category": "Obstacles",
+          "code": "33"
+        },
+        {
+          "name": "Wide Area Antitank Mine and Mine Cluster",
+          "category": "Obstacles",
+          "code": "34"
+        },
+        {
+          "name": "Antipersonnel Mine, Antipersonnel Mine with Directional Effects, and Antitank Mine",
+          "category": "Obstacles",
+          "code": "35"
+        },
+        {
+          "name": "Antipersonnel Mine, Antipersonnel Mine with Directional Effects, and Antitank Mine with Antihandling Device",
+          "category": "Obstacles",
+          "code": "36"
+        },
+        {
+          "name": "Antipersonnel Mine, Antipersonnel Mine with Directional Effects, and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "37"
+        },
+        {
+          "name": "Antipersonnel Mine, Antipersonnel Mine with Directional Effects, and Mine Cluster",
+          "category": "Obstacles",
+          "code": "38"
+        },
+        {
+          "name": "Antipersonnel Mine, Antitank Mine, and Antitank Mine with Antihandling Device",
+          "category": "Obstacles",
+          "code": "39"
+        },
+        {
+          "name": "Antipersonnel Mine, Antitank Mine, and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "40"
+        },
+        {
+          "name": "Antipersonnel Mine, Antitank Mine, and Mine Cluster",
+          "category": "Obstacles",
+          "code": "41"
+        },
+        {
+          "name": "Antipersonnel Mine, Antitank Mine with Antihandling Device, and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "42"
+        },
+        {
+          "name": "Antipersonnel Mine, Antitank Mine with Antihandling Device, and Mine Cluster",
+          "category": "Obstacles",
+          "code": "43"
+        },
+        {
+          "name": "Antipersonnel Mine, Wide Area Antitank Mine, and Mine Cluster",
+          "category": "Obstacles",
+          "code": "44"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects, Antitank Mine, and Antitank Mine with Antihandling Device",
+          "category": "Obstacles",
+          "code": "45"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects, Antitank Mine, and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "46"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects, Antitank Mine, and Mine Cluster",
+          "category": "Obstacles",
+          "code": "47"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects, Antitank Mine with Antihandling Device, and Wide Area Antitank Mine",
+          "category": "Obstacles",
+          "code": "48"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects, Antitank Mine with Antihandling Device, and Mine Cluster",
+          "category": "Obstacles",
+          "code": "49"
+        },
+        {
+          "name": "Antipersonnel Mine with Directional Effects, Wide Area Antitank Mine, and Mine Cluster",
+          "category": "Obstacles",
+          "code": "50"
+        },
+        {
+          "name": "25 Control Measures",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "27 Dismounted Individual",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Field Artillery Observer",
+          "category": "",
+          "code": "11"
+        },
+        {
+          "name": "Joint Fire Support",
+          "category": "",
+          "code": "12"
+        },
+        {
+          "name": "Liaison",
+          "category": "",
+          "code": "13"
+        },
+        {
+          "name": "Messenger",
+          "category": "",
+          "code": "14"
+        },
+        {
+          "name": "Military Police",
+          "category": "",
+          "code": "15"
+        },
+        {
+          "name": "Observer",
+          "category": "",
+          "code": "16"
+        },
+        {
+          "name": "Designated Marksman",
+          "category": "",
+          "code": "17"
+        },
+        {
+          "name": "Signaler",
+          "category": "",
+          "code": "20"
+        },
+        {
+          "name": "Reconnaissance",
+          "category": "",
+          "code": "21"
+        },
+        {
+          "name": "Infantry",
+          "category": "",
+          "code": "22"
+        },
+        {
+          "name": "Commander (CDR)",
+          "category": "",
+          "code": "23"
+        },
+        {
+          "name": "Second in Command (SIC)",
+          "category": "",
+          "code": "24"
+        },
+        {
+          "name": "Demolition",
+          "category": "",
+          "code": "25"
+        },
+        {
+          "name": "Police",
+          "category": "",
+          "code": "26"
+        },
+        {
+          "name": "Individual",
+          "category": "",
+          "code": "46"
+        },
+        {
+          "name": "27 Dismounted Individual",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Video Imagery (Combat Camera)",
+          "category": "",
+          "code": "3"
+        },
+        {
+          "name": "Functional Staff Area J1",
+          "category": "",
+          "code": "4"
+        },
+        {
+          "name": "Functional Staff Area J2",
+          "category": "",
+          "code": "5"
+        },
+        {
+          "name": "Functional Staff Area J3",
+          "category": "",
+          "code": "6"
+        },
+        {
+          "name": "Functional Staff Area J4",
+          "category": "",
+          "code": "7"
+        },
+        {
+          "name": "Functional Staff Area J5",
+          "category": "",
+          "code": "8"
+        },
+        {
+          "name": "Functional Staff Area J6",
+          "category": "",
+          "code": "9"
+        },
+        {
+          "name": "Functional Staff Area J7",
+          "category": "",
+          "code": "10"
+        },
+        {
+          "name": "Functional Staff Area J8",
+          "category": "",
+          "code": "11"
+        },
+        {
+          "name": "Functional Staff Area J9",
+          "category": "",
+          "code": "12"
+        },
+        {
+          "name": "Rank OF-1",
+          "category": "",
+          "code": "14"
+        },
+        {
+          "name": "Rank OF-2",
+          "category": "",
+          "code": "15"
+        },
+        {
+          "name": "Rank OF-3",
+          "category": "",
+          "code": "16"
+        },
+        {
+          "name": "Rank OF-4",
+          "category": "",
+          "code": "17"
+        },
+        {
+          "name": "Rank OF-5",
+          "category": "",
+          "code": "18"
+        },
+        {
+          "name": "Rank OF-6",
+          "category": "",
+          "code": "19"
+        },
+        {
+          "name": "Rank OF-7",
+          "category": "",
+          "code": "20"
+        },
+        {
+          "name": "Rank OF-8",
+          "category": "",
+          "code": "21"
+        },
+        {
+          "name": "Rank OF-9",
+          "category": "",
+          "code": "22"
+        },
+        {
+          "name": "Rank OF-10",
+          "category": "",
+          "code": "23"
+        },
+        {
+          "name": "Rank E-1",
+          "category": "",
+          "code": "25"
+        },
+        {
+          "name": "Rank E-2",
+          "category": "",
+          "code": "26"
+        },
+        {
+          "name": "Rank E-3",
+          "category": "",
+          "code": "27"
+        },
+        {
+          "name": "Rank E-4",
+          "category": "",
+          "code": "28"
+        },
+        {
+          "name": "Rank E-5",
+          "category": "",
+          "code": "29"
+        },
+        {
+          "name": "Rank E-6",
+          "category": "",
+          "code": "30"
+        },
+        {
+          "name": "Rank E-7",
+          "category": "",
+          "code": "31"
+        },
+        {
+          "name": "Rank E-8",
+          "category": "",
+          "code": "32"
+        },
+        {
+          "name": "Rank E-9",
+          "category": "",
+          "code": "33"
+        },
+        {
+          "name": "Rank WO-1",
+          "category": "",
+          "code": "34"
+        },
+        {
+          "name": "Rank WO-2",
+          "category": "",
+          "code": "35"
+        },
+        {
+          "name": "Rank WO-3",
+          "category": "",
+          "code": "36"
+        },
+        {
+          "name": "Rank WO-4",
+          "category": "",
+          "code": "37"
+        },
+        {
+          "name": "Rank WO-5",
+          "category": "",
+          "code": "38"
+        },
+        {
+          "name": "30 Sea Surface",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "Mission Area",
+          "code": "0"
+        },
+        {
+          "name": "Antiair Warfare",
+          "category": "Mission Area",
+          "code": "2"
+        },
+        {
+          "name": "Missile Defense",
+          "category": "Mission Area",
+          "code": "8"
+        },
+        {
+          "name": "Remote Multi-mission Vehicle (RMV)",
+          "category": "Mission Area",
+          "code": "11"
+        },
+        {
+          "name": "Torpedo",
+          "category": "Weapons Capability",
+          "code": "17"
+        },
+        {
+          "name": "Ballistic Missile Defense, Long-Range Surveillance and Track (LRS&T)",
+          "category": "Mission Area",
+          "code": "21"
+        },
+        {
+          "name": "Sea-Base X-Band",
+          "category": "Mission Area",
+          "code": "22"
+        },
+        {
+          "name": "30 Sea Surface",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Nuclear Powered",
+          "category": "Ship Propulsion",
+          "code": "1"
+        },
+        {
+          "name": "Dock",
+          "category": "Cargo Capacity",
+          "code": "5"
+        },
+        {
+          "name": "Logistics",
+          "category": "Cargo Capacity",
+          "code": "6"
+        },
+        {
+          "name": "Tank",
+          "category": "Cargo Capacity",
+          "code": "7"
+        },
+        {
+          "name": "Vehicle",
+          "category": "Cargo Capacity",
+          "code": "8"
+        },
+        {
+          "name": "Fast",
+          "category": "Ship Mobility",
+          "code": "9"
+        },
+        {
+          "name": "Air-Cushioned (US)",
+          "category": "Ship Mobility",
+          "code": "10"
+        },
+        {
+          "name": "Air-Cushioned (NATO)",
+          "category": "Ship Mobility",
+          "code": "11"
+        },
+        {
+          "name": "Hydrofoil",
+          "category": "Ship Mobility",
+          "code": "12"
+        },
+        {
+          "name": "35 Sea Subsurface",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Auxiliary",
+          "category": "Mission Area",
+          "code": "2"
+        },
+        {
+          "name": "Possible Submarine Low 1",
+          "category": "Submarine Confidence",
+          "code": "13"
+        },
+        {
+          "name": "Possible Submarine Low 2",
+          "category": "Submarine Confidence",
+          "code": "14"
+        },
+        {
+          "name": "Possible Submarine High 3",
+          "category": "Submarine Confidence",
+          "code": "15"
+        },
+        {
+          "name": "Possible Submarine High 4",
+          "category": "Submarine Confidence",
+          "code": "16"
+        },
+        {
+          "name": "Probable Submarine",
+          "category": "Submarine Confidence",
+          "code": "17"
+        },
+        {
+          "name": "Certain Submarine",
+          "category": "Submarine Confidence",
+          "code": "18"
+        },
+        {
+          "name": "Anti-torpedo Torpedo",
+          "category": "Weapons Capability",
+          "code": "19"
+        },
+        {
+          "name": "35 Sea Subsurface",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Air Independent Propulsion",
+          "category": "Ship Propulsion",
+          "code": "1"
+        },
+        {
+          "name": "Diesel Electric, General",
+          "category": "Ship Propulsion",
+          "code": "2"
+        },
+        {
+          "name": "Diesel - Type 1",
+          "category": "Ship Propulsion",
+          "code": "3"
+        },
+        {
+          "name": "Diesel - Type 2",
+          "category": "Ship Propulsion",
+          "code": "4"
+        },
+        {
+          "name": "Diesel - Type 3",
+          "category": "Ship Propulsion",
+          "code": "5"
+        },
+        {
+          "name": "Nuclear Powered, General",
+          "category": "Ship Propulsion",
+          "code": "6"
+        },
+        {
+          "name": "Nuclear - Type 1",
+          "category": "Ship Propulsion",
+          "code": "7"
+        },
+        {
+          "name": "Nuclear - Type 2",
+          "category": "Ship Propulsion",
+          "code": "8"
+        },
+        {
+          "name": "Nuclear - Type 3",
+          "category": "Ship Propulsion",
+          "code": "9"
+        },
+        {
+          "name": "Nuclear - Type 4",
+          "category": "Ship Propulsion",
+          "code": "10"
+        },
+        {
+          "name": "Nuclear - Type 5",
+          "category": "Ship Propulsion",
+          "code": "11"
+        },
+        {
+          "name": "Nuclear - Type 6",
+          "category": "Ship Propulsion",
+          "code": "12"
+        },
+        {
+          "name": "Nuclear - Type 7",
+          "category": "Ship Propulsion",
+          "code": "13"
+        },
+        {
+          "name": "36 Mine Warfare",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "36 Mine Warfare",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "40 Activities",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "House-to-House",
+          "category": "Military Information Support Operations",
+          "code": "4"
+        },
+        {
+          "name": "Murder",
+          "category": "Crime",
+          "code": "6"
+        },
+        {
+          "name": "Written Military Information Support Operations",
+          "category": "Military Information Support Operations",
+          "code": "9"
+        },
+        {
+          "name": "Pirate",
+          "category": "Crime",
+          "code": "10"
+        },
+        {
+          "name": "FALSE",
+          "category": "IED Category",
+          "code": "11"
+        },
+        {
+          "name": "Find",
+          "category": "IED Category",
+          "code": "12"
+        },
+        {
+          "name": "Found and Cleared",
+          "category": "IED Category",
+          "code": "13"
+        },
+        {
+          "name": "Hoax (Decoy)",
+          "category": "IED Category",
+          "code": "14"
+        },
+        {
+          "name": "Attempted",
+          "category": "Incident Qualifier",
+          "code": "15"
+        },
+        {
+          "name": "Incident",
+          "category": "Incident Qualifier",
+          "code": "17"
+        },
+        {
+          "name": "Theft",
+          "category": "Crime",
+          "code": "18"
+        },
+        {
+          "name": "Eviction",
+          "category": "Incident Qualifier",
+          "code": "21"
+        },
+        {
+          "name": "Raid",
+          "category": "Incident Qualifier",
+          "code": "22"
+        },
+        {
+          "name": "Meeting",
+          "category": "",
+          "code": "24"
+        },
+        {
+          "name": "40 Activities",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Meeting",
+          "category": "",
+          "code": "4"
+        },
+        {
+          "name": "50 SIGINT",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Anti-Aircraft Fire Control",
+          "category": "Radar",
+          "code": "1"
+        },
+        {
+          "name": "Airborne Search and Bombing",
+          "category": "Radar",
+          "code": "2"
+        },
+        {
+          "name": "Airborne Intercept",
+          "category": "Radar",
+          "code": "3"
+        },
+        {
+          "name": "Altimeter",
+          "category": "Radar",
+          "code": "4"
+        },
+        {
+          "name": "Airborne Reconnaissance and Mapping",
+          "category": "Radar",
+          "code": "5"
+        },
+        {
+          "name": "Air Traffic Control",
+          "category": "Radar",
+          "code": "6"
+        },
+        {
+          "name": "Beacon Transponder (not IFF)",
+          "category": "Radar",
+          "code": "7"
+        },
+        {
+          "name": "Battlefield Surveillance",
+          "category": "Radar",
+          "code": "8"
+        },
+        {
+          "name": "Controlled Approach",
+          "category": "Radar",
+          "code": "9"
+        },
+        {
+          "name": "Controlled Intercept",
+          "category": "Radar",
+          "code": "10"
+        },
+        {
+          "name": "Cellular/Mobile",
+          "category": "Communications",
+          "code": "11"
+        },
+        {
+          "name": "Coastal Surveillance",
+          "category": "Radar",
+          "code": "12"
+        },
+        {
+          "name": "Decoy/Mimic",
+          "category": "Radar",
+          "code": "13"
+        },
+        {
+          "name": "Data Transmission",
+          "category": "Radar",
+          "code": "14"
+        },
+        {
+          "name": "Earth Surveillance",
+          "category": "Radar",
+          "code": "15"
+        },
+        {
+          "name": "Early Warning",
+          "category": "Radar",
+          "code": "16"
+        },
+        {
+          "name": "Fire Control",
+          "category": "Radar",
+          "code": "17"
+        },
+        {
+          "name": "Ground Mapping",
+          "category": "Radar",
+          "code": "18"
+        },
+        {
+          "name": "Height Finding",
+          "category": "Radar",
+          "code": "19"
+        },
+        {
+          "name": "Harbor Surveillance",
+          "category": "Radar",
+          "code": "20"
+        },
+        {
+          "name": "Identification, Friend or Foe (Interrogator)",
+          "category": "Radar",
+          "code": "21"
+        },
+        {
+          "name": "Instrument Landing System",
+          "category": "Radar",
+          "code": "22"
+        },
+        {
+          "name": "Ionospheric Sounding",
+          "category": "Radar",
+          "code": "23"
+        },
+        {
+          "name": "Identification, Friend or Foe (Transponder)",
+          "category": "Radar",
+          "code": "24"
+        },
+        {
+          "name": "Barrage Jammer",
+          "category": "Jammer",
+          "code": "25"
+        },
+        {
+          "name": "Click Jammer",
+          "category": "Jammer",
+          "code": "26"
+        },
+        {
+          "name": "Deceptive Jammer",
+          "category": "Jammer",
+          "code": "27"
+        },
+        {
+          "name": "Frequency Swept Jammer",
+          "category": "Jammer",
+          "code": "28"
+        },
+        {
+          "name": "Jammer (general)",
+          "category": "Jammer",
+          "code": "29"
+        },
+        {
+          "name": "Noise Jammer",
+          "category": "Jammer",
+          "code": "30"
+        },
+        {
+          "name": "Pulsed Jammer",
+          "category": "Jammer",
+          "code": "31"
+        },
+        {
+          "name": "Repeater Jammer",
+          "category": "Jammer",
+          "code": "32"
+        },
+        {
+          "name": "Spot Noise Jammer",
+          "category": "Jammer",
+          "code": "33"
+        },
+        {
+          "name": "Transponder Jammer",
+          "category": "Jammer",
+          "code": "34"
+        },
+        {
+          "name": "Missile Acquisition",
+          "category": "Radar",
+          "code": "35"
+        },
+        {
+          "name": "Missile Control",
+          "category": "Jammer",
+          "code": "36"
+        },
+        {
+          "name": "Missile Downlink",
+          "category": "Air Radar",
+          "code": "37"
+        },
+        {
+          "name": "Meteorological",
+          "category": "Radar",
+          "code": "38"
+        },
+        {
+          "name": "Multi-Function",
+          "category": "Jammer",
+          "code": "39"
+        },
+        {
+          "name": "Missile Guidance",
+          "category": "Radar",
+          "code": "40"
+        },
+        {
+          "name": "Missile Homing",
+          "category": "Radar",
+          "code": "41"
+        },
+        {
+          "name": "Missile Tracking",
+          "category": "Jammer",
+          "code": "42"
+        },
+        {
+          "name": "Navigational/General",
+          "category": "Jammer",
+          "code": "43"
+        },
+        {
+          "name": "Navigational/Distance Measuring Equipment",
+          "category": "Jammer",
+          "code": "44"
+        },
+        {
+          "name": "Navigation/Terrain Following",
+          "category": "Jammer",
+          "code": "45"
+        },
+        {
+          "name": "Navigational/Weather Avoidance",
+          "category": "Jammer",
+          "code": "46"
+        },
+        {
+          "name": "Omni-Line of Sight (LOS)",
+          "category": "Jammer",
+          "code": "47"
+        },
+        {
+          "name": "Proximity Use",
+          "category": "Air Radar",
+          "code": "48"
+        },
+        {
+          "name": "Point-to-Point Line of Sight (LOS)",
+          "category": "Communications",
+          "code": "49"
+        },
+        {
+          "name": "Instrumentation",
+          "category": "Radar",
+          "code": "50"
+        },
+        {
+          "name": "Range Only",
+          "category": "Radar",
+          "code": "51"
+        },
+        {
+          "name": "Sonobuoy",
+          "category": "Radar",
+          "code": "52"
+        },
+        {
+          "name": "Satellite Downlink",
+          "category": "Communications",
+          "code": "53"
+        },
+        {
+          "name": "Space",
+          "category": "Radar",
+          "code": "54"
+        },
+        {
+          "name": "Surface Search",
+          "category": "Radar",
+          "code": "55"
+        },
+        {
+          "name": "Shell Tracking",
+          "category": "Land Radar",
+          "code": "56"
+        },
+        {
+          "name": "Satellite Uplink",
+          "category": "Communications",
+          "code": "57"
+        },
+        {
+          "name": "Target Acquisition",
+          "category": "Radar",
+          "code": "58"
+        },
+        {
+          "name": "Target Illumination",
+          "category": "Radar",
+          "code": "59"
+        },
+        {
+          "name": "Tropospheric Scatter",
+          "category": "Communications",
+          "code": "60"
+        },
+        {
+          "name": "Target Tracking",
+          "category": "Radar",
+          "code": "61"
+        },
+        {
+          "name": "Unknown",
+          "category": "Radar",
+          "code": "62"
+        },
+        {
+          "name": "Video Remoting",
+          "category": "Radar",
+          "code": "63"
+        },
+        {
+          "name": "Experimental",
+          "category": "Radar",
+          "code": "64"
+        },
+        {
+          "name": "50 SIGINT",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "60 Cyberspace",
+          "category": "1",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Defensive Cyberspace",
+          "category": "Capability",
+          "code": "1"
+        },
+        {
+          "name": "Offensive Cyberspace",
+          "category": "Capability",
+          "code": "2"
+        },
+        {
+          "name": "Social",
+          "category": "Capability",
+          "code": "3"
+        },
+        {
+          "name": "Radio Frequency",
+          "category": "Capability",
+          "code": "6"
+        },
+        {
+          "name": "Continuity of Operations",
+          "category": "Capability",
+          "code": "8"
+        },
+        {
+          "name": "Internet Service Provider (ISP)",
+          "category": "Capability",
+          "code": "9"
+        },
+        {
+          "name": "Finance",
+          "category": "Capability",
+          "code": "10"
+        },
+        {
+          "name": "Out of Band",
+          "category": "Capability",
+          "code": "11"
+        },
+        {
+          "name": "Cloud",
+          "category": "Service",
+          "code": "12"
+        },
+        {
+          "name": "Data",
+          "category": "",
+          "code": "13"
+        },
+        {
+          "name": "Service",
+          "category": "",
+          "code": "14"
+        },
+        {
+          "name": "60 Cyberspace",
+          "category": "2",
+          "code": ""
+        },
+        {
+          "name": "Unspecified",
+          "category": "",
+          "code": "0"
+        },
+        {
+          "name": "Secured",
+          "category": "Capability",
+          "code": "1"
+        },
+        {
+          "name": "Open",
+          "category": "Capability",
+          "code": "2"
+        },
+        {
+          "name": "Response Actions",
+          "category": "Capability",
+          "code": "3"
+        },
+        {
+          "name": "Internal Defense Measures",
+          "category": "Capability",
+          "code": "5"
+        },
+        {
+          "name": "Advanced Persistent Threat",
+          "category": "Capability",
+          "code": "6"
+        },
+        {
+          "name": "Nation State",
+          "category": "",
+          "code": "7"
+        },
+        {
+          "name": "Nation State Sponsored",
+          "category": "",
+          "code": "8"
+        },
+        {
+          "name": "Service",
+          "category": "",
+          "code": "10"
+        }
+      ]
+}}
