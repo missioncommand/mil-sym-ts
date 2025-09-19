@@ -25,6 +25,7 @@
         "src/main/ts/armyc2/c5isr/renderer/utilities/ShapeInfo.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/TextInfo.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/SVGSymbolInfo.ts",
+        "src/main/ts/armyc2/c5isr/renderer/utilities/SectorModUtils.ts",
         "src/main/ts/armyc2/c5isr/renderer/utilities/SymbolUtilities.ts",
         "src/main/ts/armyc2/c5isr/renderer/MilStdIconRenderer.ts",
         "src/main/ts/armyc2/c5isr/web/render/utilities/Basic3DShapes.ts",
