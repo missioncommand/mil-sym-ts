@@ -3695,7 +3695,7 @@ export class lineutility {
                             dIntLocation1x = dIntLocation2x;
                         } else {
                             dIntLocation1x
-                                = pLinePoints[i].x as double + ((k * spikeLength - spikeLength) * dPrinter / length)
+                                = pLinePoints[i].x as double + ((k * spikeLength - spikeLength / 2) * dPrinter / length)
                                 * (pLinePoints[i + 1].x - pLinePoints[i].x) as double;
                         }
 
