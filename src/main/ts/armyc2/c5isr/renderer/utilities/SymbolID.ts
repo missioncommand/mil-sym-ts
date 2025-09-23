@@ -157,12 +157,33 @@ export class SymbolID {
     public static readonly SymbolSet_Atmospheric: number = 45;
     public static readonly SymbolSet_Oceanographic: number = 46;
     public static readonly SymbolSet_MeteorologicalSpace: number = 47;
+
+    /**
+     * in 2525E+, there is only SymbolSet_SignalsIntelligence and the frame shape position is required to be populated.
+     * Valid frames are space, air, land, land equipment, sea surface, sea subsurface and cyberspace.
+     */
     public static readonly SymbolSet_SignalsIntelligence: number = 50;
+    /**
+     * 2525D/Dch1 only
+     */
     public static readonly SymbolSet_SignalsIntelligence_Space: number = 50;
+    /**
+     * 2525D/Dch1 only
+     */
     public static readonly SymbolSet_SignalsIntelligence_Air: number = 51;
+    /**
+     * 2525D/Dch1 only
+     */
     public static readonly SymbolSet_SignalsIntelligence_Land: number = 52;
+    /**
+     * 2525D/Dch1 only
+     */
     public static readonly SymbolSet_SignalsIntelligence_SeaSurface: number = 53;
+    /**
+     * 2525D/Dch1 only
+     */
     public static readonly SymbolSet_SignalsIntelligence_SeaSubsurface: number = 54;
+
     public static readonly SymbolSet_CyberSpace: number = 60;
 
     public static readonly SymbolSet_InvalidSymbol: number = 98;

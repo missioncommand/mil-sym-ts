@@ -6637,7 +6637,15 @@ export class ModifierRenderer implements SettingsEventListener {
         return y;
     }
 
-    private static isCOnTop(symbolID:string): boolean
+    /**
+     * Currently, modifiers are based on Symbol Set.
+     * The exception is SIGINT which required a frame shape value in 2525E+
+     * The SSMC couldn't come to an agreement on if frame shape should dictate modifiers.
+     * Currently, I'm keeping it tied to Symbol Set.
+     * @param symbolID
+     * @return
+     */
+    private static isCOnTop(symbolID:string):boolean
     {
         let onTop:boolean = false;
 
@@ -6646,18 +6654,31 @@ export class ModifierRenderer implements SettingsEventListener {
         let frame:string = SymbolID.getFrameShape(symbolID);
 
         if(SymbolUtilities.hasModifier(symbolID,Modifiers.C_QUANTITY)) {
-            if (frame == SymbolID.FrameShape_Air || frame == SymbolID.FrameShape_Space)
-                onTop = true;
-            else if(frame === '0') 
+
+            if(version >= SymbolID.Version_2525E)
             {
+
                 if (ss == SymbolID.SymbolSet_Air ||
                         ss == SymbolID.SymbolSet_AirMissile ||
                         ss == SymbolID.SymbolSet_Space ||
                         ss == SymbolID.SymbolSet_SpaceMissile ||
-                        ss == SymbolID.SymbolSet_SignalsIntelligence_Air ||
-                        (ss == SymbolID.SymbolSet_LandEquipment && version <= SymbolID.Version_2525Dch1)) {
+                        ss == SymbolID.SymbolSet_LandEquipment) 
+                {
                     onTop = true;
                 }
+                else if(ss == SymbolID.SymbolSet_SignalsIntelligence &&
+                        (frame == SymbolID.FrameShape_Air ||
+                        frame == SymbolID.FrameShape_Space ||
+                        frame == SymbolID.FrameShape_LandEquipment || frame == SymbolID.FrameShape_LandUnit || frame == '0'))
+                {
+                    onTop = true;
+                }
+
+            }// else if <= SymbolID.Version_2525Dch1
+            else if (ss == SymbolID.SymbolSet_LandEquipment ||
+                    ss == SymbolID.SymbolSet_SignalsIntelligence_Land)
+            {
+                onTop = true;
             }
         }
         return onTop;
