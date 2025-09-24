@@ -212,7 +212,11 @@ export class SVGLookup
 
         let frameID: string;
         let ss: string;
+        
         let affiliation: number = SymbolID.getAffiliation(symbolID);
+        if(affiliation > SymbolID.StandardIdentity_Affiliation_Hostile_Faker)
+            affiliation = SymbolID.StandardIdentity_Affiliation_Unknown;
+
         let status: number = SymbolID.getStatus(symbolID);
         //Some affiliations are always dashed and only have one SVG for status with a value of 0
         if (affiliation === SymbolID.StandardIdentity_Affiliation_Pending ||
