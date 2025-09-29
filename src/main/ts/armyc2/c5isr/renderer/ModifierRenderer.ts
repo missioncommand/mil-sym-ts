@@ -6513,7 +6513,7 @@ export class ModifierRenderer implements SettingsEventListener {
      * @param bounds bounds of the core icon
      * @param labelWidth height of the label to be placed
      * @param buffer additional horizontal spacing buffer between label and symbol if desired
-     * @param location if true, label on right side of symbol. On left if false.
+     * @param location -1 left, 0 center, 1 right
      * @param modifierFontHeight 
      * @returns 
      */
