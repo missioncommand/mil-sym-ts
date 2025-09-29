@@ -1222,7 +1222,7 @@ export class clsUtilityGE {
             tg.Pixels = pts;
         } catch (exc) {
             if (exc instanceof Error) {
-                ErrorLogger.LogException("clsRenderer", "removeTrailingPoints",
+                ErrorLogger.LogException(clsUtilityGE._className, "removeTrailingPoints",
                     new RendererException("Failed inside removeTrailingPoints", exc));
             } else {
                 throw exc;

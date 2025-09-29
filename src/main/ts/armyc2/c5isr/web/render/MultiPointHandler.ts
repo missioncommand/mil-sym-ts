@@ -1918,7 +1918,7 @@ export class MultiPointHandler {
             }
         } catch (exc2) {
             if (exc2 instanceof Error) {
-                ErrorLogger.LogException("MPH.populateModifiers", "PopulateModifiers", exc2);
+                ErrorLogger.LogException("MultiPointHandler", "PopulateModifiers", exc2);
             } else {
                 throw exc2;
             }
@@ -2069,7 +2069,7 @@ export class MultiPointHandler {
             }
         } catch (exc) {
             if (exc instanceof Error) {
-                ErrorLogger.LogException("SymbolDraw", "getIdealtextBGColor", exc);
+                ErrorLogger.LogException("MultiPointHandler", "getIdealTextBackgroundColor", exc);
             } else {
                 throw exc;
             }

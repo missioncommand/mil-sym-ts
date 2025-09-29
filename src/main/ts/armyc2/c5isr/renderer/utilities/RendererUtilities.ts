@@ -236,7 +236,7 @@ export class RendererUtilities {
                     int2 = hexAlphabet.indexOf(hexValue.charAt(i + 1));
 
                     if (int1 === -1 || int2 === -1) {
-                        ErrorLogger.LogMessage("SymbolUtilities", "getColorFromHexString", "Bad hex value: " + hexOriginal, LogLevel.WARNING);
+                        ErrorLogger.LogMessage("RendererUtilities", "getColorFromHexString", "Bad hex value: " + hexOriginal, LogLevel.WARNING);
                         return null;
                     }
 
