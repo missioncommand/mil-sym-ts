@@ -2573,8 +2573,7 @@ export class ModifierRenderer implements SettingsEventListener {
         }
 
         if (ss === SymbolID.SymbolSet_ControlMeasure && modifiers != null && modifiers.size > 0) {
-            if (ec === 130500 //contact point
-                || ec === 130700) //decision point
+            if (ec === 130500) //contact point
             {
                 if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
                     strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
@@ -2591,7 +2590,39 @@ export class ModifierRenderer implements SettingsEventListener {
                         arrMods.push(ti);
                     }
                 }
-            } else {
+                if (modifiers.has(Modifiers.W_DTG_1)) {
+                    strText = modifiers.get(Modifiers.W_DTG_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        
+                        x = (bounds.getMinX() - labelWidth - bufferXL);
+                        y = (bounds.getMinY() + labelHeight - descent);
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            } 
+            if (ec === 130700) //decision point
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        //One modifier symbols and modifier goes in center
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
+                        x = x - (labelWidth * 0.5) as int;
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;
+                        y = y + (labelHeight * 0.5) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            } 
+            else {
                 if (ec === 212800)//harbor
                 {
                     if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
