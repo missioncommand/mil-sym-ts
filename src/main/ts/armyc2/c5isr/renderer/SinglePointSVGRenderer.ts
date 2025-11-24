@@ -524,7 +524,7 @@ export class SinglePointSVGRenderer {
             if(RendererSettings.getInstance().getActionPointDefaultFill()) 
             {
                 if (SymbolUtilities.isActionPoint(symbolID) || //action points
-                    drawRule === DrawRules.POINT10 || //Sonobuoy
+                    Math.round(ec/100) === 2135 || //sonobuoy
                     ec === 180100 || ec === 180200 || ec === 180400) //ACP, CCP, PUP
                 {
                     if (SymbolID.getSymbolSet(symbolID) === SymbolID.SymbolSet_ControlMeasure) {
@@ -600,6 +600,11 @@ export class SinglePointSVGRenderer {
             if (keepUnitRatio) {
                 if(msi.getDrawRule() == DrawRules.POINT1)//Action Points
                     pixelSize = Math.ceil((pixelSize/1.5) * 2.0);
+                else if(SymbolID.getSymbolSet(symbolID)==SymbolID.SymbolSet_ControlMeasure &&
+                    Math.round(ec/100) === 2135)//Sonobuoy
+                {
+                    pixelSize = Math.ceil((pixelSize/1.5) * 2.0);
+                }
                 else
                     pixelSize = Math.ceil((pixelSize/1.5) * 1.2);
             }
