@@ -3059,6 +3059,7 @@ export class ModifierRenderer implements SettingsEventListener {
                                                 else {
                                                     if (e === 21 && et === 35)//sonobuoys
                                                     {
+                                                        let is2525E:boolean = (SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E);
                                                         //H sitting on center of circle to the right
                                                         //T above H
                                                         centerPoint = SymbolUtilities.getCMSymbolAnchorPoint(symbolID, RectUtilities.copyRect(bounds)).toPoint2D();
@@ -3071,6 +3072,11 @@ export class ModifierRenderer implements SettingsEventListener {
                                                                 x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR) as int;//right
                                                                 y = centerPoint.y;
 
+                                                                if(is2525E) {
+                                                                    x = x - (bounds.getWidth() * 0.2);
+                                                                    y = bounds.getY() + (bounds.getHeight() / 2);
+                                                                }
+
                                                                 ti.setLocation(Math.round(x), Math.round(y));
                                                                 arrMods.push(ti);
                                                             }
@@ -3082,8 +3088,12 @@ export class ModifierRenderer implements SettingsEventListener {
                                                                     ti = new TextInfo(strText, 0, 0, modifierFont, frc);
                                                                     let ti2: TextInfo = new TextInfo(strText, 0, 0, modifierFont, frc);
                                                                     labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                                    x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR) as int;//right
+                                                                    x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR - (bounds.getWidth() * 0.2) );//right
                                                                     y = centerPoint.y - labelHeight;
+
+                                                                    if(is2525E) {
+                                                                        y = (bounds.getY() + (bounds.getHeight() / 2)) - labelHeight;
+                                                                    }
 
                                                                     ti.setLocation(Math.round(x), Math.round(y));
                                                                     arrMods.push(ti);
