@@ -597,7 +597,7 @@ export class SinglePointSVGRenderer {
 
             }
 
-            if (keepUnitRatio) {
+            /*if (keepUnitRatio) {
                 if(msi.getDrawRule() == DrawRules.POINT1)//Action Points
                     pixelSize = Math.ceil((pixelSize/1.5) * 2.0);
                 else if(SymbolID.getSymbolSet(symbolID)==SymbolID.SymbolSet_ControlMeasure &&
@@ -607,7 +607,7 @@ export class SinglePointSVGRenderer {
                 }
                 else
                     pixelSize = Math.ceil((pixelSize/1.5) * 1.2);
-            }
+            }//*/
 
 
 
@@ -663,6 +663,26 @@ export class SinglePointSVGRenderer {
 
                 let strSVGIcon: string;
 
+                if(keepUnitRatio)
+                    {
+                        let scaler:number = Math.max(width/height, height/width);
+                        if (scaler < 1.2)
+                            scaler = 1.2;
+                        if (scaler > 2)
+                            scaler = 2;
+    
+                        if(!SymbolUtilities.isCBRNEvent(symbolID))
+                            pixelSize = Math.ceil((pixelSize / 1.5) * scaler);
+    
+                        /*
+                        let min:number = Math.min(width/height, height/width);
+                        if (min < 0.6)//Rectangle
+                            pixelSize = Math.ceil((pixelSize / 1.5) * 2.0);
+                        else if(min < 0.85)
+                            pixelSize = Math.ceil((pixelSize / 1.5) * 1.8);
+                        else //more of a square
+                            pixelSize = Math.ceil((pixelSize / 1.5) * 1.2);//*/
+                    }
 
                 if (hasAPFill) //Action Point(s), Sonobuoys, ACP, CCP, PUP
                 {
