@@ -3898,6 +3898,13 @@ export class ModifierRenderer implements SettingsEventListener {
                     y = ((bounds.getHeight() * 0.55)) as int;//633333333
                     y = bounds.getMinY() as int + y;
 
+                    let ec:number = SymbolID.getEntityCode(symbolID);
+                    if((ec >= 281800 && ec <= 281809) || ec == 321100)
+                    {
+                        y = ((bounds.getHeight() * 0.63));
+                        y = bounds.getMinY() + y;
+                    }
+
                     ti.setLocation(x, y);
                     arrMods.push(ti);
                 }
