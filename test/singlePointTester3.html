@@ -160,6 +160,7 @@
 
             //attributes.set(C5Ren.MilStdAttributes.LineColor,"#00FF00");
             //attributes.set(C5Ren.MilStdAttributes.FillColor,"#0000FF00");
+            //attributes.set(C5Ren.MilStdAttributes.FillColor,"#00FF00");
             //attributes.set(C5Ren.MilStdAttributes.IconColor,"#00FF00");
 
             C5Ren.RendererSettings.getInstance().setSPModifierPlacement(1);
@@ -190,7 +191,7 @@
             document.getElementById("contentSpan").innerHTML += si.getSVG();
             
             
-            //test urlEncode vs base64
+            //test urlEncode vs base64 vs SYGSymbolInfo.getSVGDataURI()
             //speedTestSVGConversion(si.getSVG());
             
             try
@@ -309,8 +310,8 @@
     function speedTestSVGConversion(svg)
     {
         var start = new Date().getTime();
-        
-        for(var i = 0; i < 10000; i++)
+        var count = 1000;
+        for(var i = 0; i < count; i++)
 		{
 			encodeURIComponent(svg)
 		}
@@ -321,7 +322,7 @@
         
         start = new Date().getTime();
         
-        for(var j = 0; j < 10000; j++)
+        for(var j = 0; j < count; j++)
 		{
 			btoa(svg)
 		}
@@ -329,6 +330,15 @@
         end = new Date().getTime();
 		time = end - start;
 		alert('btoa: ' + (time/1000) + "; length: " + btoa(svg).length);//*/
+
+        start = new Date().getTime();
+        for(var k = 0; k < count; k++)
+        {
+            var temp = "data:image/svg+xml;base64," + btoa(String.fromCodePoint(...new TextEncoder().encode(svg)));
+        }
+        end = new Date().getTime();
+		time = end - start;
+		alert('SVGSymbolInfo.getSVGDataURI(): ' + (time/1000) + "; length: " + btoa(svg).length);//*/
         
     }
 	function speedTest(type)
