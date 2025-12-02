@@ -141,7 +141,8 @@ export class MSLookup {
         }
         let intSS: number = 0;
 
-        try {
+        try 
+        {
             let msJSON: JSONSymbol[];
             if (version >= SymbolID.Version_2525E) {
                 lookup = MSLookup._MSLookupE;
@@ -211,13 +212,78 @@ export class MSLookup {
                     list.push(id);
                 }
             }
-        } catch (exc) {
+            if(version < SymbolID.Version_2525E)//add handful of SymbolID.Version_2525D codes to lookup
+            {
+                this.AddVersion10Symbols(lookup);
+            }
+        } 
+        catch (exc) 
+        {
             if (exc instanceof Error) {
                 console.log(exc.message);
             } else {
                 throw exc;
             }
         }
+    }
+
+    private AddVersion10Symbols(lookup:Map<String,MSInfo>):void
+    {
+        let id:string = null;
+        let ss:string = null;
+        let intSS:number = 0;
+        let e:string = null;
+        let et:string = null;
+        let est:string = null;
+        let ec:string = null;
+        let g:string = null;
+        let dr:string = null;
+        let m:string = null;
+        let modifiers:string[] = null;
+
+        let units:string[] = ["120300", "161900", "162200", "162600", "162700", "163400", "163800", "163900", "164100", "164700"];
+        let similar:string[] = ["120200", "161800", "161800", "161800", "161800", "161800", "161800", "161800", "161800", "161800"];
+        let unitNames:string[] = ["Amphibious",
+                "NATO Supply Class II",
+                "NATO Supply Class V",
+                "Pipeline",
+                "Postal",
+                "Supply",
+                "US Supply Class II",
+                "US Supply Class III",
+                "US Supply Class IV",
+                "Water"];
+
+        let msiTemp:MSInfo = null;
+        ss = "10";
+        for(let i:number = 0; i < units.length; i++)
+        {
+            msiTemp = lookup.get("10" + similar[i]);
+            let path:string[]  = msiTemp.getPath().split("/");
+
+            ss = path[0];
+            if(path.length>2)
+                e = path[1];
+            if(path.length>3)
+                et = path[2];
+
+            if(e == null || e === "")
+                e = unitNames[i];
+            else if(et == null || et === "")
+                et = unitNames[i];
+            else
+                est = unitNames[i];
+
+            ec = units[i];
+
+            lookup.set(10 + ec, new MSInfo(SymbolID.Version_2525D, "10", e, et, est, ec, this.populateModifierList("10",ec, SymbolID.Version_2525Dch1)));
+        }
+        est = "";
+
+        lookup.set("25214000", new MSInfo(SymbolID.Version_2525D, "25", "Maritime Control Points", "Forward Observer - Spotter Position", est, "214000", "Point","Point2",this.populateModifierList("25","214000", SymbolID.Version_2525Dch1)));
+        //3 point Bridge not implemented
+        //lookup.set("25271400", new MSInfo(SymbolID.Version_2525D, "25", "Protection Areas", "Bridge", est, "271400", "Line","Line16",this.populateModifierList("25","271400", SymbolID.Version_2525Dch1)));
+
     }
 
     private populateModifierList(modifiers: string[] | null): Array<string>;
