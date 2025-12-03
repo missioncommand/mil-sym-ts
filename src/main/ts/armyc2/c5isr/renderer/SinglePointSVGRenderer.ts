@@ -412,7 +412,8 @@ export class SinglePointSVGRenderer {
             }
             newSDI = null;//*/
 
-            si = ModifierRenderer.processSpeedLeader(si,symbolID,modifiers,attributes);
+            if(modifiers != null)
+                si = ModifierRenderer.processSpeedLeader(si,symbolID,modifiers,attributes);
 
             let widthOffset: int = 0;
             if (hasTextModifiers) {

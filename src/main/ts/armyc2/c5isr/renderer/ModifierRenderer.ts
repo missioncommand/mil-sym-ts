@@ -1649,7 +1649,7 @@ export class ModifierRenderer implements SettingsEventListener {
         let ss:number = SymbolID.getSymbolSet(symbolID);
         let pixelSize:number = RendererSettings.getInstance().getDefaultPixelSize();
         let dpi:number = RendererSettings.getInstance().getDeviceDPI();
-        if(attributes.has(MilStdAttributes.PixelSize))
+        if(attributes != null && attributes.has(MilStdAttributes.PixelSize))
             pixelSize = parseInt(attributes.get(MilStdAttributes.PixelSize));
         let strokeWidth:number = 3;
         strokeWidth = dpi / 48;
@@ -1659,7 +1659,7 @@ export class ModifierRenderer implements SettingsEventListener {
         let slPath:Path = null;
         let slBounds:Rectangle2D = null;
         try{
-            if (SymbolUtilities.hasModifier(symbolID, Modifiers.AJ_SPEED_LEADER) &&
+            if (modifiers != null && SymbolUtilities.hasModifier(symbolID, Modifiers.AJ_SPEED_LEADER) &&
                     (modifiers.has(Modifiers.AJ_SPEED_LEADER)))
             {
                 let aj:string = modifiers.get(Modifiers.AJ_SPEED_LEADER);
