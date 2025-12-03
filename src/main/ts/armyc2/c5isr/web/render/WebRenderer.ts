@@ -233,6 +233,7 @@ export class WebRenderer /* extends Applet */ {
      * @param scale A number corresponding to how many meters one meter of our 
      * map represents. A value "50000" would mean 1:50K which means for every 
      * meter of our map it represents 50000 meters of real world distance.
+     * <a href="https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#3316-scale-for-3d">Scale Calculation Example</a>
      * @param bbox The viewable area of the map.  Passed in the format of a
      * string "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
      * but can speed up rendering in some cases.
@@ -373,6 +374,7 @@ export class WebRenderer /* extends Applet */ {
      * @param scale A number corresponding to how many meters one meter of our 
      * map represents. A value "50000" would mean 1:50K which means for every 
      * meter of our map it represents 50000 meters of real world distance.
+     * <a href="https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#3316-scale-for-3d">Scale Calculation Example</a>
      * @param bbox The viewable area of the map.  Passed in the format of a
      * string "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
      * but can speed up rendering in some cases.
@@ -455,6 +457,7 @@ export class WebRenderer /* extends Applet */ {
      *            represents. A value "50000" would mean 1:50K which means for
      *            every meter of our map it represents 50000 meters of real
      *            world distance.
+     *            <a href="https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#3316-scale-for-3d">Scale Calculation Example</a>
      * @param bbox
      *            The viewable area of the map. Passed in the format of a string
      *            "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
@@ -535,6 +538,7 @@ export class WebRenderer /* extends Applet */ {
      *            represents. A value "50000" would mean 1:50K which means for
      *            every meter of our map it represents 50000 meters of real
      *            world distance.
+     *            <a href="https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#3316-scale-for-3d">Scale Calculation Example</a>
      * @param bbox
      *            The viewable area of the map. Passed in the format of a string
      *            "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
@@ -589,6 +593,7 @@ export class WebRenderer /* extends Applet */ {
      * @param scale A number corresponding to how many meters one meter of our 
      * map represents. A value "50000" would mean 1:50K which means for every 
      * meter of our map it represents 50000 meters of real world distance.
+     * <a href="https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#3316-scale-for-3d">Scale Calculation Example</a>
      * @param bbox The viewable area of the map.  Passed in the format of a
      * string "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
      * but can speed up rendering in some cases.
@@ -641,6 +646,7 @@ export class WebRenderer /* extends Applet */ {
      * @param scale A number corresponding to how many meters one meter of our 
      * map represents. A value "50000" would mean 1:50K which means for every 
      * meter of our map it represents 50000 meters of real world distance.
+     * <a href="https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#3316-scale-for-3d">Scale Calculation Example</a>
      * @param bbox The viewable area of the map.  Passed in the format of a
      * string "lowerLeftX,lowerLeftY,upperRightX,upperRightY." Not required
      * but can speed up rendering in some cases.
