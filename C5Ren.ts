@@ -29,8 +29,8 @@ export { SymbolID } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SymbolID
 export { ShapeInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ShapeInfo";
 export { MilStdSymbol } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MilStdSymbol";
 
-export { BasicShapes } from "./src/main/ts/armyc2/c5isr/JavaLineArray/BasicShapes"
-export { Basic3DShapes } from "./src/main/ts/armyc2/c5isr/web/render/utilities/Basic3DShapes"
+export { BasicShapes } from "./src/main/ts/armyc2/c5isr/JavaLineArray/BasicShapes";
+export { Basic3DShapes } from "./src/main/ts/armyc2/c5isr/web/render/utilities/Basic3DShapes";
 
 export type { IPointConversion } from "./src/main/ts/armyc2/c5isr/renderer/utilities/IPointConversion";
 export { PointConverter3D } from "./src/main/ts/armyc2/c5isr/renderer/utilities/PointConverter3D";
@@ -44,21 +44,20 @@ export { WebRenderer } from "./src/main/ts/armyc2/c5isr/web/render/WebRenderer";
  * Module for rendering 2525D/E symbology
  */
 
-let initialized:boolean = false;
-let initializing:boolean = false;
+let initialized: boolean = false;
+let initializing: boolean = false;
 /**
  * Loads files needed by the renderer and initializes its data.
  * Required call before any rendering.
  * Must wait for the returned promise to resolve before any rendering.
  * @param location where renderer and asset files are location.  So if location is "127.0.0.1:8080/dist/C5Ren.js"
- * pass in "/dist/".  This is needed when all the files aren't in the same location.  When the renderer gets imported, it thinks it's 
+ * pass in "/dist/".  This is needed when all the files aren't in the same location.  When the renderer gets imported, it thinks it's
  * in the location of the file that imported it, not where it actually exists and then it can't find the asset files.  If location is not
  * set, the renderer assumes the json asset files are in the same location as where the C5Ren script is being run.
  * Additionally, if your build process hashes the manifest.json file, you should include the new name like "/dist/manifest.[hash].json"
  * @deprecated
  */
-export async function initialize(location?:string):Promise<any>
-{
+export async function initialize(location?: string): Promise<any> {
   initializing = true;
   /*
   try
@@ -116,16 +115,15 @@ export async function initialize(location?:string):Promise<any>
     initializing = false;
   }//*/
   initializing = false;
-  initialized=true;
+  initialized = true;
 }
 
 /**
- * 
- * @param location 
+ *
+ * @param location
  * @deprecated
  */
-export async function init(location?:string)
-{
+export async function init(location?: string) {
   /*initializing = true;
   try
   {
@@ -147,26 +145,29 @@ export async function init(location?:string)
   {
     initializing = false;
   }//*/
-  initialized=true;
+  initialized = true;
 }
 
 /**
  * Returns true if renderer files are loaded and initialized.
  * @returns boolean
  */
-export function isReady():boolean
-{
-  try
-  {
-    if(GENCLookup.getInstance() && MSLookup.getInstance() && SVGLookup.getInstance())
-      return (GENCLookup.getInstance().isReady() && MSLookup.getInstance().isReady() && SVGLookup.getInstance().isReady());
-    else
-      return false;
-  }
-  catch(e)
-  {
+export function isReady(): boolean {
+  try {
+    if (
+      GENCLookup.getInstance() &&
+      MSLookup.getInstance() &&
+      SVGLookup.getInstance()
+    )
+      return (
+        GENCLookup.getInstance().isReady() &&
+        MSLookup.getInstance().isReady() &&
+        SVGLookup.getInstance().isReady()
+      );
+    else return false;
+  } catch (e) {
     if (e instanceof Error) {
-      ErrorLogger.LogException("C5Ren","isReady()",e);
+      ErrorLogger.LogException("C5Ren", "isReady()", e);
     }
     return false;
   }
