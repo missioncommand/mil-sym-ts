@@ -30,6 +30,6 @@
         "src/main/ts/armyc2/c5isr/renderer/MilStdIconRenderer.ts",
         "src/main/ts/armyc2/c5isr/web/render/utilities/Basic3DShapes.ts",
         "src/main/ts/armyc2/c5isr/web/render/WebRenderer.ts",
-        "index.ts"],
+        "C5Ren.ts"],
     "out": "docs"
 }

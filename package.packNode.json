@@ -2,8 +2,8 @@
   "name": "@armyc2.c5isr.renderer/mil-sym-ts",
   "version": "2.6.3",
   "description": "MIL-STD-2525 D/E symbol rendering TypeScript library",
-  "main": "C5Ren.js",
-  "types": "C5Ren.d.ts",
+  "main": "C5Ren.cjs",
+  "types": "C5Ren.d.cts",
   "author": "C5ISR ESI",
   "license": "Apache-2.0",
   "keywords": [
