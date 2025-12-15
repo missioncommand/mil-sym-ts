@@ -1,3 +1,7 @@
+import { SymbolID } from "../../renderer/utilities/SymbolID"
+import { MSLookup } from "../../renderer/utilities/MSLookup"
+import { MSInfo } from "../../renderer/utilities/MSInfo"
+import { DrawRules } from "../../renderer/utilities/DrawRules"
 import { type int, type double, } from "../../graphics2d/BasicTypes";
 
 
@@ -86,6 +90,44 @@ export class MilStdSymbol {
     private static _UseLineInterpolation: boolean = false;
 
     protected _Tag: any;
+
+    /**
+     * Text is not affected by scale changes
+     */
+    public static readonly TextScaleSensitive_No:number = 0;
+    /**
+     * Text is affected only by significant scale changes
+     */
+    public static readonly TextScaleSensitive_OnSlightZoomIn:number = 1;
+    /**
+     * Text is affected by zoom in scale changes
+     */
+    public static readonly TextScaleSensitive_OnZoomIn:number = 2;
+    /**
+     * Text is affected by any scale changes
+     */
+    public static readonly TextScaleSensitive_OnZoomInOut:number = 3;
+
+
+    /**
+     * Symbol is not affected by scale changes
+     */
+    public static readonly SymbolScaleSensitive_No:number = 0;
+    /**
+     * Symbol has arrow heads that are affected by scale change
+     */
+    public static readonly SymbolScaleSensitive_ArrowHeads:number = 1;
+    /**
+     * Symbol has lines details that are affected by scale change (like FLOT)
+     */
+    public static readonly SymbolScaleSensitive_DecoratedLines:number = 2;
+    /**
+     * Symbol has pattern fills that are affected by scale if you're not using the fill pattern image
+     * ShapeInfo.getPatternFillImage()
+     */
+    public static readonly SymbolScaleSensitive_PatternFills:number = 3;
+
+
 
     /*
      * Used to hold metadata for each segment of the symbol for multi-point
@@ -773,12 +815,462 @@ export class MilStdSymbol {
         }
     }	// End set SymbolID
     private _wasClipped: boolean = false;
+    /**
+     * 
+     * @param value 
+     * @deprecated see {@link #setWasClipped(boolean)}
+     */
     public set_WasClipped(value: boolean): void {
         this._wasClipped = value;
     }
+    /**
+     * 
+     * @returns 
+     * @deprecated see {@link #getWasClipped()}
+     */
     public get_WasClipped(): boolean {
         return this._wasClipped;
     }
+
+    public setWasClipped(value: boolean): void {
+        this._wasClipped = value;
+    }
+    public getWasClipped(): boolean {
+        return this._wasClipped;
+    }
+    
+
+    /**
+     * Determines if the symbol has integral or modifier/amplifier text that would
+     * be impacted if the maps is zoomed in or out after initial draw.
+     * @return 0=not sensitive, 1=slightly little zoom in sensitive, 2=zoom in sensitive, 3=zoom in/out sensitive
+     */
+    public isTextScaleSensitive():number
+    {
+        let modifiers:Array<ShapeInfo>  = this.getModifierShapes();
+        if(this._Properties == null)
+            return 0;//no scale sensitive text
+        if (this._Properties.size===0)
+            return 0;
+        else if(SymbolID.getSymbolSet(this._symbolID)==SymbolID.SymbolSet_ControlMeasure)
+        {
+            let msi:MSInfo = MSLookup.getInstance().getMSLInfo(this._symbolID);
+            if(msi != null)
+            {
+                let dr:number = msi.getDrawRule();
+                
+                let ec:string = SymbolID.getEntityCode(this._symbolID).toString();
+                switch (dr)
+                {
+                    case DrawRules.AXIS1:
+                    case DrawRules.AXIS2:
+                        if(this._Properties.has(Modifiers.W_DTG_1) ||
+                        this._Properties.has(Modifiers.W1_DTG_2))
+                            return 3;
+                        else
+                            return 0;
+                    case DrawRules.CORRIDOR1:
+                        if(this._Properties.size > 1)
+                            return 3;
+                        else
+                            return 0;
+                    case DrawRules.LINE5://Bearing Lines (2201##), Linear Targets (2407##)
+                        if(ec.startsWith("2201"))
+                        {
+                            if(this._Properties.has(Modifiers.H_ADDITIONAL_INFO_1))
+                                return 2;
+                            else
+                                return 0;
+                        }
+                        else if(ec.startsWith("2407"))
+                        {
+                            if(modifiers != null && modifiers.length != 0)
+                            {
+                                let size:number = modifiers.length;
+                                if(size == 1)
+                                    return 2;
+                                else//size > 1
+                                    return 3;
+                            }
+                            else
+                                return 0;
+                        }
+                        else
+                            return 0;
+                    case DrawRules.RECTANGULAR1:
+                        if(modifiers != null && modifiers.length > 1 && ec.startsWith("24"))
+                            return 3;
+                        else 
+                            return 0; 
+                    case DrawRules.CIRCULAR1:
+                        if(modifiers != null && modifiers.length > 1 && (ec.startsWith("2003") || ec.startsWith("24")))
+                            return 3;
+                        else 
+                            return 0; 
+                    case DrawRules.RECTANGULAR3:
+                        if(modifiers != null && modifiers.length != 0)
+                            return 2;
+                        else 
+                            return 0; 
+
+                    case DrawRules.CIRCULAR2:
+                    case DrawRules.ARC1:
+                        return 0;
+                    
+                    default:
+                        break;
+                }
+            }
+
+            let ec:number = (SymbolID.getEntityCode(this._symbolID));
+            switch (ec)
+            {
+
+                //A Little Zoom in sensitive (1)
+                case 140300://Phase line, only 5% sensitive
+                case 140400://Forward Edge of Battle, only 5% sensitive
+                case 330100://Moving Convoy
+                case 330200://Halted Convoy
+                    return 1;
+
+                //Zoom in sensitive (2)
+                case 110200://Light Line
+                case 110300://Engineer Work Line
+                case 140700://Final Coordination Line
+                case 140900://Limit of Advance
+                case 141000://Line of Departure
+                case 141100://Line of Departure / Line of Contact
+                case 141200://Probable Line of Deployment
+                case 141400://Bridgehead Line
+                case 141500://Holding Line
+                case 141600://Release Line
+                case 141800://Handover Line
+                case 141900://Battle Handover Line
+                case 142000://Named Area of Interest Line (NAI)
+                case 190100://Identification, Friend-or-Foe (IFF) Off Line
+                case 190200://Identification, Friend-or-Foe (IFF) On Line
+                case 200401://Ship Area of Interest, Eclipse/Circle (AEGIS only)
+                case 200402://Ship Area of Interest, Rectangle (AEGIS only)
+                case 330300://Main Supply Route (MSR)
+                case 330301://One Way Traffic
+                case 330302://Two Way Traffic
+                case 330303://Alternating Traffic
+                case 330400://Alternate Supply Route (ASR)
+                case 330401://One Way Traffic
+                case 330402://Two Way Traffic
+                case 330403://Alternating Traffic
+                    return 2;
+                case 120400://Airfield Zone
+                case 142100://Mobility Corridor
+                case 370100://Human Terrain
+                    if(this._Properties.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        return 2;
+                    else
+                        return 0;
+                case 290100://Obstacle Line
+                    if(this._Properties.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        return 2;
+                    else
+                        return 0;
+                case 140100://FLOT
+                    if(SymbolID.getAffiliation(this._symbolID)==SymbolID.StandardIdentity_Affiliation_Hostile_Faker)
+                        return 2;
+                    else
+                        return 1;
+
+                //Very Zoom in/out sensitive (multi-line text) (3)
+                //friendly and more than 1 text
+                //Hostile and more than 3 text assuming ENY is present
+                case 110100://boundary line
+                    if(this._Properties.has(Modifiers.T_UNIQUE_DESIGNATION_1) ||
+                        this._Properties.has(Modifiers.T1_UNIQUE_DESIGNATION_2) ||
+                        this._Properties.has(Modifiers.AS_COUNTRY))
+                        return 3;
+                    else
+                        return 0;
+
+                case 150501://Joint Tactical Action Area (JTAA), 2 rows of text
+                case 150502://Submarine Action Area (SAA), 2 rows of text
+                case 150503://Submarine Generated Action Area (SGAA), 2 rows of text
+                case 200300://No Attack (NOTACK) Zone (AEGIS only)
+                case 140601://Friendly Aviation
+                case 140602://Friendly Direction of Main Attack
+                case 140603://Friendly Direction of Supporting Attack
+                case 140605://Direction of Attack Feint
+                    if(this._Properties.has(Modifiers.W_DTG_1) ||
+                        this._Properties.has(Modifiers.W1_DTG_2))
+                        return 3;
+                    else
+                        return 0;
+                case 151100://Limited Access Area if sector 1 modifier present
+                    if(SymbolID.getModifier1(this._symbolID)!=0 || this._Properties.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        return 3;
+                    else
+                        return 0;
+
+                case 152400://Restricted Terrain
+                case 152500://Severly Restricted Terrain
+                    if(modifiers != null && modifiers.length>1)
+                        return 3;
+                    else
+                        return 0;
+
+                //Labels all contained in area but can drift away from each-other or overlap
+                case 120700: //Generic
+                case 170900: //High-Density Airspace Control Zone
+                case 171000: //Restricted Operations Zone (ROZ)
+                case 171100: //Air-to-Air Restricted Operations Zone (AARROZ)
+                case 171200: //Unmanned Aircraft Restricted Operations Zone (UA-ROZ)
+                case 171300: //Weapon Engagement Zone
+                case 171400: //Fighter Engagement Zone (FEZ)
+                case 171500: //Joint Engagement Zone (JEZ)
+                case 171600: //Missile Engagement Zone (MEZ)
+                case 171700: //Low (Altitude) Missile Engagement Zone (LOMEZ)
+                case 171800: //High (Altitude) Missile Engagement Zone (HIMEZ)
+                case 171900: //Short Range Air Defense Engagement Zone (SHORADEZ)
+                case 172000: //Weapons Free Zone
+                case 240101: //Airspace Coordination Area (ACA) - Irregular
+                case 240201: //Free Fire Area (FFA) - Irregular
+                case 240301: //No Fire Area (NFA) - Irregular
+                case 240401: //Restricted Fire Area (RFA) - Irregular
+                case 240806: //Smoke
+                case 241001://Fire Support Area - Irregular
+                case 241101: //Artillery Target Intelligence Zone (ATI), - Irregular
+                case 241201: //Call For Fire Zone (CFFZ) - Irregular
+                case 241301: //Censor Zone, - Irregular
+                case 241401: //Critical Friendly Zone (CFZ), - Irregular
+                case 241501: //Dead Space Area (DA), - Irregular
+                case 241601: //Sensor Zone, Irregular
+                case 241701: //Target Build-up Area, Irregular
+                case 241801: //Target Value Area, Irregular
+                case 241901: //Zone of Responsibility, Irregular
+                case 242000: //Terminally Guided Munition Footprint (TGMF)
+                case 242702: //Psyops Zone, Irregular
+                case 242800: //Kill Zone
+                case 242301: //Blue Kill Box, Irregular
+                case 242304: //Purple Kill Box, Irregular
+                case 270300: //Obstacle Free Zone
+                case 290600: //Lane
+                case 310100: //Detainee Holding Area
+                case 310200: //Enemy Prisoner of War Holding Area
+                case 310300: //Forward Arming and Refueling Point (FARP)
+                case 310400: //Refugee Holding Area
+                case 310800: //Corps Support Area (CSA)
+                    if(modifiers != null && modifiers.length>1)
+                        return 3;
+                    else
+                        return 0;
+
+                //CASES for areas with 4 tags like PAA
+                case 242400: //Artillery Manoeuvre Area (AMA)
+                case 240501: //Position Area for Artillery (PAA) - Irregular
+                    if(modifiers != null && modifiers.length>4)
+                        return 3;
+                    else
+                        return 0;
+
+                case 110400://Generic
+                case 260100://Fire Support Coordination Line (FSCL)
+                case 260200://Coordinated Fire Line (CFL)
+                case 260300://No Fire Line
+                case 260400://Battlefield Coordination Line
+                case 260500://Restrictive Fire Line
+                case 300100://Intelligence Coordination Line (ICL)
+                    if(this._Properties.has(Modifiers.W_DTG_1) ||
+                            this._Properties.has(Modifiers.W1_DTG_2))
+                        return 3;
+                    else
+                        return 2;
+
+                case 260600://Munition Flight Path
+                case 340800://Delay
+                    if(this._Properties.has(Modifiers.W_DTG_1) ||
+                    this._Properties.has(Modifiers.W1_DTG_2))
+                        return 2;
+                    else
+                        return 0;
+
+                case 270800://Mined Area
+                    if(this._Properties.has(Modifiers.W_DTG_1) ||
+                        this._Properties.has(Modifiers.H_ADDITIONAL_INFO_1))
+                        return 2;
+                    else
+                        return 0;
+
+                case 220109://Navigational Rhumb Line
+                    if(modifiers != null && modifiers.length > 1)
+                        return 3;
+                    else
+                        return 2;
+
+                case 271100://Bridge or Gap
+                case 271300://Assault Crossing
+                    if(this._Properties.has(Modifiers.W_DTG_1) ||
+                        this._Properties.has(Modifiers.W1_DTG_2))
+                        return 3;
+                    else //TODO: Bridge or Fix placement and it will be a 0 in other cases
+                        return 2;
+
+                default://No Scale Sensitive text
+                    return 0;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+    * Checks if the symbol has features that make it scale aware and would require a refresh
+    * on zooming in or out.
+    * @return 0=No,1=arrowheads,2=decoratedLines,3=patternFills
+    */
+    public isSymbolScaleSensitive():number
+    {
+        //return SymbolUtilities.isScaleAware(this._symbolID);
+        let ec:number = SymbolID.getEntityCode(this._symbolID);
+
+        if(SymbolID.getSymbolSet(this._symbolID)==SymbolID.SymbolSet_ControlMeasure) {
+            switch (ec)
+            {
+                //ArrowHead or smaller detail
+                case 152000://Attack By Fire
+                case 152100://Attack By Fire
+                case 152200://Search Area/Reconnaissance Area
+                case 141700://Ambush
+                case 140601://Airborne/Aviation
+                case 140602://Direction of Main attack
+                case 140603://Direction of Supporting attack
+                case 140605://Direction of Supporting attack Feint
+                case 142100://Mobility Corridor
+                case 240701://Linear Target
+                case 240702://Linear Smoke Target
+                case 240703://Final Protective Fire
+                case 270502://Disrupt
+                case 270504://Turn
+                case 270601://Obstacle Bypass Easy
+                case 270602://Obstacle Bypass Difficult
+                case 270603://Obstacle Bypass Impossible
+                case 271100://Bridge or Gap?
+                case 271300://Assault Crossing?
+                case 280100://Abatis?
+                case 290600://?Lane?
+                case 290700://Ferry
+                case 290800://Raft Site
+                case 340200://Breach
+                case 340300://Bypass
+                case 340400://Canalize
+                case 340500://Clear
+                case 340800://Delay
+                case 341000://Disrupt
+                case 341200://Follow and Assume
+                case 341300://Follow and Support
+                //case 341700://Occupy, details relative to size
+                //case 341800://Penetrate, details relative to size
+                //case 341900://Relief in Place (RIP), details relative to size
+                //case 342000://Retire/Retirement, details relative to size
+                case 342100://Secure, details relative to size
+                case 342201://Cover, details relative to size
+                case 342202://Guard, details relative to size
+                case 342203://Screen, details relative to size
+                case 342300://Screen, details relative to size
+                case 342400://Withdraw, details relative to size
+                case 342500://Withdraw under pressure, details relative to size
+                case 343000://Capture
+                case 343200://Control
+                case 343300://Demonstrate
+                case 343400://Deny
+                case 343500://Development
+                case 343600://Escort
+                case 343700://Exfiltration
+                case 343800://Infiltration
+                case 343900://Locate
+                case 344000://Pursuit
+                case 344100://Forward Passage of Lines
+                case 344200://Rearward Passage of Lines
+                case 344400://Disengage
+                case 344500://Evacuate
+                case 344600://Recover
+                case 344700://Turn
+                    return 1;//arrowhead
+
+                //Decorated Lines
+                case 130701://Decision Line
+                case 140100://FLOT
+                case 140200://Line of Contact
+                //case 140500://?Principal Direction of Fire?
+                case 151000://Fortified Area
+                case 151800://Encirclement
+                case 151203://Strong Point
+                case 151202://Battle Position Prepared (P) but not Occupied
+                case 151204://Contain
+                case 151205://Retain
+                case 151208://Mobile Defense
+                case 152600://Area Defense
+                case 152800://Mobility Defense
+                case 270100://Obstacle Belt
+                case 270200://Obstacle Zone
+                case 270300://Obstacle Free Zone
+                case 270400://Obstacle Restricted Zone
+                //case 270503://Fix?
+                case 270801://Mined Area, Fenced
+                case 282003://Overhead Wire
+                case 290100://Obstacle Line
+                case 290201://Ditch Under Construction
+                case 290202://Ditch Completed
+                case 290203://Ditch Reinforced
+                case 290204://Antitank Wall
+                case 290301://Wire Obstacles, Unspecified
+                case 290302://Wire Obstacles, Single Fence
+                case 290303://Wire Obstacles, Double Fence
+                case 290304://Wire Obstacles, Double Apron Fence
+                case 290305://Wire Obstacles, Low Wire Fence
+                case 290306://Wire Obstacles, High Wire Fence
+                case 290307://Wire Obstacles, Single Concertina
+                case 290308://Wire Obstacles, Double Strand Concertina
+                case 290309://Wire Obstacles, Triple Strand Concertina
+                case 290900://Fortified Line
+                case 291000://Fighting Position?
+                case 330100://Moving Convoy
+                case 330200://Halted Convoy
+                case 330301://MSR One Way Traffic
+                case 330302://MSR Two Way Traffic
+                case 330303://MSR Alternating Traffic
+                case 330401://ASR One Way Traffic
+                case 330402://ASR Two Way Traffic
+                case 330403://ASR Alternating Traffic
+                case 341100://Fix
+                //case 341500://Isolate, most detail contained inside
+                //case 342600://Cordon and Knock, most detail contained inside
+                //case 342700://Cordon and Search, most detail contained inside
+                    return 2;//decoration
+
+                //Areas with Pattern Fill
+                case 151100://Limited Access Area
+                case 172000://Weapons Free Zone
+                case 152400://Restricted Terrain
+                case 152500://Severely Restricted Terrain
+                case 240301://NFA Irregular
+                case 240302://NFA Rectangular
+                case 240303://NFA Circular
+                case 271700://Bio Contaminated Area
+                case 271701://Bio Contaminated Area - Toxic
+                case 271800://Chem Contaminated Area
+                case 271801://Chem Contaminated Area - Toxic
+                case 271900://Nuc Contaminated Area
+                case 272000://Rad Contaminated Area
+                case 272001://Rad Contaminated Area - Toxic
+                    if(!this.getUseFillPattern())
+                        return 3;//pattern fill
+                    else
+                        return 0;
+                default:
+                    return 0;
+            }
+        }
+
+        return 0;
+    }
+
 
     /**
      * Multipoint features and patterns scale with line width ({@link #getLineWidth()}).

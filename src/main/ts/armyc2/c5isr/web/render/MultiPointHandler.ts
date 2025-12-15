@@ -770,7 +770,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.getWasClipped(), mSymbol.isTextScaleSensitive(), mSymbol.isSymbolScaleSensitive());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 /*
@@ -1374,7 +1374,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.getWasClipped(), mSymbol.isTextScaleSensitive(), mSymbol.isSymbolScaleSensitive());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 jsonOutput += ("{\"type\":\"FeatureCollection\",\"features\":");
@@ -1396,7 +1396,11 @@ export class MultiPointHandler {
                 jsonOutput += ("\",\"symbolID\":\"");
                 jsonOutput += (symbolCode);
                 jsonOutput += ("\",\"wasClipped\":\"");
-                jsonOutput += (mSymbol.get_WasClipped()).toString();
+                jsonOutput += (mSymbol.getWasClipped()).toString();
+                jsonOutput += ("\",\"textScaleSensitive\":\"");
+                jsonOutput += (mSymbol.isTextScaleSensitive()).toString();
+                jsonOutput += ("\",\"symbolScaleSensitive\":\"");
+                jsonOutput += (mSymbol.isSymbolScaleSensitive()).toString();
                 //jsonOutput += ("\"}}");
 
                 jsonOutput += ("\"}}]}");
@@ -1405,7 +1409,7 @@ export class MultiPointHandler {
                 let textColor = mSymbol.getTextColor() ? mSymbol.getTextColor().toHexString(false) : "";
                 let backgroundColor = mSymbol.getTextBackgroundColor() ? mSymbol.getTextBackgroundColor().toHexString(false) : "";
                 //returns an svg with a geoTL and geoBR value to use to place the canvas on the map
-                jsonOutput = MultiPointHandlerSVG.GeoSVGize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, backgroundColor, mSymbol.get_WasClipped());
+                jsonOutput = MultiPointHandlerSVG.GeoSVGize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, backgroundColor, mSymbol.getWasClipped());
             }
         } catch (exc) {
             if (exc instanceof Error) {
@@ -1936,7 +1940,9 @@ export class MultiPointHandler {
         ipc: IPointConversion,
         normalize: boolean,
         textColor: Color,
-        wasClipped: boolean): string {
+        wasClipped: boolean,
+        textScaleSensitive: number,
+        symbolScaleSensitive:number): string {
         let kml: string = "";
         let tempModifier: ShapeInfo;
         let cdataStart: string = "<![CDATA[";
@@ -1949,6 +1955,8 @@ export class MultiPointHandler {
         kml += ("<ExtendedData>");
         kml += ("<Data name=\"symbolID\"><value>" + symbolCode + "</value></Data>");
         kml += ("<Data name=\"wasClipped\"><value>" + wasClipped + "</value></Data>");
+        kml += ("<Data name=\"textScaleSensitive\"><value>" + textScaleSensitive + "</value></Data>");
+        kml += ("<Data name=\"symbolScaleSensitive\"><value>" + symbolScaleSensitive + "</value></Data>");
         kml += ("</ExtendedData>");
         for (let i: int = 0; i < len; i++) {
             let shapesToAdd: string = MultiPointHandler.ShapeToKMLString(shapes[i], ipc, normalize);
@@ -3686,7 +3694,7 @@ export class MultiPointHandler {
             }
             mSymbol.setSymbolShapes(shapeInfos);
             mSymbol.setModifierShapes(modifierShapeInfos);
-            mSymbol.set_WasClipped(tg.get_WasClipped());
+            mSymbol.setWasClipped(tg.get_WasClipped());
             shapes = mSymbol.getSymbolShapes();
             modifiers = mSymbol.getModifierShapes();
 
@@ -3700,7 +3708,7 @@ export class MultiPointHandler {
                 if(textColor==null)
                     textColor=mSymbol.getLineColor();
 
-                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.get_WasClipped());
+                jsonContent = MultiPointHandler.KMLize(id, name, description, symbolCode, shapes, modifiers, ipc, normalize, textColor, mSymbol.getWasClipped(), mSymbol.isTextScaleSensitive(), mSymbol.isSymbolScaleSensitive());
                 jsonOutput += jsonContent;
             } else if (format === WebRenderer.OUTPUT_FORMAT_GEOJSON) {
                 /*
@@ -3738,7 +3746,11 @@ export class MultiPointHandler {
                 jsonOutput += ("\",\"symbolID\":\"");
                 jsonOutput += (symbolCode);
                 jsonOutput += ("\",\"wasClipped\":\"");
-                jsonOutput += (mSymbol.get_WasClipped()).toString();
+                jsonOutput += (mSymbol.getWasClipped()).toString();
+                jsonOutput += ("\",\"textScaleSensitive\":\"");
+                jsonOutput += (mSymbol.isTextScaleSensitive()).toString();
+                jsonOutput += ("\",\"symbolScaleSensitive\":\"");
+                jsonOutput += (mSymbol.isSymbolScaleSensitive()).toString();
                 //jsonOutput += ("\"}}");
 
                 jsonOutput += ("\"}}]}");
