@@ -1172,7 +1172,7 @@ export class MilStdSymbol {
                 case 342201://Cover, details relative to size
                 case 342202://Guard, details relative to size
                 case 342203://Screen, details relative to size
-                case 342300://Screen, details relative to size
+                case 342300://Seize, details relative to size
                 case 342400://Withdraw, details relative to size
                 case 342500://Withdraw under pressure, details relative to size
                 case 343000://Capture
@@ -1204,9 +1204,9 @@ export class MilStdSymbol {
                 case 151202://Battle Position Prepared (P) but not Occupied
                 case 151204://Contain
                 case 151205://Retain
-                case 151208://Mobile Defense
+                //case 151208://Mobile Defense//bad code?
                 case 152600://Area Defense
-                case 152800://Mobility Defense
+                case 152800://Mobile Defense
                 case 270100://Obstacle Belt
                 case 270200://Obstacle Zone
                 case 270300://Obstacle Free Zone

@@ -808,7 +808,11 @@ export class MultiPointHandler {
                 jsonOutput += ("\",\"symbolID\":\"");
                 jsonOutput += (symbolCode);
                 jsonOutput += ("\",\"wasClipped\":\"");
-                jsonOutput += (mSymbol.get_WasClipped()).toString();
+                jsonOutput += (mSymbol.getWasClipped()).toString();
+                jsonOutput += ("\",\"textScaleSensitive\":\"");
+                jsonOutput += (mSymbol.isTextScaleSensitive()).toString();
+                jsonOutput += ("\",\"symbolScaleSensitive\":\"");
+                jsonOutput += (mSymbol.isSymbolScaleSensitive()).toString();
                 //jsonOutput += ("\"}}");
 
                 jsonOutput += ("\"}}]}");
