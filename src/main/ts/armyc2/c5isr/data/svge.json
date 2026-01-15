@@ -2460,11 +2460,11 @@
   },
   {
     "id": "25250600",
-    "X": "130.0",
-    "Y": "221.0",
-    "Width": "350.0",
-    "Height": "350.0",
-    "SVG": "<g id=\"25250600\">        <line fill=\"none\" stroke=\"#000000\" stroke-width=\"14\" x1=\"305\" x2=\"305\" y1=\"221\" y2=\"571\"/>        <line fill=\"none\" stroke=\"#000000\" stroke-width=\"14\" x1=\"130\" x2=\"480\" y1=\"396\" y2=\"396\"/>        <text font-family=\"sans-serif\" font-size=\"70\" font-weight=\"bold\" id=\"static\" x=\"332\" y=\"327\">KNP </text>    </g>"
+    "X": "205.0260009765625",
+    "Y": "295.93499755859375",
+    "Width": "228.2532958984375",
+    "Height": "199.49899291992188",
+    "SVG": "<g id=\"25250600\">        <line fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"15\" x1=\"304.789\" x2=\"304.789\" y1=\"295.935\" y2=\"495.434\"/>        <line fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"15\" x1=\"404.338\" x2=\"205.026\" y1=\"395.698\" y2=\"395.698\"/>        <text font-family=\"sans-serif\" font-size=\"50\" font-weight=\"bold\" id=\"static\" x=\"330\" y=\"357\">KNP </text>    </g>"
   },
   {
     "id": "52421",

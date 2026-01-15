@@ -2768,8 +2768,7 @@ export class ModifierRenderer implements SettingsEventListener {
     
                                                 x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
                                                 //                  x = x - (labelbounds.getWidth * 0.5);
-                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.25)) as int;
-                                                y = y + (labelHeight * 0.5) as int;
+                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.30)) as int;
     
                                                 ti.setLocation(Math.round(x), Math.round(y));
                                                 arrMods.push(ti);
@@ -2795,8 +2794,7 @@ export class ModifierRenderer implements SettingsEventListener {
     
                                                 x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
                                                 //                  x = x - (labelbounds.getWidth * 0.5);
-                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.25)) as int;
-                                                y = y + (labelHeight * 0.5) as int;
+                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.30)) as int;
     
                                                 ti.setLocation(Math.round(x), Math.round(y));
                                                 arrMods.push(ti);
@@ -3288,10 +3286,12 @@ export class ModifierRenderer implements SettingsEventListener {
 
                                                                                                     //One modifier symbols and modifier goes upper right of center
                                                                                                     x = (bounds.getX() + (bounds.getWidth() + bufferXR)) as int;
-                                                                                                    //                  x = x - (labelBounds.width * 0.5);
-                                                                                                    y = (bounds.getY() + (bounds.getHeight() * 0.25)) as int;
-                                                                                                    y = y + (labelHeight * 0.5) as int;
 
+                                                                                                    if(!RendererSettings.getInstance().getOutlineSPControlMeasures() && 
+                                                                                                        !(attributes.has(MilStdAttributes.OutlineSymbol) && (attributes.get(MilStdAttributes.OutlineSymbol).toUpperCase()==="TRUE")))
+                                                                                                        x += bufferXR;
+                                                                                                    
+                                                                                                    y = (bounds.getY() + (bounds.getHeight() * 0.30)) as int;
 
                                                                                                     ti.setLocation(Math.round(x), Math.round(y));
                                                                                                     arrMods.push(ti);

@@ -537,6 +537,36 @@ export class RendererUtilities {
         }
     }
 
+    /**
+     * Sets SVG stroke-dasharray when action points are in planned status
+     * @param symbolID 
+     * @param siIcon 
+     * @returns 
+     */
+    public static setAffiliationDashArray(symbolID:string, siIcon:SVGInfo): SVGInfo
+    {
+        let svg:string = siIcon.getSVG();
+        let status:number = SymbolID.getStatus(symbolID);
+        let aff:number = SymbolID.getAffiliation(symbolID);
+        let returnVal:SVGInfo = siIcon;
+        if(status == SymbolID.Status_Planned_Anticipated_Suspect)
+        {
+            if(SymbolUtilities.isActionPoint(symbolID))
+            {
+                svg = svg.replace("<rect ","<rect stroke-dasharray=\"20 19\" ");
+                svg = svg.replace("<polygon ","<polygon stroke-dasharray=\"20 20\" ");
+                returnVal = new SVGInfo(siIcon.getID(),siIcon.getBbox(), svg);
+            }
+        }
+        /*else if(aff == SymbolID.StandardIdentity_Affiliation_Pending ||
+                aff == SymbolID.StandardIdentity_Affiliation_AssumedFriend ||
+                aff == SymbolID.StandardIdentity_Affiliation_Suspect_Joker)
+        {
+            //Dot pattern if Control Measures use it?
+        }//*/
+
+        return returnVal;
+    }
 
     public static findWidestStrokeWidth(svg: string): float {
         let pattern = RegExp("(stroke-width=\")(\\d+\\.?\\d*)\"", "g");
