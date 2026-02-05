@@ -266,8 +266,21 @@ export class Shape3DHandler {
         //            NormalizeGECoordsToGEExtents(0, 360, geoCoords2);
         //        }
 
+        let useDashArray:boolean = true;
+        let useFillPattern:boolean = true;
+        if(symbolAttributes != null)
+        {
+            if(symbolAttributes.has(MilStdAttributes.UseDashArray) && 
+                symbolAttributes.get(MilStdAttributes.UseDashArray) != null &&
+                symbolAttributes.get(MilStdAttributes.UseDashArray).toLocaleLowerCase() === "false")
+                useDashArray = false;
+            if(symbolAttributes.has(MilStdAttributes.UsePatternFill) && 
+                symbolAttributes.get(MilStdAttributes.UsePatternFill) != null &&
+                symbolAttributes.get(MilStdAttributes.UsePatternFill).toLocaleLowerCase() === "false")
+                useFillPattern = false;
+        }
         //disable clipping
-        if (MultiPointHandler.ShouldClipSymbol(symbolCode) === false) {
+        if (MultiPointHandler.ShouldClipSymbol(symbolCode, useDashArray, useFillPattern) === false) {
 
             if (MultiPointHandler.crossesIDL(geoCoords) === false) {
                 rect = null;

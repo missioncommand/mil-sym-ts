@@ -136,6 +136,8 @@ export class RendererSettings {
 
     private _overscanScale: double = 1.0;
 
+    private _autoAdjustScale: boolean = true;
+
     //acevedo - 12/8/17 - allow the setting of affiliation colors.
     private _friendlyUnitFillColor: Color = AffiliationColors.FriendlyUnitFillColor;
     /// <summary>
@@ -830,6 +832,20 @@ export class RendererSettings {
     public getOverscanScale(): double {
         return this._overscanScale;
     }
+
+    /**
+     * Will attempt to adjust the scale if it doesn't seem to make sense with the passed in bbox.
+     * If you wish to have absolute control over the scale, set to false.
+     * @param autoAdjustScale default true
+     */
+    public setAutoAdjustScale(autoAdjustScale: boolean): void {
+        this._autoAdjustScale = autoAdjustScale;
+    }
+
+    public getAutoAdjustScale(): boolean {
+        return this._autoAdjustScale;
+    }
+
 
     /**
      * get the preferred fill affiliation color for units.

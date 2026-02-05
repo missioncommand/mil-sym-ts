@@ -345,13 +345,15 @@ export class MultiPointHandler {
      * clipped when possible.
      *
      * @param symbolID
+     * @param useDashArray default true, some symbols don't need to be clipped uf using dash array MilStdAttribute
+     * @param useFillPattern default true, some symbols don't need to be clipped uf using fill pattern MilStdAttribute
      * @return
      */
-    public static ShouldClipSymbol(symbolID: string): boolean {
+    public static ShouldClipSymbol(symbolID:string, useDashArray:boolean = true, useFillPattern:boolean = true):boolean {
         //TODO: need to reevaluate this function to make sure we clip the right symbols.
-        let status: int = SymbolID.getStatus(symbolID);
+        let status:number = SymbolID.getStatus(symbolID);
 
-        if (SymbolUtilities.isTacticalGraphic(symbolID) && status === SymbolID.Status_Planned_Anticipated_Suspect) {
+        if (SymbolUtilities.isTacticalGraphic(symbolID) && status == SymbolID.Status_Planned_Anticipated_Suspect && !useDashArray) {
             return true;
         }
 
@@ -359,99 +361,107 @@ export class MultiPointHandler {
             return true;
         }
 
-        let id: int = parseInt(SymbolUtilities.getBasicSymbolID(symbolID));
-        //TODO: needs to be reworked
-        if (id === 25341100 || //Task Fix
-            id === 25260200 || //CFL
-            id === 25110100 || //Boundary
-            id === 25110200 || //Light Line (LL)
-            id === 25110300 || //Engineer Work Line (EWL)
-            id === 25140100 || //FLOT
-            id === 25140200 || //Line of contact is now just two flots, but APP6 still has it as a separate symbol
-            id === 25151000 || //Fortified Area
-            id === 25151100 || //Limited Access Area
-            id === 25172000 || //Weapons Free Zone
-            id === 25151202 || //Battle Position/Prepared but not Occupied
-            id === 25151203 || //Strong Point
-            id === 25141200 || //Probable Line of Deployment (PLD)
-            id === 25270800 || //Mined Area
-            id === 25270801 || //Mined Area, Fenced
-            id === 25170100 || //Air Corridor
-            id === 25170200 || //Low Level Transit Route (LLTR)
-            id === 25170300 || //Minimum-Risk Route (MRR)
-            id === 25170400 || //Safe Lane (SL)
-            id === 25170500 || //Standard Use ARmy Aircraft Flight Route (SAAFR)
-            id === 25170600 || //Transit Corridors (TC)
-            id === 25170700 || //Special Corridor (SC)
+        let shouldClip:boolean = false;
+        let id:number = parseInt(SymbolUtilities.getBasicSymbolID(symbolID));
+        if(//One of these decorated lines or lines that can potentially have a large # of points
+                id == 25260200 || //CFL
+                id == 25110100 || //Boundary
+                id == 25110200 || //Light Line (LL)
+                id == 25110300 || //Engineer Work Line (EWL)
+                id == 25140100 || //FLOT
+                id == 25140200 || //Line of contact is now just two flots
+                id == 25151000 || //Fortified Area
 
-            id === 25270100 || //Obstacle Belt
-            id === 25270200 || //Obstacle Zone
-            id === 25270300 || //Obstacle Free Zone
-            id === 25270400 || //Obstacle Restricted Zone
+                id == 25151202 || //Battle Position/Prepared but not Occupied
+                id == 25151203 || //Strong Point
+                id == 25141200 || //Probable Line of Deployment (PLD)
+                id == 25270800 || //Mined Area
+                id == 25270801 || //Mined Area, Fenced
+                id == 25170100 || //Air Corridor
+                id == 25170200 || //Low Level Transit Route (LLTR)
+                id == 25170300 || //Minimum-Risk Route (MRR)
+                id == 25170400 || //Safe Lane (SL)
+                id == 25170500 || //Standard Use ARmy Aircraft Flight Route (SAAFR)
+                id == 25170600 || //Transit Corridors (TC)
+                id == 25170700 || //Special Corridor (SC)
 
-            id === 25290100 || //Obstacle Line
-            id === 25290201 || //Antitank Ditch - Under Construction
-            id === 25290202 || //Antitank Ditch - Completed
-            id === 25290203 || //Antitank Ditch Reinforced, with Antitank Mines
-            id === 25290204 || //Antitank Wall
-            id === 25290301 || //Unspecified
-            id === 25290302 || //Single Fence
-            id === 25290303 || //Double Fence
-            id === 25290304 || //Double Apron Fence
-            id === 25290305 || //Low Wire Fence
-            id === 25290306 || //High Wire Fence
-            id === 25290307 || //Single Concertina
-            id === 25290308 || //Double Strand Concertina
-            id === 25290309 || //Triple Strand Concertina
+                id == 25270100 || //Obstacle Belt
+                id == 25270200 || //Obstacle Zone
+                id == 25270300 || //Obstacle Free Zone
+                id == 25270400 || //Obstacle Restricted Zone
 
-            id === 25341100 || //Obstacles Effect Fix now Mission Tasks Fix
-            id === 25290400 || //Mine Cluster
-            id === 25282003 || //Aviation / Overhead Wire
-            id === 25270602 || //Bypass Difficult
-            id === 25271500 || //Ford Easy
-            id === 25271600 || //Ford Difficult
+                id == 25290100 || //Obstacle Line
+                id == 25290201 || //Antitank Ditch - Under Construction
+                id == 25290202 || //Antitank Ditch - Completed
+                id == 25290203 || //Antitank Ditch Reinforced, with Antitank Mines
+                id == 25290204 || //Antitank Wall
+                id == 25290301 || //Unspecified
+                id == 25290302 || //Single Fence
+                id == 25290303 || //Double Fence
+                id == 25290304 || //Double Apron Fence
+                id == 25290305 || //Low Wire Fence
+                id == 25290306 || //High Wire Fence
+                id == 25290307 || //Single Concertina
+                id == 25290308 || //Double Strand Concertina
+                id == 25290309 || //Triple Strand Concertina
 
-            id === 25290900 || //Fortified Line
+                id == 25341100 || //Obstacles Effect Fix now Mission Tasks Fix
 
-            id === 25271700 || //Biological Contaminated Area
-            id === 25271800 || //Chemical Contaminated Area
-            id === 25271900 || //Nuclear Contaminated Area
-            id === 25272000 || //Radiological Contaminated Area
+                id == 25282003 || //Aviation / Overhead Wire
+                //id == 25270602 || //Bypass Difficult
+                id == 25271500 || //Ford Easy
+                id == 25271600 || //Ford Difficult
 
-            id === 25240301 || //No Fire Area (NFA) - Irregular
-            id === 25240302 || //No Fire Area (NFA) - Rectangular
-            id === 25240303 || //No Fire Area (NFA) - Circular
+                id == 25290900 || //Fortified Line
 
+                id == 25151800 || //Encirclement
 
-            id === 25240701 || //Linear Target
-            id === 25240702 || //Linear Smoke Target
-            id === 25240703 || //Final Protective Fire (FPF)
-            id === 25151800 || //Encirclement
+                id == 25330300 || //MSR
+                id == 25330301 || //MSR / One Way Traffic
+                id == 25330302 || //MSR / Two Way Traffic
+                id == 25330303 || //MSR / Alternating Traffic
 
-            id === 25330300 || //MSR
-            id === 25330301 || //MSR / One Way Traffic
-            id === 25330302 || //MSR / Two Way Traffic
-            id === 25330303 || //MSR / Alternating Traffic
+                id == 25330400 || //ASR
+                id == 25330401 || //ASR / One Way Traffic
+                id == 25330402 || //ASR / Two Way Traffic
+                id == 25330403 || //AMSR / Alternating Traffic
 
-            id === 25330400 || //ASR
-            id === 25330401 || //ASR / One Way Traffic
-            id === 25330402 || //ASR / Two Way Traffic
-            id === 25330403 || //AMSR / Alternating Traffic
-
-            id === 25151205 || //Retain
-            id === 25341500 || //Isolate
-
-            id === 25340600 || //counterattack.
-            id === 25340700 || //counterattack by fire.
-            //id == G*G*PA----****X || //AoA for Feint - appears to be gone in 2525D
-            id === 25271200 || //Blown Bridges Planned
-            id === 25271202 || //Blown Bridges Explosives, State of Readiness 1 (Safe)
-            id === 25341200) // Follow and Assume
+                id == 25151205 || //Retain
+                id == 25341500 //Isolate
+                )
         {
-            return true;
-        } else {
-            return false;
+            shouldClip = true;//decorated lines
         }
+        if(!useFillPattern){
+
+            if(
+                id == 25151100 || //Limited Access Area //no longer needed with pattern fill
+                id == 25172000 || //Weapons Free Zone //no longer needed with pattern fill
+                id == 25271700 || //Biological Contaminated Area //no longer needed with pattern fill
+                id == 25271800 || //Chemical Contaminated Area //no longer needed with pattern fill
+                id == 25271900 || //Nuclear Contaminated Area //no longer needed with pattern fill
+                id == 25272000 || //Radiological Contaminated Area //no longer needed with pattern fill
+
+                id == 25240301 || //No Fire Area (NFA) - Irregular //no longer needed with pattern fill
+                id == 25240302 || //No Fire Area (NFA) - Rectangular //no longer needed with pattern fill
+                id == 25240303  //No Fire Area (NFA) - Circular //no longer needed with pattern fill
+            )
+                shouldClip = true;//not using fill pattern so clip to not draw more lines than we have to
+        }
+        if(!useDashArray){
+
+            if(
+                id == 25290400 || //Mine Cluster //not needed using dash array.
+                id == 25340600 || //counterattack. //not needed using dash array.
+                id == 25340700 || //counterattack by fire. //not needed using dash array.
+                id == 25271200 || //Blown Bridges Planned //not needed using dash array.
+                id == 25271202 || //Blown Bridges Explosives, State of Readiness 1 (Safe) //not needed using dash array.
+                id == 25341200 // Follow and Assume //not needed using dash array.
+            )
+                shouldClip = true;//not using dash array so clip to not draw more lines than we have to
+        }
+
+        return shouldClip;
     }
 
     /**
@@ -465,6 +475,10 @@ export class MultiPointHandler {
      */
     static getReasonableScale(bbox: string, origScale: double): double {
         try {
+
+            if(!RendererSettings.getInstance().getAutoAdjustScale())
+                return origScale;
+            
             let bounds: string[] = bbox.split(",");
             let left: double = parseFloat(bounds[0]);
             let right: double = parseFloat(bounds[2]);
@@ -720,8 +734,21 @@ export class MultiPointHandler {
         //            NormalizeGECoordsToGEExtents(0, 360, geoCoords2);
         //        }
 
+        let useDashArray:boolean = true;
+        let useFillPattern:boolean = true;
+        if(symbolAttributes != null)
+        {
+            if(symbolAttributes.has(MilStdAttributes.UseDashArray) && 
+                symbolAttributes.get(MilStdAttributes.UseDashArray) != null &&
+                symbolAttributes.get(MilStdAttributes.UseDashArray).toLocaleLowerCase() === "false")
+                useDashArray = false;
+            if(symbolAttributes.has(MilStdAttributes.UsePatternFill) && 
+                symbolAttributes.get(MilStdAttributes.UsePatternFill) != null &&
+                symbolAttributes.get(MilStdAttributes.UsePatternFill).toLocaleLowerCase() === "false")
+                useFillPattern = false;
+        }
         //disable clipping
-        if (MultiPointHandler.ShouldClipSymbol(symbolCode) === false) {
+        if (MultiPointHandler.ShouldClipSymbol(symbolCode, useDashArray, useFillPattern) === false) {
 
             if (MultiPointHandler.crossesIDL(geoCoords) === false) {
                 rect = null;
@@ -1077,8 +1104,21 @@ export class MultiPointHandler {
         //            NormalizeGECoordsToGEExtents(0, 360, geoCoords2);
         //        }
 
+        let useDashArray:boolean = true;
+        let useFillPattern:boolean = true;
+        if(symbolAttributes != null)
+        {
+            if(symbolAttributes.has(MilStdAttributes.UseDashArray) && 
+                symbolAttributes.get(MilStdAttributes.UseDashArray) != null &&
+                symbolAttributes.get(MilStdAttributes.UseDashArray).toLocaleLowerCase() === "false")
+                useDashArray = false;
+            if(symbolAttributes.has(MilStdAttributes.UsePatternFill) && 
+                symbolAttributes.get(MilStdAttributes.UsePatternFill) != null &&
+                symbolAttributes.get(MilStdAttributes.UsePatternFill).toLocaleLowerCase() === "false")
+                useFillPattern = false;
+        }
         //disable clipping
-        if (MultiPointHandler.ShouldClipSymbol(symbolCode) === false) {
+        if (MultiPointHandler.ShouldClipSymbol(symbolCode, useDashArray, useFillPattern) === false) {
 
             if (MultiPointHandler.crossesIDL(geoCoords) === false) {
                 rect = null;
@@ -1339,7 +1379,21 @@ export class MultiPointHandler {
             //            {
             //                ((PointConversion)ipc).set_normalize(false);
             //            }
-            if (MultiPointHandler.ShouldClipSymbol(symbolCode) || MultiPointHandler.crossesIDL(geoCoords)) {
+
+            let useDashArray:boolean = true;
+            let useFillPattern:boolean = true;
+            if(symbolAttributes != null)
+            {
+                if(symbolAttributes.has(MilStdAttributes.UseDashArray) && 
+                    symbolAttributes.get(MilStdAttributes.UseDashArray) != null &&
+                    symbolAttributes.get(MilStdAttributes.UseDashArray).toLocaleLowerCase() === "false")
+                    useDashArray = false;
+                if(symbolAttributes.has(MilStdAttributes.UsePatternFill) && 
+                    symbolAttributes.get(MilStdAttributes.UsePatternFill) != null &&
+                    symbolAttributes.get(MilStdAttributes.UsePatternFill).toLocaleLowerCase() === "false")
+                    useFillPattern = false;
+            }
+            if (MultiPointHandler.ShouldClipSymbol(symbolCode, useDashArray, useFillPattern) || MultiPointHandler.crossesIDL(geoCoords)) {
                 let lt: Point2D = new Point2D(left, top);
                 //temp = ipc.GeoToPixels(new Point2D(left, top));
                 temp = ipc.GeoToPixels(lt);
