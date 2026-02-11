@@ -51,9 +51,9 @@ export class clsUtility {
             let hatch2: int = 0;
             let shape2: Shape2;
             let index: int = 0;
-            let hatchLineThickness: double = 1.5 + ((tg.get_LineThickness() / 2) - 1.5) * tg.get_patternScale();
+            let hatchLineThickness: double = (tg.get_LineThickness() * 0.75) * tg.get_patternScale();//1.5 + ((tg.get_LineThickness() / 2) - 1.5) * tg.get_patternScale();
             let hatchColor: Color = tg.get_LineColor();
-            let hatchSpacing: int = Math.trunc(hatchLineThickness * 10);
+            let hatchSpacing: int = Math.trunc(hatchLineThickness * 6);//Math.trunc(hatchLineThickness * 10);
 
             //            if(armyc2.c5isr.JavaTacticalRenderer.clsUtility.isClosedPolygon(lineType)==false)
             //                if(armyc2.c5isr.JavaTacticalRenderer.clsUtility.IsChange1Area(lineType, null)==false)
@@ -87,8 +87,9 @@ export class clsUtility {
                 case TacticalLines.RAD: {
                     hatchStyle = clsUtility.Hatch_BackwardDiagonal;
                     hatchColor = Color.yellow;
-                    hatchLineThickness = 1.5 + (tg.get_LineThickness() - 1.5) * tg.get_patternScale();
-                    hatchSpacing = Math.trunc(hatchLineThickness * 4);
+                    hatchLineThickness = (tg.get_LineThickness() * 0.85) * tg.get_patternScale();
+                    //hatchLineThickness = 1.5 + (tg.get_LineThickness() - 1.5) * tg.get_patternScale();
+                    //hatchSpacing = Math.trunc(hatchLineThickness * 4);
                     break;
                 }
 
