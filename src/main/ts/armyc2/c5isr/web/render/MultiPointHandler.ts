@@ -734,28 +734,6 @@ export class MultiPointHandler {
         //            NormalizeGECoordsToGEExtents(0, 360, geoCoords2);
         //        }
 
-        let useDashArray:boolean = true;
-        let useFillPattern:boolean = true;
-        if(symbolAttributes != null)
-        {
-            if(symbolAttributes.has(MilStdAttributes.UseDashArray) && 
-                symbolAttributes.get(MilStdAttributes.UseDashArray) != null &&
-                symbolAttributes.get(MilStdAttributes.UseDashArray).toLocaleLowerCase() === "false")
-                useDashArray = false;
-            if(symbolAttributes.has(MilStdAttributes.UsePatternFill) && 
-                symbolAttributes.get(MilStdAttributes.UsePatternFill) != null &&
-                symbolAttributes.get(MilStdAttributes.UsePatternFill).toLocaleLowerCase() === "false")
-                useFillPattern = false;
-        }
-        //disable clipping
-        if (MultiPointHandler.ShouldClipSymbol(symbolCode, useDashArray, useFillPattern) === false) {
-
-            if (MultiPointHandler.crossesIDL(geoCoords) === false) {
-                rect = null;
-                bboxCoords = null;
-            }
-        }
-
 
         tgl.set_SymbolId(symbolCode);// "GFGPSLA---****X" AMBUSH symbol code
         tgl.set_Pixels(null);
@@ -775,6 +753,15 @@ export class MultiPointHandler {
                 MultiPointHandler.populateModifiers(symbolModifiers, symbolAttributes, mSymbol);
             } else {
                 mSymbol.setFillColor(null);
+            }
+
+            //disable clipping
+            if (MultiPointHandler.ShouldClipSymbol(symbolCode, mSymbol.getUseDashArray(), mSymbol.getUseFillPattern()) === false) {
+
+                if (MultiPointHandler.crossesIDL(geoCoords) === false) {
+                    rect = null;
+                    bboxCoords = null;
+                }
             }
 
             if (bboxCoords == null) {
@@ -1104,27 +1091,7 @@ export class MultiPointHandler {
         //            NormalizeGECoordsToGEExtents(0, 360, geoCoords2);
         //        }
 
-        let useDashArray:boolean = true;
-        let useFillPattern:boolean = true;
-        if(symbolAttributes != null)
-        {
-            if(symbolAttributes.has(MilStdAttributes.UseDashArray) && 
-                symbolAttributes.get(MilStdAttributes.UseDashArray) != null &&
-                symbolAttributes.get(MilStdAttributes.UseDashArray).toLocaleLowerCase() === "false")
-                useDashArray = false;
-            if(symbolAttributes.has(MilStdAttributes.UsePatternFill) && 
-                symbolAttributes.get(MilStdAttributes.UsePatternFill) != null &&
-                symbolAttributes.get(MilStdAttributes.UsePatternFill).toLocaleLowerCase() === "false")
-                useFillPattern = false;
-        }
-        //disable clipping
-        if (MultiPointHandler.ShouldClipSymbol(symbolCode, useDashArray, useFillPattern) === false) {
 
-            if (MultiPointHandler.crossesIDL(geoCoords) === false) {
-                rect = null;
-                bboxCoords = null;
-            }
-        }
 
         tgl.set_SymbolId(symbolCode);// "GFGPSLA---****X" AMBUSH symbol code
         tgl.set_Pixels(null);
@@ -1146,6 +1113,15 @@ export class MultiPointHandler {
                 let fc: Color = mSymbol.getFillColor();
                 fillColor = RendererUtilities.colorToHexString(fc, false);
 
+            }
+
+            //disable clipping
+            if (MultiPointHandler.ShouldClipSymbol(symbolCode, mSymbol.getUseDashArray(), mSymbol.getUseFillPattern()) === false) {
+
+                if (MultiPointHandler.crossesIDL(geoCoords) === false) {
+                    rect = null;
+                    bboxCoords = null;
+                }
             }
 
             if (bboxCoords == null) {
@@ -1380,20 +1356,8 @@ export class MultiPointHandler {
             //                ((PointConversion)ipc).set_normalize(false);
             //            }
 
-            let useDashArray:boolean = true;
-            let useFillPattern:boolean = true;
-            if(symbolAttributes != null)
-            {
-                if(symbolAttributes.has(MilStdAttributes.UseDashArray) && 
-                    symbolAttributes.get(MilStdAttributes.UseDashArray) != null &&
-                    symbolAttributes.get(MilStdAttributes.UseDashArray).toLocaleLowerCase() === "false")
-                    useDashArray = false;
-                if(symbolAttributes.has(MilStdAttributes.UsePatternFill) && 
-                    symbolAttributes.get(MilStdAttributes.UsePatternFill) != null &&
-                    symbolAttributes.get(MilStdAttributes.UsePatternFill).toLocaleLowerCase() === "false")
-                    useFillPattern = false;
-            }
-            if (MultiPointHandler.ShouldClipSymbol(symbolCode, useDashArray, useFillPattern) || MultiPointHandler.crossesIDL(geoCoords)) {
+
+            if (MultiPointHandler.ShouldClipSymbol(symbolCode, mSymbol.getUseDashArray(), mSymbol.getUseFillPattern()) || MultiPointHandler.crossesIDL(geoCoords)) {
                 let lt: Point2D = new Point2D(left, top);
                 //temp = ipc.GeoToPixels(new Point2D(left, top));
                 temp = ipc.GeoToPixels(lt);

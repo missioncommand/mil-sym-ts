@@ -268,25 +268,6 @@ export class Shape3DHandler {
 
         let useDashArray:boolean = true;
         let useFillPattern:boolean = true;
-        if(symbolAttributes != null)
-        {
-            if(symbolAttributes.has(MilStdAttributes.UseDashArray) && 
-                symbolAttributes.get(MilStdAttributes.UseDashArray) != null &&
-                symbolAttributes.get(MilStdAttributes.UseDashArray).toLocaleLowerCase() === "false")
-                useDashArray = false;
-            if(symbolAttributes.has(MilStdAttributes.UsePatternFill) && 
-                symbolAttributes.get(MilStdAttributes.UsePatternFill) != null &&
-                symbolAttributes.get(MilStdAttributes.UsePatternFill).toLocaleLowerCase() === "false")
-                useFillPattern = false;
-        }
-        //disable clipping
-        if (MultiPointHandler.ShouldClipSymbol(symbolCode, useDashArray, useFillPattern) === false) {
-
-            if (MultiPointHandler.crossesIDL(geoCoords) === false) {
-                rect = null;
-                bboxCoords = null;
-            }
-        }
 
 
         tgl.set_SymbolId(symbolCode);// "GFGPSLA---****X" AMBUSH symbol code
@@ -307,6 +288,14 @@ export class Shape3DHandler {
                 MultiPointHandler.populateModifiers(symbolModifiers, symbolAttributes, mSymbol);
             } else {
                 mSymbol.setFillColor(null);
+            }
+
+            //disable clipping
+            if (MultiPointHandler.ShouldClipSymbol(symbolCode, mSymbol.getUseDashArray(), mSymbol.getUseFillPattern()) === false) {
+                if (MultiPointHandler.crossesIDL(geoCoords) === false) {
+                    rect = null;
+                    bboxCoords = null;
+                }
             }
 
             if (bboxCoords == null) {
