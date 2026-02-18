@@ -610,6 +610,31 @@ export class RendererUtilities {
 
     }
 
+    /**
+     * Searches an SVG string and increments all stroke-width values by 2.
+     * @param svgString The input SVG content as a string.
+     * @param increaseBy the number to add to the current stroke value
+     * @returns A new SVG string with updated stroke-width values.
+     */
+    public static  increaseStrokeWidth(svgString: string, increaseBy:number): string {
+    // Regex matches 'stroke-width="' followed by one or more digits/decimals
+    // and capturing the numeric part.
+    const strokeWidthRegex = /stroke-width="([\d.]+)"/g;
+  
+    return svgString.replace(strokeWidthRegex, (match, value) => {
+      const numericValue = parseFloat(value);
+      
+        // Check if the value is a valid number before adding
+        if (!isNaN(numericValue)) {
+            const newValue = numericValue + increaseBy;
+            return `stroke-width="${newValue}"`;
+        }
+
+        // Return original match if parsing fails
+        return match;
+        });
+    }
+
     public static getDistanceBetweenPoints(pt1:Point2D, pt2:Point2D):int
     {
         let distance:int = (Math.sqrt(Math.pow((pt2.getX() - pt1.getX()) ,2) + Math.pow((pt2.getY() - pt1.getY()) ,2))) as int;
