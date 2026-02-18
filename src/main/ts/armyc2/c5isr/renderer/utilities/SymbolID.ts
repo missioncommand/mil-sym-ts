@@ -111,6 +111,11 @@ export class SymbolID {
 
 
     //Version, 1-2 (Can't start with zero, will be 10 at a minimum)
+    public static readonly Version_APP6D = 10;
+    /**
+     * @deprecated 2525D(10) will be treated like APP6D(also 10)
+     * For 2525D use 2525Dch1(11)
+     */
     public static readonly Version_2525D: number = 10;
     public static readonly Version_2525Dch1: number = 11;
     /**

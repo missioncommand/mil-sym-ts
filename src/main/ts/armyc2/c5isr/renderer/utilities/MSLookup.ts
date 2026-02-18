@@ -22,9 +22,13 @@ export class MSLookup {
 
     private static _MSLookupD: Map<string, MSInfo>;
     private static _MSLookupE: Map<string, MSInfo>;
+    private static _MSLookup6D: Map<string, MSInfo>;
+    private static _MSLookup6E: Map<string, MSInfo>;
     //private TAG: string = "MSLookup";
     private _IDListD: Array<string> = [];
     private _IDListE: Array<string> = [];
+    private _IDList6D: Array<string> = [];
+    private _IDList6E: Array<string> = [];
     private static msdJSON:string = "/msd.json";
     private static mseJSON:string = "/mse.json";
 
@@ -100,8 +104,12 @@ export class MSLookup {
             MSLookup._initCalled = true;
             MSLookup._MSLookupD = new Map();
             MSLookup._MSLookupE = new Map();
+            MSLookup._MSLookup6D = new Map();
+            MSLookup._MSLookup6E = new Map();
             this._IDListD = new Array();
             this._IDListE = new Array();
+            this._IDList6D = new Array();
+            this._IDList6E = new Array();
 
             try 
             {
@@ -134,6 +142,7 @@ export class MSLookup {
             et: string;
             est: string;
             code: string;
+            versions: string;
             geometry?: string;
             drawRules?: string;
             modifiers?: string;
@@ -158,6 +167,7 @@ export class MSLookup {
             let e: string = ""
             let et: string = ""
             let est: string = ""
+            let versions: string = "";
             for (let JSONSymbol of msJSON) {
                 if (JSONSymbol.code.length != 6) {
                     JSONSymbol.code = "000000";
@@ -184,6 +194,11 @@ export class MSLookup {
                     est = JSONSymbol.est;
                 }
 
+                if(JSONSymbol.versions !== null && JSONSymbol.versions !=="")
+                {
+                    versions = JSONSymbol.versions;
+                }
+
                 intSS = parseInt(ss);
                 let id = ss + JSONSymbol.code;
                 if (JSONSymbol.code !== "000000") {
@@ -196,25 +211,33 @@ export class MSLookup {
 
                         let g: string = JSONSymbol.geometry || "";
                         let dr: string = JSONSymbol.drawRules || "";
-                        lookup.set(id, new MSInfo(version, ss, e, et, est, JSONSymbol.code, g, dr, this.populateModifierList(modifiers)));
+
+                        //multi points
+                        let verArr:string[] = versions.split(",");
+                        for(let ver of verArr)
+                            this.addToLookup(new MSInfo(parseInt(ver), ss, e, et, est, JSONSymbol.code, g, dr, this.populateModifierList(modifiers)));
                     } else {//Everything else
-                        //_MSLookupD.set(id, new MSInfo(ss, e, et, est, ec));
-                        lookup.set(id, new MSInfo(version, ss, e, et, est, JSONSymbol.code, this.populateModifierList(ss, JSONSymbol.code, version)));
+                        //single points
+                        let verArr:string[] = versions.split(",");
+                        for(let ver of verArr)
+                            this.addToLookup(new MSInfo(parseInt(ver), ss, e, et, est, JSONSymbol.code, this.populateModifierList(ss, JSONSymbol.code, version)));
                     }
-                    list.push(id);
+                    this.addToList(versions, id);
                 }
                 else if(intSS != SymbolID.SymbolSet_ControlMeasure &&
                     intSS != SymbolID.SymbolSet_Atmospheric &&
                     intSS != SymbolID.SymbolSet_Oceanographic &&
                     intSS != SymbolID.SymbolSet_MeteorologicalSpace)
                 {
-                    lookup.set(id, new MSInfo(version, ss, e, et, est, JSONSymbol.code, this.populateModifierList(ss,JSONSymbol.code, version)));
-                    list.push(id);
+                    let verArr:string[] = versions.split(",");
+                    for(let ver of verArr)
+                        this.addToLookup(new MSInfo(parseInt(ver), ss, e, et, est, JSONSymbol.code, this.populateModifierList(ss,JSONSymbol.code, version)));
+                    this.addToList(versions, id);
                 }
             }
             if(version < SymbolID.Version_2525E)//add handful of SymbolID.Version_2525D codes to lookup
             {
-                this.AddVersion10Symbols(lookup);
+                //this.AddVersion10Symbols(lookup);
             }
         } 
         catch (exc) 
@@ -225,6 +248,66 @@ export class MSLookup {
                 throw exc;
             }
         }
+    }
+
+    private addToLookup(msi:MSInfo):void
+    {
+        let version:number = msi.getVersion();
+        if(version==SymbolID.Version_2525Dch1)
+            MSLookup._MSLookupD.set(msi.getBasicSymbolID(), msi);
+        if(version==SymbolID.Version_APP6D)
+            MSLookup._MSLookup6D.set(msi.getBasicSymbolID(), msi);
+        if(version==SymbolID.Version_2525Ech1)
+            MSLookup._MSLookupE.set(msi.getBasicSymbolID(), msi);
+        if(version==SymbolID.Version_APP6Ech2)
+            MSLookup._MSLookup6E.set(msi.getBasicSymbolID(), msi);
+    }
+
+    private addCustomToLookupAndList(msi:MSInfo):boolean
+    {
+        let success:boolean = false;
+        let version:number = msi.getVersion();
+        if(version==SymbolID.Version_2525Dch1) {
+            if(!MSLookup._MSLookupD.has(msi.getBasicSymbolID())) {
+                MSLookup._MSLookupD.set(msi.getBasicSymbolID(), msi);
+                this._IDListD.push(msi.getBasicSymbolID());
+                success = true;
+            }
+        }
+        if(version==SymbolID.Version_APP6D){
+            if (!MSLookup._MSLookup6D.has(msi.getBasicSymbolID())) {
+                MSLookup._MSLookup6D.set(msi.getBasicSymbolID(), msi);
+                this._IDList6D.push(msi.getBasicSymbolID());
+                success = true;
+            }
+        }
+        if(version==SymbolID.Version_2525Ech1){
+            if(!MSLookup._MSLookupE.has(msi.getBasicSymbolID())) {
+                MSLookup._MSLookupE.set(msi.getBasicSymbolID(), msi);
+                this._IDListE.push(msi.getBasicSymbolID());
+                success = true;
+            }
+        }
+        if(version==SymbolID.Version_APP6Ech2) {
+            if(!MSLookup._MSLookup6E.has(msi.getBasicSymbolID())) {
+                MSLookup._MSLookup6E.set(msi.getBasicSymbolID(), msi);
+                this._IDList6E.push(msi.getBasicSymbolID());
+                success = true;
+            }
+        }
+        return success;
+    }
+
+    private addToList(versions:string, basicSymbolID:string):void
+    {
+        if(versions.indexOf(SymbolID.Version_2525Dch1.toString())>=0)
+            this._IDListD.push(basicSymbolID);
+        if(versions.indexOf(SymbolID.Version_APP6D.toString())>=0)
+            this._IDList6D.push(basicSymbolID);
+        if(versions.indexOf(SymbolID.Version_2525Ech1.toString())>=0)
+            this._IDListE.push(basicSymbolID);
+        if(versions.indexOf(SymbolID.Version_APP6Ech2.toString())>=0)
+            this._IDList6E.push(basicSymbolID);
     }
 
     private AddVersion10Symbols(lookup:Map<String,MSInfo>):void
@@ -895,17 +978,16 @@ export class MSLookup {
 
                 let length: number = basicID.length;
                 if (length === 8) {
-                    if (version >= SymbolID.Version_2525E) {
-                        return MSLookup._MSLookupE.get(basicID) || null;
-                    } else if (version === SymbolID.Version_2525D && basicID === "25272100") {
-                        // MSDZ can have extra point in D
-                        return new MSInfo(SymbolID.Version_2525D, "25",
-                                "Protection Areas", "Minimum Safe Distance Zone", "",
-                                "272100", "Area", "Area14", []);
-                    } else {
-                        return MSLookup._MSLookupD.get(basicID) || null;
-                    }
-                } else {
+                    if (version == SymbolID.Version_2525E || version == SymbolID.Version_2525Ech1)
+                        return MSLookup._MSLookupE.get(basicID);
+                    else if (version == SymbolID.Version_APP6Ech2 || version == SymbolID.Version_APP6Ech1)
+                        return MSLookup._MSLookup6E.get(basicID);
+                    else if (version == SymbolID.Version_APP6D || version == SymbolID.Version_APP6Dch2)
+                        return MSLookup._MSLookup6D.get(basicID);
+                    else
+                        return MSLookup._MSLookupD.get(basicID);
+                }
+                else {
                     if (length >= 20 && length <= 30)//probably got a full id instead of a basic ID.
                     {
                         return this.getMSLInfo(SymbolUtilities.getBasicSymbolID(basicID), version);
@@ -927,49 +1009,34 @@ export class MSLookup {
      * @return 
      */
     public getIDList(version: number): Array<string> {
-        if (version < SymbolID.Version_2525E) {
-            return this._IDListD;
-        } else if (version >= SymbolID.Version_2525E) {
+        if (version == SymbolID.Version_2525E || version == SymbolID.Version_2525Ech1)
             return this._IDListE;
-        } else {
+        else if (version == SymbolID.Version_APP6D || version == SymbolID.Version_APP6Dch2)
+            return this._IDList6D;
+        else if (version == SymbolID.Version_2525Dch1)
             return this._IDListD;
-        }
+        else if (version == SymbolID.Version_APP6Ech1 || version == SymbolID.Version_APP6Ech2)
+            return this._IDList6E;
+        else//default to 2525Dch1
+            return this._IDListD;
     }
 
     public addCustomSymbol(msInfo:MSInfo):boolean
     {
-        let success = false;
+        let success:boolean = false;
         try
         {
-            let version:number = msInfo.getVersion();
-            if (version < SymbolID.Version_2525E) 
-            {
-                if(this._IDListD.indexOf(msInfo.getBasicSymbolID()) == -1)
-                {
-                    this._IDListD.push(msInfo.getBasicSymbolID());
-                    MSLookup._MSLookupD.set(msInfo.getBasicSymbolID(), msInfo);
-                    success = true;
-                }
-                else
-                    ErrorLogger.LogMessage("Symbol Set and Entity Code combination already exist: " + msInfo.getBasicSymbolID(), LogLevel.INFO,false);
-            }
-            else if (version >= SymbolID.Version_2525E) 
-            {
-                if(this._IDListE.indexOf(msInfo.getBasicSymbolID()) == -1)
-                {
-                    this._IDListE.push(msInfo.getBasicSymbolID());
-                    MSLookup._MSLookupE.set(msInfo.getBasicSymbolID(), msInfo);
-                    success = true;
-                }
-                else
-                    ErrorLogger.LogMessage("Symbol Set and Entity Code combination already exist: " + msInfo.getBasicSymbolID(), LogLevel.INFO,false);
-            }
+            if(msInfo != null)
+                success = this.addCustomToLookupAndList(msInfo);
+            else
+                ErrorLogger.LogMessage("Attempt to add custom msInfo with null object.",LogLevel.INFO,false);
+            if(msInfo != null && !success)
+                ErrorLogger.LogMessage("Symbol Set and Entity Code combination already exist: " + msInfo.getBasicSymbolID(),LogLevel.INFO,false);
         }
-        catch(e)
+        catch(exc)
         {
-            if (e instanceof Error) {
-                ErrorLogger.LogException("MSLookup", "addCustomSymbol",e);
-            }
+            if(exc instanceof Error)
+            ErrorLogger.LogException("MSLookup", "addCustomSymbol",exc);
         }
         return success;
         

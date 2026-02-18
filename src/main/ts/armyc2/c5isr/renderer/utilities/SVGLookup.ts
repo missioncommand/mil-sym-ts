@@ -175,6 +175,10 @@ export class SVGLookup
      * @return
      */
     public getSVGLInfo(id: string, version: number): SVGInfo | null {
+
+        if(id.startsWith("27") && version < SymbolID.Version_2525E)
+            version = SymbolID.Version_2525E;
+        
         if (version >= SymbolID.Version_2525E) {
             if (SVGLookup._SVGLookupE.has(id)) {
 
