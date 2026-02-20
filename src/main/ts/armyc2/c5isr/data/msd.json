@@ -12796,6 +12796,46 @@
       {
         "ss": "",
         "e": "",
+        "et": "Service Branch",
+        "est": "",
+        "code": "110100",
+        "versions": "10"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Infantry",
+        "code": "110101",
+        "versions": "10"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Medical",
+        "code": "110102",
+        "versions": "10"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Reconnaissance",
+        "code": "110103",
+        "versions": "10"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Signal",
+        "code": "110104",
+        "versions": "10"
+      },
+      {
+        "ss": "",
+        "e": "",
         "et": "Activity/Task",
         "est": "",
         "code": "110200",
