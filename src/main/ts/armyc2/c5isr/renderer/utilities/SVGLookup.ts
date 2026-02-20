@@ -373,182 +373,189 @@ export class SVGLookup
                 mainIconID += "_a";
             }
         }
-        else {
-            if (ss === SymbolID.SymbolSet_LandUnit) {
-                switch (SymbolID.getEntityCode(symbolID)) {
-                    case 111000:
-                    case 111001:
-                    case 111002:
-                    case 111003:
-                    case 111004:
-                    case 111005:
-                    case 111500:
-                    case 120100:
-                    case 120300:
-                    case 120400:
-                    case 120401:
-                    case 120402:
-                    case 120501:
-                    case 120502:
-                    case 120601:
-                    case 120801:
-                    case 121100:
-                    case 121101:
-                    case 121102:
-                    case 121103:
-                    case 121104:
-                    case 121105:
-                    case 121106:
-                    case 121107:
-                    case 121300:
-                    case 121301:
-                    case 121302:
-                    case 121303:
-                    case 121304:
-                    case 121802:
-                    case 122100:
-                    case 130100:
-                    case 130101:
-                    case 130102:
-                    case 130103:
-                    case 130200:
-                    case 130302:
-                    case 130303:
-                    case 140102:
-                    case 140103:
-                    case 140104:
-                    case 140105:
-                    case 140702:
-                    case 140703:
-                    case 141702:
-                    case 150504:
-                    case 150800:
-                    case 160200:
-                    case 161200:
-                    case 161300:
-                    case 161400:
-                    case 161700:
-                    case 161800:
-                    case 161900:
-                    case 162000:
-                    case 162100:
-                    case 162200:
-                    case 163400:
-                    case 163700:
-                    case 163800:
-                    case 163900:
-                    case 164000:
-                    case 164100:
-                    case 164200:
-                    case 164300:
-                    case 164400:
-                    case 164500:
-                    case 164600:
-                    case 165000: {//NATO Only
-                        //do thing to append correct number
-                        mainIconID += SVGLookup.getPostFixForIcon(symbolID);
-                        break;
-                    }
+        else if (ss === SymbolID.SymbolSet_LandUnit) 
+        {
+            switch (SymbolID.getEntityCode(symbolID)) 
+            {
+                case 110501:
+                case 111000:
+                case 111001:
+                case 111002:
+                case 111003:
+                case 111004:
+                case 111005:
+                case 111500:
+                case 120100:
+                case 120300:
+                case 120400:
+                case 120401:
+                case 120402:
+                case 120501:
+                case 120502:
+                case 120601:
+                case 120801:
+                case 121100:
+                case 121101:
+                case 121102:
+                case 121103:
+                case 121104:
+                case 121105:
+                case 121106:
+                case 121107:
+                case 121300:
+                case 121301:
+                case 121302:
+                case 121303:
+                case 121304:
+                case 121802:
+                case 122100:
+                case 130100:
+                case 130101:
+                case 130102:
+                case 130103:
+                case 130200:
+                case 130302:
+                case 130303:
+                case 140102:
+                case 140103:
+                case 140104:
+                case 140105:
+                case 140702:
+                case 140703:
+                case 141702:
+                case 150504:
+                case 150800:
+                case 160200:
+                case 161200:
+                case 161300:
+                case 161400:
+                case 161700:
+                case 161800:
+                case 161900:
+                case 162000:
+                case 162100:
+                case 162200:
+                case 163400:
+                case 163700:
+                case 163800:
+                case 163900:
+                case 164000:
+                case 164100:
+                case 164200:
+                case 164300:
+                case 164400:
+                case 164500:
+                case 164600:
+                case 165000: {//NATO Only
+                    //do thing to append correct number
+                    mainIconID += SVGLookup.getPostFixForIcon(symbolID);
+                    break;
+                }
 
-                    default: {
-                        break;
-                    }
+                default: {
+                    break;
+                }
 
+            } 
+
+        }
+        else if (ss === SymbolID.SymbolSet_LandEquipment) 
+        {
+            switch (SymbolID.getEntityCode(symbolID)) 
+            {
+                case 120111: {
+                    //do thing to append correct number
+                    mainIconID += SVGLookup.getPostFixForIcon(symbolID);
+                    break;
+                }
+
+                default: {
+                    break;
+                }
+
+            } 
+        }
+        else if (ss === SymbolID.SymbolSet_LandInstallation) 
+        {
+            switch (SymbolID.getEntityCode(symbolID)) 
+            {
+                case 110300:
+                case 111200:
+                case 120103:
+                case 120105:
+                case 120106:
+                case 120107:
+                case 120701:
+                case 120702: {
+                    //do thing to append correct number
+                    mainIconID += SVGLookup.getPostFixForIcon(symbolID);
+                    break;
+                }
+
+                default: {
+                    break;
                 }
 
             }
-            else {
-                if (ss === SymbolID.SymbolSet_LandEquipment) {
-                    switch (SymbolID.getEntityCode(symbolID)) {
-                        case 120111: {
-                            //do thing to append correct number
-                            mainIconID += SVGLookup.getPostFixForIcon(symbolID);
-                            break;
-                        }
-
-                        default: {
-                            break;
-                        }
-
-                    }
+        }
+        else if(ss === SymbolID.SymbolSet_DismountedIndividuals)
+        {
+            switch (SymbolID.getEntityCode(symbolID))
+            {
+                case 110101:
+                case 110102:
+                case 110103:
+                case 110104:
+                    //do thing to append correct number
+                    mainIconID += SVGLookup.getPostFixForIcon(symbolID);
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (ss === SymbolID.SymbolSet_Activities) 
+        {
+            switch (SymbolID.getEntityCode(symbolID)) 
+            {
+                case 110303:
+                case 130201:
+                case 131202:
+                case 131208: {
+                    //do thing to append correct number
+                    mainIconID += SVGLookup.getPostFixForIcon(symbolID);
+                    break;
                 }
-                else {
-                    if (ss === SymbolID.SymbolSet_LandInstallation) {
-                        switch (SymbolID.getEntityCode(symbolID)) {
-                            case 110300:
-                            case 111200:
-                            case 120103:
-                            case 120105:
-                            case 120106:
-                            case 120107:
-                            case 120701:
-                            case 120702: {
-                                //do thing to append correct number
-                                mainIconID += SVGLookup.getPostFixForIcon(symbolID);
-                                break;
-                            }
 
-                            default: {
-                                break;
-                            }
-
-                        }
-                    }
-                    else {
-                        if (ss === SymbolID.SymbolSet_Activities) {
-                            switch (SymbolID.getEntityCode(symbolID)) {
-                                case 110303:
-                                case 130201:
-                                case 131202:
-                                case 131208: {
-                                    //do thing to append correct number
-                                    mainIconID += SVGLookup.getPostFixForIcon(symbolID);
-                                    break;
-                                }
-
-                                default: {
-                                    break;
-                                }
-
-                            }
-                        }
-                        else {
-                            if (ss === SymbolID.SymbolSet_Unknown) {
-
-                                mainIconID = "00000000";
-                            }
-                            //unknown with question mark
-                            else {
-                                if (ss !== SymbolID.SymbolSet_Air &&
-                                    ss !== SymbolID.SymbolSet_AirMissile &&
-                                    ss !== SymbolID.SymbolSet_Space &&
-                                    ss !== SymbolID.SymbolSet_SpaceMissile &&
-                                    ss !== SymbolID.SymbolSet_LandCivilianUnit_Organization &&
-                                    ss !== SymbolID.SymbolSet_DismountedIndividuals &&
-                                    ss !== SymbolID.SymbolSet_ControlMeasure &&
-                                    ss !== SymbolID.SymbolSet_SeaSurface &&
-                                    ss !== SymbolID.SymbolSet_SeaSubsurface &&
-                                    ss !== SymbolID.SymbolSet_Atmospheric &&
-                                    ss !== SymbolID.SymbolSet_Oceanographic &&
-                                    ss !== SymbolID.SymbolSet_MeteorologicalSpace &&
-                                    ss !== SymbolID.SymbolSet_SignalsIntelligence_Space &&
-                                    ss !== SymbolID.SymbolSet_SignalsIntelligence_Air &&
-                                    ss !== SymbolID.SymbolSet_SignalsIntelligence_Land &&
-                                    ss !== SymbolID.SymbolSet_SignalsIntelligence_SeaSurface &&
-                                    ss !== SymbolID.SymbolSet_SignalsIntelligence_SeaSubsurface &&
-                                    ss !== SymbolID.SymbolSet_CyberSpace) {
-                                    mainIconID = "98100000";//invalid symbol, inverted question mark
-                                }
-                            }
-
-                        }
-
-                    }
-
+                default: {
+                    break;
                 }
 
             }
-
+        }
+        else if (ss === SymbolID.SymbolSet_Unknown) 
+        {
+            mainIconID = "00000000";
+        }
+        //unknown with question mark
+        else if (ss !== SymbolID.SymbolSet_Air &&
+                    ss !== SymbolID.SymbolSet_AirMissile &&
+                    ss !== SymbolID.SymbolSet_Space &&
+                    ss !== SymbolID.SymbolSet_SpaceMissile &&
+                    ss !== SymbolID.SymbolSet_LandCivilianUnit_Organization &&
+                    ss !== SymbolID.SymbolSet_ControlMeasure &&
+                    ss !== SymbolID.SymbolSet_SeaSurface &&
+                    ss !== SymbolID.SymbolSet_SeaSubsurface &&
+                    ss !== SymbolID.SymbolSet_Atmospheric &&
+                    ss !== SymbolID.SymbolSet_Oceanographic &&
+                    ss !== SymbolID.SymbolSet_MeteorologicalSpace &&
+                    ss !== SymbolID.SymbolSet_SignalsIntelligence_Space &&
+                    ss !== SymbolID.SymbolSet_SignalsIntelligence_Air &&
+                    ss !== SymbolID.SymbolSet_SignalsIntelligence_Land &&
+                    ss !== SymbolID.SymbolSet_SignalsIntelligence_SeaSurface &&
+                    ss !== SymbolID.SymbolSet_SignalsIntelligence_SeaSubsurface &&
+                    ss !== SymbolID.SymbolSet_CyberSpace) 
+        {
+            mainIconID = "98100000";//invalid symbol, inverted question mark
         }
 
 

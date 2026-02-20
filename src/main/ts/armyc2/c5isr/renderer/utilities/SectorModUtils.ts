@@ -111,12 +111,14 @@ export class SectorModUtils {
         let id = null;
         let sb:string = null;
         let sectorList:Array<string[]> = null;
+        let sectorList6:Array<string[]> = null;
 
         type modIn = 
         {
             "name": string;
             "category": string;
             "code": string;
+            "versions": string;
         }
 
         let smJSON: modIn[];
@@ -139,32 +141,48 @@ export class SectorModUtils {
 
             for (const modifier of smJSON) 
             {
-                if(modifier != null && modifier["code"]==="")
+                if(modifier != null && modifier["versions"]==="")
                 {
-                    if(sectorList !== null && sectorList.length > 0)
+                    let vers = modifier["code"].split(",");
+                    for(let v of vers)
                     {
-                        id = ver + "-" + ss + "-" + l;
-                        SectorModUtils._sectorModLists.set(id,sectorList);
-                    }
+                        id = v + "-" + ss + "-" + l;
 
+                        if(parseInt(v) == SymbolID.Version_2525Ech1 || parseInt(v) == SymbolID.Version_2525Dch1)
+                            SectorModUtils._sectorModLists.set(id,sectorList);
+                        else
+                            SectorModUtils._sectorModLists.set(id,sectorList6);
+                    }
+                    
                     //get symbol set
                     ss = parseInt(modifier["name"].split(" ")[0]);
                     //get location; 1=top, 2=bottom
                     l = parseInt(modifier["category"]);
                     //start new list
+
+
                     sectorList = new Array<string[]>();
+                    sectorList6 = new Array<string[]>();                    
                 }
-                else // code is not empty string so a valid modifier
+                else // versions is not empty string so a valid modifier
                 {
                     name = modifier["name"];
                     code = modifier["code"];
                     if(code.length==1)
                         code = "0" + code;
 
-                    id = ver + "-" + ss + "-" + l + "-" + code;
-                    entry = [code,name];
-                    sectorList.push(entry);
-                    SectorModUtils._sectorMods.set(id, name);
+                    let vers = modifier["code"].split(",");
+                    for(let v of vers){
+                        id = v + "-" + ss + "-" + l + "-" + code;
+                        entry = [code,name];
+
+                        if(parseInt(v) == SymbolID.Version_2525Ech1 || parseInt(v) == SymbolID.Version_2525Dch1)
+                            sectorList.push(entry);
+                        else
+                            sectorList6.push(entry);
+
+                        SectorModUtils._sectorMods.set(id, name);
+                    }
                 }
                 
             }
