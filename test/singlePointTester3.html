@@ -639,8 +639,9 @@
             try
             {
             var smu = C5Ren.SectorModUtils.getInstance();
-            var name = smu.getName(11,1,1,"01");
-            var al = smu.getSectorModList(11,1,1);
+            var name = smu.getName(11,1,1,"01");//ver, symbol set, sector location, code
+            var alDch1 = smu.getSectorModList(11,1,1);//ver, symbol set, sector location
+            var alAPP6D = smu.getSectorModList(10,1,1);//ver, symbol set, sector location
             name = smu.getName(15,0,1,"100");
             console.log(name);
             }

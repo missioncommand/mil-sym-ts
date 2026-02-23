@@ -141,17 +141,20 @@ export class SectorModUtils {
 
             for (const modifier of smJSON) 
             {
-                if(modifier != null && modifier["versions"]==="")
+                if(modifier != null && (modifier["versions"]===undefined || modifier["versions"]===""))
                 {
-                    let vers = modifier["code"].split(",");
-                    for(let v of vers)
+                    if(sectorList != null && sectorList.length > 0)
                     {
-                        id = v + "-" + ss + "-" + l;
+                        let vers = modifier["code"].split(",");
+                        for(let v of vers)
+                        {
+                            id = v + "-" + ss + "-" + l;
 
-                        if(parseInt(v) == SymbolID.Version_2525Ech1 || parseInt(v) == SymbolID.Version_2525Dch1)
-                            SectorModUtils._sectorModLists.set(id,sectorList);
-                        else
-                            SectorModUtils._sectorModLists.set(id,sectorList6);
+                            if(parseInt(v) == SymbolID.Version_2525Ech1 || parseInt(v) == SymbolID.Version_2525Dch1)
+                                SectorModUtils._sectorModLists.set(id,sectorList);
+                            else
+                                SectorModUtils._sectorModLists.set(id,sectorList6);
+                        }
                     }
                     
                     //get symbol set
@@ -171,7 +174,7 @@ export class SectorModUtils {
                     if(code.length==1)
                         code = "0" + code;
 
-                    let vers = modifier["code"].split(",");
+                    let vers = modifier["versions"].split(",");
                     for(let v of vers){
                         id = v + "-" + ss + "-" + l + "-" + code;
                         entry = [code,name];
@@ -206,9 +209,11 @@ export class SectorModUtils {
      */
     public getSectorModList(version:number, symbolSet:number, location:number):Array<string[]>
     {
-        let ver:number = SymbolID.Version_2525Dch1;
-        if(version >= SymbolID.Version_2525E )
+        let ver:number = version;
+        if(version == SymbolID.Version_2525E)
             ver = SymbolID.Version_2525Ech1;
+        if(version == SymbolID.Version_APP6Ech1)
+            ver = SymbolID.Version_APP6Ech2;
 
         let ss:number = symbolSet;
         if (ss > 50 && ss < 60)
@@ -237,9 +242,11 @@ export class SectorModUtils {
     public getName(version:number, symbolSet:number, location:number, code:string):string
     {
 
-        let ver:number = SymbolID.Version_2525Dch1;
-        if(version >= SymbolID.Version_2525E )
+        let ver:number = version;
+        if(version == SymbolID.Version_2525E)
             ver = SymbolID.Version_2525Ech1;
+        if(version == SymbolID.Version_APP6Ech1)
+            ver = SymbolID.Version_APP6Ech2;
 
         let ss:number = symbolSet;
         if (ss > 50 && ss < 60)
