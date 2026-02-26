@@ -6400,12 +6400,13 @@
         "ss": "",
         "e": "",
         "et": "Supporting Attack",
-        "est": "152300",
-        "code": "16",
-        "versions": "Line",
-        "geometry": "Axis1",
-        "drawRules": "T,H",
-        "modifiers": ""
+        "est": "",
+        "code": "152300",
+        "versions": "16",
+        "geometry": "Line",
+        "drawRules": "Axis1",
+        "modifiers": "T,H",
+        "aux1": ""
       },
       {
         "ss": "",
