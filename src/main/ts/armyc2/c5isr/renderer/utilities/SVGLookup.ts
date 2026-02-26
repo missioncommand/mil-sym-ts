@@ -7,6 +7,8 @@ import { RendererUtilities } from "./RendererUtilities";
 
 import jsond from '../../data/svgd.json';
 import jsone from '../../data/svge.json';
+import json6d from '../../data/svg6d.json';
+import json6e from '../../data/svg6e.json';
 
 export class SVGLookup
 {
@@ -15,12 +17,18 @@ export class SVGLookup
     private static _isReady: boolean = false;
     private static _SVGLookupD: Map<string, SVGInfo>;
     private static _SVGLookupE: Map<string, SVGInfo>;
+    private static _SVGLookup6D: Map<string, SVGInfo>;
+    private static _SVGLookup6E: Map<string, SVGInfo>;
 
     private static svgd:any;
     private static svge:any;
+    private static svg6d:any;
+    private static svg6e:any;
 
     private static svgdJSON:string = "/svgd.json";
     private static svgeJSON:string = "/svge.json";
+    private static svg6dJSON:string = "/svg6d.json";
+    private static svg6eJSON:string = "/svg6e.json";
 
     /*public static async loadData(location?:string)
     {
@@ -85,19 +93,31 @@ export class SVGLookup
         {
             SVGLookup.svgd = jsond;
             SVGLookup.svge = jsone;
+            SVGLookup.svg6d = json6d;
+            SVGLookup.svg6e = json6e;
         }
 
         if (SVGLookup._initCalled === false) {
             SVGLookup._initCalled = true;
             SVGLookup._SVGLookupD = new Map();
             SVGLookup._SVGLookupE = new Map();
+            SVGLookup._SVGLookup6D = new Map();
+            SVGLookup._SVGLookup6E = new Map();
             try 
             {
                 //TODO: potentially wrap this in a web worker.
                 this.populateLookup(SVGLookup.svgd, SymbolID.Version_2525Dch1);
-                this.populateLookup(SVGLookup.svge, SymbolID.Version_2525E);
-                if(SVGLookup._SVGLookupD.size > 0 && SVGLookup._SVGLookupD.size > 0)
+                this.populateLookup(SVGLookup.svge, SymbolID.Version_2525Ech1);
+                this.populateLookup(SVGLookup.svg6d, SymbolID.Version_APP6D);
+                this.populateLookup(SVGLookup.svg6e, SymbolID.Version_APP6Ech2);
+                if(SVGLookup._SVGLookupD.size > 0 && SVGLookup._SVGLookupE.size > 0
+                    && SVGLookup._SVGLookup6D.size > 0 && SVGLookup._SVGLookup6E.size > 0)
                     SVGLookup._isReady = true;
+
+                    console.log("D Size: " + SVGLookup._SVGLookupD.size);
+                    console.log("E Size: " + SVGLookup._SVGLookupE.size);
+                    console.log("6D Size: " + SVGLookup._SVGLookup6D.size);
+                    console.log("6E Size: " + SVGLookup._SVGLookup6E.size);
 
             } 
             catch (exc) 
@@ -126,17 +146,25 @@ export class SVGLookup
         try 
         {
 
-            let lookup: Map<string, SVGInfo>;
+            let lookup: Map<string, SVGInfo> = null;
 
-            if (version >= SymbolID.Version_2525E) {
-
+            if(version == SymbolID.Version_2525E || version == SymbolID.Version_2525Ech1)
+            {
                 lookup = SVGLookup._SVGLookupE;
             }
-
-            else {
-
+            else if(version == SymbolID.Version_2525Dch1)
+            {
                 lookup = SVGLookup._SVGLookupD;
             }
+            else if(version == SymbolID.Version_APP6D)// || version == SymbolID.Version_APP6Dch2)
+            {
+                lookup = SVGLookup._SVGLookup6D;
+            }
+            else if(version == SymbolID.Version_APP6Ech1 || version == SymbolID.Version_APP6Ech2)
+            {
+                lookup = SVGLookup._SVGLookup6E;
+            }
+
 
             let svgCount:number = svgData.svgdata.SVGElements.length;
 
@@ -167,7 +195,8 @@ export class SVGLookup
                         svg = RendererUtilities.increaseStrokeWidth(svg, 2);
                     }//*/
 
-                    lookup.set(id, new SVGInfo(id, bbox, svg));
+                    if(lookup != null)
+                        lookup.set(id, new SVGInfo(id, bbox, svg));
                 }
             }
         }
@@ -183,23 +212,32 @@ export class SVGLookup
      */
     public getSVGLInfo(id: string, version: number): SVGInfo | null {
 
-        if(id.startsWith("27") && version < SymbolID.Version_2525E)
-            version = SymbolID.Version_2525E;
-        
-        if (version >= SymbolID.Version_2525E) {
-            if (SVGLookup._SVGLookupE.has(id)) {
-
-                return SVGLookup._SVGLookupE.get(id);
+        if(version == SymbolID.Version_2525E || version == SymbolID.Version_2525Ech1)
+            {
+                if (SVGLookup._SVGLookupE.has(id))
+                    return SVGLookup._SVGLookupE.get(id);
             }
-
-        }
-        else {
-            if (SVGLookup._SVGLookupD.has(id)) {
-
-                return SVGLookup._SVGLookupD.get(id);
+            else if(version == SymbolID.Version_2525Dch1)
+            {
+                if (SVGLookup._SVGLookupD.has(id))
+                    return SVGLookup._SVGLookupD.get(id);
             }
-
-        }
+            else if(version == SymbolID.Version_APP6Ech2 || version == SymbolID.Version_APP6Ech1)
+            {
+                if (SVGLookup._SVGLookup6E.has(id))
+                    return SVGLookup._SVGLookup6E.get(id);
+                else if (SVGLookup._SVGLookupE.has(id))
+                    return SVGLookup._SVGLookupE.get(id);
+            }
+            else if(version == SymbolID.Version_APP6D)
+            {
+                if (SVGLookup._SVGLookup6D.has(id))
+                    return SVGLookup._SVGLookup6D.get(id);
+                else if (SVGLookup._SVGLookupD.has(id))
+                    return SVGLookup._SVGLookupD.get(id);
+                else if (SVGLookup._SVGLookupE.has(id))//Dismounted Individual
+                    return SVGLookup._SVGLookupE.get(id);
+            }
 
         return null;
     }

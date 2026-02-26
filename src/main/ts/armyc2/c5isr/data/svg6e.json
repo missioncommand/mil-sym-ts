@@ -203,6 +203,14 @@
     "SVG": "<g id=\"25271801\">        <path d=\"M48.475,173.975L105.5,116 M49.167,182.833   l76.22-75.666 M51.5,191.998l90.443-91.374 M52.5,200L155.44,97.308 M54.833,208.167L167.424,95.659 M55.167,218.534   L179.739,94.405 M57.5,226.5L189.578,93.659 M57.833,236.088L199.867,94.405 M59.5,244.5L208.373,95.659 M61.167,253.5   L221.9,92.399 M64.167,260.5L228.71,96 M70.5,263.833L236.999,97.747 M78.5,266.833L246.505,98 M87.277,268.5L256.032,98.741    M194.34,292.521l146.494-146.21 M204.676,292.521L349.5,147.654 M215.99,291.324L357.167,150.5 M229.244,288.639l133.795-134.102    M158.5,287.833l148.334-149.227 M166.167,290.324L316.5,140.167 M174.459,292.521l149.873-150.498 M185.3,292.521l147.999-148.337    M96.722,268.5L264.787,99.362 M252.322,285.986l114.884-114.66 M263.962,284.628l104.351-105.265 M274.891,283.891l93.422-94.001    M286.578,281.855l81.734-81.022 M240.338,287.833L365.964,161.92 M301.598,277.266l66.715-66.136 M338.167,250.833l29.146-29.845    M105.5,270.167l168.034-168.654 M115.5,270.167l163.625-164.264 M125.387,270.167l158.925-159.179 M133.937,271.833   l154.502-154.067 M141.534,274.833l151.655-151.666 M151.5,283.891l150.098-149.3 M146.438,278.833l150.289-149.266\" fill=\"none\" stroke=\"#FFFF00\" stroke-miterlimit=\"10\" stroke-width=\"2\"/>        <path d=\"   M211.646,94.092c-20.781-6.726-44.775,0.263-66.083,2.969c-20.782,5.11-36.958,17.249-56.913,23.973   c-13.754,20.763-5.131,15.896-21.044,21.025c-5.938,5.918-11.876,11.855-17.793,17.773c-2.162,2.161-6.221,6.2-6.221,6.2   c2.442,14.825,5.675,27.489,9.189,41.767c0.262,2.161,4.583,43.119,5.917,47.967c4.585,15.353,27.528,13.475,38.858,14.826   c38.555,4.301,18.601,0.809,45.037,6.198c21.854,32.86,85.494,12.666,110.861,11.858c18.884-2.162,41.261-2.162,56.914-14.828   c5.107-4.038,6.745-11.592,12.139-15.086c5.393-3.229,12.136-4.039,18.059-5.938c2.969-1.071,8.901-2.969,8.901-2.969   c7.292-7.819,10.263-16.704,18.077-23.978c1.07-2.97,2.969-5.918,2.969-9.168c0-19.937,2.688-40.678-2.969-59.804   c-2.161-7.008-11.068-10.239-18.077-11.855c-29.93-7.291-15.912-4.584-42.065-8.907c-16.724-11.572-18.339-35.828-41.811-39.06   c-10.784-1.616-21.852-1.878-32.92-2.969C212.455,87.367,217.586,82.5,211.646,94.092\" fill=\"none\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"5.3925\"/>        <polygon fill=\"#FFFFFF\" points=\"   202.336,261.686 279.284,138.606 125.387,138.606  \" stroke=\"#000000\" stroke-linecap=\"round\" stroke-miterlimit=\"8\" stroke-width=\"5.3925\"/>        <g>                <path d=\"M180.962,168.839c-4.44,0-8.06,4.723-8.06,10.523    c0,5.827,3.62,10.525,8.06,10.525c4.439,0,8.035-4.698,8.035-10.525C188.997,173.562,185.401,168.839,180.962,168.839\" stroke=\"#000000\" stroke-width=\"1.2709\"/>                <path d=\"M181.675,171.326    c17.551,0,31.771,18.521,31.771,41.343\" fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"5.3925\"/>                <path d=\"M226.107,171.326    c-17.551,0-31.792,18.521-31.792,41.343\" fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"5.3925\"/>                <path d=\"M225.609,168.547c-4.395,0-7.971,4.669-7.971,10.404    c0,5.762,3.576,10.407,7.971,10.407c4.393,0,7.945-4.645,7.945-10.407C233.555,173.217,230.002,168.547,225.609,168.547\" stroke=\"#000000\" stroke-width=\"1.2566\"/>            </g>        <text font-family=\"sans-serif\" font-size=\"26.8212\" x=\"195\" y=\"167\">C</text>        <text font-family=\"sans-serif\" font-size=\"26.8212\" x=\"194\" y=\"242\">T</text>    </g>"
   },
   {
+    "id": "25343600",
+    "X": "51.551998138427734",
+    "Y": "95.5",
+    "Width": "274.987003326416",
+    "Height": "59.5",
+    "SVG": "<g id=\"25343600\">            <path d=\"M54.052,155 L54.052,111.336 L162,111.336 M220,111.336  L324.039,111.336 L324.039,155\" fill=\"none\" stroke=\"#000000\" stroke-width=\"5\"/>            <text font-family=\"sans-serif\" font-size=\"21\" x=\"162\" y=\"118\">E</text>            <text font-family=\"sans-serif\" font-size=\"21\" x=\"209\" y=\"118\">E</text>            <rect fill=\"none\" height=\"28\" stroke=\"#000000\" width=\"34\" x=\"174\" y=\"96\"/>            <text font-family=\"sans-serif\" font-size=\"18\" x=\"185\" y=\"116\">A</text>      </g>"
+  },
+  {
     "id": "10163700_1",
     "X": "123.49808502197266",
     "Y": "442.5150146484375",
@@ -385,6 +393,14 @@
     "Width": "202.57666015625",
     "Height": "70.3125",
     "SVG": "<g id=\"40170300\">        <text font-family=\"sans-serif\" font-size=\"95\" x=\"201\" y=\"429\">INFS</text>    </g>"
+  },
+  {
+    "id": "25344600",
+    "X": "45.000999450683594",
+    "Y": "103.375",
+    "Width": "340.3835184641292",
+    "Height": "216.82083537415542",
+    "SVG": "<g id=\"25344600\" transform=\"translate(65 54)\">        <circle cx=\"14.251\" cy=\"83.625\" fill=\"#FFFFFF\" r=\"33.25\" stroke=\"#000000\" stroke-width=\"2\"/>        <path d=\"M49.251,83.625c114.401,3.454,230.205,52.57,245,181.125\" fill=\"none\" stroke=\"#000000\" stroke-width=\"2\"/>        <line fill=\"none\" stroke=\"#000000\" stroke-width=\"2\" x1=\"262.434\" x2=\"294.571\" y1=\"241.527\" y2=\"265.393\"/>        <line fill=\"none\" stroke=\"#000000\" stroke-width=\"2\" x1=\"292.98\" x2=\"319.704\" y1=\"265.393\" y2=\"240.574\"/>        <g transform=\"translate(55 -34)\">                <rect fill=\"#FFFFFF\" height=\"35\" stroke=\"#FFFFFF\" width=\"35\" x=\"123\" y=\"135\"/>                <text font-family=\"sans-serif\" font-size=\"35\" x=\"129\" y=\"165\">R</text>            </g>    </g>"
   },
   {
     "id": "25350203",
@@ -875,6 +891,14 @@
     "SVG": "<g id=\"25242702\">            <line fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"5\" x1=\"241.093\" x2=\"240.173\" y1=\"57.824\" y2=\"279.684\"/>            <line fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"5\" x1=\"282.63\" x2=\"240.988\" y1=\"314.504\" y2=\"279.684\"/>            <line fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"5\" x1=\"199.348\" x2=\"240.988\" y1=\"314.504\" y2=\"279.684\"/>            <line fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"5\" x1=\"199.452\" x2=\"241.093\" y1=\"23.02\" y2=\"57.824\"/>            <line fill=\"none\" stroke=\"#000000\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"5\" x1=\"282.732\" x2=\"241.093\" y1=\"23.02\" y2=\"57.824\"/>      </g>"
   },
   {
+    "id": "25152400",
+    "X": "0.36822096629953194",
+    "Y": "0.4998596281679607",
+    "Width": "263.007729363322",
+    "Height": "126.11326655582819",
+    "SVG": "<g id=\"25152400\">          <pattern height=\"20\" id=\"crosshatch\" patternUnits=\"userSpaceOnUse\" width=\"20\">                      <!-- Background (optional) -->                      <!-- <rect width=\"10\" height=\"10\" fill=\"white\" /> -->                      <!-- Diagonal lines crossing each other -->                      <path d=\"M 0 0 L 20 20 M 20 0 L 0 20\" stroke=\"black\" stroke-width=\"0.5\"/>                </pattern>            <pattern height=\"20\" id=\"hatch\" patternUnits=\"userSpaceOnUse\" width=\"20\">                      <!-- Background (optional) -->                      <!-- <rect width=\"10\" height=\"10\" fill=\"white\" /> -->                      <!-- Diagonal lines crossing each other -->                      <path d=\"M 20 0 L 0 20\" stroke=\"black\" stroke-width=\"0.5\"/>                </pattern>        <g transform=\"translate(-516.0,-271.0)\">                <path d=\"M564.0 274.0L519.0 308.0L525.0 366.0L662.0 395.0L775.0 345.0L714.0 285.0L564.0 274.0\" fill=\"url(#hatch)\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-width=\"5\"/>            </g>      </g>"
+  },
+  {
     "id": "01130000",
     "X": "194.1875",
     "Y": "358.28125",
@@ -1321,6 +1345,14 @@
     "Width": "293.476993560791",
     "Height": "278.8708492721132",
     "SVG": "<g id=\"25242400\">        <path d=\"   M138.047,62.514c-38.923,6.124-60.916,93.731-71.078,122.264c-10.162,28.514-3.393,28.514,10.162,48.894   c13.537,20.381,38.904,59.094,71.059,73.352c32.155,14.262,96.464,38.713,121.852,12.229   c25.385-26.483,52.458-128.368,30.448-171.158C278.496,105.303,176.97,56.409,138.047,62.514\" fill=\"none\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" stroke-width=\"7\"/>        <g>                <rect fill=\"#FFFFFF\" height=\"29.188\" width=\"49.311\" x=\"283.473\" y=\"193.869\"/>                <text font-family=\"sans-serif\" font-size=\"20.8061\" x=\"287\" y=\"215\">AMA</text>            </g>        <g>                <rect fill=\"#FFFFFF\" height=\"29.188\" width=\"49.307\" x=\"39.307\" y=\"182.551\"/>                <text font-family=\"sans-serif\" font-size=\"20.8061\" x=\"43\" y=\"204\">AMA</text>            </g>        <g>                <rect fill=\"#FFFFFF\" height=\"29.188\" width=\"49.307\" x=\"178.571\" y=\"64.189\"/>                <text font-family=\"sans-serif\" font-size=\"20.8061\" x=\"183\" y=\"86\">AMA</text>            </g>        <g>                <rect fill=\"#FFFFFF\" height=\"29.188\" width=\"49.307\" x=\"172.408\" y=\"308.189\"/>                <text font-family=\"sans-serif\" font-size=\"20.8061\" x=\"176\" y=\"330\">AMA</text>            </g>    </g>"
+  },
+  {
+    "id": "25152500",
+    "X": "0.36822096629953194",
+    "Y": "0.4998596281679607",
+    "Width": "263.007729363322",
+    "Height": "126.11326655582819",
+    "SVG": "<g id=\"25152500\">          <pattern height=\"20\" id=\"crosshatch\" patternUnits=\"userSpaceOnUse\" width=\"20\">                      <!-- Background (optional) -->                      <!-- <rect width=\"10\" height=\"10\" fill=\"white\" /> -->                      <!-- Diagonal lines crossing each other -->                      <path d=\"M 0 0 L 20 20 M 20 0 L 0 20\" stroke=\"black\" stroke-width=\"0.5\"/>                </pattern>            <pattern height=\"20\" id=\"hatch\" patternUnits=\"userSpaceOnUse\" width=\"20\">                      <!-- Background (optional) -->                      <!-- <rect width=\"10\" height=\"10\" fill=\"white\" /> -->                      <!-- Diagonal lines crossing each other -->                      <path d=\"M 20 0 L 0 20\" stroke=\"black\" stroke-width=\"0.5\"/>                </pattern>        <g transform=\"translate(-516.0,-271.0)\">                <path d=\"M564.0 274.0L519.0 308.0L525.0 366.0L662.0 395.0L775.0 345.0L714.0 285.0L564.0 274.0\" fill=\"url(#crosshatch)\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-width=\"5\"/>            </g>      </g>"
   },
   {
     "id": "27272",
