@@ -13139,8 +13139,8 @@
         "est": "",
         "code": "360100",
         "versions": "16",
-        "geometry": "",
-        "drawRules": "",
+        "geometry": "Point",
+        "drawRules": "Point1",
         "modifiers": "H",
         "aux1": "Always Navy Blue"
       },
@@ -13151,8 +13151,8 @@
         "est": "",
         "code": "360200",
         "versions": "16",
-        "geometry": "",
-        "drawRules": "",
+        "geometry": "Point",
+        "drawRules": "Point1",
         "modifiers": "H",
         "aux1": "Always Navy Blue"
       },
@@ -13163,8 +13163,8 @@
         "est": "",
         "code": "360300",
         "versions": "16",
-        "geometry": "",
-        "drawRules": "",
+        "geometry": "Point",
+        "drawRules": "Point1",
         "modifiers": "H",
         "aux1": "Always Navy Blue"
       },
@@ -13187,8 +13187,8 @@
         "est": "",
         "code": "370100",
         "versions": "16",
-        "geometry": "",
-        "drawRules": "",
+        "geometry": "Area",
+        "drawRules": "Area1",
         "modifiers": "H",
         "aux1": ""
       },
