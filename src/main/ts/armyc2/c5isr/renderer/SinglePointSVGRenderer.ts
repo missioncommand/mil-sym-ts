@@ -783,7 +783,7 @@ export class SinglePointSVGRenderer {
 
                 let strLineJoin: string = "";
 
-                if (msi.getSymbolSet() === SymbolID.SymbolSet_ControlMeasure && msi.getDrawRule() === DrawRules.POINT1) {
+                if (SymbolUtilities.isActionPoint(symbolID)) {
                     //smooth out action points
                     strLineJoin = " stroke-linejoin=\"round\" ";
                 }
