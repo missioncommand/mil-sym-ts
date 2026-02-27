@@ -2562,6 +2562,16 @@ export class ModifierRenderer implements SettingsEventListener {
             outlineOffset = 0;
         }
 
+        //Check for Valid Country Code
+        let cc:number = SymbolID.getCountryCode(symbolID);
+        let scc:string = "";
+        if(cc > 0)
+        {
+            scc = GENCLookup.getInstance().get3CharCode(cc);
+        }
+        if(scc != null && scc != "")
+            modifiers.set(Modifiers.AS_COUNTRY, scc);
+
 
         // <editor-fold defaultstate="collapsed" desc="Process Special Modifiers">
         let ti: TextInfo;
@@ -2604,10 +2614,35 @@ export class ModifierRenderer implements SettingsEventListener {
                     }
                 }
             } 
-            if (ec === 130700) //decision point
+            else if (ec === 130700) //decision point
             {
                 if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    
+                    strText = "";
+                    if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1))
+                        strText += modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (modifiers.has(Modifiers.AS_COUNTRY))
+                        strText += " " + modifiers.get(Modifiers.AS_COUNTRY);
+                    strText = strText.trim();
+
+                    if (strText != "") {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        //One modifier symbols and modifier goes in center
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
+                        x = x - (labelWidth * 0.5) as int;
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;
+                        y = y + (labelHeight * 0.5) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            } 
+            else if (ec === 212800)//harbor
+            {
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
                     if (strText != null) {
                         ti = new TextInfo(strText, 0, 0, modifierFont, frc);
                         labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
@@ -2622,825 +2657,807 @@ export class ModifierRenderer implements SettingsEventListener {
                     }
                 }
             } 
-            else {
-                if (ec === 212800)//harbor
-                {
-                    if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                        strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                        if (strText != null) {
-                            ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                            labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                            //One modifier symbols and modifier goes in center
-                            x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
-                            x = x - (labelWidth * 0.5) as int;
-                            y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;
-                            y = y + (labelHeight * 0.5) as int;
-
-                            ti.setLocation(Math.round(x), Math.round(y));
-                            arrMods.push(ti);
-                        }
-                    }
-                } else {
-                    if (ec === 131300)//point of interest
-                    {
-                        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                            strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                            if (strText != null) {
-                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                //One modifier symbols, top third & center
-                                x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
-                                x = x - (labelWidth * 0.5) as int;
-                                y = (bounds.getMinY() + (bounds.getHeight() * 0.25) as int) as int;
-                                y = y + (labelHeight * 0.5) as int;
-
-                                ti.setLocation(Math.round(x), Math.round(y));
-                                arrMods.push(ti);
-                            }
-                        }
-                    } else {
-                        if (ec === 131800//waypoint
-                            || ec === 240900)//fire support station
-                        {
-                            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                if (strText != null) {
-                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                    //One modifier symbols and modifier goes right of center
-                                    if (ec === 131800) {
-
-                                        x = (bounds.getMinX() + (bounds.getWidth() * 0.75)) as int;
-                                    }
-
-                                    else {
-
-                                        x = (bounds.getMinX() + (bounds.getWidth())) as int;
-                                    }
-
-                                    y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
-                                    y = y + ((labelHeight - descent) * 0.5) as int;
-
-                                    ti.setLocation(Math.round(x), Math.round(y));
-                                    arrMods.push(ti);
-                                }
-                            }
-                        }
-                        else {
-                            if (ec === 131900)  //Airfield (AEGIS Only)
-                            {
-                                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                    if (strText != null) {
-                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                        //One modifier symbols and modifier goes right of center
-                                        x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
-
-                                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
-                                        y = y + ((labelHeight - descent) * 0.5) as int;
-
-                                        ti.setLocation(Math.round(x), Math.round(y));
-                                        arrMods.push(ti);
-                                    }
-                                }
-                            } else {
-                                if (ec === 180100 //Air Control point
-                                    || ec === 180200) //Communications Check point
-                                {
-                                    if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                        strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                        if (strText != null) {
-                                            ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                            labelWidth = ti.getTextBounds().getWidth() as int;
-                                            //One modifier symbols and modifier goes just below of center
-                                            x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
-                                            x = x - (labelWidth * 0.5) as int;
-                                            y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
-                                            y = y + (((bounds.getHeight() * 0.5) - labelHeight) / 2) as int + labelHeight - descent;
-
-                                            ti.setLocation(Math.round(x), Math.round(y));
-                                            arrMods.push(ti);
-                                        }
-                                    }
-                                } else {
-                                    if (ec === 160300 || //T (target reference point)
-                                        ec === 132000 || //T (Target Handover)
-                                        ec === 240601 || //ap,ap1,x,h (Point/Single Target)
-                                        ec === 240602) //T (nuclear target)
-                                    { //Targets with special modifier positions
-                                        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)
-                                            && ec === 240601)//H //point single target
-                                        {
-                                            strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                                            if (strText != null) {
-                                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
-                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.75)) as int;
-                                                y = y + (labelHeight * 0.5) as int;
-
-                                                ti.setLocation(Math.round(x), Math.round(y));
-                                                arrMods.push(ti);
-                                            }
-                                        }
-                                        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)
-                                            && ec === 240601)//X point or single target
-                                        {
-                                            strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-                                            if (strText != null) {
-                                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                x = (bounds.getCenterX() - (bounds.getWidth() * 0.15) as int) as int;
-                                                x = x - (labelWidth);
-                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.75)) as int;
-                                                y = y + (labelHeight * 0.5) as int;
-
-                                                ti.setLocation(Math.round(x), Math.round(y));
-                                                arrMods.push(ti);
-                                            }
-                                        }
-                                        if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) &&
-                                            (ec === 160300 || ec === 132000)) {
-                                            strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                            if (strText != null) {
-                                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-    
-                                                x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
-                                                //                  x = x - (labelbounds.getWidth * 0.5);
-                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.30)) as int;
-    
-                                                ti.setLocation(Math.round(x), Math.round(y));
-                                                arrMods.push(ti);
-                                            }
-                                        }
-                                        if (ec === 240601 || ec === 240602) {
-                                            if (modifiers.has(Modifiers.AP_TARGET_NUMBER)) {
-                                                strText = modifiers.get(Modifiers.AP_TARGET_NUMBER);
-                                            }
-                                            if (ec === 240601 && modifiers.has(Modifiers.AP1_TARGET_NUMBER_EXTENSION)) {
-                                                if (strText != null) {
-
-                                                    strText = strText + "  " + modifiers.get(Modifiers.AP1_TARGET_NUMBER_EXTENSION);
-                                                }
-
-                                                else {
-
-                                                    strText = modifiers.get(Modifiers.AP1_TARGET_NUMBER_EXTENSION);
-                                                }
-                                            }
-                                            if (strText != null) {
-                                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-    
-                                                x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
-                                                //                  x = x - (labelbounds.getWidth * 0.5);
-                                                y = (bounds.getMinY() + (bounds.getHeight() * 0.30)) as int;
-    
-                                                ti.setLocation(Math.round(x), Math.round(y));
-                                                arrMods.push(ti);
-                                            }
-                                        }
-                                    }
-                                    else {
-                                        if (ec === 132100)  //Key Terrain
-                                        {
-                                            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                                strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                                if (strText != null) {
-                                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                    //One modifier symbols and modifier goes right of center
-                                                    x = (bounds.getMinX() + (bounds.getWidth() * 0.5 + bufferXR)) as int;
-
-                                                    y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
-                                                    y = y + ((labelHeight - descent) * 0.5) as int;
-
-                                                    ti.setLocation(Math.round(x), Math.round(y));
-                                                    arrMods.push(ti);
-                                                }
-                                            }
-                                        }
-                                        else if(ec == 182600)//Isolated Personnel Location
-                                        {
-                                            
-                                            if (modifiers.has(Modifiers.C_QUANTITY)) {
-                                                strText = modifiers.get(Modifiers.C_QUANTITY);
-                                                if (strText != null) {
-                                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                    labelWidth = Math.round(ti.getTextBounds().getWidth());
-                                                    //subset of NBC, just nuclear
-                                                    x = (bounds.getMinX() + (bounds.getWidth() * 0.5));
-                                                    x = x -  (labelWidth * 0.5);
-                                                    y = bounds.getMinY() - descent;
-                                                    ti.setLocation(Math.round(x), Math.round(y));
-                                                    arrMods.push(ti);
-                                                }
-                                            }
-                                            if (modifiers.has(Modifiers.W_DTG_1)) {
-                                                strText = modifiers.get(Modifiers.W_DTG_1);
-                                                if (strText != null) {
-                                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                    labelWidth = Math.round(ti.getTextBounds().getWidth());
-                            
-                                                    x = bounds.getMinX() - labelWidth - bufferXL;
-                                                    if (!byLabelHeight) {
-                                                        y = bounds.getMinY() + labelHeight - descent;
-                                                    } else {
-                                                        y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - ((labelHeight - descent) * 0.5) + (-descent - bufferText)));
-                                                    }
-                            
-                                                    ti.setLocation(Math.round(x), Math.round(y));
-                                                    arrMods.push(ti);
-                                                }
-                                            }
-                                            if (modifiers.has(Modifiers.W1_DTG_2)) {
-                                                strText = modifiers.get(Modifiers.W1_DTG_2);
-                                                if (strText != null) {
-                                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                    labelWidth = Math.round(ti.getTextBounds().getWidth());
-                            
-                                                    x = bounds.getMinX() - labelWidth - bufferXL;
-                                                    if (!byLabelHeight) {
-                                                        y = bounds.getMinY() + labelHeight - descent;
-                                                    } else {
-                                                        y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - (((labelHeight * 2) - descent) * 0.5) + (-descent - bufferText)));
-                                                    }
-                            
-                                                    ti.setLocation(Math.round(x), Math.round(y));
-                                                    arrMods.push(ti);
-                                                }
-                                            }
-                                        }
-                                        else {
-                                            if (SymbolUtilities.isCBRNEvent(symbolID)) //CBRN
-                                            {
-                                                if (modifiers.has(Modifiers.N_HOSTILE)) {
-                                                    strText = modifiers.get(Modifiers.N_HOSTILE);
-                                                    if (strText != null) {
-                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                        x = (bounds.getMinX() + bounds.getWidth() + bufferXR) as int;
-
-                                                        if (!byLabelHeight) {
-                                                            y = (bounds.getMinY() + bounds.getHeight()) as int;
-                                                        } else {
-                                                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) + ((labelHeight - descent) * 0.5) + (labelHeight - descent + bufferText))) as int;
-                                                        }
-
-                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                        arrMods.push(ti);
-                                                    }
-
-                                                }
-                                                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                                                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                                                    if (strText != null) {
-                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                        x = (bounds.getMinX() + bounds.getWidth() + bufferXR) as int;
-                                                        if (!byLabelHeight) {
-                                                            y = (bounds.getMinY() + labelHeight - descent) as int;
-                                                        } else {
-                                                            //y = bounds.y + ((bounds.getHeight * 0.5) + (labelHeight * 0.5) - (labelHeight + bufferText));
-                                                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - ((labelHeight - descent) * 0.5) + (-descent - bufferText))) as int;
-                                                        }
-
-                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                        arrMods.push(ti);
-                                                    }
-                                                }
-                                                if (modifiers.has(Modifiers.W_DTG_1)) {
-                                                    strText = modifiers.get(Modifiers.W_DTG_1);
-                                                    if (strText != null) {
-                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-
-                                                        x = bounds.getMinX() as int - labelWidth - bufferXL;
-                                                        if (!byLabelHeight) {
-                                                            y = bounds.getMinY() as int + labelHeight - descent;
-                                                        } else {
-                                                            //y = bounds.y + ((bounds.getHeight * 0.5) + (labelHeight * 0.5) - (labelHeight + bufferText));
-                                                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - ((labelHeight - descent) * 0.5) + (-descent - bufferText))) as int;
-                                                        }
-
-                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                        arrMods.push(ti);
-                                                    }
-                                                }
-                                                if ((ec === 281500 || ec === 281600) && modifiers.has(Modifiers.V_EQUIP_TYPE)) {//nuclear event or nuclear fallout producing event
-                                                    strText = modifiers.get(Modifiers.V_EQUIP_TYPE);
-                                                    if (strText != null) {
-                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                        //subset of nbc, just nuclear
-                                                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                        x = bounds.getMinX() as int - labelWidth - bufferXL;
-                                                        y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) + ((labelHeight - descent) * 0.5))) as int;//((bounds.getHeight / 2) - (labelHeight/2));
-
-                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                        arrMods.push(ti);
-                                                    }
-                                                }
-                                                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                                    if (strText != null) {
-                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                        x = bounds.getMinX() as int - labelWidth - bufferXL;
-                                                        if (!byLabelHeight) {
-                                                            y = (bounds.getMinY() + bounds.getHeight()) as int;
-                                                        } else {
-                                                            //y = bounds.y + ((bounds.getHeight * 0.5) + ((labelHeight-descent) * 0.5) + (labelHeight + bufferText));
-                                                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) + ((labelHeight - descent) * 0.5) + (labelHeight - descent + bufferText))) as int;
-                                                        }
-                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                        arrMods.push(ti);
-                                                    }
-                                                }
-                                                if (modifiers.has(Modifiers.Y_LOCATION)) {
-                                                    strText = modifiers.get(Modifiers.Y_LOCATION);
-                                                    if (strText != null) {
-                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                        //just NBC
-                                                        //x = bounds.getX() + (bounds.getWidth() * 0.5);
-                                                        //x = x - (labelWidth * 0.5);
-                                                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
-                                                        x = x - (labelWidth * 0.5) as int;
-
-                                                        if (!byLabelHeight) {
-                                                            y = (bounds.getMinY() + bounds.getHeight() + labelHeight - descent + bufferY) as int;
-                                                        } else {
-                                                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) + ((labelHeight - descent) * 0.5) + ((labelHeight + bufferText) * 2) - descent) as int) as int;
-
-                                                        }
-                                                        yForY = y + descent; //so we know where to start the DOM arrow.
-                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                        arrMods.push(ti);
-                                                    }
-
-                                                }
-                                                if (modifiers.has(Modifiers.C_QUANTITY)) {
-                                                    strText = modifiers.get(Modifiers.C_QUANTITY);
-                                                    if (strText != null) {
-                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                        //subset of NBC, just nuclear
-                                                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
-                                                        x = x - (labelWidth * 0.5) as int;
-                                                        y = bounds.getMinY() as int - descent;
-                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                        arrMods.push(ti);
-                                                    }
-
-                                                }
-                                            }
-                                            else {
-                                                if (ec === 270701)//static depiction
-                                                {
-                                                    if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                                                        strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                                                        if (strText != null) {
-                                                            ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                            labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                            x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
-                                                            x = x - (labelWidth * 0.5) as int;
-                                                            y = bounds.getMinY() as int - descent;// + (bounds.getHeight * 0.5);
-                                                            //y = y + (labelHeight * 0.5);
-
-                                                            ti.setLocation(Math.round(x), Math.round(y));
-                                                            arrMods.push(ti);
-                                                        }
-
-                                                    }
-                                                    if (modifiers.has(Modifiers.W_DTG_1)) {
-                                                        strText = modifiers.get(Modifiers.W_DTG_1);
-                                                        if (strText != null) {
-                                                            ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                            labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                            x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
-                                                            x = x - (labelWidth * 0.5) as int;
-                                                            y = (bounds.getMinY() + (bounds.getHeight())) as int;
-                                                            y = y + (labelHeight);
-
-                                                            ti.setLocation(Math.round(x), Math.round(y));
-                                                            arrMods.push(ti);
-                                                        }
-                                                    }
-                                                    if (modifiers.has(Modifiers.N_HOSTILE)) {
-                                                        strText = modifiers.get(Modifiers.N_HOSTILE);
-                                                        if (strText != null) {
-                                                            ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                            let ti2: TextInfo = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                            labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                            x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR) as int;//right
-                                                            //x = x + labelWidth;//- (labelbounds.getWidth * 0.75);
-
-                                                            duplicate = true;
-
-                                                            x2 = bounds.getMinX() as int;//left
-                                                            x2 = x2 - labelWidth - bufferXL;// - (labelbounds.getWidth * 0.25);
-
-                                                            y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;//center
-                                                            y = y + ((labelHeight - descent) * 0.5) as int;
-
-                                                            y2 = y;
-
-                                                            ti.setLocation(Math.round(x), Math.round(y));
-                                                            ti2.setLocation(Math.round(x2), Math.round(y2));
-                                                            arrMods.push(ti);
-                                                            arrMods.push(ti2);
-                                                        }
-                                                    }
-
-                                                }
-                                                else {
-                                                    if (e === 21 && et === 35)//sonobuoys
-                                                    {
-                                                        let is2525E:boolean = (SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E);
-                                                        //H sitting on center of circle to the right
-                                                        //T above H
-                                                        centerPoint = SymbolUtilities.getCMSymbolAnchorPoint(symbolID, RectUtilities.copyRect(bounds)).toPoint2D();
-                                                        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                                                            strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                                                            if (strText != null) {
-                                                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                                let ti2: TextInfo = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                                x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR) as int;//right
-                                                                y = centerPoint.y;
-
-                                                                if(is2525E) {
-                                                                    x = x - (bounds.getWidth() * 0.2);
-                                                                    y = bounds.getY() + (bounds.getHeight() / 2);
-                                                                }
-
-                                                                ti.setLocation(Math.round(x), Math.round(y));
-                                                                arrMods.push(ti);
-                                                            }
-                                                        }
-                                                        if (est === 0 || est === 1 || est === 4 || est === 7 || est === 8 || est === 15) {
-                                                            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                                                strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                                                if (strText != null) {
-                                                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                                    let ti2: TextInfo = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                                    labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                                    x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR - (bounds.getWidth() * 0.2) );//right
-                                                                    y = centerPoint.y - labelHeight;
-
-                                                                    if(is2525E) {
-                                                                        y = (bounds.getY() + (bounds.getHeight() / 2)) - labelHeight;
-                                                                    }
-
-                                                                    ti.setLocation(Math.round(x), Math.round(y));
-                                                                    arrMods.push(ti);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    else {
-                                                        if (ec === 282001 || //tower, low
-                                                            ec === 282002)   //tower, high
-                                                        {
-                                                            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                                                                strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-                                                                if (strText != null) {
-                                                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                                                    labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                                    x = (bounds.getMinX() + (bounds.getWidth() * 0.7)) as int;
-                                                                    y = bounds.getMinY() as int + labelHeight;// + (bounds.getHeight * 0.5);
-                                                                    //y = y + (labelHeight * 0.5);
-
-                                                                    ti.setLocation(Math.round(x), Math.round(y));
-                                                                    arrMods.push(ti);
-                                                                }
-
-                                                            }
-                                                        }
-                                                        else {
-                                                            if (ec === 180600)  //TACAN
-                                                            {
-                                                                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                                                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                                                    if (strText != null) {
-                                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                        //One modifier symbols and modifier goes top right of symbol
-                                                                        x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
-
-                                                                        y = (bounds.getMinY() + labelHeight) as int;
-
-
-                                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                                        arrMods.push(ti);
-                                                                    }
-                                                                }
-                                                            }
-                                                            else {
-                                                                if (ec === 210300)  //Defended Asset
-                                                                {
-                                                                    if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                                                        strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                                                        if (strText != null) {
-                                                                            ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                            //One modifier symbols and modifier goes top right of symbol
-                                                                            x = (bounds.getMinX() - labelWidth - bufferXL) as int;
-
-                                                                            y = (bounds.getMinY() + labelHeight) as int;
-
-
-                                                                            ti.setLocation(Math.round(x), Math.round(y));
-                                                                            arrMods.push(ti);
-                                                                        }
-                                                                    }
-                                                                }
-                                                                else {
-                                                                    if (ec === 210600)  //Air Detonation
-                                                                    {
-                                                                        if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                                                                            strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-                                                                            if (strText != null) {
-                                                                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                                //One modifier symbols and modifier goes top right of symbol
-                                                                                x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
-
-                                                                                y = (bounds.getMinY() + labelHeight) as int;
-
-
-                                                                                ti.setLocation(Math.round(x), Math.round(y));
-                                                                                arrMods.push(ti);
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    else {
-                                                                        if (ec === 210800)  //Impact Point
-                                                                        {
-                                                                            if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-                                                                                strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
-                                                                                if (strText != null) {
-                                                                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                                    //One modifier symbols and modifier goes upper right of center
-                                                                                    x = (bounds.getX() + (bounds.getWidth() * 0.65)) as int;
-                                                                                    //                  x = x - (labelBounds.width * 0.5);
-                                                                                    y = (bounds.getY() + (bounds.getHeight() * 0.25)) as int;
-                                                                                    y = y + (labelHeight * 0.5) as int;
-
-
-                                                                                    ti.setLocation(Math.round(x), Math.round(y));
-                                                                                    arrMods.push(ti);
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                        else {
-                                                                            if (ec === 211000)  //Launched Torpedo
-                                                                            {
-                                                                                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                                                                                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                                                                                    if (strText != null) {
-                                                                                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                                        //One modifier symbols and modifier goes upper right of center
-                                                                                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                                                        x = (bounds.getX() + (bounds.getWidth() * 0.5) - (labelWidth / 2)) as int;
-                                                                                        y = (bounds.getY() - bufferY) as int;
-
-
-                                                                                        ti.setLocation(Math.round(x), Math.round(y));
-                                                                                        arrMods.push(ti);
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                            else {
-                                                                                if (ec === 214900 || ec === 215600)//General Sea SubSurface Station & General Sea Surface Station
-                                                                                {
-                                                                                    if (modifiers.has(Modifiers.W_DTG_1)) {
-                                                                                        strText = modifiers.get(Modifiers.W_DTG_1);
-                                                                                        if (strText != null) {
-                                                                                            ti = new TextInfo(strText + " - ", 0, 0, modifierFont, frc);
-
-                                                                                            //One modifier symbols and modifier goes top right of symbol
-                                                                                            x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
-                                                                                            y = (bounds.getMinY() + labelHeight) as int;
-
-                                                                                            ti.setLocation(Math.round(x), Math.round(y));
-                                                                                            arrMods.push(ti);
-                                                                                        }
-                                                                                    }
-                                                                                    if (modifiers.has(Modifiers.W1_DTG_2)) {
-                                                                                        strText = modifiers.get(Modifiers.W1_DTG_2);
-                                                                                        if (strText != null) {
-                                                                                            ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                                            //One modifier symbols and modifier goes top right of symbol
-                                                                                            x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
-                                                                                            y = (bounds.getMinY() + (labelHeight * 2)) as int;
-
-                                                                                            ti.setLocation(Math.round(x), Math.round(y));
-                                                                                            arrMods.push(ti);
-                                                                                        }
-                                                                                    }
-                                                                                    if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                                                                        strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                                                                        if (strText != null) {
-                                                                                            ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                                            //One modifier symbols and modifier goes top right of symbol
-                                                                                            x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
-                                                                                            y = (bounds.getMinY() + (labelHeight * 3)) as int;
-
-                                                                                            ti.setLocation(Math.round(x), Math.round(y));
-                                                                                            arrMods.push(ti);
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                                else {
-                                                                                    if (ec === 217000)//Shore Control Station
-                                                                                    {
-                                                                                        if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
-                                                                                            strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
-                                                                                            if (strText != null) {
-                                                                                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                                                //One modifier symbols and modifier goes upper right of center
-                                                                                                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                                                                                x = (bounds.getX() + (bounds.getWidth() * 0.5) - (labelWidth / 2)) as int;
-                                                                                                y = (bounds.getY() + bounds.getHeight() + labelHeight + bufferY) as int;
-
-
-                                                                                                ti.setLocation(Math.round(x), Math.round(y));
-                                                                                                arrMods.push(ti);
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                    else {
-                                                                                        if (ec === 250600)//Known Point
-                                                                                        {
-                                                                                            if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
-                                                                                                strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
-                                                                                                if (strText != null) {
-                                                                                                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-
-                                                                                                    //One modifier symbols and modifier goes upper right of center
-                                                                                                    x = (bounds.getX() + (bounds.getWidth() + bufferXR)) as int;
-
-                                                                                                    if(!RendererSettings.getInstance().getOutlineSPControlMeasures() && 
-                                                                                                        !(attributes.has(MilStdAttributes.OutlineSymbol) && (attributes.get(MilStdAttributes.OutlineSymbol).toUpperCase()==="TRUE")))
-                                                                                                        x += bufferXR;
-                                                                                                    
-                                                                                                    y = (bounds.getY() + (bounds.getHeight() * 0.30)) as int;
-
-                                                                                                    ti.setLocation(Math.round(x), Math.round(y));
-                                                                                                    arrMods.push(ti);
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-
-                                                                                }
-
-                                                                            }
-
-                                                                        }
-
-                                                                    }
-
-                                                                }
-
-                                                            }
-
-                                                        }
-
-                                                    }
-
-                                                }
-
-                                            }
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-        else {
-            if (ss === SymbolID.SymbolSet_Atmospheric) {
-                let modX: string;
-                if (modifiers != null && modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
-
-                    modX = (modifiers.get(Modifiers.X_ALTITUDE_DEPTH));
-                }
-
-
-                if (ec === 162300)//Freezing Level
-                {
-                    strText = "0" + String.fromCharCode(176) + ":";
-                    if (modX != null) {
-
-                        strText += modX;
-                    }
-
-                    else {
-
-                        strText += "?";
-                    }
-
-
-                    ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                    labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                    //One modifier symbols and modifier goes in center
-                    x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
-                    x = x - (labelWidth * 0.5) as int;
-                    y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
-                    y = y + ((labelHeight - modifierFontDescent) * 0.5) as int;
-
-                    ti.setLocation(Math.round(x), Math.round(y));
-                    arrMods.push(ti);
-                }
-                else {
-                    if (ec === 162200)//tropopause Level
-                    {
-                        strText = "X?";
-                        if (modX != null) {
-
-                            strText = modX;
-                        }
-
-
+            else if (ec === 131300)//point of interest
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
                         ti = new TextInfo(strText, 0, 0, modifierFont, frc);
                         labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                        //One modifier symbols and modifier goes in center
-                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
+                        //One modifier symbols, top third & center
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
                         x = x - (labelWidth * 0.5) as int;
-                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
-                        y = y + ((labelHeight - modifierFontDescent) * 0.5) as int;
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.25) as int) as int;
+                        y = y + (labelHeight * 0.5) as int;
 
                         ti.setLocation(Math.round(x), Math.round(y));
                         arrMods.push(ti);
                     }
-                    else {
-                        if (ec === 110102)//tropopause Low
-                        {
-                            strText = "X?";
-                            if (modX != null) {
+                }
+            } 
+            else if (ec === 131800//waypoint
+                    || ec === 240900)//fire support station
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
 
-                                strText = modX;
-                            }
+                        //One modifier symbols and modifier goes right of center
+                        if (ec === 131800) {
 
+                            x = (bounds.getMinX() + (bounds.getWidth() * 0.75)) as int;
+                        }
 
+                        else {
+
+                            x = (bounds.getMinX() + (bounds.getWidth())) as int;
+                        }
+
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
+                        y = y + ((labelHeight - descent) * 0.5) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 131900)  //Airfield (AEGIS Only)
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes right of center
+                        x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
+
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
+                        y = y + ((labelHeight - descent) * 0.5) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            } 
+            else if (ec === 180100 //Air Control point
+                    || ec === 180200) //Communications Check point
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = ti.getTextBounds().getWidth() as int;
+                        //One modifier symbols and modifier goes just below of center
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
+                        x = x - (labelWidth * 0.5) as int;
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
+                        y = y + (((bounds.getHeight() * 0.5) - labelHeight) / 2) as int + labelHeight - descent;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            } 
+            else if (ec === 160300 || //T (target reference point)
+                    ec === 132000 || //T (Target Handover)
+                    ec === 240601 || //ap,ap1,x,h (Point/Single Target)
+                    ec === 240602) //T (nuclear target)
+            { //Targets with special modifier positions
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)
+                    && ec === 240601)//H //point single target
+                {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.75)) as int;
+                        y = y + (labelHeight * 0.5) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)
+                    && ec === 240601)//X point or single target
+                {
+                    strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = (bounds.getCenterX() - (bounds.getWidth() * 0.15) as int) as int;
+                        x = x - (labelWidth);
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.75)) as int;
+                        y = y + (labelHeight * 0.5) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1) &&
+                    (ec === 160300 || ec === 132000)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
+                        //                  x = x - (labelbounds.getWidth * 0.5);
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.30)) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (ec === 240601 || ec === 240602) {
+                    if (modifiers.has(Modifiers.AP_TARGET_NUMBER)) {
+                        strText = modifiers.get(Modifiers.AP_TARGET_NUMBER);
+                    }
+                    if (ec === 240601 && modifiers.has(Modifiers.AP1_TARGET_NUMBER_EXTENSION)) {
+                        if (strText != null) {
+
+                            strText = strText + "  " + modifiers.get(Modifiers.AP1_TARGET_NUMBER_EXTENSION);
+                        }
+
+                        else {
+
+                            strText = modifiers.get(Modifiers.AP1_TARGET_NUMBER_EXTENSION);
+                        }
+                    }
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        x = (bounds.getCenterX() + (bounds.getWidth() * 0.15)) as int;
+                        //                  x = x - (labelbounds.getWidth * 0.5);
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.30)) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec == 213400 && SymbolID.getVersion(symbolID)==SymbolID.Version_APP6Ech2)  //Navigation Reference Point
+            {
+                if (modifiers.has(Modifiers.W_DTG_1))
+                {
+                    strText = modifiers.get(Modifiers.W_DTG_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        x = bounds.getMinX() + (bounds.getWidth() * 0.75);
+                        y = bounds.getMinY() + (bounds.getHeight() * 0.75);
+                        y = y + labelHeight;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.25)-ti.getTextBounds().getWidth());
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.25));
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 132100)  //Key Terrain
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes right of center
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5 + bufferXR)) as int;
+
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
+                        y = y + ((labelHeight - descent) * 0.5) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec == 132300)  //Vital Ground
+            {
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes bottom right of symbol
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.88));
+
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.88));
+                        y = y + (labelHeight - descent);
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if(ec == 182600)//Isolated Personnel Location
+            {
+                
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth());
+                        
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5));
+                        x = x -  (labelWidth * 0.5);
+                        y = bounds.getMinY() - descent;
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.W_DTG_1)) {
+                    strText = modifiers.get(Modifiers.W_DTG_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth());
+
+                        x = bounds.getMinX() - labelWidth - bufferXL;
+                        if (!byLabelHeight) {
+                            y = bounds.getMinY() + labelHeight - descent;
+                        } else {
+                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - ((labelHeight - descent) * 0.5) + (-descent - bufferText)));
+                        }
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.W1_DTG_2)) {
+                    strText = modifiers.get(Modifiers.W1_DTG_2);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth());
+
+                        x = bounds.getMinX() - labelWidth - bufferXL;
+                        if (!byLabelHeight) {
+                            y = bounds.getMinY() + labelHeight - descent;
+                        } else {
+                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - (((labelHeight * 2) - descent) * 0.5) + (-descent - bufferText)));
+                        }
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (SymbolUtilities.isCBRNEvent(symbolID)) //CBRN
+            {
+                if (modifiers.has(Modifiers.N_HOSTILE)) {
+                    strText = modifiers.get(Modifiers.N_HOSTILE);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        x = (bounds.getMinX() + bounds.getWidth() + bufferXR) as int;
+
+                        if (!byLabelHeight) {
+                            y = (bounds.getMinY() + bounds.getHeight()) as int;
+                        } else {
+                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) + ((labelHeight - descent) * 0.5) + (labelHeight - descent + bufferText))) as int;
+                        }
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+
+                }
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        x = (bounds.getMinX() + bounds.getWidth() + bufferXR) as int;
+                        if (!byLabelHeight) {
+                            y = (bounds.getMinY() + labelHeight - descent) as int;
+                        } else {
+                            //y = bounds.y + ((bounds.getHeight * 0.5) + (labelHeight * 0.5) - (labelHeight + bufferText));
+                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - ((labelHeight - descent) * 0.5) + (-descent - bufferText))) as int;
+                        }
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.W_DTG_1)) {
+                    strText = modifiers.get(Modifiers.W_DTG_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+
+                        x = bounds.getMinX() as int - labelWidth - bufferXL;
+                        if (!byLabelHeight) {
+                            y = bounds.getMinY() as int + labelHeight - descent;
+                        } else {
+                            //y = bounds.y + ((bounds.getHeight * 0.5) + (labelHeight * 0.5) - (labelHeight + bufferText));
+                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) - ((labelHeight - descent) * 0.5) + (-descent - bufferText))) as int;
+                        }
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if ((ec === 281500 || ec === 281600) && modifiers.has(Modifiers.V_EQUIP_TYPE)) {//nuclear event or nuclear fallout producing event
+                    strText = modifiers.get(Modifiers.V_EQUIP_TYPE);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //subset of nbc, just nuclear
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = bounds.getMinX() as int - labelWidth - bufferXL;
+                        y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) + ((labelHeight - descent) * 0.5))) as int;//((bounds.getHeight / 2) - (labelHeight/2));
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = bounds.getMinX() as int - labelWidth - bufferXL;
+                        if (!byLabelHeight) {
+                            y = (bounds.getMinY() + bounds.getHeight()) as int;
+                        } else {
+                            //y = bounds.y + ((bounds.getHeight * 0.5) + ((labelHeight-descent) * 0.5) + (labelHeight + bufferText));
+                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) + ((labelHeight - descent) * 0.5) + (labelHeight - descent + bufferText))) as int;
+                        }
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.Y_LOCATION)) {
+                    strText = modifiers.get(Modifiers.Y_LOCATION);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        //just NBC
+                        //x = bounds.getX() + (bounds.getWidth() * 0.5);
+                        //x = x - (labelWidth * 0.5);
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
+                        x = x - (labelWidth * 0.5) as int;
+
+                        if (!byLabelHeight) {
+                            y = (bounds.getMinY() + bounds.getHeight() + labelHeight - descent + bufferY) as int;
+                        } else {
+                            y = (bounds.getMinY() + ((bounds.getHeight() * 0.5) + ((labelHeight - descent) * 0.5) + ((labelHeight + bufferText) * 2) - descent) as int) as int;
+
+                        }
+                        yForY = y + descent; //so we know where to start the DOM arrow.
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+
+                }
+                if (modifiers.has(Modifiers.C_QUANTITY)) {
+                    strText = modifiers.get(Modifiers.C_QUANTITY);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        //subset of NBC, just nuclear
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
+                        x = x - (labelWidth * 0.5) as int;
+                        y = bounds.getMinY() as int - descent;
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+
+                }
+            }
+            else if (ec === 270701)//static depiction
+            {
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
+                        x = x - (labelWidth * 0.5) as int;
+                        y = bounds.getMinY() as int - descent;// + (bounds.getHeight * 0.5);
+                        //y = y + (labelHeight * 0.5);
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+
+                }
+                if (modifiers.has(Modifiers.W_DTG_1)) {
+                    strText = modifiers.get(Modifiers.W_DTG_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
+                        x = x - (labelWidth * 0.5) as int;
+                        y = (bounds.getMinY() + (bounds.getHeight())) as int;
+                        y = y + (labelHeight);
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.N_HOSTILE)) {
+                    strText = modifiers.get(Modifiers.N_HOSTILE);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        let ti2: TextInfo = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR) as int;//right
+                        //x = x + labelWidth;//- (labelbounds.getWidth * 0.75);
+
+                        duplicate = true;
+
+                        x2 = bounds.getMinX() as int;//left
+                        x2 = x2 - labelWidth - bufferXL;// - (labelbounds.getWidth * 0.25);
+
+                        y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;//center
+                        y = y + ((labelHeight - descent) * 0.5) as int;
+
+                        y2 = y;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        ti2.setLocation(Math.round(x2), Math.round(y2));
+                        arrMods.push(ti);
+                        arrMods.push(ti2);
+                    }
+                }
+
+            }
+            else if (e === 21 && et === 35)//sonobuoys
+            {
+                let is2525E:boolean = (SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E);
+                //H sitting on center of circle to the right
+                //T above H
+                centerPoint = SymbolUtilities.getCMSymbolAnchorPoint(symbolID, RectUtilities.copyRect(bounds)).toPoint2D();
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        let ti2: TextInfo = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR) as int;//right
+                        y = centerPoint.y;
+
+                        if(is2525E) {
+                            x = x - (bounds.getWidth() * 0.2);
+                            y = bounds.getY() + (bounds.getHeight() / 2);
+                        }
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (est === 0 || est === 1 || est === 4 || est === 7 || est === 8 || est === 15) {
+                    if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                        strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                        if (strText != null) {
                             ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                            let ti2: TextInfo = new TextInfo(strText, 0, 0, modifierFont, frc);
                             labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                            //One modifier symbols and modifier goes in center
-                            x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
-                            x = x - (labelWidth * 0.5) as int;
-                            y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;
-                            y = y - descent;
+                            x = (bounds.getMinX() + (bounds.getWidth()) + bufferXR - (bounds.getWidth() * 0.2) );//right
+                            y = centerPoint.y - labelHeight;
+
+                            if(is2525E) {
+                                y = (bounds.getY() + (bounds.getHeight() / 2)) - labelHeight;
+                            }
 
                             ti.setLocation(Math.round(x), Math.round(y));
                             arrMods.push(ti);
                         }
-                        else {
-                            if (ec === 110202)//tropopause High
-                            {
-                                strText = "X?";
-                                if (modX != null) {
+                    }
+                }
+            }
+            else if (ec === 282001 || //tower, low
+                    ec === 282002)   //tower, high
+            {
+                if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+                    strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = (bounds.getMinX() + (bounds.getWidth() * 0.7)) as int;
+                        y = bounds.getMinY() as int + labelHeight;// + (bounds.getHeight * 0.5);
+                        //y = y + (labelHeight * 0.5);
 
-                                    strText = modX;
-                                }
-
-
-                                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
-                                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
-                                //One modifier symbols and modifier goes in center
-                                x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
-                                x = x - (labelWidth * 0.5) as int;
-                                y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;
-                                //y = y + (int) ((labelHeight * 0.5f) + (labelHeight/2));
-                                y = y + (((labelHeight * 0.5) - (labelHeight / 2)) + labelHeight - descent) as int;
-
-                                ti.setLocation(Math.round(x), Math.round(y));
-                                arrMods.push(ti);
-                            }
-                        }
-
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
                     }
 
                 }
+            }
+            else if (ec === 180600)  //TACAN
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
 
+                        //One modifier symbols and modifier goes top right of symbol
+                        x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
+
+                        y = (bounds.getMinY() + labelHeight) as int;
+
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 210300)  //Defended Asset
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes top right of symbol
+                        x = (bounds.getMinX() - labelWidth - bufferXL) as int;
+
+                        y = (bounds.getMinY() + labelHeight) as int;
+
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 210600)  //Air Detonation
+            {
+                if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+                    strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes top right of symbol
+                        x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
+
+                        y = (bounds.getMinY() + labelHeight) as int;
+
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 210800)  //Impact Point
+            {
+                if (modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+                    strText = modifiers.get(Modifiers.X_ALTITUDE_DEPTH);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes upper right of center
+                        x = (bounds.getX() + (bounds.getWidth() * 0.65)) as int;
+                        //                  x = x - (labelBounds.width * 0.5);
+                        y = (bounds.getY() + (bounds.getHeight() * 0.25)) as int;
+                        y = y + (labelHeight * 0.5) as int;
+
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 211000)  //Launched Torpedo
+            {
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes upper right of center
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = (bounds.getX() + (bounds.getWidth() * 0.5) - (labelWidth / 2)) as int;
+                        y = (bounds.getY() - bufferY) as int;
+
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 214900 || ec === 215600)//General Sea SubSurface Station & General Sea Surface Station
+            {
+                if (modifiers.has(Modifiers.W_DTG_1)) {
+                    strText = modifiers.get(Modifiers.W_DTG_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText + " - ", 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes top right of symbol
+                        x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
+                        y = (bounds.getMinY() + labelHeight) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.W1_DTG_2)) {
+                    strText = modifiers.get(Modifiers.W1_DTG_2);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes top right of symbol
+                        x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
+                        y = (bounds.getMinY() + (labelHeight * 2)) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes top right of symbol
+                        x = (bounds.getMinX() + (bounds.getWidth() + bufferXR)) as int;
+                        y = (bounds.getMinY() + (labelHeight * 3)) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 217000)//Shore Control Station
+            {
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes upper right of center
+                        labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                        x = (bounds.getX() + (bounds.getWidth() * 0.5) - (labelWidth / 2)) as int;
+                        y = (bounds.getY() + bounds.getHeight() + labelHeight + bufferY) as int;
+
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if (ec === 250600)//Known Point
+            {
+                if (modifiers.has(Modifiers.T_UNIQUE_DESIGNATION_1)) {
+                    strText = modifiers.get(Modifiers.T_UNIQUE_DESIGNATION_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes upper right of center
+                        x = (bounds.getX() + (bounds.getWidth() + bufferXR)) as int;
+
+                        if(!RendererSettings.getInstance().getOutlineSPControlMeasures() && 
+                            !(attributes.has(MilStdAttributes.OutlineSymbol) && (attributes.get(MilStdAttributes.OutlineSymbol).toUpperCase()==="TRUE")))
+                            x += bufferXR;
+                        
+                        y = (bounds.getY() + (bounds.getHeight() * 0.30)) as int;
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }
+            else if(ec == 360100 || ec == 360200 || ec == 360300)//Protection of Cultural Property
+            {
+                if (modifiers.has(Modifiers.H_ADDITIONAL_INFO_1)) {
+                    strText = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1);
+                    if (strText != null) {
+                        ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+
+                        //One modifier symbols and modifier goes right of center
+                        x = (bounds.getX() + bounds.getWidth() + bufferXR);
+                        y = (bounds.getY() + (bounds.getHeight() * 0.6));
+
+                        ti.setLocation(Math.round(x), Math.round(y));
+                        arrMods.push(ti);
+                    }
+                }
+            }          
+        }
+        else if (ss === SymbolID.SymbolSet_Atmospheric) 
+        {
+            let modX: string;
+            if (modifiers != null && modifiers.has(Modifiers.X_ALTITUDE_DEPTH)) {
+
+                modX = (modifiers.get(Modifiers.X_ALTITUDE_DEPTH));
+            }
+
+
+            if (ec === 162300)//Freezing Level
+            {
+                strText = "0" + String.fromCharCode(176) + ":";
+                if (modX != null) {
+
+                    strText += modX;
+                }
+
+                else {
+
+                    strText += "?";
+                }
+
+
+                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                //One modifier symbols and modifier goes in center
+                x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
+                x = x - (labelWidth * 0.5) as int;
+                y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
+                y = y + ((labelHeight - modifierFontDescent) * 0.5) as int;
+
+                ti.setLocation(Math.round(x), Math.round(y));
+                arrMods.push(ti);
+            }
+            else if (ec === 162200)//tropopause Level
+            {
+                strText = "X?";
+                if (modX != null) {
+
+                    strText = modX;
+                }
+
+
+                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                //One modifier symbols and modifier goes in center
+                x = (bounds.getMinX() + (bounds.getWidth() * 0.5)) as int;
+                x = x - (labelWidth * 0.5) as int;
+                y = (bounds.getMinY() + (bounds.getHeight() * 0.5)) as int;
+                y = y + ((labelHeight - modifierFontDescent) * 0.5) as int;
+
+                ti.setLocation(Math.round(x), Math.round(y));
+                arrMods.push(ti);
+            }
+            else if (ec === 110102)//tropopause Low
+            {
+                strText = "X?";
+                if (modX != null) {
+
+                    strText = modX;
+                }
+
+
+                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                //One modifier symbols and modifier goes in center
+                x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
+                x = x - (labelWidth * 0.5) as int;
+                y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;
+                y = y - descent;
+
+                ti.setLocation(Math.round(x), Math.round(y));
+                arrMods.push(ti);
+            }
+            else if (ec === 110202)//tropopause High
+            {
+                strText = "X?";
+                if (modX != null) {
+
+                    strText = modX;
+                }
+
+
+                ti = new TextInfo(strText, 0, 0, modifierFont, frc);
+                labelWidth = Math.round(ti.getTextBounds().getWidth()) as int;
+                //One modifier symbols and modifier goes in center
+                x = (bounds.getMinX() + (bounds.getWidth() * 0.5) as int) as int;
+                x = x - (labelWidth * 0.5) as int;
+                y = (bounds.getMinY() + (bounds.getHeight() * 0.5) as int) as int;
+                //y = y + (int) ((labelHeight * 0.5f) + (labelHeight/2));
+                y = y + (((labelHeight * 0.5) - (labelHeight / 2)) + labelHeight - descent) as int;
+
+                ti.setLocation(Math.round(x), Math.round(y));
+                arrMods.push(ti);
             }
         }
 
