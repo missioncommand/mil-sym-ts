@@ -114,10 +114,10 @@ export class SVGLookup
                     && SVGLookup._SVGLookup6D.size > 0 && SVGLookup._SVGLookup6E.size > 0)
                     SVGLookup._isReady = true;
 
-                    console.log("D Size: " + SVGLookup._SVGLookupD.size);
+                    /*console.log("D Size: " + SVGLookup._SVGLookupD.size);
                     console.log("E Size: " + SVGLookup._SVGLookupE.size);
                     console.log("6D Size: " + SVGLookup._SVGLookup6D.size);
-                    console.log("6E Size: " + SVGLookup._SVGLookup6E.size);
+                    console.log("6E Size: " + SVGLookup._SVGLookup6E.size);//*/
 
             } 
             catch (exc) 
