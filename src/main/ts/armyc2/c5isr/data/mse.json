@@ -5682,6 +5682,18 @@
       },
       {
         "ss": "",
+        "e": "",
+        "et": "Vital Ground",
+        "est": "",
+        "code": "132300",
+        "versions": "16",
+        "geometry": "Point",
+        "drawRules": "Point2",
+        "modifiers": "H",
+        "aux1": ""
+      },
+      {
+        "ss": "",
         "e": "Maneuver Lines",
         "et": "",
         "est": "",
@@ -7838,7 +7850,7 @@
         "versions": "16",
         "geometry": "Point",
         "drawRules": "Point2",
-        "modifiers": "",
+        "modifiers": "H,W",
         "aux1": ""
       },
       {

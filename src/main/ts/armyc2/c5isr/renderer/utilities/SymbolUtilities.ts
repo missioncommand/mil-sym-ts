@@ -1113,10 +1113,14 @@ export class SymbolUtilities {
         if (ss === SymbolID.SymbolSet_ControlMeasure) {
             switch (ec) {
                 case 281300:
+                case 281301:
                 case 281400:
+                case 281401:
                 case 281500:
                 case 281600:
-                case 281700: {
+                case 281700: 
+                case 281701: 
+                {
                     return true;
                 }
 
@@ -1227,6 +1231,7 @@ export class SymbolUtilities {
                 case 131900: //Airfield (AEGIS Only)
                 case 132000: //Target Handover
                 case 132100: //Key Terrain
+                case 132300: //Vital Ground
                 case 160300: //Target Point Reference
                 case 180100: //Air Control Point
                 case 180200: //Communications Check Point
@@ -1236,6 +1241,7 @@ export class SymbolUtilities {
                 case 210800: //Impact Point
                 case 211000: //Launched Torpedo
                 case 212800: //Harbor
+                case 213400: //Navigational reference waypoint
                 case 213500: //Sonobuoy
                 case 213501: //Ambient Noise Sonobuoy
                 case 213502: //Air Transportable Communication (ATAC) (Sonobuoy)
@@ -1263,10 +1269,17 @@ export class SymbolUtilities {
                 case 282001: //Tower, Low
                 case 282002: //Tower, High
                 case 281300: //Chemical Event
+                case 281301: //Chemical Event - toxic material
                 case 281400: //Biological Event
+                case 281402: //Biological Event - toxic material
                 case 281500: //Nuclear Event
                 case 281600: //Nuclear Fallout Producing Event
-                case 281700: { //Radiological Event
+                case 281700: //Radiological Event
+                case 281701: //Radiological Event - toxic material
+                case 360100: //Protection of cultural property - General
+                case 360200: //Protection of cultural property - Special
+                case 360300: //Protection of cultural property - Enhanced
+                {
                     return true;
                 }
 
