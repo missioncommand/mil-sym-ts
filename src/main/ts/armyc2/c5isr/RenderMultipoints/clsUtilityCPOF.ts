@@ -1690,9 +1690,12 @@ export class clsUtilityCPOF {
                 case TacticalLines.FORTL:
                 case TacticalLines.STRONG:
                 case TacticalLines.RAD:
+                case TacticalLines.RADT:
                 case TacticalLines.BIO:
+                case TacticalLines.BIOT:
                 case TacticalLines.NUC:
                 case TacticalLines.CHEM:
+                case TacticalLines.CHEMT:
                 case TacticalLines.DRCL:
                 case TacticalLines.LINTGT:
                 case TacticalLines.LINTGTS:

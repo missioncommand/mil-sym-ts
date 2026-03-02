@@ -307,8 +307,11 @@ export class TacticalLines {
     public static readonly NFA_RECTANGULAR: number = 24324200;
     public static readonly NFA_CIRCULAR: number = 24324300;
     public static readonly CHEM: number = 23460000;
+    public static readonly CHEMT: number = 25271801;
     public static readonly BIO: number = 23450000;
+    public static readonly BIOT: number = 25271701;
     public static readonly RAD: number = 23440000;
+    public static readonly RADT: number = 25272001;
     public static readonly NUC: number = 271900;
     public static readonly NFL: number = 24230000;
     public static readonly MFP: number = 24225000;

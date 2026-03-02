@@ -27,6 +27,7 @@ import { ref } from "../../JavaLineArray/ref"
 import { BasicShapes } from "../../JavaLineArray/BasicShapes";
 import { Basic3DShapes } from "./utilities/Basic3DShapes";
 import { Shape3DHandler } from "./Shape3DHandler";
+import { SymbolID } from "../../renderer/utilities/SymbolID";
 
 
 /**
@@ -250,6 +251,9 @@ export class WebRenderer /* extends Applet */ {
         let output: string = "";
         try {
 
+            //catch duplicate symbols and redirect to original symbol.
+			symbolCode = this.interceptAndAdjustCode(symbolCode,modifiers,attributes);
+
             JavaRendererUtilities.addAltModeToModifiersString(attributes, altitudeMode);
 
             if (altitudeMode !== "clampToGround"
@@ -337,6 +341,10 @@ export class WebRenderer /* extends Applet */ {
         attributes: Map<string, string>, format: int): string {
         let output: string = "";
         try {
+
+            //catch duplicate symbols and redirect to original symbol.
+			symbolCode = this.interceptAndAdjustCode(symbolCode,modifiers,attributes);
+
             output = MultiPointHandler.RenderSymbol2D(id, name, description,
                 symbolCode, controlPoints, pixelWidth, pixelHeight, bbox,
                 modifiers, attributes, format);
@@ -479,6 +487,10 @@ export class WebRenderer /* extends Applet */ {
         controlPoints: string, altitudeMode: string, scale: double, bbox: string, modifiers: Map<string, string>, attributes: Map<string, string>): MilStdSymbol {
         let mSymbol: MilStdSymbol;
         try {
+
+            //catch duplicate symbols and redirect to original symbol.
+			symbolCode = this.interceptAndAdjustCode(symbolCode,modifiers,attributes);
+
             mSymbol = MultiPointHandler.RenderSymbolAsMilStdSymbol(id, name, description, symbolCode,
                 controlPoints, scale, bbox, modifiers, attributes);
 
@@ -792,4 +804,43 @@ export class WebRenderer /* extends Applet */ {
         return pointString.trim();
     
     }
+
+    	/**
+	 * There are a handful of redundant symbols in APP6 that are duplicate symbols that could be properly rendered
+	 * using the original symbol with the appropriate modifier changes.
+	 * Here we intercept and adjust that values as needed.
+	 * @param symbolID
+	 * @param modifiers
+	 * @param attributes
+	 * @return
+	 */
+	private static interceptAndAdjustCode(symbolID:string, modifiers: Map<string, string>, attributes: Map<string, string>):string
+	{
+		if(SymbolID.getSymbolSet(symbolID)==SymbolID.SymbolSet_ControlMeasure)
+		{
+			let returnVal:string = symbolID;
+			let etc:number = SymbolID.getEntityCode(symbolID);
+			switch (etc)
+			{
+				case 151406://Axis of Advance for a Feint
+					returnVal = SymbolID.setEntityCode(returnVal,151404);//SUpporting Atttack
+					returnVal = SymbolID.setHQTFD(returnVal,SymbolID.HQTFD_FeintDummy);
+					break;
+				case 140605://Direction of attack feint
+					returnVal = SymbolID.setEntityCode(returnVal,140603);//Direction of Supporting Attack
+					returnVal = SymbolID.setHQTFD(returnVal,SymbolID.HQTFD_FeintDummy);
+					break;
+				case 260100: //FSCL
+				case 260200: //CFL
+				case 260300: //NFL
+				case 260400: //BCL
+				case 260500: //RFL
+					//instead of T1 uses T2 & AS
+					break;
+
+			}
+			return returnVal;
+		}
+		else return symbolID;
+	}
 }
