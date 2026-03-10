@@ -1061,6 +1061,27 @@ export class SymbolID {
         return parseInt(scc);
     }
 
+    public static setCountryCode(symbolID: string, countryCode: string | number)
+    {
+        let cc:string = "000";
+        if(typeof countryCode === "number")
+            cc = countryCode.toString();
+        else
+            cc = countryCode;
+        if(cc.length > 3)
+            cc = cc.substring(0,3);
+        if(symbolID != null && symbolID.length >= 20)
+            {
+                while(cc.length < 3)
+                    cc = "0" + cc;
+                return symbolID.substring(0,27) + cc;
+            }
+            else
+            {
+                return symbolID;
+            }
+    }
+
     /**
      * In 2525E, position 23 of the symbol code has the Frame Shape modifier.
      * This lets a user force a different frame shape than what a symbol would normally have.
