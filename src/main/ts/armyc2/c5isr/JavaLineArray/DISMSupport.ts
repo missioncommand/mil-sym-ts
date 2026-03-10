@@ -1424,6 +1424,39 @@ export class DISMSupport {
         }
     }
 
+        /**
+     * Calculates the points for DECEIVE.
+     *
+     * @param points - OUT - the client points, also used for the returned points.
+     */
+    static GetDISMDeceiveDouble(points:POINT2[]) {
+        try {
+
+            let savepoints: POINT2[] = new Array<POINT2>(3);
+            let j:number = 0;
+
+            for (j = 0; j < 3; j++) {
+                savepoints[j] = new POINT2(points[j]);
+            }
+
+            points[0] = new POINT2(savepoints[0]);
+            points[0].style = 1;
+            points[1] = new POINT2(savepoints[1]);
+            points[1].style = 5;
+            points[2] = new POINT2(savepoints[2]);
+            points[2].style = 1;
+            points[3] = new POINT2(savepoints[0]);
+            points[3].style = 5;
+
+        } catch (exc) {
+            if (exc instanceof Error) {
+            ErrorLogger.LogException(DISMSupport._className ,"GetDISMDeceiveDouble",
+                    new RendererException("Failed inside GetDISMDeceiveDouble", exc));
+            }
+            else
+                throw exc;
+        }
+    }
 
     /**
      * Calculates the points for DISRUPT

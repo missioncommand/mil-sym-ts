@@ -2692,6 +2692,9 @@ export class clsRenderer {
                 return TacticalLines.RECTANGULAR_TARGET;
             case 220100:
                 return TacticalLines.BEARING;
+            case 230100:
+            case 230200:
+                return TacticalLines.DECEIVE;
             case 220101:
                 return TacticalLines.ELECTRO;
             case 220102:    //EW                //new label

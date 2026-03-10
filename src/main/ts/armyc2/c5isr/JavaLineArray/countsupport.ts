@@ -234,7 +234,8 @@ export class countsupport {
                 case TacticalLines.ESR1:
                 case TacticalLines.ESR2:
                 case TacticalLines.FORDSITE:
-                case TacticalLines.FOXHOLE: {
+                case TacticalLines.FOXHOLE: 
+                case TacticalLines.DECEIVE: {
                     count = 4;
                     break;
                 }

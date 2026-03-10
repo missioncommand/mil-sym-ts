@@ -100,6 +100,7 @@ export class TacticalLines {
     public static readonly SCREEN: number = 212210000;
     public static readonly GUARD: number = 212220000;
     public static readonly SARA: number = 22139000;
+    public static readonly DECEIVE: number = 22310000;
     public static readonly FIX: number = 211100000;
     public static readonly PDF: number = 22422000;
     public static readonly ATKBYFIRE: number = 22533000;

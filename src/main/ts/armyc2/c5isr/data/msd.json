@@ -8907,13 +8907,25 @@
       },
       {
         "ss": "",
+        "e": "Deception",
+        "et": "",
+        "est": "",
+        "code": "230000",
+        "versions": "10",
+        "geometry": "",
+        "drawRules": "",
+        "modifiers": "",
+        "aux1": ""
+      },
+      {
+        "ss": "",
         "e": "",
         "et": "Decoy/Dummy/Deception",
         "est": "",
         "code": "230100",
         "versions": "10",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line29",
         "modifiers": "",
         "aux1": ""
       },
@@ -8925,7 +8937,7 @@
         "code": "230200",
         "versions": "10",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line29",
         "modifiers": "",
         "aux1": ""
       },
