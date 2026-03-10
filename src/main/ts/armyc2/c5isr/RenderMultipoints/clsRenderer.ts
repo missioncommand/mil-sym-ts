@@ -3043,6 +3043,10 @@ export class clsRenderer {
                 return TacticalLines.RETIRE;
             case 342100:
                 return TacticalLines.SECURE;
+            case 343200:
+                return TacticalLines.CONTROL;
+            case 343900:
+                return TacticalLines.LOCATE;
             case 342201:
                 return TacticalLines.COVER;
             case 342202:

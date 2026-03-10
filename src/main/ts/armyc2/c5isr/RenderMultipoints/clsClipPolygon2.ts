@@ -721,6 +721,8 @@ export class clsClipPolygon2 {
                 case TacticalLines.CORDONSEARCH:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
                 case TacticalLines.ISOLATE:

@@ -680,6 +680,7 @@ export class arraysupport {
             let midPts: POINT2[] = new Array<POINT2>(7);
             let trianglePts: POINT2[] = new Array<POINT2>(35);
             let pArrowPoints: POINT2[] = new Array<POINT2>(3);
+            let pArrowPoints2: POINT2[] = new Array<POINT2>(3);
             let dRadius: double = lineutility.CalcDistanceDouble(pt0, pt1);
             let dLength: double = Math.abs(dRadius - 20);
             if (dRadius < 40) {
@@ -701,6 +702,7 @@ export class arraysupport {
             lineutility.InitializePOINT2Array(midPts);
             lineutility.InitializePOINT2Array(trianglePts);
             lineutility.InitializePOINT2Array(pArrowPoints);
+            lineutility.InitializePOINT2Array(pArrowPoints2);
             lineutility.InitializePOINT2Array(ptsSeize);
 
             let DPIScaleFactor: double = RendererSettings.getInstance().getDeviceDPI() / 96.0;
@@ -738,6 +740,12 @@ export class arraysupport {
                 lineutility.GetArrowHead4Double(ptsArc[24], ptsArc[25], Math.trunc(d / 7), Math.trunc(d  / 7), pArrowPoints, 0);
             } else {
                 lineutility.GetArrowHead4Double(ptsArc[24], ptsArc[25], Math.trunc(d / 7), Math.trunc((1.75 * d) / 7), pArrowPoints, 0);
+            }
+
+            //second arrow
+            if(lineType == TacticalLines.CONTROL || lineType == TacticalLines.LOCATE)
+            {
+                lineutility.GetArrowHead4Double(ptsArc[1], ptsArc[0], Math.trunc(d / 7), Math.trunc(d / 7), pArrowPoints2, 0);
             }
 
             pLinePoints[25].style = 5;
@@ -835,6 +843,22 @@ export class arraysupport {
                         pLinePoints[j].style = 0;
                     }
                     pLinePoints[28].style = 5;
+                    break;
+                }
+
+                case TacticalLines.CONTROL: 
+                case TacticalLines.LOCATE: {
+                    for (j = 26; j < 29; j++) {
+                        pLinePoints[j] = new POINT2(pArrowPoints[j - 26]);
+                        pLinePoints[j].style = 0;
+                    }
+                    pLinePoints[28].style = 5;
+                    pLinePoints[28].style = 5;
+                    for (j = 29; j < 32; j++) {
+                        pLinePoints[j] = new POINT2(pArrowPoints2[j - 29]);
+                        pLinePoints[j].style = 0;
+                    }
+                    pLinePoints[31].style = 5;
                     break;
                 }
 
@@ -3044,7 +3068,9 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.OCCUPY: {
+                case TacticalLines.OCCUPY: 
+                case TacticalLines.CONTROL: 
+                case TacticalLines.LOCATE: {
                     arraysupport.GetIsolatePointsDouble(pLinePoints, lineType, converter);
                     acCounter = 32;
                     break;
@@ -4510,6 +4536,8 @@ export class arraysupport {
                 case TacticalLines.PENETRATE:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.SEIZE:
                 case TacticalLines.CAPTURE:

@@ -423,7 +423,9 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.OCCUPY: {
+                case TacticalLines.OCCUPY: 
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE: {
                     count = 32;
                     break;
                 }

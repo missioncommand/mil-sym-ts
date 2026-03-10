@@ -401,6 +401,8 @@ export class clsRenderer2 {
                 }
 
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.OCCUPY: {
                     if (shapes != null && shapes.length > 0) {
 

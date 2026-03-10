@@ -920,6 +920,8 @@ export class clsUtility {
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.MOBILE_DEFENSE:
                 case TacticalLines.FLOT:

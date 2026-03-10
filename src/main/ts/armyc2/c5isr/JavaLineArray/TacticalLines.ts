@@ -93,6 +93,8 @@ export class TacticalLines {
     public static readonly PENETRATE: number = 211700000;
     public static readonly RETAIN: number = 211900000;
     public static readonly SECURE: number = 212100000;
+    public static readonly CONTROL: number = 25343200;
+    public static readonly LOCATE: number = 25343900;
     public static readonly SEIZE: number = 212300000;
     public static readonly CAPTURE: number = 25343000;
     public static readonly ASLTXING: number = 23221000;

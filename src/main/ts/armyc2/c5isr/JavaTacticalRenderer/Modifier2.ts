@@ -276,7 +276,8 @@ export class Modifier2 {
 
                 case TacticalLines.CAPTURE:
                 case TacticalLines.CANALIZE:
-                case TacticalLines.CLEAR: {
+                case TacticalLines.CLEAR: 
+                case TacticalLines.CONTROL: {
                     label = "C";
                     break;
                 }
@@ -356,6 +357,11 @@ export class Modifier2 {
 
                 case TacticalLines.LL: {
                     label = "LL";
+                    break;
+                }
+
+                case TacticalLines.LOCATE: {
+                    label = "LOC";
                     break;
                 }
 
@@ -4250,6 +4256,8 @@ export class Modifier2 {
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.CONTAIN:
                 case TacticalLines.SEIZE:
@@ -4440,11 +4448,14 @@ export class Modifier2 {
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.AREA_DEFENSE: {
                     pt0 = tg.Pixels[13];
                     pt1 = tg.Pixels[14];
                     //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
                     break;
                 }
 

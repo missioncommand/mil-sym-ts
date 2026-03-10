@@ -2721,7 +2721,9 @@ export class lineutility {
 
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
-                case TacticalLines.SECURE: {
+                case TacticalLines.SECURE: 
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE: {
                     startangle = M;
                     //if(CELineArrayGlobals.Change1==false)
                     endangle = startangle + 338 * Math.PI / 180;
@@ -2751,7 +2753,9 @@ export class lineutility {
 
                     case TacticalLines.OCCUPY:
                     case TacticalLines.RETAIN:
-                    case TacticalLines.SECURE: {
+                    case TacticalLines.SECURE: 
+                    case TacticalLines.CONTROL:
+                    case TacticalLines.LOCATE: {
                         startangle = M - Math.PI;
                         //if(CELineArrayGlobals.Change1==false)
                         endangle = startangle + 338 * Math.PI / 180;
