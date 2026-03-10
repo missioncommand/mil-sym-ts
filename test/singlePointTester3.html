@@ -664,6 +664,8 @@
                 C5Ren.ErrorLogger.LogMessage(country);
                 country = SymbolID.setCountryCode("000000000000000000000000000000","076");
                 C5Ren.ErrorLogger.LogMessage(country);//*/
+
+                testBasicShape();
             }
             catch(e)
             {
@@ -675,6 +677,40 @@
             }
 
 	}
+
+    function testBasicShape()
+    {
+        var id = "id";
+        var name = "name";
+        var description = "description";
+        var controlPoints = "8.40185525443334,38.95854638813517";
+        var altitudeMode = "absolute";
+        var scale = 5869879.2;
+        var bbox = "5.76417051405295,34.86552015439102,20.291017309471272,45.188646318100695";
+
+        var modifiers = new Map();
+        var attributes = new Map();
+        try
+        {
+            modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1500");
+
+            var geoJSON = C5Ren.WebRenderer.RenderBasicShape(id, name, description, C5Ren.BasicShapes.CIRCLE, controlPoints, altitudeMode, scale, bbox, modifiers, attributes, C5Ren.WebRenderer.OUTPUT_FORMAT_GEOJSON);
+            console.log("Basic Shape CIRCLE");
+            console.log(geoJSON);
+
+            modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1500,1000");
+            modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "20");
+            modifiers.set(C5Ren.Modifiers.T_UNIQUE_DESIGNATION_1, "T: RECTANGLE");
+
+            geoJSON = C5Ren.WebRenderer.RenderBasicShape(id, name, description, C5Ren.BasicShapes.RECTANGLE, controlPoints, altitudeMode, scale, bbox, modifiers, attributes, C5Ren.WebRenderer.OUTPUT_FORMAT_GEOJSON);
+            console.log("Basic Shape RECTANGLE");
+            console.log(geoJSON);
+        }
+        catch(exc)
+        {
+            console.log(exc);
+        }
+    }
 </script>
 </head>
    

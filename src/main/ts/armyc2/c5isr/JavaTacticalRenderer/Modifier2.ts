@@ -274,6 +274,7 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.CAPTURE:
                 case TacticalLines.CANALIZE:
                 case TacticalLines.CLEAR: {
                     label = "C";
@@ -4252,6 +4253,7 @@ export class Modifier2 {
                 case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.CONTAIN:
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE:
                 case TacticalLines.TURN:
                 case TacticalLines.CORDONKNOCK:
@@ -4473,11 +4475,13 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE: {
                     pt0 = tg.Pixels[26];
                     pt1 = tg.Pixels[27];
                     //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
                     break;
                 }
 
@@ -4541,7 +4545,8 @@ export class Modifier2 {
                         stringWidth = -stringWidth;
                     }
                     pt1 = lineutility.ExtendAlongLineDouble2(pt0, pt1, 0.75 * stringWidth);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, ptCenter, ptCenter, true);
                     break;
                 }
 

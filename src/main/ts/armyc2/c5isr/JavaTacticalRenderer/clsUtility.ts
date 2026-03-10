@@ -224,6 +224,7 @@ export class clsUtility {
             case TacticalLines.COVER:
             case TacticalLines.GUARD:
             case TacticalLines.SEIZE:
+            case TacticalLines.CAPTURE:
             case TacticalLines.EVACUATE:
             case TacticalLines.WITHDRAW:
             case TacticalLines.DISENGAGE:

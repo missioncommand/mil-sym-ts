@@ -4315,6 +4315,7 @@ export class arraysupport {
                 }
 
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE: {
                     let radius: double = 0;
                     if (vblSaveCounter === 4) {
@@ -4511,6 +4512,7 @@ export class arraysupport {
                 case TacticalLines.SECURE:
                 case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE:
                 case TacticalLines.TURN:
                 case TacticalLines.BS_RECTANGLE:

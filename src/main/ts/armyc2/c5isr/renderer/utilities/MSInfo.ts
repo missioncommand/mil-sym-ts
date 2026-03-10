@@ -908,17 +908,11 @@ export class MSInfo {
 
             case DrawRules.LINE26:
             case DrawRules.LINE27: {
-                if (version >= SymbolID.Version_2525E) {
-
-                    points[0] = 4;
-                }
-
-                else {
-
-                    points[0] = 3;
-                }
-
-                points[1] = 4;
+                points[0] = 3;
+                if (version >= SymbolID.Version_2525E) 
+                    points[1] = 4;
+                else 
+                    points[1] = 3;
                 break;
             }
 

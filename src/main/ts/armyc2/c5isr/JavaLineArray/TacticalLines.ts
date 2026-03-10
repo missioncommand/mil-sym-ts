@@ -94,6 +94,7 @@ export class TacticalLines {
     public static readonly RETAIN: number = 211900000;
     public static readonly SECURE: number = 212100000;
     public static readonly SEIZE: number = 212300000;
+    public static readonly CAPTURE: number = 25343000;
     public static readonly ASLTXING: number = 23221000;
     public static readonly GAP: number = 23163000;
     public static readonly COVER: number = 212230000;
