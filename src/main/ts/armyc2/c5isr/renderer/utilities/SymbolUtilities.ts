@@ -302,7 +302,6 @@ export class SymbolUtilities {
      * G*G*GPP---****X
      * @param strSymbolID 15 Character string
      * @return 15 Character string
-     * @deprecated function will be removed
      */
     public static getBasicSymbolID2525C(strSymbolID: string): string {
         if (strSymbolID != null && strSymbolID.length === 15) {
