@@ -783,6 +783,58 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.DENY:
+                {
+                    if (dRadius > 100) {
+                        dLength = -0.2 * dRadius;
+                    }
+                    for (j = 1; j <= 23; j++) {
+                        if (j % 3 == 0) {
+
+                            // 1. Get the midpoint of each segment
+                            let start:POINT2 = new POINT2(ptsArc[j - 1]);
+                            let end:POINT2 = new POINT2(ptsArc[j + 1]);
+                            let midX:number = (start.x + end.x)/2;
+                            let midY:number = (start.y + end.y)/2;
+
+                            // 2. Calculate the direction vector from center to midpoint
+                            let dx:number = midX - pt0.x;
+                            let dy:number = midY - pt0.y;
+                            let distance:number = Math.sqrt(dx * dx + dy * dy);
+
+                            // 3. Normalize and scale to 120% of the radius
+                            let targetDistance:number = dRadius * 1.20;
+
+                            // Handle edge case: if midpoint is exactly at center, use start point for direction
+                            if (distance < 0.00001) {
+                                dx = start.x - pt0.x;
+                                dy = start.y - pt0.y;
+                                distance = Math.sqrt(dx * dx + dy * dy);
+                            }
+
+                            midPts[k].x = pt0.x + (dx / distance) * targetDistance;
+                            midPts[k].y = pt0.y + (dy / distance) * targetDistance;
+                            midPts[k].style = 0;
+                            trianglePts[l] = new POINT2(ptsArc[j - 1]);
+                            l++;
+                            trianglePts[l] = new POINT2(midPts[k]);
+                            l++;
+                            trianglePts[l] = new POINT2(ptsArc[j + 1]);
+                            trianglePts[l].style = 5;
+                            l++;
+                            k++;
+                        }
+                    }
+                    for (j = 26; j < 47; j++) {
+                        pLinePoints[j] = new POINT2(trianglePts[j - 26]);
+                    }
+                    pLinePoints[46].style = 5;
+                    for (j = 47; j < 50; j++) {
+                        pLinePoints[j] = new POINT2(pArrowPoints[j - 47]);
+                        pLinePoints[j].style = 0;
+                    }
+                    break;
+                }
                 case TacticalLines.AREA_DEFENSE: {
                     if (dRadius > 100) {
                         dLength = 0.8 * dRadius;
@@ -3056,7 +3108,8 @@ export class arraysupport {
 
                 case TacticalLines.ISOLATE:
                 case TacticalLines.CORDONKNOCK:
-                case TacticalLines.CORDONSEARCH: {
+                case TacticalLines.CORDONSEARCH: 
+                case TacticalLines.DENY: {
                     arraysupport.GetIsolatePointsDouble(pLinePoints, lineType, converter);
                     acCounter = 50;
                     break;
@@ -4549,6 +4602,7 @@ export class arraysupport {
                 case TacticalLines.AIRFIELD:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH:
+                case TacticalLines.DENY:
                 case TacticalLines.MSDZ:
                 case TacticalLines.CONVOY:
                 case TacticalLines.HCONVOY:

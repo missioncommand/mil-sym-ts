@@ -413,7 +413,8 @@ export class countsupport {
 
                 case TacticalLines.ISOLATE:
                 case TacticalLines.CORDONKNOCK:
-                case TacticalLines.CORDONSEARCH: {
+                case TacticalLines.CORDONSEARCH: 
+                case TacticalLines.DENY: {
                     count = 50;
                     break;
                 }

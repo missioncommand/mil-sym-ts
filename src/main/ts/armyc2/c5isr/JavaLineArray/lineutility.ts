@@ -2706,6 +2706,7 @@ export class lineutility {
                 case TacticalLines.ISOLATE:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH:
+                case TacticalLines.DENY:
                 case TacticalLines.AREA_DEFENSE: {
                     startangle = M;
                     endangle = startangle + 330 * Math.PI / 180;
@@ -2745,6 +2746,7 @@ export class lineutility {
                     case TacticalLines.ISOLATE:
                     case TacticalLines.CORDONKNOCK:
                     case TacticalLines.CORDONSEARCH:
+                    case TacticalLines.DENY:
                     case TacticalLines.AREA_DEFENSE: {
                         startangle = M - Math.PI;
                         endangle = startangle + 330 * Math.PI / 180;

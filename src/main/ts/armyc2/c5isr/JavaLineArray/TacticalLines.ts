@@ -146,6 +146,7 @@ export class TacticalLines {
     public static readonly WITHDRAW: number = 212400000;
     public static readonly CORDONSEARCH: number = 212500000;
     public static readonly CORDONKNOCK: number = 212600000;
+    public static readonly DENY: number = 25343400;
     public static readonly WDRAWUP: number = 212410000;
     public static readonly CFL: number = 24220000;
     public static readonly LOD: number = 22526000;

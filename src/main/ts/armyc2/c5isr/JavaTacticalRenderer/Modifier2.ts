@@ -590,7 +590,8 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.DELAY: {
+                case TacticalLines.DELAY: 
+                case TacticalLines.DENY: {
                     label = "D";
                     break;
                 }
@@ -4266,6 +4267,7 @@ export class Modifier2 {
                 case TacticalLines.TURN:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH:
+                case TacticalLines.DENY:
                 case TacticalLines.FOLLA:
                 case TacticalLines.FOLSP:
                 case TacticalLines.ACA_RECTANGULAR:
@@ -4548,7 +4550,8 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.CORDONKNOCK:
-                case TacticalLines.CORDONSEARCH: {
+                case TacticalLines.CORDONSEARCH: 
+                case TacticalLines.DENY: {
                     pt0 = tg.Pixels[13];
                     pt1 = tg.Pixels[0];
                     stringWidth = metrics.stringWidth(label);

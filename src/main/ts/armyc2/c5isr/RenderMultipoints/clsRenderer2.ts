@@ -456,7 +456,8 @@ export class clsRenderer2 {
 
                 case TacticalLines.CORDONSEARCH:
                 case TacticalLines.CORDONKNOCK:
-                case TacticalLines.ISOLATE: {
+                case TacticalLines.ISOLATE: 
+                case TacticalLines.DENY: {
                     //set the fillcolor to null for the existing shapes
                     //we are going to create a new fill shape
                     if (shapes != null && shapes.length > 0) {
