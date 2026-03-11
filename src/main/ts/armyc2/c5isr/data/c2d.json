@@ -8786,7 +8786,7 @@
             {
               "basic": "G*G*PA----****X",
               "ss": "25",
-              "ec": "140400",
+              "ec": "151406",
               "s1": "",
               "s2": "",
               "e": "",
@@ -8796,7 +8796,7 @@
             {
               "basic": "G*G*PD----****X",
               "ss": "25",
-              "ec": "150100",
+              "ec": "230200",
               "s1": "",
               "s2": "",
               "e": "",
@@ -8812,6 +8812,36 @@
               "e": "",
               "et": "",
               "est": "Direction of Attack Feint"
+            },
+            {
+              "basic": "G*G*PN----****X",
+              "ss": "25",
+              "ec": "270705",
+              "s1": "",
+              "s2": "",
+              "e": "",
+              "et": "",
+              "est": "Dummy Minefield"
+            },
+            {
+              "basic": "G*G*PM----****X",
+              "ss": "25",
+              "ec": "270900",
+              "s1": "",
+              "s2": "",
+              "e": "",
+              "et": "",
+              "est": "Decoy Mined Area"
+            },
+            {
+              "basic": "G*G*PY----****X",
+              "ss": "25",
+              "ec": "270901",
+              "s1": "",
+              "s2": "",
+              "e": "",
+              "et": "",
+              "est": "Decoy Mined Area, Fenced"
             },
             {
               "basic": "G*G*GPA---****X",
@@ -10827,11 +10857,7 @@
               "s2": "",
               "e": "",
               "et": "Bridge or Gap",
-              "est": "",
-              "__parsed_extra": [
-                "",
-                "What is the difference between 'Bridge' (271400) and 'Bridge or Gap' (271100)? They are both listed under Obstacles. Also, the naming is reversed between versions"
-              ]
+              "est": ""
             },
             {
               "basic": "G*M*ORP---****X",
@@ -15141,7 +15167,7 @@
             {
               "basic": "WA-DPFC-FG-L---",
               "ss": "45",
-              "ec": "110203",
+              "ec": "110303",
               "s1": "00",
               "s2": "00",
               "e": "",
@@ -15151,7 +15177,7 @@
             {
               "basic": "WA-DPFC-FY-L---",
               "ss": "45",
-              "ec": "110104",
+              "ec": "110304",
               "s1": "00",
               "s2": "00",
               "e": "",

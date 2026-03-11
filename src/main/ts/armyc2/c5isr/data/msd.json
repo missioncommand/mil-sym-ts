@@ -10359,6 +10359,30 @@
         "ss": "",
         "e": "",
         "et": "",
+        "est": "Dummy Minefield",
+        "code": "270705",
+        "versions": "10",
+        "geometry": "Point",
+        "drawRules": "Point2",
+        "modifiers": "H,N,W",
+        "aux1": "just 270701 with FD mod"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Dummy Minefield Dynamic",
+        "code": "270706",
+        "versions": "10",
+        "geometry": "Area",
+        "drawRules": "Area23",
+        "modifiers": "",
+        "aux1": "just 270707 with FD mod"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
         "est": "Dynamic Depiction",
         "code": "270707",
         "versions": "10,11",
@@ -10390,6 +10414,30 @@
         "drawRules": "Area1",
         "modifiers": "N",
         "aux1": ""
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Dummy Mined Area",
+        "est": "",
+        "code": "270900",
+        "versions": "10",
+        "geometry": "Area",
+        "drawRules": "Area1",
+        "modifiers": "H,N,W",
+        "aux1": "just 270800 with FD mod"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Fenced Dummy",
+        "code": "270901",
+        "versions": "10",
+        "geometry": "Area",
+        "drawRules": "Area1",
+        "modifiers": "N",
+        "aux1": "just 270801 with FD mod"
       },
       {
         "ss": "",
