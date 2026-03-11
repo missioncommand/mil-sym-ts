@@ -78,10 +78,10 @@ export class C2DLookup {
      * Take a complete 15 character 2525C symbol code and converts it to 2525D if there is a match.
      * Returns null if no match.
      * @param symbolID 15 character 2525C symbol code.
-     * @param includeCountryCode Update the country code as well.
+     * @param includeCountryCode default true, Update the country code as well.
      * @return 30 character 2525D code or null if no matching symbol.
      */
-    public getDCode(symbolID:string, includeCountryCode:boolean = false):string
+    public getDCode(symbolID:string, includeCountryCode:boolean = true):string
     {
         let basicID:string = SymbolUtilities.getBasicSymbolID2525C(symbolID);
         let newCode:string = "110000000000000000000000000000";
@@ -282,6 +282,20 @@ export class C2DLookup {
                         break;
                 }
             }
+        }
+
+        switch(SymbolID.getEntityCode(newCode))
+        {
+            case 151406://Axis of Advance for a Feint
+            case 140605://Direction of attack feint
+            case 270705://Dummy Minefield
+            case 270706://Dummy Minefield, Dynamic
+            case 270900://Decoy Mined Area
+            case 270901://Decoy Mined Area, Fenced
+                newCode = SymbolID.setVersion(newCode,10);
+                break;
+            default:
+                break;
         }
 
         //country code
