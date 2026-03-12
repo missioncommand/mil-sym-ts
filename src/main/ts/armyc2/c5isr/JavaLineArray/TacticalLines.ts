@@ -538,6 +538,7 @@ export class TacticalLines {
     public static readonly EXPLOIT: number = 25343100;
     public static readonly DEMONSTRATE: number = 25343300;
     public static readonly ENVELOPMENT: number = 25343500;
+    public static readonly EXFILTRATION: number = 25343700;
     public static readonly INFILTRATION: number = 25343800;
     public static readonly PURSUIT: number = 25344000;
     public static readonly DISENGAGE: number = 25344400;

@@ -449,6 +449,131 @@ export class DISMSupport {
         return false;
     }
 
+    public static GetInfiltrationDouble(points:POINT2[]):POINT2[] {
+        let counter:number = 0;
+
+        let p1:POINT2 = points[0];//start
+        let p3:POINT2 = points[1];//mid
+        let p5:POINT2 = points[2];//end
+        let start:POINT2 = points[0];//start
+        let mid:POINT2 = points[1];//mid
+        let end:POINT2 = points[2];//end
+        let p2:POINT2 = new POINT2(0,0,1);
+        let p4:POINT2 = new POINT2(0,0,1);
+        p1.style=0;
+
+
+
+        let dpi:number = RendererSettings.getInstance().getDeviceDPI();
+        let scale:number = 4;
+
+        if(p5.x==0 && p5.y==0)//handle points drop when all 3 on top of each other.
+        {
+            p5.x=p3.x;
+            p5.y=p3.y;
+        }
+ 
+        let d1 = Math.round(lineutility.CalcDistanceDouble(p1,p3));
+        let d2 = Math.round(lineutility.CalcDistanceDouble(p3,p5));
+
+        //force some distance so render doesn't fail when points too close
+        if(d1==0) {
+            p1.x = p1.x - 1;
+            p1.y = p1.y - 1;
+        }
+        if(d2==0) {
+            p5.x = p5.x + 1;
+            p5.y = p5.y + 1;
+        }
+
+        let arcDistance:number = dpi/scale;
+
+        let anchor1:POINT2 = new POINT2();
+        let anchor2:POINT2 = new POINT2();
+        if(p5.y >= p3.y)//end point lower than mid point
+        {
+            p2.y = p3.y - arcDistance;
+            p4.y = p3.y + arcDistance;
+        }
+        else//end point higher than mid point
+        {
+            p2.y = p3.y + arcDistance;
+            p4.y = p3.y - arcDistance;
+        }
+
+        arcDistance = dpi/scale;
+        if(d2 < arcDistance)
+            arcDistance = Math.max(d2*0.5,3);
+        if(p5.x >= p3.x)
+        {
+            p2.x = p3.x - arcDistance;
+            p4.x = p3.x + arcDistance;
+        }
+        else
+        {
+            p2.x = p3.x + arcDistance;
+            p4.x = p3.x - arcDistance;
+        }
+        anchor1.x=p2.x;
+        anchor1.y=p3.y;
+
+        anchor2.x=p4.x;
+        anchor2.y=p3.y;
+
+
+        let path:Array<POINT2> = new Array<POINT2>();
+
+        try {
+
+            // Draw the first straight line segment (p1 to p2)
+            //g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+            path.push(p1);
+            //path.add(p2);//first curve is going to add this point again
+
+            // Draw the first 45-degree arc (concave) from p2 to p3
+            //drawArc(g2d, p2, p3, true, 5);
+            //path.addAll(getArc(p2, p3, false, 5));
+            if(arcDistance < d1) {
+                path = path.concat(lineutility.GetArcPointsDouble(p2, p3, anchor1, 5));
+                //path.remove(path.size() - 1);//next curve is going to add this point again.
+                path.pop();//next curve is going to add this point again.
+            }
+
+
+            // Draw the second 45-degree arc (convex) from p3 to p4
+            //drawArc(g2d, p3, p4, false, 5);
+            //path.addAll(getArc(p3, p4, true, 5));
+            if(arcDistance < d2)
+                path = path.concat(lineutility.GetArcPointsDouble(p3, p4, anchor2, 5));
+            else
+                path.push(p3);
+
+            // Draw the second straight line segment (p4 to p5)
+            //g2d.drawLine(p4.x, p4.y, p5.x, p5.y);
+            path.push(p5);
+
+        }
+        catch(exc:any)
+        {
+            ErrorLogger.LogException("DISMSupport","GetInfiltrationDouble",exc);
+        }
+
+        let lcv = 0;
+        points = new Array<POINT2>(path.length + 3);
+
+        for(let pt of path)
+        {
+            if(lcv == 0)
+                pt.style = 0;
+            else
+                pt.style=1;
+            points[lcv] = pt;
+            lcv++;
+        }
+
+        return points;
+    }
+
     /**
      * Calculates the points for ENVELOPMENT
      *

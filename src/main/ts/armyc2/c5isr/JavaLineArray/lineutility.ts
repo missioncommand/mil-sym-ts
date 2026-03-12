@@ -1640,6 +1640,45 @@ export class lineutility {
         }
     }
 
+    
+    /**
+     *
+     * @param start beginning of arc
+     * @param end end of arc
+     * @param center center point of circle
+     * @param numSegments how many lines to use to make the curve
+     * @return ArrayList<POINT2> of points that make the arc
+     */
+    public static GetArcPointsDouble(start:POINT2, end:POINT2, center:POINT2, numSegments:number):Array<POINT2> {
+        let points:Array<POINT2> = new Array<POINT2>();
+
+        // 1. Calculate vectors from center to start/end points
+        let dxStart:number = start.x - center.x;
+        let dyStart:number = start.y - center.y;
+        let dxEnd:number = end.x - center.x;
+        let dyEnd:number = end.y - center.y;
+
+        // 2. Determine radius and initial/final angles
+        let radius:number = Math.sqrt(dxStart * dxStart + dyStart * dyStart);
+        let angleStart:number = Math.atan2(dyStart, dxStart);
+        let angleEnd:number = Math.atan2(dyEnd, dxEnd);
+
+        // 3. Calculate the shortest sweep angle
+        let sweep:number = angleEnd - angleStart;
+        while (sweep > Math.PI) sweep -= 2 * Math.PI;
+        while (sweep < -Math.PI) sweep += 2 * Math.PI;
+
+        // 4. Generate points for each segment
+        points.push(start); // Start with the actual start point
+        for (let i = 1; i <= numSegments; i++) {
+            let currentAngle:number = angleStart + (sweep * i / numSegments);
+            let x:number = center.x + radius * Math.cos(currentAngle);
+            let y:number = center.y + radius * Math.sin(currentAngle);
+            points.push(new POINT2(x, y));
+        }
+
+        return points;
+    }
 
     /**
      * Returns the smallest x and y pixel values from an array of points

@@ -907,6 +907,11 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.EXFILTRATION: {
+                    label = "EX";
+                    break;
+                }
+
                 case TacticalLines.INFILTRATION: {
                     label = "IN";
                     break;
@@ -2632,6 +2637,7 @@ export class Modifier2 {
                 case TacticalLines.AAAAA:
                 case TacticalLines.MAIN:
                 case TacticalLines.DIRATKSPT:
+                case TacticalLines.EXFILTRATION:
                 case TacticalLines.INFILTRATION:
                 case TacticalLines.DIRATKGND:
                 case TacticalLines.LAUNCH_AREA:
@@ -2992,8 +2998,10 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.EXFILTRATION:
                 case TacticalLines.INFILTRATION: {
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, true);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, ptCenter, ptCenter , true);
                     break;
                 }
 

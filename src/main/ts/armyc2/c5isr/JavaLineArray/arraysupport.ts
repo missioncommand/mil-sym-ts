@@ -3927,8 +3927,7 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT:
-                case TacticalLines.INFILTRATION: {
+                case TacticalLines.DIRATKSPT: {
                     if (lineType == TacticalLines.DIRATKSPT) {
                     //reverse the points
                     lineutility.ReversePointsDouble2(
@@ -3947,6 +3946,33 @@ export class arraysupport {
                     if (dMBR > 500 * DPIScaleFactor) {
                         dMBR = 500 * DPIScaleFactor;
                     }
+
+                    lineutility.GetArrowHead4Double(pLinePoints[vblCounter - 5], pLinePoints[vblCounter - 4], Math.trunc(dMBR / 20), Math.trunc(dMBR / 20), pArrowPoints, 0);
+                    for (k = 0; k < 3; k++) {
+                        pLinePoints[vblCounter - k - 1] = new POINT2(pArrowPoints[k]);
+                    }
+                    acCounter = vblCounter;
+                    break;
+                }
+
+                case TacticalLines.EXFILTRATION: 
+                case TacticalLines.INFILTRATION: {
+
+                    if (dMBR / 20 > arraysupport.maxLength * DPIScaleFactor) {
+                        dMBR = 20 * arraysupport.maxLength * DPIScaleFactor;
+                    }
+                    if (dMBR / 20 < arraysupport.minLength * DPIScaleFactor) {
+                        dMBR = 20 * arraysupport.minLength * DPIScaleFactor;
+                    }
+                    if (dMBR < 150 * DPIScaleFactor) {
+                        dMBR = 150 * DPIScaleFactor;
+                    }
+                    if (dMBR > 500 * DPIScaleFactor) {
+                        dMBR = 500 * DPIScaleFactor;
+                    }
+
+                    pLinePoints = DISMSupport.GetInfiltrationDouble(pLinePoints);
+                    vblCounter = pLinePoints.length;
 
                     lineutility.GetArrowHead4Double(pLinePoints[vblCounter - 5], pLinePoints[vblCounter - 4], Math.trunc(dMBR / 20), Math.trunc(dMBR / 20), pArrowPoints, 0);
                     for (k = 0; k < 3; k++) {
@@ -5394,6 +5420,7 @@ export class arraysupport {
                 }
 
                 case TacticalLines.DIRATKSPT:
+                case TacticalLines.EXFILTRATION:
                 case TacticalLines.INFILTRATION: {
                     arraysupport.addPolyline(pLinePoints, acCounter - 3, shapes); // Main line
                     secondPoly = new Array<POINT2>(3);
