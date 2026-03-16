@@ -110,44 +110,44 @@
             if(msInfo != null && msInfo.getSymbolSet()==25) {
                 var drawRule = msInfo.getDrawRule();
                 // Points
-                if (drawRule == DrawRules.POINT17) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1500,1000");
-                    modifier.put(Modifiers.AN_AZIMUTH, "45"); // degrees
-                } else if (drawRule == DrawRules.POINT18) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1000,1500");
-                    modifier.put(Modifiers.AN_AZIMUTH, "45,90"); // degrees
+                if (drawRule == C5Ren.DrawRules.POINT17) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1500,1000");
+                    modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "45"); // degrees
+                } else if (drawRule == C5Ren.DrawRules.POINT18) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000,1500");
+                    modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "45,90"); // degrees
                 }
                 //Corridor
-                else if (drawRule == DrawRules.CORRIDOR1) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1000");
-                    modifier.put(Modifiers.X_ALTITUDE_DEPTH, "0,10");
+                else if (drawRule == C5Ren.DrawRules.CORRIDOR1) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000");
+                    modifiers.set(C5Ren.Modifiers.X_ALTITUDE_DEPTH, "0,10");
                 }
                 // Ellipse
-                else if (drawRule == DrawRules.ELLIPSE1) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1000,1500");
-                    modifier.put(Modifiers.AN_AZIMUTH, "45");
+                else if (drawRule == C5Ren.DrawRules.ELLIPSE1) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000,1500");
+                    modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "45");
                 }
                 // Rectangles
-                if (drawRule == DrawRules.RECTANGULAR1) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1000");
-                } else if (drawRule == DrawRules.RECTANGULAR2) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1000,6000");
-                    modifier.put(Modifiers.AN_AZIMUTH, "45"); // mils
-                } else if (drawRule == DrawRules.RECTANGULAR3) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1000");
+                if (drawRule == C5Ren.DrawRules.RECTANGULAR1) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000");
+                } else if (drawRule == C5Ren.DrawRules.RECTANGULAR2) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000,3000");
+                    modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "45"); // mils
+                } else if (drawRule == C5Ren.DrawRules.RECTANGULAR3) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000");
                 }
                 // Circles
-                else if (drawRule == DrawRules.CIRCULAR1) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1000");
-                } else if (drawRule == DrawRules.CIRCULAR2) {
-                    modifier.put(Modifiers.AM_DISTANCE, "750,1000,1500");
-                    modifier.put(Modifiers.X_ALTITUDE_DEPTH, "0,10,100");
+                else if (drawRule == C5Ren.DrawRules.CIRCULAR1) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000");
+                } else if (drawRule == C5Ren.DrawRules.CIRCULAR2) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "750,1500,1500");
+                    modifiers.set(C5Ren.Modifiers.X_ALTITUDE_DEPTH, "0,10,100");
                 }
                 // Arc
-                else if (drawRule == DrawRules.ARC1) {
-                    modifier.put(Modifiers.AM_DISTANCE, "1000,1500,2200,3200,3500");
-                    modifier.put(Modifiers.AN_AZIMUTH, "290,30,290,30,315,30,315,35"); // degrees
-                    modifier.put(Modifiers.X_ALTITUDE_DEPTH, "0,10,100,200");
+                else if (drawRule == C5Ren.DrawRules.ARC1) {
+                    modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "500,1500,2500,3500,4500");
+                    modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "290,30,290,30,315,30,315,35"); // degrees
+                    modifiers.set(C5Ren.Modifiers.X_ALTITUDE_DEPTH, "0,10,100,200");
                 }
             }
             
@@ -631,13 +631,33 @@
 
         var geoLeft = 49.9;
         var geoRight = 50;
-        var geoTop = 20;
-        var geoBottom = 20.5;
+        var geoTop = 20.05;
+        var geoBottom = 20;
 
         var mx = (geoRight - geoLeft) / pw;
-        var my = (geoBottom - geoTop) / ph;
+        var my = (geoTop - geoBottom) / ph;
 
-        return [geoLeft + (x*mx),geoTop + (y*my)];
+        if(geoRight-geoLeft < -180)
+        {
+            mmx = (geoRight - geoLeft + 360) / pw ;
+        }
+        if(geoRight-geoLeft > 180)
+        {
+            mx = (360 - (geoRight - geoLeft) ) / pw ;
+        }
+        //end section
+        if(geoTop < geoBottom)
+            my = -Math.abs(my);
+        else
+            my = Math.abs(my);
+
+
+            /*if(coords.x > 180) //Should add but not necessary given the tester stays at a fixed location.
+            coords.x -= 360;
+        if(coords.x < -180)
+            coords.x += 360;//*/
+
+        return [geoLeft + (x*mx),geoTop - (y*my)];
 
 
     }
@@ -671,16 +691,13 @@
         var scale = 5869879.2;
         var geoLeft = 49.9;
         var geoRight = 50;
-        var geoTop = 20;
-        var geoBottom = 20.5;
+        var geoTop = 20.05;
+        var geoBottom = 20
         //var bbox = "5.76417051405295,34.86552015439102,20.291017309471272,45.188646318100695";
-        var bbox = "49.9,20.5,50,20";
+        var bbox = "49.9,20,50,20.05";
 
-        var modifiers = new Map();
+        var modifiers = populateModifiers();
         var attributes = new Map();
-        modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1500,1000");
-        modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "20");
-        modifiers.set(C5Ren.Modifiers.T_UNIQUE_DESIGNATION_1, "T");
 
         var preview = document.getElementById("preview");
         var pw = preview.width;
@@ -707,8 +724,8 @@
             //calculate pixel point////////////////////////////////
             var geoLeft = 49.9;
             var geoRight = 50;
-            var geoTop = 20;
-            var geoBottom = 20.5;
+            var geoTop = 20.05;
+            var geoBottom = 20;
 
             var mx = (geoRight - geoLeft) / pw;
             var my = (geoBottom - geoTop) / ph;
