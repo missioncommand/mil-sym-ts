@@ -31,6 +31,10 @@
 	    
     <script type = "text/javascript">
 	
+    var drawMPMode = false;
+    var mpPoints = null;
+    var mpcp = null;
+    var mpPointCount = 0;
 	var fontCheckTimer =  null;
 	var retries = 15;
 	var attempts = 0;
@@ -39,6 +43,7 @@
         var _modifiers = null;
         var Modifiers = null;
         //var C5Ren = null;
+
 	
 	
         function populateModifiers()
@@ -492,6 +497,7 @@
 
         
     }
+
     function clearCanvas()
     {
         var preview = document.getElementById("preview");
@@ -523,10 +529,38 @@
         
         var id = buildSymbolID(_symbolID);
         
+
         var preview = document.getElementById("preview");
         var x = e.pageX - preview.offsetLeft;
         var y = e.pageY - preview.offsetTop;
-        render(id,x, y);
+
+        if(drawMPMode==false)
+        {
+            render(id,x, y);
+        }
+        else
+        {
+            msi = C5Ren.MSLookup.getInstance().getMSLInfo(id);
+            var max = msi.getMaxPointCount();
+            if(mpPoints != null && mpPointCount < max)
+            {
+                //add point
+                var point = getFakeGeo(x,y);
+                mpcp += point[0] + "," + point[1] + " ";
+                mpPointCount++;
+            }
+            if(mpPointCount >= max)
+            {
+                //Draw Multipoint
+                renderMP(id,mpcp);
+
+                //reset mode
+                drawMPMode = false;;
+                mpPoints = null;
+                mpcp = "";
+                mpPointCount = 0;
+            }
+        }
 
         /*
         var att = new Map();
@@ -535,6 +569,112 @@
         var LAA = "110325000015110016000000000000";
         var si = C5Ren.SinglePointSVGRenderer.getInstance().RenderModifier(LAA,att);
         console.log(si.getSVG());//*/
+    }
+
+    function getFakeGeo(x,y)
+    {
+        //33,34,33,34
+        var preview = document.getElementById("preview");
+        var pw = preview.width;
+        var ph = preview.height;
+        //return [33 + (1/pw),33 + (1/ph)];
+
+        var geoLeft = 49.9;
+        var geoRight = 50;
+        var geoTop = 20;
+        var geoBottom = 20.5;
+
+        var mx = (geoRight - geoLeft) / pw;
+        var my = (geoBottom - geoTop) / ph;
+
+        return [geoLeft + (x*mx),geoTop + (y*my)];
+
+
+    }
+
+    function drawMP()
+    {
+        var preview = document.getElementById("preview");
+        var width = preview.width;
+        var height = preview.height;
+
+        drawMPMode = true;
+        mpPoints = new Array();
+        mpcp = "";
+        mpPointCount = 0;
+
+    
+    }
+
+    function renderMP(symbolID, controlPoints)
+    {
+        var id = "id";
+        var name = "name";
+        var description = "description";
+        //var controlPoints = "8.40185525443334,38.95854638813517";
+        var altitudeMode = "absolute";
+        var scale = 5869879.2;
+        var geoLeft = 49.9;
+        var geoRight = 50;
+        var geoTop = 20;
+        var geoBottom = 20.5;
+        //var bbox = "5.76417051405295,34.86552015439102,20.291017309471272,45.188646318100695";
+        var bbox = "49.9,20.5,50,20";
+
+        var modifiers = new Map();
+        var attributes = new Map();
+        modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1500,1000");
+        modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "20");
+        modifiers.set(C5Ren.Modifiers.T_UNIQUE_DESIGNATION_1, "T");
+
+        var preview = document.getElementById("preview");
+        var pw = preview.width;
+        var ph = preview.height;
+
+        try
+        {
+
+            var geoSVG = C5Ren.WebRenderer.RenderSymbol2D(id, name, description,symbolID, controlPoints, pw,ph, bbox, modifiers, attributes, C5Ren.WebRenderer.OUTPUT_FORMAT_GEOSVG);
+            console.log("GeoSVG:");
+            console.log(geoSVG);
+
+            var data = "data:image/svg+xml;base64," + btoa(String.fromCodePoint(...new TextEncoder().encode(geoSVG)));
+
+            var svgImage = document.getElementById("SVGTest");
+            svgImage.src = data;
+
+            if (typeof geoSVG === 'string') {
+                var start = geoSVG.toString().indexOf("<geoTL>");
+                var stop = geoSVG.toString().indexOf("</geoTL>");
+                var anchorString = geoSVG.toString().substring(start+7,stop);
+                var anchor = anchorString.split(" ");
+            }
+            //calculate pixel point////////////////////////////////
+            var geoLeft = 49.9;
+            var geoRight = 50;
+            var geoTop = 20;
+            var geoBottom = 20.5;
+
+            var mx = (geoRight - geoLeft) / pw;
+            var my = (geoBottom - geoTop) / ph;
+
+            //return [geoLeft + (x*mx),geoTop + (y*my)];
+
+            //put on canvas
+            x = parseFloat(anchor[0]);
+            y = parseFloat(anchor[1]);
+
+            x = (x - geoLeft)/mx;
+            y = (y - geoTop)/my;
+
+            drawToCanvas(geoSVG,x,y);
+
+
+        }
+        catch(exc)
+        {
+            console.log(exc);
+        }
     }
     
     function setSpeedTestImages()
@@ -847,6 +987,8 @@ Keep Unit Ratio: <input id="cbKeepUnitRatio" type="checkbox" checked><br/>
 Labels:  <input id="cbLabels" type="checkbox"><br/>
 Draw as Icon:  <input id="cbDrawAsIcon" type="checkbox"><br/>
 Scale Internal Symbol:  <input id="cbScaleMainIcon" type="checkbox" checked><br/>
+<button id="btnDrawMP" type='button' onclick='drawMP();' >Draw MP</button>
+<br/>
 <button id="btnClear" type='button' onclick='clearCanvas();' >Clear Canvas</button>
 <br/>
 <!-- <button id="btnRender" type='button' onclick='testRender();' disabled>Loading Page</button>-->
