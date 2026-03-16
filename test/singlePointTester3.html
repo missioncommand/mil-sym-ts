@@ -105,6 +105,52 @@
 			//modifiers.set(C5Ren.utilities.MilStdAttributes.TextColor,"#FF00FF";
 			//modifiers.set(C5Ren.utilities.MilStdAttributes.TextBackgroundColor,"#00FF00";
             
+            var id = buildSymbolID(_symbolID);
+            var msInfo = C5Ren.MSLookup.getInstance().getMSLInfo(id);
+            if(msInfo != null && msInfo.getSymbolSet()==25) {
+                var drawRule = msInfo.getDrawRule();
+                // Points
+                if (drawRule == DrawRules.POINT17) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1500,1000");
+                    modifier.put(Modifiers.AN_AZIMUTH, "45"); // degrees
+                } else if (drawRule == DrawRules.POINT18) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1000,1500");
+                    modifier.put(Modifiers.AN_AZIMUTH, "45,90"); // degrees
+                }
+                //Corridor
+                else if (drawRule == DrawRules.CORRIDOR1) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1000");
+                    modifier.put(Modifiers.X_ALTITUDE_DEPTH, "0,10");
+                }
+                // Ellipse
+                else if (drawRule == DrawRules.ELLIPSE1) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1000,1500");
+                    modifier.put(Modifiers.AN_AZIMUTH, "45");
+                }
+                // Rectangles
+                if (drawRule == DrawRules.RECTANGULAR1) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1000");
+                } else if (drawRule == DrawRules.RECTANGULAR2) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1000,6000");
+                    modifier.put(Modifiers.AN_AZIMUTH, "45"); // mils
+                } else if (drawRule == DrawRules.RECTANGULAR3) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1000");
+                }
+                // Circles
+                else if (drawRule == DrawRules.CIRCULAR1) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1000");
+                } else if (drawRule == DrawRules.CIRCULAR2) {
+                    modifier.put(Modifiers.AM_DISTANCE, "750,1000,1500");
+                    modifier.put(Modifiers.X_ALTITUDE_DEPTH, "0,10,100");
+                }
+                // Arc
+                else if (drawRule == DrawRules.ARC1) {
+                    modifier.put(Modifiers.AM_DISTANCE, "1000,1500,2200,3200,3500");
+                    modifier.put(Modifiers.AN_AZIMUTH, "290,30,290,30,315,30,315,35"); // degrees
+                    modifier.put(Modifiers.X_ALTITUDE_DEPTH, "0,10,100,200");
+                }
+            }
+            
             return modifiers;
         }
 
@@ -541,12 +587,16 @@
         else
         {
             msi = C5Ren.MSLookup.getInstance().getMSLInfo(id);
-            var max = msi.getMaxPointCount();
+            var max = Math.min(msi.getMaxPointCount(),6);
             if(mpPoints != null && mpPointCount < max)
             {
                 //add point
                 var point = getFakeGeo(x,y);
-                mpcp += point[0] + "," + point[1] + " ";
+                
+                if(mpPointCount >0)
+                    mpcp += " ";
+                
+                mpcp += point[0] + "," + point[1];
                 mpPointCount++;
             }
             if(mpPointCount >= max)
@@ -594,15 +644,20 @@
 
     function drawMP()
     {
-        var preview = document.getElementById("preview");
-        var width = preview.width;
-        var height = preview.height;
+        var id = buildSymbolID(_symbolID);
+        
+        if(C5Ren.SymbolUtilities.isMultiPoint(id))
+        {
+            
+            var preview = document.getElementById("preview");
+            var width = preview.width;
+            var height = preview.height;
 
-        drawMPMode = true;
-        mpPoints = new Array();
-        mpcp = "";
-        mpPointCount = 0;
-
+            drawMPMode = true;
+            mpPoints = new Array();
+            mpcp = "";
+            mpPointCount = 0;
+        }
     
     }
 
@@ -641,7 +696,7 @@
             var data = "data:image/svg+xml;base64," + btoa(String.fromCodePoint(...new TextEncoder().encode(geoSVG)));
 
             var svgImage = document.getElementById("SVGTest");
-            svgImage.src = data;
+            //svgImage.src = data;
 
             if (typeof geoSVG === 'string') {
                 var start = geoSVG.toString().indexOf("<geoTL>");
