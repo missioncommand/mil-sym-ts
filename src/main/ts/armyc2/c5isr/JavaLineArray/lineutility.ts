@@ -1476,7 +1476,7 @@ export class lineutility {
      *
      * @return the extension point
      */
-    static ExtendLine2Double(pt1: POINT2,
+    public static ExtendLine2Double(pt1: POINT2,
         pt2: POINT2,
         dist: double,
         styl: int): POINT2 {

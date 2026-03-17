@@ -543,5 +543,7 @@ export class TacticalLines {
     public static readonly PURSUIT: number = 25344000;
     public static readonly DISENGAGE: number = 25344400;
     public static readonly EVACUATE: number = 25344500;
+    public static readonly ESCORT: number = 25343600;
+    public static readonly DECISION_LINE: number = 25130701;
 }
 

@@ -1422,6 +1422,7 @@ export class clsUtilityCPOF {
 
             switch (lineType) {
                 case TacticalLines.PL:
+                case TacticalLines.DECISION_LINE:
                 case TacticalLines.FEBA:
                 case TacticalLines.LOA:
                 case TacticalLines.LL:
@@ -1602,6 +1603,7 @@ export class clsUtilityCPOF {
                 case TacticalLines.FLOT:
                 case TacticalLines.LC:
                 case TacticalLines.PL:
+                case TacticalLines.DECISION_LINE:
                 case TacticalLines.FEBA:
                 case TacticalLines.LL:
                 case TacticalLines.EWL:
@@ -1813,6 +1815,7 @@ export class clsUtilityCPOF {
             case TacticalLines.FLOT:
             case TacticalLines.LC:
             case TacticalLines.PL:
+            case TacticalLines.DECISION_LINE:
             case TacticalLines.FEBA:
             case TacticalLines.LL:
             case TacticalLines.EWL:

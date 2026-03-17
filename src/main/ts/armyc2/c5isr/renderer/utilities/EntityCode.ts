@@ -26,6 +26,8 @@ export class EntityCode {
 
     public static readonly EntityCode_AnchoragePoint: number = 120304;
 
+    public static readonly EntityCode_Decision_Point: number = 130700;
+
     /**
      * Returns the modifier icon for a given contamination area
      * @param contaminationArea the entity code of the contamination area
