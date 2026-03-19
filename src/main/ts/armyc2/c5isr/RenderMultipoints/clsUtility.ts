@@ -513,6 +513,7 @@ export class clsUtility {
             case TacticalLines.SCREEN:
             case TacticalLines.COVER:
             case TacticalLines.GUARD:
+            case TacticalLines.ESCORT:
             case TacticalLines.FLOT:
             case TacticalLines.LC:
             case TacticalLines.PL:

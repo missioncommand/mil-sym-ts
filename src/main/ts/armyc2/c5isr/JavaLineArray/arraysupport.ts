@@ -3978,6 +3978,7 @@ export class arraysupport {
                     for (k = 0; k < 3; k++) {
                         pLinePoints[vblCounter - k - 1] = new POINT2(pArrowPoints[k]);
                     }
+                    points =  pLinePoints;//set pixels to be used for integral modifier placement
                     acCounter = vblCounter;
                     break;
                 }
@@ -4327,6 +4328,11 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.ESCORT:
+                {
+                    acCounter = DISMSupport.GetDISMEscortDouble(tg, pLinePoints, TacticalLines.ESCORT);
+                    break;
+                }
                 case TacticalLines.SARA: {
                     acCounter = DISMSupport.GetDISMCoverDouble(pLinePoints, lineType);
                     //reorder pLinePoints
@@ -4599,6 +4605,7 @@ export class arraysupport {
                 case TacticalLines.COVER:
                 case TacticalLines.SCREEN:  //note: screen, cover, guard are getting their modifiers before the call to getlinearray
                 case TacticalLines.GUARD:
+                case TacticalLines.ESCORT:
                 case TacticalLines.PAA_RECTANGULAR:
                 case TacticalLines.RECTANGULAR_TARGET:
                 case TacticalLines.FOLSP:
@@ -5419,9 +5426,7 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT:
-                case TacticalLines.EXFILTRATION:
-                case TacticalLines.INFILTRATION: {
+                case TacticalLines.DIRATKSPT: {
                     arraysupport.addPolyline(pLinePoints, acCounter - 3, shapes); // Main line
                     secondPoly = new Array<POINT2>(3);
                     for (let i: int = 0; i < 3; i++) {

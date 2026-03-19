@@ -328,8 +328,8 @@ export class clsRenderer2 {
             //at this point tg.Pixels has the points from CELineArray
             //the following line adds modifiers for those sybmols which require
             //the calculated points to use for the modifiers.
-            //currentlly only BLOCK and CONTAIN use tg.Pixels for computing
-            //the modifiers after the call to GetLineArray
+            //currentlly only BLOCK, CONTAIN, ESCORT, Infiltraion and Exfiltration use tg.Pixels
+            //for computing the modifiers after the call to GetLineArray
             //Modifier2.AddModifiers2(tg);//flipped only for 3d for change 1 symbols
             Modifier2.AddModifiers2(tg, converter);
 

@@ -4384,6 +4384,37 @@ export class lineutility {
         }
     }
 
+    /**
+     * 
+     * @param p1 start point
+     * @param p2 end point
+     * @param p3 point not on the line
+     * @return the point closest to point 3.  This point and point 3 will create a line that is perpendicular to
+     * the line created by point 1 and 2.
+     */
+    public static FindClosestPointOnLine(p1:POINT2, p2:POINT2, p3:POINT2):POINT2 {
+        // Calculate the direction vector of the line (u)
+        let dxLine:number = p2.x - p1.x;
+        let dyLine:number = p2.y - p1.y;
+
+        // Calculate the vector from point 1 to point 3 (v)
+        let dxToPoint3:number = p3.x - p1.x;
+        let dyToPoint3:number = p3.y - p1.y;
+
+        // Compute the dot products
+        let dotProduct_uv:number = dxToPoint3 * dxLine + dyToPoint3 * dyLine; // v · u
+        let dotProduct_uu:number = dxLine * dxLine + dyLine * dyLine;         // u · u
+
+        // Calculate the scalar projection factor
+        let scalarProjection:number = dotProduct_uv / dotProduct_uu;
+
+        // Find the closest point on the line
+        let closestX:number = p1.x + scalarProjection * dxLine;
+        let closestY:number = p1.y + scalarProjection * dyLine;
+
+        return new POINT2(closestX, closestY);
+    }
+
     private static CalcMBR(pLinePoints: POINT2[],
         numpts: int,
         ulx: ref<number[]>,

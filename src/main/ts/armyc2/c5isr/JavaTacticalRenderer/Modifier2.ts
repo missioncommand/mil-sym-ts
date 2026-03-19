@@ -65,14 +65,43 @@ export class Modifier2 {
         this.textPath = new Array<POINT2>(2);
     }
 
+    /**
+     * Put label next to pt0 on opposite side of line
+     */
     private static readonly toEnd: int = 1; // Put next to pt0 on opposite side of line
+    /**
+     * put label between both point and apply the angle between the two points
+     */
     private static readonly aboveMiddle: int = 2;    //use both points
+    /**
+     * one point, label always right-side-up
+     */
     private static readonly area: int = 3;   //use one point
+    /**
+     * one point, label always right-side-up
+     */
     private static readonly screen: int = 4;   //use one point, screen, cover, guard points
+    /**
+     * Put next to pt0, but above the line
+     */
     private static readonly aboveEnd: int = 5; // Put next to pt0 on line
+    /**
+     * between both points but perpendicular rotation of text
+     */
     private static readonly aboveMiddlePerpendicular: int = 6; //use both points
+    /**
+     * For Moving and Halted Convoy.
+     * At start of line behind arrowhead
+     */
     private static readonly aboveStartInside: int = 7; //place at the start inside the shape
+    /**
+     * For Moving and Halted Convoy.
+     * At back of line inside arrow shape.
+     */
     private static readonly aboveEndInside: int = 8;  //place at the end inside the shape
+    /**
+     * Image Modifier, uses one point
+     */
     private static readonly areaImage: int = 9;   //use one point
     private static fillAlphaCanObscureText: double = 50;
 
@@ -833,7 +862,8 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.ELECTRO: {
+                case TacticalLines.ELECTRO: 
+                case TacticalLines.ESCORT: {
                     label = "E";
                     break;
                 }
@@ -2705,8 +2735,6 @@ export class Modifier2 {
                 case TacticalLines.AAAAA:
                 case TacticalLines.MAIN:
                 case TacticalLines.DIRATKSPT:
-                case TacticalLines.EXFILTRATION:
-                case TacticalLines.INFILTRATION:
                 case TacticalLines.DIRATKGND:
                 case TacticalLines.LAUNCH_AREA:
                 case TacticalLines.DEFENDED_AREA_CIRCULAR:
@@ -3076,12 +3104,6 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.EXFILTRATION:
-                case TacticalLines.INFILTRATION: {
-                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, ptCenter, ptCenter , true);
-                    break;
-                }
 
                 case TacticalLines.SPT:
                 case TacticalLines.FRONTAL_ATTACK:
@@ -4362,6 +4384,9 @@ export class Modifier2 {
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH:
                 case TacticalLines.DENY:
+                case TacticalLines.ESCORT:
+                case TacticalLines.INFILTRATION:
+                case TacticalLines.EXFILTRATION:
                 case TacticalLines.FOLLA:
                 case TacticalLines.FOLSP:
                 case TacticalLines.ACA_RECTANGULAR:
@@ -4657,6 +4682,26 @@ export class Modifier2 {
                     Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, ptCenter, ptCenter, true);
                     break;
                 }
+
+                case TacticalLines.ESCORT: {
+                    if(tg.Pixels.length == 6) {
+                        if (tg.Pixels[2].x == tg.Pixels[3].x &&
+                                tg.Pixels[2].y == tg.Pixels[3].y) {
+                            //No Room for E labels
+                            break;//?
+                        }
+                        //This function put the pabel 
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, tg.Pixels[2], tg.Pixels[1], true);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, tg.Pixels[3], tg.Pixels[4], true);
+                    }
+                    break;
+                }
+
+                case TacticalLines.EXFILTRATION:
+                    case TacticalLines.INFILTRATION: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1 , true);
+                        break;
+                    }
 
                 case TacticalLines.FOLLA: {
                     pt0 = tg.Pixels[0];

@@ -12653,7 +12653,7 @@
         "code": "343600",
         "versions": "10",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line50",
         "modifiers": "",
         "aux1": ""
       },

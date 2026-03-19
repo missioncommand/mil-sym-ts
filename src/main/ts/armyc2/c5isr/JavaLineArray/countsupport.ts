@@ -383,6 +383,11 @@ export class countsupport {
                     break;
                 }
 
+                case TacticalLines.ESCORT: {
+                    count = 6;
+                    break;
+                }
+
                 case TacticalLines.RAFT:
                 case TacticalLines.MFLANE: {	//extra eight points for hash marks at either end
                     count = 8;

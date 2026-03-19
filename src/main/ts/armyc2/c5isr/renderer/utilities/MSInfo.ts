@@ -561,6 +561,11 @@ export class MSInfo {
                 break;
             }
 
+            case "line50": {
+                idr = DrawRules.LINE50;
+                break;
+            }
+
             case "corridor1": {
                 idr = DrawRules.CORRIDOR1;
                 break;
@@ -830,6 +835,7 @@ export class MSInfo {
             case DrawRules.LINE30:
             case DrawRules.LINE32:
             case DrawRules.LINE33:
+            case DrawRules.LINE50:
             case DrawRules.POLYLINE1: {
                 points[0] = 3;
                 points[1] = 3;

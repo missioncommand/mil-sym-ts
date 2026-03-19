@@ -12884,7 +12884,7 @@
         "code": "343600",
         "versions": "16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line50",
         "modifiers": "",
         "aux1": ""
       },
