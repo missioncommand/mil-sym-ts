@@ -148,11 +148,11 @@
   },
   {
     "id": "25360100",
-    "X": "239.5",
-    "Y": "203.5",
-    "Width": "133.0",
-    "Height": "195.00811767578125",
-    "SVG": "<g id=\"25360100\">          <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"5\"/>          <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>          <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>    </g>"
+    "X": "237.5",
+    "Y": "201.5",
+    "Width": "137.0",
+    "Height": "199.81463623046875",
+    "SVG": "<g id=\"25360100\">          <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"9\"/>          <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>          <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>    </g>"
   },
   {
     "id": "01120100",
@@ -364,19 +364,19 @@
   },
   {
     "id": "25350202",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350202\">        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350202\">        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>    </g>"
   },
   {
     "id": "25350201",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350201\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"255\" y2=\"370\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"255\" y2=\"370\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350201\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"255\" y2=\"370\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"255\" y2=\"370\"/>    </g>"
   },
   {
     "id": "30120000",
@@ -404,11 +404,11 @@
   },
   {
     "id": "25350203",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350203\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"370\" y2=\"255\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"370\" y2=\"255\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350203\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"370\" y2=\"255\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"370\" y2=\"255\"/>    </g>"
   },
   {
     "id": "01311",
@@ -628,11 +628,11 @@
   },
   {
     "id": "25350103",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350103\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>          <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"370\" y2=\"255\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"370\" y2=\"255\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350103\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>          <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"370\" y2=\"255\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"370\" y2=\"255\"/>    </g>"
   },
   {
     "id": "20111902",
@@ -644,11 +644,11 @@
   },
   {
     "id": "25350102",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350102\">        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>        <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350102\">        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>        <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>    </g>"
   },
   {
     "id": "40170200",
@@ -668,11 +668,11 @@
   },
   {
     "id": "25350101",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350101\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>          <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"255\" y2=\"370\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"255\" y2=\"370\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350101\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>          <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"255\" y2=\"370\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"255\" y2=\"370\"/>    </g>"
   },
   {
     "id": "20111901",
@@ -752,7 +752,7 @@
     "Y": "194.0",
     "Width": "152.0",
     "Height": "217.83901977539062",
-    "SVG": "<g id=\"25360300\">            <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" id=\"guide\" stroke=\"red\" stroke-width=\"1\"/>            <g transform=\"translate(305 395) scale(0.5) translate(-305 -500)\">                      <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"5\"/>                      <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>                      <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>                </g>            <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" id=\"outline\" stroke=\"black\" stroke-width=\"24\"/>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"blRed\" letter-spacing=\"2\" transform=\"rotate(45, 246, 347)\" x=\"246\" y=\"347\">RED</text>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"brRed\" letter-spacing=\"2\" transform=\"rotate(-45, 330, 382)\" x=\"330\" y=\"382\">RED</text>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"clRed\" letter-spacing=\"2\" transform=\"rotate(-90, 250, 300)\" x=\"250\" y=\"300\">RED</text>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"crRed\" letter-spacing=\"2\" transform=\"rotate(90, 362, 250)\" x=\"362\" y=\"250\">RED</text>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"topRed\" letter-spacing=\"2\" text-anchor=\"middle\" x=\"305\" y=\"215\">RED</text>      </g>"
+    "SVG": "<g id=\"25360300\">            <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" id=\"guide\" stroke=\"red\" stroke-width=\"1\"/>            <g transform=\"translate(305 395) scale(0.5) translate(-305 -500)\">                      <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"9\"/>                      <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>                      <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>                </g>            <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" id=\"outline\" stroke=\"black\" stroke-width=\"24\"/>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"blRed\" letter-spacing=\"2\" transform=\"rotate(45, 246, 347)\" x=\"246\" y=\"347\">RED</text>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"brRed\" letter-spacing=\"2\" transform=\"rotate(-45, 330, 382)\" x=\"330\" y=\"382\">RED</text>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"clRed\" letter-spacing=\"2\" transform=\"rotate(-90, 250, 300)\" x=\"250\" y=\"300\">RED</text>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"crRed\" letter-spacing=\"2\" transform=\"rotate(90, 362, 250)\" x=\"362\" y=\"250\">RED</text>            <text fill=\"white\" font-family=\"sans-serif\" font-size=\"24\" font-weight=\"bold\" id=\"topRed\" letter-spacing=\"2\" text-anchor=\"middle\" x=\"305\" y=\"215\">RED</text>      </g>"
   },
   {
     "id": "27162",
@@ -1188,11 +1188,11 @@
   },
   {
     "id": "25360200",
-    "X": "209.75",
-    "Y": "199.25",
-    "Width": "191.5",
-    "Height": "197.50406416299387",
-    "SVG": "<g id=\"25360200\">          <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" display=\"none\" fill=\"none\" id=\"guide\" stroke=\"red\" stroke-width=\"1\"/>          <g transform=\"translate(305 395) scale(0.5) translate(-305 -395)\">                  <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"5\"/>                  <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>                  <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>              </g>          <g transform=\"translate(305 395) scale(0.5) translate(-430 -595)\">                  <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"5\"/>                  <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>                  <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>              </g>          <g transform=\"translate(305 395) scale(0.5) translate(-180 -595)\">                  <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"5\"/>                  <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>                  <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>              </g>    </g>"
+    "X": "208.75",
+    "Y": "198.25",
+    "Width": "193.5",
+    "Height": "199.90731549338898",
+    "SVG": "<g id=\"25360200\">          <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" display=\"none\" fill=\"none\" id=\"guide\" stroke=\"red\" stroke-width=\"1\"/>          <g transform=\"translate(305 395) scale(0.5) translate(-305 -395)\">                  <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"9\"/>                  <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>                  <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>              </g>          <g transform=\"translate(305 395) scale(0.5) translate(-430 -595)\">                  <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"9\"/>                  <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>                  <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>              </g>          <g transform=\"translate(305 395) scale(0.5) translate(-180 -595)\">                  <path d=\"M305 395 l-63 -63 l-0 -126 l128 0 l0 126 z\" fill=\"none\" stroke=\"navy\" stroke-width=\"9\"/>                  <path d=\"M305 395 l-63 -63 l63 -63 l63 63 z\" fill=\"navy\"/>                  <path d=\"M305 269 l-63 -63 l126 0 z\" fill=\"navy\"/>              </g>    </g>"
   },
   {
     "id": "27262",

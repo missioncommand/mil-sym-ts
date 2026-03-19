@@ -412,19 +412,19 @@
   },
   {
     "id": "25350103",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350103\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>          <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"370\" y2=\"255\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"370\" y2=\"255\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350103\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>          <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"370\" y2=\"255\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"370\" y2=\"255\"/>    </g>"
   },
   {
     "id": "25350102",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350102\">        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>        <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350102\">        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>        <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>    </g>"
   },
   {
     "id": "25342600",
@@ -436,11 +436,11 @@
   },
   {
     "id": "25350101",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350101\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>          <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"255\" y2=\"370\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"255\" y2=\"370\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350101\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>          <circle cx=\"200\" cy=\"200\" fill=\"black\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"255\" y2=\"370\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"255\" y2=\"370\"/>    </g>"
   },
   {
     "id": "10121106_0",
@@ -1100,27 +1100,27 @@
   },
   {
     "id": "25350202",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350202\">        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350202\">        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>        <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>    </g>"
   },
   {
     "id": "25350201",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350201\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"255\" y2=\"370\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"255\" y2=\"370\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350201\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"145\" x2=\"30\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"255\" x2=\"370\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"145\" y2=\"30\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"255\" y2=\"370\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"255\" y2=\"370\"/>    </g>"
   },
   {
     "id": "25350203",
-    "X": "14.5",
-    "Y": "14.5",
-    "Width": "371.0",
-    "Height": "371.0",
-    "SVG": "<g id=\"25350203\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"11\"/>          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"11\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"150\" y1=\"370\" y2=\"255\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"11\" x1=\"200\" x2=\"250\" y1=\"370\" y2=\"255\"/>    </g>"
+    "X": "12.5",
+    "Y": "12.5",
+    "Width": "375.0",
+    "Height": "375.0",
+    "SVG": "<g id=\"25350203\">          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"180\" stroke=\"black\" stroke-width=\"15\"/>          <circle cx=\"200\" cy=\"200\" fill=\"none\" r=\"50\" stroke=\"black\" stroke-width=\"15\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"30\" x2=\"145\" y1=\"200\" y2=\"250\"/>            <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"150\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"370\" x2=\"255\" y1=\"200\" y2=\"250\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"30\" y2=\"145\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"150\" y1=\"370\" y2=\"255\"/>          <line fill=\"none\" stroke=\"black\" stroke-width=\"15\" x1=\"200\" x2=\"250\" y1=\"370\" y2=\"255\"/>    </g>"
   },
   {
     "id": "25342700",

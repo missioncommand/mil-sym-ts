@@ -446,12 +446,15 @@ export class RendererUtilities {
 
 
             }
-            //key terrain
-            if (symbolID.length >= 20 &&
-                SymbolUtilities.getBasicSymbolID(symbolID) === "25132100" &&
-                SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E) {
-                defaultStrokeColor = "#800080";
-            }
+            
+            if(symbolID.length >= 20)
+                {
+                    if(SymbolUtilities.getBasicSymbolID(symbolID)=="25132100" && //key terrain
+                            SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E)
+                        defaultStrokeColor = "#800080";
+                    else if(isOutline && SymbolUtilities.getBasicSymbolID(symbolID).startsWith("2535"))//space debris doesn't change color
+                        defaultStrokeColor = "black";
+                }
             returnSVG = returnSVG.replaceAll("stroke=\"" + defaultStrokeColor + "\"", "stroke=\"" + hexStrokeColor + "\"" + strokeOpacity);
             returnSVG = returnSVG.replaceAll("fill=\"" + defaultStrokeColor + "\"", "fill=\"" + hexStrokeColor + "\"" + fillOpacity);
         }
