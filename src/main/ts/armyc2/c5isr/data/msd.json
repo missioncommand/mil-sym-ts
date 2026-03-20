@@ -1110,6 +1110,14 @@
       {
         "ss": "",
         "e": "",
+        "et": "",
+        "est": "Main Gun System",
+        "code": "121106",
+        "versions": "10"
+      },
+      {
+        "ss": "",
+        "e": "",
         "et": "Observer",
         "est": "",
         "code": "121200",
