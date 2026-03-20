@@ -300,7 +300,7 @@ export class C2DLookup {
 
         //country code
         if(includeCountryCode)
-            newCode = newCode.substring(0,27) + GENCLookup.getInstance().get3DigitCode(parseInt(symbolID.substring(12,14)));
+            newCode = newCode.substring(0,27) + GENCLookup.getInstance().get3DigitCode(symbolID.substring(12,14));
 
         return newCode;
     }
