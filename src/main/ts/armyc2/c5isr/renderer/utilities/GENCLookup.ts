@@ -105,7 +105,8 @@ export class GENCLookup {
      * @param id 3 digit code from 2525D+ symbol code
      * @return
      */
-    public get3CharCode(id: string): string {
+    public get3CharCode(id: string | number): string {
+        
         if (GENCLookup._GENCLookup && GENCLookup._GENCLookup.has(String(id))) {
             return GENCLookup._GENCLookup.get(String(id));
         }
@@ -117,9 +118,9 @@ export class GENCLookup {
      * @param id 2 char string from 2525C symbol code
      * @return
      */
-    public get3DigitCode(id: number): string {
-        if (GENCLookup._GENCLookup && GENCLookup._GENCLookup.has(String(id))) {
-            let code = GENCLookup._GENCLookup.get(String(id));
+    public get3DigitCode(id: string): string {
+        if (GENCLookup._GENCLookup && GENCLookup._GENCLookup.has(id)) {
+            let code = GENCLookup._GENCLookup.get(id);
             while(code.length < 3)
                 code = "0" + code;
             return code;
