@@ -163,7 +163,7 @@ export class MilStdIconRenderer
         let msi: MSInfo = MSLookup.getInstance().getMSLInfo(symbolID);
         if (msi == null) 
         {
-            //TODO: if null, try to fix the code so that something renders
+            //Attempt to fix the code or set if to invalid symbol if unfixable
             symbolID = SymbolUtilities.reconcileSymbolID(symbolID);
             msi = MSLookup.getInstance().getMSLInfo(symbolID);
             if(msi == null)

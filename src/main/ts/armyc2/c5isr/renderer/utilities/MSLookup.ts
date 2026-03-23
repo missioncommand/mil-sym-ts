@@ -984,6 +984,8 @@ export class MSLookup {
                         return MSLookup._MSLookup6E.get(basicID);
                     else if (version == SymbolID.Version_APP6D || version == SymbolID.Version_APP6Dch2)
                         return MSLookup._MSLookup6D.get(basicID);
+                    else if (version == SymbolID.Version_2525Dch1)
+                        return MSLookup._MSLookupD.get(basicID);
                     else
                         return null;
                 }
