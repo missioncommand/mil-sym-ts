@@ -344,18 +344,18 @@ export class SymbolUtilities {
 
 
             let v: int = SymbolID.getVersion(symbolID);
-            if (v < SymbolID.Version_2525E) {
+            if (v < SymbolID.Version_APP6D) {
 
                 newID = SymbolID.Version_2525Dch1.toString();
             }
 
-            else {
+            else if (v > SymbolID.Version_APP6Ech2){
 
-                newID = SymbolID.Version_2525E.toString();
+                newID = SymbolID.Version_2525Ech1.toString();
             }
 
             let c: int = SymbolID.getContext(symbolID);
-            if (c > 2) {
+            if (c > 4) {
 
                 newID += SymbolID.StandardIdentity_Context_Reality.toString();
             }
@@ -434,17 +434,18 @@ export class SymbolUtilities {
                 newID += "000000";
             }
             //root symbol for symbol set
-            else {
-                if (SVGLookup.getInstance().getSVGLInfo(SVGLookup.getMainIconID(newID + ec + "0000"), v) == null) {
-                    //set to invalid symbol since we couldn't find it in the lookup
-                    newID = SymbolID.setSymbolSet(newID, 98);
-                    newID += 100000;
-                }
-                else {
-                    newID += String(ec).padStart(6, '0');
-                }
-
+            else if (SVGLookup.getInstance().getSVGLInfo(SVGLookup.getMainIconID(newID + ec + "0000"), v) == null) 
+            {
+                //set to blank symbol
+                newID += "000000";
+                /*//set to invalid symbol since we couldn't find it in the lookup
+                newID = SymbolID.setSymbolSet(newID, 98);
+                newID += "100000";//*/
             }
+            else 
+                newID += String(ec).padStart(6, '0');
+            
+            
             //we found it so add the entity code
 
             //newID += SymbolID.getMod1ID(symbolID);//just add, won't get used if value bad

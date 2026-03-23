@@ -1143,8 +1143,8 @@ export class DrawRules {
     /**
      * Temporary DrawRule for Escort.
      * Has yet to be defined by the MilStd or APP6
-     * Points 2 & 3 make a line.  Point 1 will slide the main line.
-     * The end points of the line will connect to points 2 & 3
+     * Points 2 &amp; 3 make a line.  Point 1 will slide the main line.
+     * The end points of the line will connect to points 2 &amp; 3
      * There will be a gap in the middle of the line for a unit
      * to be placed as a separate symbol
      * TODO: update when MilStd or APP6 defines a rule

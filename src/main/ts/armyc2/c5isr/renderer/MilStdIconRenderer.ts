@@ -164,8 +164,12 @@ export class MilStdIconRenderer
         if (msi == null) 
         {
             //TODO: if null, try to fix the code so that something renders
-            //This check currently happening in RenderUnit & RenderSP via renconcileSymbolID()
-            //Checks for bad codes and tries to resolve.  IF it can't returns unknown symbol.
+            symbolID = SymbolUtilities.reconcileSymbolID(symbolID);
+            msi = MSLookup.getInstance().getMSLInfo(symbolID);
+            if(msi == null)
+            {
+                symbolID = "110098000010000000000000000000";//invalid symbol
+            }
         }
         if (msi != null && msi.getDrawRule() === DrawRules.DONOTDRAW) {
             return null;
