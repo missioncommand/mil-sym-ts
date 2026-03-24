@@ -5856,9 +5856,9 @@ export class ModifierRenderer implements SettingsEventListener {
                     if(modifiers.has(Modifiers.P_IFF_SIF_AIS))
                         temp = modifiers.get(Modifiers.P_IFF_SIF_AIS) + sep;
                     if(modifiers.has(Modifiers.X_ALTITUDE_DEPTH))
-                        temp = modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
+                        temp += modifiers.get(Modifiers.X_ALTITUDE_DEPTH) + sep;
                     if(modifiers.has(Modifiers.Z_SPEED))
-                        temp = modifiers.get(Modifiers.Z_SPEED);
+                        temp += modifiers.get(Modifiers.Z_SPEED);
 
                     temp = temp.trim();
 
@@ -5880,7 +5880,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     if(modifiers.has(Modifiers.G_STAFF_COMMENTS))
                         temp = modifiers.get(Modifiers.G_STAFF_COMMENTS) + sep;
                     if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
-                        temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
+                        temp += modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
                     if(modifiers.has(Modifiers.J_EVALUATION_RATING))
                         temp += modifiers.get(Modifiers.J_EVALUATION_RATING);
                     temp = temp.trim();
@@ -5896,7 +5896,7 @@ export class ModifierRenderer implements SettingsEventListener {
                 if(modifiers.has(Modifiers.AD_PLATFORM_TYPE))
                 {
                     y = 0;//
-                    temp = temp += modifiers.get(Modifiers.AD_PLATFORM_TYPE);
+                    temp = modifiers.get(Modifiers.AD_PLATFORM_TYPE);
 
                     if(temp != null && temp !== "")
                         mods.push(new Modifier("AD", temp, x, y, centered));
