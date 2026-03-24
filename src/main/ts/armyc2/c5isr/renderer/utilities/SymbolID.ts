@@ -122,7 +122,13 @@ export class SymbolID {
      * @deprecated withdrawn from standard
      */
     public static readonly Version_APP6Dch2: number = 12;
+    /**
+     * @deprecated use 2525Ech1
+     */
     public static readonly Version_2525E: number = 13;
+    /**
+     * @deprecated use APP6EEch2
+     */
     public static readonly Version_APP6Ech1: number = 14;
     public static readonly Version_2525Ech1: number = 15;
     public static readonly Version_APP6Ech2: number = 16;
