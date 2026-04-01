@@ -71,6 +71,7 @@ export class GENCLookup {
         
         type gencIn = 
         {
+            "2char": string;
             "3char": string;
             "numeric": string;
             "name": string;
@@ -84,6 +85,8 @@ export class GENCLookup {
                 let gencJSON: gencIn[] = GENCLookup.genc["genc"]["countries"]
                 for (let countryJSON of gencJSON) {
                     GENCLookup._GENCLookup.set(countryJSON["numeric"], countryJSON["3char"]);
+                    if(countryJSON["2char"].length===2)
+                        GENCLookup._GENCLookup.set(countryJSON["2char"], countryJSON["numeric"]);
                 }
                 
             } catch (e) {
@@ -97,10 +100,33 @@ export class GENCLookup {
             GENCLookup._isReady = true;
     }
 
-    public get3CharCode(id: number): string {
+    /**
+     *
+     * @param id 3 digit code from 2525D+ symbol code
+     * @return
+     */
+    public get3CharCode(id: string | number): string {
+        
         if (GENCLookup._GENCLookup && GENCLookup._GENCLookup.has(String(id))) {
             return GENCLookup._GENCLookup.get(String(id));
         }
         return "";
     }
+    
+    /**
+     *
+     * @param id 2 char string from 2525C symbol code
+     * @return
+     */
+    public get3DigitCode(id: string): string {
+        if (GENCLookup._GENCLookup && GENCLookup._GENCLookup.has(id)) {
+            let code = GENCLookup._GENCLookup.get(id);
+            while(code.length < 3)
+                code = "0" + code;
+            return code;
+        }
+        return "000";
+    }
+
+    
 }

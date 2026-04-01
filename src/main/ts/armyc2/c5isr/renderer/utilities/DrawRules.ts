@@ -1139,6 +1139,18 @@ export class DrawRules {
      * Used by: Ech1
      */
     public static readonly LINE33: number = 333;
+    
+    /**
+     * Temporary DrawRule for Escort.
+     * Has yet to be defined by the MilStd or APP6
+     * Points 2 &amp; 3 make a line.  Point 1 will slide the main line.
+     * The end points of the line will connect to points 2 &amp; 3
+     * There will be a gap in the middle of the line for a unit
+     * to be placed as a separate symbol
+     * TODO: update when MilStd or APP6 defines a rule
+     * NOTE: PLACEHOLDER
+     */
+    public static readonly LINE50 = 350;
 
     /**
      * Anchor Points: This symbol may contain multiple segments. Each segment

@@ -521,12 +521,12 @@ export class ErrorLogger {
                 }
 
                 case 3: {
-                    if (args[2] instanceof Boolean) {
+                    if (typeof args[2] === 'boolean') {
                         const [message, lvl, showMessageBox] = args as [string, LogLevel, boolean];
 
 
                         if (lvl.intValue() >= ErrorLogger._level.intValue()) {
-                            console.log(new Date().toLocaleString('en-US', this.dateFormatOptions) + ErrorLogger.LoggerName);
+                            console.log(new Date().toLocaleString('en-US', this.dateFormatOptions) + " " + ErrorLogger.LoggerName);
                             console.log("INFO: " + message);
                         }
                         /*_Logger.log(lvl, message);
@@ -547,7 +547,7 @@ export class ErrorLogger {
                 }
 
                 case 4: {
-                    if (args[3] instanceof Boolean) {
+                    if (typeof args[3] === 'boolean') {
 
                         const [sourceClass, sourceMethod, message, showMessageBox] = args as [string, string, string, boolean];
 
@@ -587,7 +587,7 @@ export class ErrorLogger {
                 }
 
                 case 6: {
-                    if (args[4] instanceof Array) {
+                    if (Array.isArray(args[4])) {
                         const [sourceClass, sourceMethod, message, lvl, params, showMessageBox] = args as [string, string, string, LogLevel, any[], boolean];
 
 
@@ -645,7 +645,7 @@ export class ErrorLogger {
             }
 
             case 4: {
-                if (args[3] instanceof Boolean) {
+                if (typeof args[3] === 'boolean') {
 
                     const [sourceClass, sourceMethod, exc, showMessageBox] = args as [string, string, Error, boolean];
 

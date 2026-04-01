@@ -680,6 +680,7 @@ export class arraysupport {
             let midPts: POINT2[] = new Array<POINT2>(7);
             let trianglePts: POINT2[] = new Array<POINT2>(35);
             let pArrowPoints: POINT2[] = new Array<POINT2>(3);
+            let pArrowPoints2: POINT2[] = new Array<POINT2>(3);
             let dRadius: double = lineutility.CalcDistanceDouble(pt0, pt1);
             let dLength: double = Math.abs(dRadius - 20);
             if (dRadius < 40) {
@@ -701,6 +702,7 @@ export class arraysupport {
             lineutility.InitializePOINT2Array(midPts);
             lineutility.InitializePOINT2Array(trianglePts);
             lineutility.InitializePOINT2Array(pArrowPoints);
+            lineutility.InitializePOINT2Array(pArrowPoints2);
             lineutility.InitializePOINT2Array(ptsSeize);
 
             let DPIScaleFactor: double = RendererSettings.getInstance().getDeviceDPI() / 96.0;
@@ -740,6 +742,12 @@ export class arraysupport {
                 lineutility.GetArrowHead4Double(ptsArc[24], ptsArc[25], Math.trunc(d / 7), Math.trunc((1.75 * d) / 7), pArrowPoints, 0);
             }
 
+            //second arrow
+            if(lineType == TacticalLines.CONTROL || lineType == TacticalLines.LOCATE)
+            {
+                lineutility.GetArrowHead4Double(ptsArc[1], ptsArc[0], Math.trunc(d / 7), Math.trunc(d / 7), pArrowPoints2, 0);
+            }
+
             pLinePoints[25].style = 5;
 
             switch (lineType) {
@@ -775,6 +783,58 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.DENY:
+                {
+                    if (dRadius > 100) {
+                        dLength = -0.2 * dRadius;
+                    }
+                    for (j = 1; j <= 23; j++) {
+                        if (j % 3 == 0) {
+
+                            // 1. Get the midpoint of each segment
+                            let start:POINT2 = new POINT2(ptsArc[j - 1]);
+                            let end:POINT2 = new POINT2(ptsArc[j + 1]);
+                            let midX:number = (start.x + end.x)/2;
+                            let midY:number = (start.y + end.y)/2;
+
+                            // 2. Calculate the direction vector from center to midpoint
+                            let dx:number = midX - pt0.x;
+                            let dy:number = midY - pt0.y;
+                            let distance:number = Math.sqrt(dx * dx + dy * dy);
+
+                            // 3. Normalize and scale to 120% of the radius
+                            let targetDistance:number = dRadius * 1.20;
+
+                            // Handle edge case: if midpoint is exactly at center, use start point for direction
+                            if (distance < 0.00001) {
+                                dx = start.x - pt0.x;
+                                dy = start.y - pt0.y;
+                                distance = Math.sqrt(dx * dx + dy * dy);
+                            }
+
+                            midPts[k].x = pt0.x + (dx / distance) * targetDistance;
+                            midPts[k].y = pt0.y + (dy / distance) * targetDistance;
+                            midPts[k].style = 0;
+                            trianglePts[l] = new POINT2(ptsArc[j - 1]);
+                            l++;
+                            trianglePts[l] = new POINT2(midPts[k]);
+                            l++;
+                            trianglePts[l] = new POINT2(ptsArc[j + 1]);
+                            trianglePts[l].style = 5;
+                            l++;
+                            k++;
+                        }
+                    }
+                    for (j = 26; j < 47; j++) {
+                        pLinePoints[j] = new POINT2(trianglePts[j - 26]);
+                    }
+                    pLinePoints[46].style = 5;
+                    for (j = 47; j < 50; j++) {
+                        pLinePoints[j] = new POINT2(pArrowPoints[j - 47]);
+                        pLinePoints[j].style = 0;
+                    }
+                    break;
+                }
                 case TacticalLines.AREA_DEFENSE: {
                     if (dRadius > 100) {
                         dLength = 0.8 * dRadius;
@@ -835,6 +895,22 @@ export class arraysupport {
                         pLinePoints[j].style = 0;
                     }
                     pLinePoints[28].style = 5;
+                    break;
+                }
+
+                case TacticalLines.CONTROL: 
+                case TacticalLines.LOCATE: {
+                    for (j = 26; j < 29; j++) {
+                        pLinePoints[j] = new POINT2(pArrowPoints[j - 26]);
+                        pLinePoints[j].style = 0;
+                    }
+                    pLinePoints[28].style = 5;
+                    pLinePoints[28].style = 5;
+                    for (j = 29; j < 32; j++) {
+                        pLinePoints[j] = new POINT2(pArrowPoints2[j - 29]);
+                        pLinePoints[j].style = 0;
+                    }
+                    pLinePoints[31].style = 5;
                     break;
                 }
 
@@ -3032,7 +3108,8 @@ export class arraysupport {
 
                 case TacticalLines.ISOLATE:
                 case TacticalLines.CORDONKNOCK:
-                case TacticalLines.CORDONSEARCH: {
+                case TacticalLines.CORDONSEARCH: 
+                case TacticalLines.DENY: {
                     arraysupport.GetIsolatePointsDouble(pLinePoints, lineType, converter);
                     acCounter = 50;
                     break;
@@ -3044,7 +3121,9 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.OCCUPY: {
+                case TacticalLines.OCCUPY: 
+                case TacticalLines.CONTROL: 
+                case TacticalLines.LOCATE: {
                     arraysupport.GetIsolatePointsDouble(pLinePoints, lineType, converter);
                     acCounter = 32;
                     break;
@@ -3848,8 +3927,7 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT:
-                case TacticalLines.INFILTRATION: {
+                case TacticalLines.DIRATKSPT: {
                     if (lineType == TacticalLines.DIRATKSPT) {
                     //reverse the points
                     lineutility.ReversePointsDouble2(
@@ -3873,6 +3951,34 @@ export class arraysupport {
                     for (k = 0; k < 3; k++) {
                         pLinePoints[vblCounter - k - 1] = new POINT2(pArrowPoints[k]);
                     }
+                    acCounter = vblCounter;
+                    break;
+                }
+
+                case TacticalLines.EXFILTRATION: 
+                case TacticalLines.INFILTRATION: {
+
+                    if (dMBR / 20 > arraysupport.maxLength * DPIScaleFactor) {
+                        dMBR = 20 * arraysupport.maxLength * DPIScaleFactor;
+                    }
+                    if (dMBR / 20 < arraysupport.minLength * DPIScaleFactor) {
+                        dMBR = 20 * arraysupport.minLength * DPIScaleFactor;
+                    }
+                    if (dMBR < 150 * DPIScaleFactor) {
+                        dMBR = 150 * DPIScaleFactor;
+                    }
+                    if (dMBR > 500 * DPIScaleFactor) {
+                        dMBR = 500 * DPIScaleFactor;
+                    }
+
+                    pLinePoints = DISMSupport.GetInfiltrationDouble(pLinePoints);
+                    vblCounter = pLinePoints.length;
+
+                    lineutility.GetArrowHead4Double(pLinePoints[vblCounter - 5], pLinePoints[vblCounter - 4], Math.trunc(dMBR / 20), Math.trunc(dMBR / 20), pArrowPoints, 0);
+                    for (k = 0; k < 3; k++) {
+                        pLinePoints[vblCounter - k - 1] = new POINT2(pArrowPoints[k]);
+                    }
+                    points =  pLinePoints;//set pixels to be used for integral modifier placement
                     acCounter = vblCounter;
                     break;
                 }
@@ -4222,6 +4328,11 @@ export class arraysupport {
                     break;
                 }
 
+                case TacticalLines.ESCORT:
+                {
+                    acCounter = DISMSupport.GetDISMEscortDouble(tg, pLinePoints, TacticalLines.ESCORT);
+                    break;
+                }
                 case TacticalLines.SARA: {
                     acCounter = DISMSupport.GetDISMCoverDouble(pLinePoints, lineType);
                     //reorder pLinePoints
@@ -4315,6 +4426,7 @@ export class arraysupport {
                 }
 
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE: {
                     let radius: double = 0;
                     if (vblSaveCounter === 4) {
@@ -4456,7 +4568,11 @@ export class arraysupport {
                     acCounter = DISMSupport.GetDISMEasyDouble(pLinePoints, lineType);
                     break;
                 }
-
+                case TacticalLines.DECEIVE: {
+                    DISMSupport.GetDISMDeceiveDouble(pLinePoints);
+                    acCounter = 4;
+                    break;
+                }
                 case TacticalLines.BYPASS: {
                     acCounter = DISMSupport.GetDISMBypassDouble(pLinePoints, lineType);
                     break;
@@ -4489,6 +4605,7 @@ export class arraysupport {
                 case TacticalLines.COVER:
                 case TacticalLines.SCREEN:  //note: screen, cover, guard are getting their modifiers before the call to getlinearray
                 case TacticalLines.GUARD:
+                case TacticalLines.ESCORT:
                 case TacticalLines.PAA_RECTANGULAR:
                 case TacticalLines.RECTANGULAR_TARGET:
                 case TacticalLines.FOLSP:
@@ -4505,8 +4622,11 @@ export class arraysupport {
                 case TacticalLines.PENETRATE:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE:
                 case TacticalLines.TURN:
                 case TacticalLines.BS_RECTANGLE:
@@ -4515,6 +4635,7 @@ export class arraysupport {
                 case TacticalLines.AIRFIELD:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH:
+                case TacticalLines.DENY:
                 case TacticalLines.MSDZ:
                 case TacticalLines.CONVOY:
                 case TacticalLines.HCONVOY:
@@ -5305,8 +5426,7 @@ export class arraysupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT:
-                case TacticalLines.INFILTRATION: {
+                case TacticalLines.DIRATKSPT: {
                     arraysupport.addPolyline(pLinePoints, acCounter - 3, shapes); // Main line
                     secondPoly = new Array<POINT2>(3);
                     for (let i: int = 0; i < 3; i++) {

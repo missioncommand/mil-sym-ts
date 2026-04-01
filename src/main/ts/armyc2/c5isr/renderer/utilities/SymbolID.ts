@@ -111,13 +111,24 @@ export class SymbolID {
 
 
     //Version, 1-2 (Can't start with zero, will be 10 at a minimum)
+    public static readonly Version_APP6D = 10;
+    /**
+     * @deprecated 2525D(10) will be treated like APP6D(also 10)
+     * For 2525D use 2525Dch1(11)
+     */
     public static readonly Version_2525D: number = 10;
     public static readonly Version_2525Dch1: number = 11;
     /**
      * @deprecated withdrawn from standard
      */
     public static readonly Version_APP6Dch2: number = 12;
+    /**
+     * @deprecated use 2525Ech1
+     */
     public static readonly Version_2525E: number = 13;
+    /**
+     * @deprecated use APP6EEch2
+     */
     public static readonly Version_APP6Ech1: number = 14;
     public static readonly Version_2525Ech1: number = 15;
     public static readonly Version_APP6Ech2: number = 16;
@@ -1054,6 +1065,27 @@ export class SymbolID {
         }
 
         return parseInt(scc);
+    }
+
+    public static setCountryCode(symbolID: string, countryCode: string | number)
+    {
+        let cc:string = "000";
+        if(typeof countryCode === "number")
+            cc = countryCode.toString();
+        else
+            cc = countryCode;
+        if(cc.length > 3)
+            cc = cc.substring(0,3);
+        if(symbolID != null && symbolID.length >= 20)
+            {
+                while(cc.length < 3)
+                    cc = "0" + cc;
+                return symbolID.substring(0,27) + cc;
+            }
+            else
+            {
+                return symbolID;
+            }
     }
 
     /**

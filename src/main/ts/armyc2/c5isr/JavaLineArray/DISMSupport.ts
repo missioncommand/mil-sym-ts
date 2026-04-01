@@ -13,6 +13,7 @@ import { ErrorLogger } from "../renderer/utilities/ErrorLogger"
 import { RendererException } from "../renderer/utilities/RendererException"
 import { RendererSettings } from "../renderer/utilities/RendererSettings"
 import { clsUtility } from "../JavaTacticalRenderer/clsUtility";
+import { Font } from "../graphics2d/Font";
 
 
 /**
@@ -447,6 +448,131 @@ export class DISMSupport {
             }
         }
         return false;
+    }
+
+    public static GetInfiltrationDouble(points:POINT2[]):POINT2[] {
+        let counter:number = 0;
+
+        let p1:POINT2 = points[0];//start
+        let p3:POINT2 = points[1];//mid
+        let p5:POINT2 = points[2];//end
+        let start:POINT2 = points[0];//start
+        let mid:POINT2 = points[1];//mid
+        let end:POINT2 = points[2];//end
+        let p2:POINT2 = new POINT2(0,0,1);
+        let p4:POINT2 = new POINT2(0,0,1);
+        p1.style=0;
+
+
+
+        let dpi:number = RendererSettings.getInstance().getDeviceDPI();
+        let scale:number = 4;
+
+        if(p5.x==0 && p5.y==0)//handle points drop when all 3 on top of each other.
+        {
+            p5.x=p3.x;
+            p5.y=p3.y;
+        }
+ 
+        let d1 = Math.round(lineutility.CalcDistanceDouble(p1,p3));
+        let d2 = Math.round(lineutility.CalcDistanceDouble(p3,p5));
+
+        //force some distance so render doesn't fail when points too close
+        if(d1==0) {
+            p1.x = p1.x - 1;
+            p1.y = p1.y - 1;
+        }
+        if(d2==0) {
+            p5.x = p5.x + 1;
+            p5.y = p5.y + 1;
+        }
+
+        let arcDistance:number = dpi/scale;
+
+        let anchor1:POINT2 = new POINT2();
+        let anchor2:POINT2 = new POINT2();
+        if(p5.y >= p3.y)//end point lower than mid point
+        {
+            p2.y = p3.y - arcDistance;
+            p4.y = p3.y + arcDistance;
+        }
+        else//end point higher than mid point
+        {
+            p2.y = p3.y + arcDistance;
+            p4.y = p3.y - arcDistance;
+        }
+
+        arcDistance = dpi/scale;
+        if(d2 < arcDistance)
+            arcDistance = Math.max(d2*0.5,3);
+        if(p5.x >= p3.x)
+        {
+            p2.x = p3.x - arcDistance;
+            p4.x = p3.x + arcDistance;
+        }
+        else
+        {
+            p2.x = p3.x + arcDistance;
+            p4.x = p3.x - arcDistance;
+        }
+        anchor1.x=p2.x;
+        anchor1.y=p3.y;
+
+        anchor2.x=p4.x;
+        anchor2.y=p3.y;
+
+
+        let path:Array<POINT2> = new Array<POINT2>();
+
+        try {
+
+            // Draw the first straight line segment (p1 to p2)
+            //g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+            path.push(p1);
+            //path.add(p2);//first curve is going to add this point again
+
+            // Draw the first 45-degree arc (concave) from p2 to p3
+            //drawArc(g2d, p2, p3, true, 5);
+            //path.addAll(getArc(p2, p3, false, 5));
+            if(arcDistance < d1) {
+                path = path.concat(lineutility.GetArcPointsDouble(p2, p3, anchor1, 5));
+                //path.remove(path.size() - 1);//next curve is going to add this point again.
+                path.pop();//next curve is going to add this point again.
+            }
+
+
+            // Draw the second 45-degree arc (convex) from p3 to p4
+            //drawArc(g2d, p3, p4, false, 5);
+            //path.addAll(getArc(p3, p4, true, 5));
+            if(arcDistance < d2)
+                path = path.concat(lineutility.GetArcPointsDouble(p3, p4, anchor2, 5));
+            else
+                path.push(p3);
+
+            // Draw the second straight line segment (p4 to p5)
+            //g2d.drawLine(p4.x, p4.y, p5.x, p5.y);
+            path.push(p5);
+
+        }
+        catch(exc:any)
+        {
+            ErrorLogger.LogException("DISMSupport","GetInfiltrationDouble",exc);
+        }
+
+        let lcv = 0;
+        points = new Array<POINT2>(path.length + 3);
+
+        for(let pt of path)
+        {
+            if(lcv == 0)
+                pt.style = 0;
+            else
+                pt.style=1;
+            points[lcv] = pt;
+            lcv++;
+        }
+
+        return points;
     }
 
     /**
@@ -1070,6 +1196,78 @@ export class DISMSupport {
         }
         return counter;
     }
+
+    
+    /**
+     * Calculates the points for Escort.
+     *
+     * @param points OUT - the client points, also used for the returned points.
+     * @param lineType the line type.
+     */
+    static GetDISMEscortDouble(tg:TGLight, points:POINT2[], lineType:number):number {
+        let counter:number = 6;
+        try {
+            let pt0:POINT2 = new POINT2(points[1]);
+            let pt1:POINT2 = new POINT2();
+            let pt2:POINT2 = new POINT2();
+            let pt3:POINT2 = new POINT2();
+            let pt4:POINT2 = new POINT2();
+            let pt5:POINT2 = new POINT2(points[2]);
+
+
+
+            let offset:POINT2 = points[0];
+            let intersect:POINT2 = lineutility.FindClosestPointOnLine(pt0,pt5,offset);
+
+            let xOffset:number = offset.x - intersect.x;
+            let yOffset:number = offset.y - intersect.y;
+            pt1 = new POINT2(pt0.x+xOffset, pt0.y + yOffset);
+            pt4 = new POINT2(pt5.x+xOffset, pt5.y + yOffset);
+
+
+            let pixelSize:number = tg.getIconSize();
+            let distance:number = lineutility.CalcDistanceDouble(pt1,pt4);
+            let center:POINT2 = lineutility.MidPointDouble(pt1,pt4,0);
+            let font:Font = tg.get_Font();
+            if (font == null) {
+                font = RendererSettings.getInstance().getMPLabelFont();;
+            }
+
+            let ptCenter:POINT2 = lineutility.MidPointDouble(pt1, pt4, 0);
+            if ((font.getSize()*2 + pixelSize) < distance)//draw the gap for the icon
+            {
+                pt2 = lineutility.ExtendAlongLineDouble(center, pt1, pixelSize/2 + font.getSize());
+                pt3 = lineutility.ExtendAlongLineDouble(center, pt4, pixelSize/2 + font.getSize());
+            }
+            else
+            {
+                pt2 = ptCenter;
+                pt3 = ptCenter;
+            }
+
+            pt0.style = 0;
+            pt1.style = 1;
+            pt2.style = 5;
+            pt3.style = 0;
+            pt4.style = 1;
+            pt5.style = 1;
+
+            points[0] = pt0;
+            points[1] = pt1;
+            points[2] = pt2;
+            points[3] = pt3;
+            points[4] = pt4;
+            points[5] = pt5;
+
+        } catch (exc) {
+            if (exc instanceof Error) {
+            ErrorLogger.LogException(DISMSupport._className, "GetDISMEscortDouble",
+                    new RendererException("Failed inside GetDISMEscortDouble", exc));
+            }
+        }
+        return counter;
+    }
+
     /**
      * Calculates the points for BYPASS
      *
@@ -1424,6 +1622,39 @@ export class DISMSupport {
         }
     }
 
+        /**
+     * Calculates the points for DECEIVE.
+     *
+     * @param points - OUT - the client points, also used for the returned points.
+     */
+    static GetDISMDeceiveDouble(points:POINT2[]) {
+        try {
+
+            let savepoints: POINT2[] = new Array<POINT2>(3);
+            let j:number = 0;
+
+            for (j = 0; j < 3; j++) {
+                savepoints[j] = new POINT2(points[j]);
+            }
+
+            points[0] = new POINT2(savepoints[0]);
+            points[0].style = 1;
+            points[1] = new POINT2(savepoints[1]);
+            points[1].style = 5;
+            points[2] = new POINT2(savepoints[2]);
+            points[2].style = 1;
+            points[3] = new POINT2(savepoints[0]);
+            points[3].style = 5;
+
+        } catch (exc) {
+            if (exc instanceof Error) {
+            ErrorLogger.LogException(DISMSupport._className ,"GetDISMDeceiveDouble",
+                    new RendererException("Failed inside GetDISMDeceiveDouble", exc));
+            }
+            else
+                throw exc;
+        }
+    }
 
     /**
      * Calculates the points for DISRUPT
@@ -2532,7 +2763,7 @@ export class DISMSupport {
             points[counter - 1].style = 5;
 
             // draw the arrowhead on line between savepoints 2 and 3
-            if (linetype != TacticalLines.MOBILE_DEFENSE) {
+            if (linetype == TacticalLines.RIP) {
                 pts[0] = new POINT2(savepoints[2]);
                 pts[1] = new POINT2(savepoints[3]);
                 iLengthPt2Pt3 = Math.sqrt((pts[1].x - pts[0].x) * (pts[1].x - pts[0].x) +

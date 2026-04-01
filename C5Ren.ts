@@ -1,5 +1,6 @@
 import { ErrorLogger } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ErrorLogger";
 import { GENCLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/GENCLookup";
+import { C2DLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/C2DLookup";
 import { MSLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSLookup";
 import { SVGLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SVGLookup";
 
@@ -17,6 +18,7 @@ export { Modifiers } from "./src/main/ts/armyc2/c5isr/renderer/utilities/Modifie
 export { DrawRules } from "./src/main/ts/armyc2/c5isr/renderer/utilities/DrawRules";
 export { MODrawRules } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MODrawRules";
 export { GENCLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/GENCLookup";
+export { C2DLookup } from  "./src/main/ts/armyc2/c5isr/renderer/utilities/C2DLookup";
 export { MSLookup } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSLookup";
 export { MSInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MSInfo";
 export { SectorModUtils } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SectorModUtils";
@@ -156,11 +158,13 @@ export function isReady(): boolean {
   try {
     if (
       GENCLookup.getInstance() &&
+      C2DLookup.getInstance() &&
       MSLookup.getInstance() &&
       SVGLookup.getInstance()
     )
       return (
         GENCLookup.getInstance().isReady() &&
+        C2DLookup.getInstance().isReady() &&
         MSLookup.getInstance().isReady() &&
         SVGLookup.getInstance().isReady()
       );

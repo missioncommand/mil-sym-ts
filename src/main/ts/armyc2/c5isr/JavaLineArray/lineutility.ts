@@ -1476,7 +1476,7 @@ export class lineutility {
      *
      * @return the extension point
      */
-    static ExtendLine2Double(pt1: POINT2,
+    public static ExtendLine2Double(pt1: POINT2,
         pt2: POINT2,
         dist: double,
         styl: int): POINT2 {
@@ -1640,6 +1640,45 @@ export class lineutility {
         }
     }
 
+    
+    /**
+     *
+     * @param start beginning of arc
+     * @param end end of arc
+     * @param center center point of circle
+     * @param numSegments how many lines to use to make the curve
+     * @return ArrayList<POINT2> of points that make the arc
+     */
+    public static GetArcPointsDouble(start:POINT2, end:POINT2, center:POINT2, numSegments:number):Array<POINT2> {
+        let points:Array<POINT2> = new Array<POINT2>();
+
+        // 1. Calculate vectors from center to start/end points
+        let dxStart:number = start.x - center.x;
+        let dyStart:number = start.y - center.y;
+        let dxEnd:number = end.x - center.x;
+        let dyEnd:number = end.y - center.y;
+
+        // 2. Determine radius and initial/final angles
+        let radius:number = Math.sqrt(dxStart * dxStart + dyStart * dyStart);
+        let angleStart:number = Math.atan2(dyStart, dxStart);
+        let angleEnd:number = Math.atan2(dyEnd, dxEnd);
+
+        // 3. Calculate the shortest sweep angle
+        let sweep:number = angleEnd - angleStart;
+        while (sweep > Math.PI) sweep -= 2 * Math.PI;
+        while (sweep < -Math.PI) sweep += 2 * Math.PI;
+
+        // 4. Generate points for each segment
+        points.push(start); // Start with the actual start point
+        for (let i = 1; i <= numSegments; i++) {
+            let currentAngle:number = angleStart + (sweep * i / numSegments);
+            let x:number = center.x + radius * Math.cos(currentAngle);
+            let y:number = center.y + radius * Math.sin(currentAngle);
+            points.push(new POINT2(x, y));
+        }
+
+        return points;
+    }
 
     /**
      * Returns the smallest x and y pixel values from an array of points
@@ -2706,6 +2745,7 @@ export class lineutility {
                 case TacticalLines.ISOLATE:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH:
+                case TacticalLines.DENY:
                 case TacticalLines.AREA_DEFENSE: {
                     startangle = M;
                     endangle = startangle + 330 * Math.PI / 180;
@@ -2721,7 +2761,9 @@ export class lineutility {
 
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
-                case TacticalLines.SECURE: {
+                case TacticalLines.SECURE: 
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE: {
                     startangle = M;
                     //if(CELineArrayGlobals.Change1==false)
                     endangle = startangle + 338 * Math.PI / 180;
@@ -2743,6 +2785,7 @@ export class lineutility {
                     case TacticalLines.ISOLATE:
                     case TacticalLines.CORDONKNOCK:
                     case TacticalLines.CORDONSEARCH:
+                    case TacticalLines.DENY:
                     case TacticalLines.AREA_DEFENSE: {
                         startangle = M - Math.PI;
                         endangle = startangle + 330 * Math.PI / 180;
@@ -2751,7 +2794,9 @@ export class lineutility {
 
                     case TacticalLines.OCCUPY:
                     case TacticalLines.RETAIN:
-                    case TacticalLines.SECURE: {
+                    case TacticalLines.SECURE: 
+                    case TacticalLines.CONTROL:
+                    case TacticalLines.LOCATE: {
                         startangle = M - Math.PI;
                         //if(CELineArrayGlobals.Change1==false)
                         endangle = startangle + 338 * Math.PI / 180;
@@ -4337,6 +4382,37 @@ export class lineutility {
                 throw exc;
             }
         }
+    }
+
+    /**
+     * 
+     * @param p1 start point
+     * @param p2 end point
+     * @param p3 point not on the line
+     * @return the point closest to point 3.  This point and point 3 will create a line that is perpendicular to
+     * the line created by point 1 and 2.
+     */
+    public static FindClosestPointOnLine(p1:POINT2, p2:POINT2, p3:POINT2):POINT2 {
+        // Calculate the direction vector of the line (u)
+        let dxLine:number = p2.x - p1.x;
+        let dyLine:number = p2.y - p1.y;
+
+        // Calculate the vector from point 1 to point 3 (v)
+        let dxToPoint3:number = p3.x - p1.x;
+        let dyToPoint3:number = p3.y - p1.y;
+
+        // Compute the dot products
+        let dotProduct_uv:number = dxToPoint3 * dxLine + dyToPoint3 * dyLine; // v · u
+        let dotProduct_uu:number = dxLine * dxLine + dyLine * dyLine;         // u · u
+
+        // Calculate the scalar projection factor
+        let scalarProjection:number = dotProduct_uv / dotProduct_uu;
+
+        // Find the closest point on the line
+        let closestX:number = p1.x + scalarProjection * dxLine;
+        let closestY:number = p1.y + scalarProjection * dyLine;
+
+        return new POINT2(closestX, closestY);
     }
 
     private static CalcMBR(pLinePoints: POINT2[],

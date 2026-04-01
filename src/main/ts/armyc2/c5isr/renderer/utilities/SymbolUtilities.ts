@@ -302,7 +302,6 @@ export class SymbolUtilities {
      * G*G*GPP---****X
      * @param strSymbolID 15 Character string
      * @return 15 Character string
-     * @deprecated function will be removed
      */
     public static getBasicSymbolID2525C(strSymbolID: string): string {
         if (strSymbolID != null && strSymbolID.length === 15) {
@@ -345,18 +344,18 @@ export class SymbolUtilities {
 
 
             let v: int = SymbolID.getVersion(symbolID);
-            if (v < SymbolID.Version_2525E) {
+            if (v < SymbolID.Version_APP6D) {
 
                 newID = SymbolID.Version_2525Dch1.toString();
             }
 
-            else {
+            else if (v > SymbolID.Version_APP6Ech2){
 
-                newID = SymbolID.Version_2525E.toString();
+                newID = SymbolID.Version_2525Ech1.toString();
             }
 
             let c: int = SymbolID.getContext(symbolID);
-            if (c > 2) {
+            if (c > 4) {
 
                 newID += SymbolID.StandardIdentity_Context_Reality.toString();
             }
@@ -435,17 +434,18 @@ export class SymbolUtilities {
                 newID += "000000";
             }
             //root symbol for symbol set
-            else {
-                if (SVGLookup.getInstance().getSVGLInfo(SVGLookup.getMainIconID(newID + ec + "0000"), v) == null) {
-                    //set to invalid symbol since we couldn't find it in the lookup
-                    newID = SymbolID.setSymbolSet(newID, 98);
-                    newID += 100000;
-                }
-                else {
-                    newID += String(ec).padStart(6, '0');
-                }
-
+            else if (SVGLookup.getInstance().getSVGLInfo(SVGLookup.getMainIconID(newID + ec + "0000"), v) == null) 
+            {
+                //set to blank symbol
+                newID += "000000";
+                /*//set to invalid symbol since we couldn't find it in the lookup
+                newID = SymbolID.setSymbolSet(newID, 98);
+                newID += "100000";//*/
             }
+            else 
+                newID += String(ec).padStart(6, '0');
+            
+            
             //we found it so add the entity code
 
             //newID += SymbolID.getMod1ID(symbolID);//just add, won't get used if value bad
@@ -768,10 +768,11 @@ export class SymbolUtilities {
 
     public static isActionPoint(symbolID: string): boolean {
         let msi: MSInfo = MSLookup.getInstance().getMSLInfo(symbolID);
-        if (msi.getDrawRule() === DrawRules.POINT1) {
+        if (msi !== null && msi.getDrawRule() === DrawRules.POINT1) {
             let ec: int = SymbolID.getEntityCode(symbolID);
-            if (ec !== 131300 && ec !== 131301 && ec !== 182600 && ec !== 212800) {
-
+            if (ec !== 131300 && ec !== 131301 && ec !== 182600 && ec !== 212800
+                && ec != 360100 && ec != 360200 && ec != 360300)
+            {
                 return true;
             }
 
@@ -1112,10 +1113,14 @@ export class SymbolUtilities {
         if (ss === SymbolID.SymbolSet_ControlMeasure) {
             switch (ec) {
                 case 281300:
+                case 281301:
                 case 281400:
+                case 281401:
                 case 281500:
                 case 281600:
-                case 281700: {
+                case 281700: 
+                case 281701: 
+                {
                     return true;
                 }
 
@@ -1226,6 +1231,7 @@ export class SymbolUtilities {
                 case 131900: //Airfield (AEGIS Only)
                 case 132000: //Target Handover
                 case 132100: //Key Terrain
+                case 132300: //Vital Ground
                 case 160300: //Target Point Reference
                 case 180100: //Air Control Point
                 case 180200: //Communications Check Point
@@ -1235,6 +1241,7 @@ export class SymbolUtilities {
                 case 210800: //Impact Point
                 case 211000: //Launched Torpedo
                 case 212800: //Harbor
+                case 213400: //Navigational reference waypoint
                 case 213500: //Sonobuoy
                 case 213501: //Ambient Noise Sonobuoy
                 case 213502: //Air Transportable Communication (ATAC) (Sonobuoy)
@@ -1262,10 +1269,17 @@ export class SymbolUtilities {
                 case 282001: //Tower, Low
                 case 282002: //Tower, High
                 case 281300: //Chemical Event
+                case 281301: //Chemical Event - toxic material
                 case 281400: //Biological Event
+                case 281402: //Biological Event - toxic material
                 case 281500: //Nuclear Event
                 case 281600: //Nuclear Fallout Producing Event
-                case 281700: { //Radiological Event
+                case 281700: //Radiological Event
+                case 281701: //Radiological Event - toxic material
+                case 360100: //Protection of cultural property - General
+                case 360200: //Protection of cultural property - Special
+                case 360300: //Protection of cultural property - Enhanced
+                {
                     return true;
                 }
 

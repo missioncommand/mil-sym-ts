@@ -161,15 +161,19 @@ export class MilStdIconRenderer
         let temp: ImageInfo;
         let svgTemp: SVGSymbolInfo;
         let msi: MSInfo = MSLookup.getInstance().getMSLInfo(symbolID);
-        if (msi == null) 
+        /*if (msi == null) 
         {
-            //TODO: if null, try to fix the code so that something renders
-            //This check currently happening in RenderUnit & RenderSP via renconcileSymbolID()
-            //Checks for bad codes and tries to resolve.  IF it can't returns unknown symbol.
+            //Attempt to fix the code or set if to invalid symbol if unfixable
+            symbolID = SymbolUtilities.reconcileSymbolID(symbolID);
+            msi = MSLookup.getInstance().getMSLInfo(symbolID);
+            if(msi == null)
+            {
+                symbolID = "110098000010000000000000000000";//invalid symbol
+            }
         }
         if (msi != null && msi.getDrawRule() === DrawRules.DONOTDRAW) {
             return null;
-        }
+        }//*/
 
         //Check in case attributes are something other than Map<string,string>, null or undefined
         if(attributes != null && attributes instanceof Map === false)

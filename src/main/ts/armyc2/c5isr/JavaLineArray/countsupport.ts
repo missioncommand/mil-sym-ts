@@ -234,7 +234,8 @@ export class countsupport {
                 case TacticalLines.ESR1:
                 case TacticalLines.ESR2:
                 case TacticalLines.FORDSITE:
-                case TacticalLines.FOXHOLE: {
+                case TacticalLines.FOXHOLE: 
+                case TacticalLines.DECEIVE: {
                     count = 4;
                     break;
                 }
@@ -319,6 +320,7 @@ export class countsupport {
                 }
 
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE: {
                     count = 37;
                     break;
@@ -335,9 +337,14 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.DIRATKSPT:
-                case TacticalLines.INFILTRATION: {
+                case TacticalLines.DIRATKSPT: {
                     count = vblCounter + 3;
+                    break;
+                }
+
+                case TacticalLines.EXFILTRATION:
+                case TacticalLines.INFILTRATION: {
+                    count = vblCounter + 10 + 3;//client points plus 2 arcs plus one arrowhead
                     break;
                 }
 
@@ -376,6 +383,11 @@ export class countsupport {
                     break;
                 }
 
+                case TacticalLines.ESCORT: {
+                    count = 6;
+                    break;
+                }
+
                 case TacticalLines.RAFT:
                 case TacticalLines.MFLANE: {	//extra eight points for hash marks at either end
                     count = 8;
@@ -411,7 +423,8 @@ export class countsupport {
 
                 case TacticalLines.ISOLATE:
                 case TacticalLines.CORDONKNOCK:
-                case TacticalLines.CORDONSEARCH: {
+                case TacticalLines.CORDONSEARCH: 
+                case TacticalLines.DENY: {
                     count = 50;
                     break;
                 }
@@ -421,7 +434,9 @@ export class countsupport {
                     break;
                 }
 
-                case TacticalLines.OCCUPY: {
+                case TacticalLines.OCCUPY: 
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE: {
                     count = 32;
                     break;
                 }

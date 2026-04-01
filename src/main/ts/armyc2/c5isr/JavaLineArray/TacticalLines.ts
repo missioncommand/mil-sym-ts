@@ -93,13 +93,17 @@ export class TacticalLines {
     public static readonly PENETRATE: number = 211700000;
     public static readonly RETAIN: number = 211900000;
     public static readonly SECURE: number = 212100000;
+    public static readonly CONTROL: number = 25343200;
+    public static readonly LOCATE: number = 25343900;
     public static readonly SEIZE: number = 212300000;
+    public static readonly CAPTURE: number = 25343000;
     public static readonly ASLTXING: number = 23221000;
     public static readonly GAP: number = 23163000;
     public static readonly COVER: number = 212230000;
     public static readonly SCREEN: number = 212210000;
     public static readonly GUARD: number = 212220000;
     public static readonly SARA: number = 22139000;
+    public static readonly DECEIVE: number = 22310000;
     public static readonly FIX: number = 211100000;
     public static readonly PDF: number = 22422000;
     public static readonly ATKBYFIRE: number = 22533000;
@@ -142,6 +146,7 @@ export class TacticalLines {
     public static readonly WITHDRAW: number = 212400000;
     public static readonly CORDONSEARCH: number = 212500000;
     public static readonly CORDONKNOCK: number = 212600000;
+    public static readonly DENY: number = 25343400;
     public static readonly WDRAWUP: number = 212410000;
     public static readonly CFL: number = 24220000;
     public static readonly LOD: number = 22526000;
@@ -307,8 +312,11 @@ export class TacticalLines {
     public static readonly NFA_RECTANGULAR: number = 24324200;
     public static readonly NFA_CIRCULAR: number = 24324300;
     public static readonly CHEM: number = 23460000;
+    public static readonly CHEMT: number = 25271801;
     public static readonly BIO: number = 23450000;
+    public static readonly BIOT: number = 25271701;
     public static readonly RAD: number = 23440000;
+    public static readonly RADT: number = 25272001;
     public static readonly NUC: number = 271900;
     public static readonly NFL: number = 24230000;
     public static readonly MFP: number = 24225000;
@@ -530,9 +538,12 @@ export class TacticalLines {
     public static readonly EXPLOIT: number = 25343100;
     public static readonly DEMONSTRATE: number = 25343300;
     public static readonly ENVELOPMENT: number = 25343500;
+    public static readonly EXFILTRATION: number = 25343700;
     public static readonly INFILTRATION: number = 25343800;
     public static readonly PURSUIT: number = 25344000;
     public static readonly DISENGAGE: number = 25344400;
     public static readonly EVACUATE: number = 25344500;
+    public static readonly ESCORT: number = 25343600;
+    public static readonly DECISION_LINE: number = 25130701;
 }
 

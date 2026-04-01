@@ -36,6 +36,8 @@ import { clsUtility } from "./clsUtility";
 import { IPathIterator } from "../graphics2d/IPathIterator";
 import { SinglePointSVGRenderer } from "../renderer/SinglePointSVGRenderer";
 import { SVGSymbolInfo } from "../renderer/utilities/SVGSymbolInfo";
+import { GENCLookup } from "../renderer/utilities/GENCLookup";
+import { Modifiers } from "../renderer/utilities/Modifiers";
 
 
 /**
@@ -63,14 +65,43 @@ export class Modifier2 {
         this.textPath = new Array<POINT2>(2);
     }
 
+    /**
+     * Put label next to pt0 on opposite side of line
+     */
     private static readonly toEnd: int = 1; // Put next to pt0 on opposite side of line
+    /**
+     * put label between both point and apply the angle between the two points
+     */
     private static readonly aboveMiddle: int = 2;    //use both points
+    /**
+     * one point, label always right-side-up
+     */
     private static readonly area: int = 3;   //use one point
+    /**
+     * one point, label always right-side-up
+     */
     private static readonly screen: int = 4;   //use one point, screen, cover, guard points
+    /**
+     * Put next to pt0, but above the line
+     */
     private static readonly aboveEnd: int = 5; // Put next to pt0 on line
+    /**
+     * between both points but perpendicular rotation of text
+     */
     private static readonly aboveMiddlePerpendicular: int = 6; //use both points
+    /**
+     * For Moving and Halted Convoy.
+     * At start of line behind arrowhead
+     */
     private static readonly aboveStartInside: int = 7; //place at the start inside the shape
+    /**
+     * For Moving and Halted Convoy.
+     * At back of line inside arrow shape.
+     */
     private static readonly aboveEndInside: int = 8;  //place at the end inside the shape
+    /**
+     * Image Modifier, uses one point
+     */
     private static readonly areaImage: int = 9;   //use one point
     private static fillAlphaCanObscureText: double = 50;
 
@@ -274,8 +305,10 @@ export class Modifier2 {
                     break;
                 }
 
+                case TacticalLines.CAPTURE:
                 case TacticalLines.CANALIZE:
-                case TacticalLines.CLEAR: {
+                case TacticalLines.CLEAR: 
+                case TacticalLines.CONTROL: {
                     label = "C";
                     break;
                 }
@@ -355,6 +388,11 @@ export class Modifier2 {
 
                 case TacticalLines.LL: {
                     label = "LL";
+                    break;
+                }
+
+                case TacticalLines.LOCATE: {
+                    label = "LOC";
                     break;
                 }
 
@@ -583,7 +621,8 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.DELAY: {
+                case TacticalLines.DELAY: 
+                case TacticalLines.DENY: {
                     label = "D";
                     break;
                 }
@@ -823,7 +862,8 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.ELECTRO: {
+                case TacticalLines.ELECTRO: 
+                case TacticalLines.ESCORT: {
                     label = "E";
                     break;
                 }
@@ -896,6 +936,11 @@ export class Modifier2 {
 
                 case TacticalLines.TRIP: {
                     label = "t";
+                    break;
+                }
+
+                case TacticalLines.EXFILTRATION: {
+                    label = "EX";
                     break;
                 }
 
@@ -1070,6 +1115,57 @@ export class Modifier2 {
         Modifier2.AddModifier2(tg, text, type, lineFactor, pt0, pt1, isIntegral, modifierType);
     }
 
+    private static AddIntegralAreaImageModifier(tg:TGLight,
+            image: SVGSymbolInfo,
+            type: int,
+            lineFactor: double,
+            pt0: POINT2,
+            pt1: POINT2,
+            isIntegral: boolean,
+            anchorPoint:POINT2 = pt0,
+            anchorOffset:POINT2 = new POINT2(0,0)
+        ) 
+    {
+        try {
+        if (image == null) {
+        return;
+        }
+
+        let modifier:Modifier2 = new Modifier2();
+        modifier.set_IsIntegral(isIntegral);
+        modifier.image = image;
+        if (image == null) {
+        return;
+        }
+
+        if (pt0 == null || pt1 == null) {
+        return;
+        }
+
+        modifier.type = type;
+        modifier.lineFactor = lineFactor;
+        modifier.textPath[0] = pt0;
+        modifier.textPath[1] = pt1;
+        tg.modifiers.push(modifier);
+        } catch (exc) {
+            if (exc instanceof Error) {
+                ErrorLogger.LogException(Modifier2._className, "AddAreaModifier",
+                new RendererException("Failed inside AddIntegralAreaImageModifier", exc));
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param tg 
+     * @param type 
+     * @param lineFactor 
+     * @param pt0 
+     * @param pt1 
+     * @param isIntegral 
+     * @returns 
+     * @deprecated
+     */
     private static AddImageModifier(tg: TGLight,
         type: int,
         lineFactor: double,
@@ -1116,7 +1212,20 @@ export class Modifier2 {
                         sa.set(MilStdAttributes.PixelSize, ((tg.getIconSize() * 1.5) as int).toString());
                     }
                     symbol = SinglePointSVGRenderer.getInstance().RenderModifier(symbolID, sa);
-                } else if (lineType === TacticalLines.ANCHORAGE_LINE || lineType === TacticalLines.ANCHORAGE_AREA) {
+                } 
+                else if (lineType == TacticalLines.DECISION_LINE) {
+
+                    sa.set(MilStdAttributes.PixelSize, (tg.getIconSize() * 1.5).toString());
+                    sa.set(MilStdAttributes.KeepUnitRatio, (tg.get_KeepUnitRation()).toString());
+                    sa.set(MilStdAttributes.FillColor, RendererUtilities.colorToHexString(tg.get_FillColor(), true));
+                    sa.set(MilStdAttributes.LineColor, RendererUtilities.colorToHexString(tg.get_LineColor(), true));
+                    sa.set(MilStdAttributes.OutlineSymbol, "false");
+                    mods.set(Modifiers.T_UNIQUE_DESIGNATION_1,(tg.get_Name()));
+        
+                    let decsionPoint:string = SymbolID.setEntityCode(symbolID, EntityCode.EntityCode_Decision_Point);
+                    symbol = SinglePointSVGRenderer.getInstance().RenderSP(decsionPoint, mods, sa);
+                }
+                else if (lineType === TacticalLines.ANCHORAGE_LINE || lineType === TacticalLines.ANCHORAGE_AREA) {
                     sa.set(MilStdAttributes.OutlineSymbol, "false");
                     let anchorPoint: string = SymbolID.setEntityCode(symbolID, EntityCode.EntityCode_AnchoragePoint);
                     symbol = SinglePointSVGRenderer.getInstance().RenderSP(anchorPoint, mods, sa);
@@ -1469,6 +1578,7 @@ export class Modifier2 {
 
                 case TacticalLines.PDF:
                 case TacticalLines.PL:
+                case TacticalLines.DECISION_LINE:
                 case TacticalLines.FEBA:
                 case TacticalLines.LOA:
                 case TacticalLines.LOD:
@@ -2545,6 +2655,7 @@ export class Modifier2 {
                 case TacticalLines.MINED:
                 case TacticalLines.FENCED:
                 case TacticalLines.PL:
+                case TacticalLines.DECISION_LINE:
                 case TacticalLines.FEBA:
                 case TacticalLines.FCL:
                 case TacticalLines.HOLD:
@@ -2607,9 +2718,12 @@ export class Modifier2 {
                 case TacticalLines.DELAY:
                 case TacticalLines.TGMF:
                 case TacticalLines.BIO:
+                case TacticalLines.BIOT:
                 case TacticalLines.CHEM:
+                case TacticalLines.CHEMT:
                 case TacticalLines.NUC:
                 case TacticalLines.RAD:
+                case TacticalLines.RADT:
                 case TacticalLines.MINE_LINE:
                 case TacticalLines.ANCHORAGE_LINE:
                 case TacticalLines.ANCHORAGE_AREA:
@@ -2621,7 +2735,6 @@ export class Modifier2 {
                 case TacticalLines.AAAAA:
                 case TacticalLines.MAIN:
                 case TacticalLines.DIRATKSPT:
-                case TacticalLines.INFILTRATION:
                 case TacticalLines.DIRATKGND:
                 case TacticalLines.LAUNCH_AREA:
                 case TacticalLines.DEFENDED_AREA_CIRCULAR:
@@ -2733,7 +2846,17 @@ export class Modifier2 {
                     Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
                     break;
                 }
+                case TacticalLines.DECISION_LINE:
+                    if(tg.get_AS() == null || tg.get_AS() !== "")
+                        tg.set_AS(GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(tg.get_SymbolId()).toString()));
+                    let si:SVGSymbolInfo =  Modifier2.GetImageModifier(tg);
 
+                    let ptDP1:POINT2 = lineutility.ExtendLine2Double(pt1,pt0,si.getSymbolBounds().getWidth()/2,0);
+                    let ptDP2:POINT2 = lineutility.ExtendLine2Double(ptNextToLast, ptLast,si.getSymbolBounds().getWidth()/2,0);
+
+                    Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,ptDP1,ptDP1,false);
+                    Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,ptDP2,ptDP2,false);
+                    break;
                 case TacticalLines.BS_LINE:
                 case TacticalLines.BBS_LINE: {
                     if (tg.get_T1() == null || tg.get_T1() == "") {
@@ -2836,23 +2959,54 @@ export class Modifier2 {
                 case TacticalLines.ICL:
                 case TacticalLines.NFL:
                 case TacticalLines.BCL_REVD:
-                case TacticalLines.RFL: {
+                case TacticalLines.RFL: 
+                case TacticalLines.BCL:
+                {
                     pt0 = tg.Pixels[0];
                     pt1 = tg.Pixels[1];
                     pt2 = tg.Pixels[tg.Pixels.length - 1];
                     pt3 = tg.Pixels[tg.Pixels.length - 2];
                     dist = lineutility.CalcDistanceDouble(pt0, pt1);
                     dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
-                    stringWidth = (metrics.stringWidth(tg.get_Name() + " " + label) as double) as int;
-                    stringWidth2 = (metrics.stringWidth(tg.get_DTG()) as double) as int;
+                    
+                    let TMod:string = ""; // Don't add parenthesis if T modifier is empty
+
+                    let version:number = SymbolID.getVersion(tg.get_SymbolId());
+                    if(version < SymbolID.Version_2525E) {
+                        TMod = tg.get_Name();
+                        stringWidth =  (metrics.stringWidth(TMod + " " + label));
+                    }
+                    else if(version == SymbolID.Version_2525E || version == SymbolID.Version_2525Ech1) {
+                        if(linetype == TacticalLines.BCL) {
+                            if (tg.get_Name() != null && tg.get_Name()!=="")
+                                TMod = " (" + tg.get_Name() + ")";
+                            stringWidth = ( metrics.stringWidth(label + TMod));
+                        }
+                        else
+                        {
+                            TMod = tg.get_Name();
+                            stringWidth = (metrics.stringWidth(tg.get_Name() + " " + label));
+                        }
+                    }
+                    else if((version == SymbolID.Version_APP6Ech2)) {
+                        if (tg.get_Name() != null && tg.get_Name() !== "")
+                            TMod += " " + tg.get_Name();
+                        if(tg.get_AS() != null && tg.get_AS() !== "")
+                            TMod += " (" + tg.get_AS() + ")";
+                        stringWidth = (metrics.stringWidth(label + TMod));
+
+                    }
+
+                    stringWidth2 = (metrics.stringWidth(tg.get_DTG()));
                     if (stringWidth2 > stringWidth) {
                         stringWidth = stringWidth2;
                     }
 
+
                     if (tg.Pixels.length === 2) //one segment
                     {
                         pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                        Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                        Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
                         Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
                         Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
                         if (dist > 3.5 * stringWidth)//was 28stringwidth+5
@@ -2860,7 +3014,7 @@ export class Modifier2 {
                             pt0 = tg.Pixels[tg.Pixels.length - 1];
                             pt1 = tg.Pixels[tg.Pixels.length - 2];
                             pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
                             Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
                             Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
                         }
@@ -2869,7 +3023,7 @@ export class Modifier2 {
                         let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
                         if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
                             pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
                             Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
                             Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
                         }
@@ -2877,7 +3031,7 @@ export class Modifier2 {
                             pt0 = tg.Pixels[tg.Pixels.length - 1];
                             pt1 = tg.Pixels[tg.Pixels.length - 2];
                             pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
                             Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
                             Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
                         }
@@ -2950,10 +3104,6 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.INFILTRATION: {
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, true);
-                    break;
-                }
 
                 case TacticalLines.SPT:
                 case TacticalLines.FRONTAL_ATTACK:
@@ -3227,7 +3377,8 @@ export class Modifier2 {
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.aboveMiddle, -1.5 * csFactor, ul, ur, false);
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG(), Modifier2.aboveMiddle, 1.5 * csFactor, ll, lr, false);
                     Modifier2.addModifierOnLine("M", tg);
-                    Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
                     break;
                 }
 
@@ -3243,7 +3394,8 @@ export class Modifier2 {
                         }
                     }
                     Modifier2.addModifierOnLine("M", tg);
-                    Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
                     break;
                 }
 
@@ -3576,15 +3728,21 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.BIO:
+                case TacticalLines.BIOT:
                 case TacticalLines.CHEM:
+                case TacticalLines.CHEMT:
                 case TacticalLines.NUC:
-                case TacticalLines.RAD: {
-                    Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                case TacticalLines.RAD: 
+                case TacticalLines.RADT: 
+                {
+                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
                     break;
                 }
 
                 case TacticalLines.ANCHORAGE_LINE: {
-                    Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.15 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
+                    //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.15 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
+                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.15 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
                     break;
                 }
 
@@ -3598,14 +3756,16 @@ export class Modifier2 {
                             y = tg.Pixels[index].y + tg.Pixels[index + 1].y;
                         }
                     }
-                    Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.25 * csFactor, tg.Pixels[index], tg.Pixels[index + 1], false);
+                    //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.25 * csFactor, tg.Pixels[index], tg.Pixels[index + 1], false);
+                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.25 * csFactor, tg.Pixels[index], tg.Pixels[index + 1], false);
                     break;
                 }
 
                 case TacticalLines.MINE_LINE: {
-                    Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.2 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
+                    //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.2 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
+                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.2 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
                     if (tg.isHostile()) {
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, 0.0, pt0, pt1, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, 0.0, pt0, pt1, false);                       
                         Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, 0.0, ptLast, ptNextToLast, false);
                     }
                     break;
@@ -3614,7 +3774,8 @@ export class Modifier2 {
                 case TacticalLines.DEPICT: {
                     Modifier2.GetMBR(tg, ul, ur, lr, ll);
                     Modifier2.addNModifier(tg);
-                    Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
                     break;
                 }
 
@@ -3741,7 +3902,8 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.LAA: {
-                    Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
                     Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
                     break;
                 }
@@ -4211,13 +4373,20 @@ export class Modifier2 {
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.AREA_DEFENSE:
                 case TacticalLines.CONTAIN:
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE:
                 case TacticalLines.TURN:
                 case TacticalLines.CORDONKNOCK:
                 case TacticalLines.CORDONSEARCH:
+                case TacticalLines.DENY:
+                case TacticalLines.ESCORT:
+                case TacticalLines.INFILTRATION:
+                case TacticalLines.EXFILTRATION:
                 case TacticalLines.FOLLA:
                 case TacticalLines.FOLSP:
                 case TacticalLines.ACA_RECTANGULAR:
@@ -4400,11 +4569,14 @@ export class Modifier2 {
                 case TacticalLines.OCCUPY:
                 case TacticalLines.RETAIN:
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.AREA_DEFENSE: {
                     pt0 = tg.Pixels[13];
                     pt1 = tg.Pixels[14];
                     //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
                     break;
                 }
 
@@ -4435,11 +4607,13 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.SEIZE:
+                case TacticalLines.CAPTURE:
                 case TacticalLines.EVACUATE: {
                     pt0 = tg.Pixels[26];
                     pt1 = tg.Pixels[27];
                     //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
                     break;
                 }
 
@@ -4495,7 +4669,8 @@ export class Modifier2 {
                 }
 
                 case TacticalLines.CORDONKNOCK:
-                case TacticalLines.CORDONSEARCH: {
+                case TacticalLines.CORDONSEARCH: 
+                case TacticalLines.DENY: {
                     pt0 = tg.Pixels[13];
                     pt1 = tg.Pixels[0];
                     stringWidth = metrics.stringWidth(label);
@@ -4503,9 +4678,30 @@ export class Modifier2 {
                         stringWidth = -stringWidth;
                     }
                     pt1 = lineutility.ExtendAlongLineDouble2(pt0, pt1, 0.75 * stringWidth);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, ptCenter, ptCenter, true);
                     break;
                 }
+
+                case TacticalLines.ESCORT: {
+                    if(tg.Pixels.length == 6) {
+                        if (tg.Pixels[2].x == tg.Pixels[3].x &&
+                                tg.Pixels[2].y == tg.Pixels[3].y) {
+                            //No Room for E labels
+                            break;//?
+                        }
+                        //This function put the pabel 
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, tg.Pixels[2], tg.Pixels[1], true);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, tg.Pixels[3], tg.Pixels[4], true);
+                    }
+                    break;
+                }
+
+                case TacticalLines.EXFILTRATION:
+                    case TacticalLines.INFILTRATION: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1 , true);
+                        break;
+                    }
 
                 case TacticalLines.FOLLA: {
                     pt0 = tg.Pixels[0];
@@ -5266,6 +5462,9 @@ export class Modifier2 {
                 g2d.setBackground(Color.white);
             }
 
+            let anchor:Point2D = null;
+            let anchorOffset:Point2D = null;
+
             let direction: int = -1;
             let glyphPosition: Point;
             for (j = 0; j < tg.modifiers.length; j++) {
@@ -5332,32 +5531,48 @@ export class Modifier2 {
                             justify = ShapeInfo.justify_left;
                         }
 
+                        //3rd point value is location to start perpendicular line from
                         pt3 = lineutility.ExtendDirectedLine(pt1, pt0, pt0, direction, lineFactor * stringHeight);
+                        //pt3 is the end point of the perpendicularline
 
                         glyphPosition = new Point(pt3.x as int, pt3.y as int);
                         modifierPosition = new Point2D(pt3.x, pt3.y);
+                        
+                        anchor = new Point2D(pt0.x, pt0.y);
+                        anchorOffset = new Point2D(pt3.x - pt0.x, pt3.y - pt0.y);
+
                         break;
                     }
 
                     case Modifier2.aboveStartInside: {
+                        //returns pt3 which is based on the specified distance from pt0 along the line of pt0 to pt1.
                         pt3 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
 
                         glyphPosition = new Point(pt3.x as int, pt3.y as int);
                         modifierPosition = new Point2D(pt3.x as int, pt3.y);
+                        
+                        anchor = new Point2D(pt0.x, pt0.y);
+                        anchorOffset = new Point2D(pt3.x - pt0.x, pt3.y - pt0.y);
                         break;
                     }
 
                     case Modifier2.aboveEndInside: {
+                        //returns pt3 which is based on the specified distance from pt0 along the line of pt1 to pt0.
                         pt3 = lineutility.ExtendAlongLineDouble(pt1, pt0, stringWidth);
 
                         glyphPosition = new Point(pt3.x as int, pt3.y as int);
                         modifierPosition = new Point2D(pt3.x as int, pt3.y);
+                        
+                        anchor = new Point2D(pt1.x, pt1.y);
+                        anchorOffset = new Point2D(pt3.x - pt1.x, pt3.y - pt1.y);
                         break;
                     }
 
                     case Modifier2.aboveMiddle:
                     case Modifier2.aboveMiddlePerpendicular: {
                         pt2 = midPt;
+                        anchor = new Point2D(midPt.x,midPt.y);
+
                         if (tg.get_Client() === "2D") {
                             lineFactor += 0.5;
                         }
@@ -5382,6 +5597,10 @@ export class Modifier2 {
                         glyphPosition = new Point(pt3.x as int, pt3.y as int);
                         justify = ShapeInfo.justify_center;
                         modifierPosition = new Point2D(midPt.x, midPt.y);
+
+                        //anchor = new Point2D.Double(midPt.x, midPt.y);
+                        anchorOffset = new Point2D(midPt.x - anchor.getX(), midPt.y - anchor.getY());
+
 
                         if (modifier.type === Modifier2.aboveMiddlePerpendicular) {
                             // Need to negate the original rotation
@@ -5408,6 +5627,9 @@ export class Modifier2 {
                         glyphPosition = new Point(x, y);
                         justify = ShapeInfo.justify_center;
                         modifierPosition = new Point2D(x, y);
+                        
+                        anchor = new Point2D(x1, y1);
+                        anchorOffset = new Point2D(x - x1, y - y1);
                         break;
                     }
 
@@ -5415,6 +5637,9 @@ export class Modifier2 {
                         glyphPosition = new Point(x1 as int, y1 as int);
                         justify = ShapeInfo.justify_center;
                         modifierPosition = new Point2D(x1 as int, y1 as int);
+                        
+                        anchor = new Point2D(x1, y1);
+                        anchorOffset = new Point2D(0, 0);
                         break;
                     }
 
@@ -5461,10 +5686,12 @@ export class Modifier2 {
                             x = x1 as int - stringWidth as int / 2;
                             y = y1 as int - Math.trunc(stringHeight / 2) + (lineFactor * stringHeight) as int;
                             y = y1 as int + (stringHeight / 2) as int + (lineFactor * stringHeight) as int;
+                            anchor = new Point2D(x1, y1);
                         } else {
                             theta = 0;
                             x = tg.Pixels[0].x as int;
                             y = tg.Pixels[0].y as int;
+                            anchor = new Point2D(x, y);
                             x = x as int - stringWidth as int / 2;
                             y = y as int - Math.trunc(stringHeight / 2) + (lineFactor * stringHeight) as int;
                             y = y as int + (stringHeight / 2) as int + (lineFactor * stringHeight) as int;
@@ -5472,6 +5699,8 @@ export class Modifier2 {
 
                         glyphPosition = new Point(x, y);
                         //glyphPosition=new Point2D(x,y);
+                        //anchor = new Point2D.Double(x1, y1);
+                        anchorOffset = new Point2D(x - anchor.getX(), y - anchor.getY());
                         break;
                     }
 
@@ -5518,7 +5747,9 @@ export class Modifier2 {
                 //shape2.setModifierStringPosition(glyphPosition);//M. Deutch 7-6-11
                 shape2.setModifierAngle(theta * 180 / Math.PI);
                 shape2.setModifierPosition(modifierPosition);
-
+                shape2.setModifierAnchor(anchor);
+                shape2.setModifierAnchorOffset(anchorOffset);
+                
                 if (shape2 != null) {
                     shapes.push(shape2);
                 }
@@ -5670,6 +5901,65 @@ export class Modifier2 {
             }
         }
         return null;
+    }
+
+    private static GetImageModifier(tg: TGLight):SVGSymbolInfo
+    {
+        let symbolID: string = tg.get_SymbolId();
+        let symbol: SVGSymbolInfo;
+        let mods: Map<string, string> = new Map();
+        let sa: Map<string, string> = new Map();
+        sa.set(MilStdAttributes.PixelSize, tg.getIconSize().toString());
+        let contaminationCode: int = EntityCode.getSymbolForContaminationArea(SymbolID.getEntityCode(symbolID));
+            let modifier1Code: int = SymbolID.getModifier1(symbolID);
+            let lineType: int = clsUtility.GetLinetypeFromString(symbolID);
+        if (contaminationCode > 0) {
+            sa.set(MilStdAttributes.OutlineSymbol, "true");
+            sa.set(MilStdAttributes.FillColor, RendererUtilities.colorToHexString(tg.get_FillColor(), true));
+            sa.set(MilStdAttributes.LineColor, RendererUtilities.colorToHexString(tg.get_LineColor(), true));
+            let contaminationSP:string = SymbolID.setEntityCode(symbolID, contaminationCode);
+            contaminationSP = SymbolID.setHQTFD(contaminationSP, 0); // Remove fdi if necessary
+            symbol = SinglePointSVGRenderer.getInstance().RenderSP(contaminationSP, mods, sa);
+        } else if (lineType == TacticalLines.DEPICT || lineType == TacticalLines.MINED || lineType == TacticalLines.FENCED || lineType == TacticalLines.MINE_LINE) {
+            if (modifier1Code < 13 || modifier1Code > 50) {
+                // Invalid mine type
+                modifier1Code = 13;//unspecified mine (default value if not specified as per MilStd 2525)
+                symbolID = SymbolID.setModifier1(symbolID, modifier1Code);
+            }
+            if (tg.get_KeepUnitRation()) {
+                sa.set(MilStdAttributes.PixelSize, (tg.getIconSize() * 1.5).toString());
+            }
+            sa.set(MilStdAttributes.OutlineSymbol, "true");
+            symbol = SinglePointSVGRenderer.getInstance().RenderModifier(symbolID, sa);
+        } else if (lineType == TacticalLines.LAA && modifier1Code > 0) {
+            sa.set(MilStdAttributes.OutlineSymbol, "true");
+            sa.set(MilStdAttributes.FillColor, RendererUtilities.colorToHexString(tg.get_FillColor(), true));
+            sa.set(MilStdAttributes.LineColor, RendererUtilities.colorToHexString(tg.get_LineColor(), true));
+            if (tg.get_KeepUnitRation()) {
+                sa.set(MilStdAttributes.PixelSize, (tg.getIconSize() * 1.5).toString());
+            }
+            symbol = SinglePointSVGRenderer.getInstance().RenderModifier(symbolID, sa);
+        } else if (lineType == TacticalLines.DECISION_LINE) {
+
+            sa.set(MilStdAttributes.PixelSize, (tg.getIconSize() * 1.5).toString());
+            sa.set(MilStdAttributes.KeepUnitRatio, tg.get_KeepUnitRation().toString());
+            sa.set(MilStdAttributes.FillColor, RendererUtilities.colorToHexString(tg.get_FillColor(), true));
+            sa.set(MilStdAttributes.LineColor, RendererUtilities.colorToHexString(tg.get_LineColor(), true));
+            sa.set(MilStdAttributes.OutlineSymbol, "false");
+            mods.set(Modifiers.T_UNIQUE_DESIGNATION_1,(tg.get_Name()));
+
+            let decsionPoint:string = SymbolID.setEntityCode(symbolID, EntityCode.EntityCode_Decision_Point);
+            symbol = SinglePointSVGRenderer.getInstance().RenderSP(decsionPoint, mods, sa);
+        } else if (lineType == TacticalLines.ANCHORAGE_LINE || lineType == TacticalLines.ANCHORAGE_AREA) {
+            sa.set(MilStdAttributes.OutlineSymbol, "false");
+            let anchorPoint:string = SymbolID.setEntityCode(symbolID, EntityCode.EntityCode_AnchoragePoint);
+            symbol = SinglePointSVGRenderer.getInstance().RenderSP(anchorPoint, mods, sa);
+        }
+
+        if (symbol != null)
+            return symbol;
+        else
+            return null;
     }
 
     private static removeDecimal(doubleVal: string | double): string {

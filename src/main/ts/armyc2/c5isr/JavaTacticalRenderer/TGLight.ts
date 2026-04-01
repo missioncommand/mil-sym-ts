@@ -13,6 +13,7 @@ import { RendererException } from "../renderer/utilities/RendererException"
 import { SymbolID } from "../renderer/utilities/SymbolID"
 import { SymbolUtilities } from "../renderer/utilities/SymbolUtilities"
 import { RendererSettings } from "../renderer/utilities/RendererSettings";
+import { GENCLookup } from "../renderer/utilities/GENCLookup";
 
 /**
  * A class to encapsulate the tactical graphic object. Many of the properties
@@ -522,6 +523,10 @@ export class TGLight {
                 if (this.echelonSymbol == null) {
                     this.echelonSymbol = "";
                 }
+
+                let cc:number = SymbolID.getCountryCode(this.symbolId);
+                if(cc > 0 && this.as === "")
+                    this.as = GENCLookup.getInstance().get3CharCode(cc);
             }
         } catch (exc) {
             if (exc instanceof Error) {

@@ -588,7 +588,8 @@ export class clsRenderer {
             }
 
             let coords: Array<Point2D> = clsRenderer.getClientCoords(tg);
-            tg.set_Font(new Font("Arial", Font.PLAIN, 12));
+            //tg.set_Font(new Font("Arial", Font.PLAIN, 12));\
+            tg.set_Font(RendererSettings.getInstance().getMPLabelFont());
             let modifiers: Map<string, string> = new Map();
             modifiers.set(Modifiers.W_DTG_1, tg.get_DTG());
             modifiers.set(Modifiers.W1_DTG_2, tg.get_DTG1());
@@ -1143,7 +1144,8 @@ export class clsRenderer {
                     clsRenderer.setClientCoords(milStd, tg);
                     //build tg.Pixels
                     tg.Pixels = clsUtility.LatLongToPixels(tg.LatLongs, converter);
-                    tg.set_Font(new Font("Arial", Font.PLAIN, 12));
+                    //tg.set_Font(new Font("Arial", Font.PLAIN, 12));
+                    tg.set_Font(RendererSettings.getInstance().getMPLabelFont());
                     tg.set_FillColor(milStd.getFillColor());
                     tg.set_LineColor(milStd.getLineColor());
                     tg.set_LineThickness(milStd.getLineWidth());
@@ -1561,7 +1563,7 @@ export class clsRenderer {
                 let ptB: POINT2 = new POINT2(points[4]);
                 let ptC: POINT2 = new POINT2(points[9]);
                 shapes.push(DISMSupport.getFDIShape(tg, ptA, ptB, ptC));
-            } else if (lineType === TacticalLines.DIRATKSPT || lineType == TacticalLines.INFILTRATION) {
+            } else if (lineType === TacticalLines.DIRATKSPT || lineType == TacticalLines.EXFILTRATION || lineType == TacticalLines.INFILTRATION) {
                 let points: Array<POINT2> = shapes[1].getPoints();
                 let ptA: POINT2 = new POINT2(points[0]);
                 let ptB: POINT2 = new POINT2(points[1]);
@@ -2430,37 +2432,10 @@ export class clsRenderer {
         if (version >= SymbolID.Version_2525Ech1) {
             switch (entityCode) {
                 // Added in 2525Ech1
-                case 152600:
-                    return TacticalLines.AREA_DEFENSE;
-                case 152700:
-                    return TacticalLines.FRONTAL_ATTACK;
-                case 152900:
-                    return TacticalLines.TURNING_MOVEMENT;
-                case 152800:
-                    return TacticalLines.MOBILE_DEFENSE;
-                case 242800:
-                    return TacticalLines.KILL_ZONE;
-                case 342900:
-                    return TacticalLines.MOVEMENT_TO_CONTACT;
-                case 343100:
-                    return TacticalLines.EXPLOIT;
-                case 343300:
-                    return TacticalLines.DEMONSTRATE;
-                case 343500:
-                    return TacticalLines.ENVELOPMENT;
-                case 343800:
-                    return TacticalLines.INFILTRATION;
-                case 344000:
-                    return TacticalLines.PURSUIT;
-                case 344400:
-                    return TacticalLines.DISENGAGE;
-                case 344500:
-                    return TacticalLines.EVACUATE;
-                case 344700:
-                    return TacticalLines.TURN;
+
                 // Updated in 2525Ech1
                 case 172000:
-                    return TacticalLines.WFZ;
+                    return TacticalLines.WFZ;//extra modifiers
                 // Removed in 2525Ech1
                 case 240804:
                     return -1;
@@ -2469,1158 +2444,641 @@ export class clsRenderer {
         if (version >= SymbolID.Version_2525E) {
             switch (entityCode) {
                 // Added in 2525E
-                case 110400: {
-                    return TacticalLines.GENERIC_LINE;
-                }
-
-                case 120700: {
-                    return TacticalLines.GENERIC_AREA;
-                }
-
-                case 141800: {
-                    return TacticalLines.HOL;
-                }
-
-                case 141900: {
-                    return TacticalLines.BHL;
-                }
-
-                case 310800: {
-                    return TacticalLines.CSA;
-                }
-
-                case 330500: {
-                    return TacticalLines.TRAFFIC_ROUTE;
-                }
-
-                case 330501: {
-                    return TacticalLines.TRAFFIC_ROUTE_ONEWAY;
-                }
-
-                case 330502: {
-                    return TacticalLines.TRAFFIC_ROUTE_ALT;
-                }
-
-                case 344100: {
-                    return TacticalLines.FPOL;
-                }
-
-                case 344200: {
-                    return TacticalLines.RPOL;
-                }
 
                 // Updated in 2525E
-                case 120500: {
-                    return TacticalLines.BASE_CAMP;
-                }
-
-                case 120600: {
-                    return TacticalLines.GUERILLA_BASE;
-                }
-
-                case 151000: {
-                    return TacticalLines.FORT;
-                }
-
-                case 260400: {
-                    return TacticalLines.BCL;
-                }
-
-                case 310100: {
-                    return TacticalLines.DHA;
-                }
-
+                case 120500:
+                    return TacticalLines.BASE_CAMP;//labels B,T,H,N,W,W1
+                case 120600:
+                    return TacticalLines.GUERILLA_BASE;//labels B,T,H,N,W,W1
+                case 260400:
+                    return TacticalLines.BCL;//label like "BCL (T)"
+                case 310100:
+                    return TacticalLines.DHA;//label just DHA
                 // Updated in 2525Ech1
-                case 172000: {
-                    return TacticalLines.WFZ_REVD;
-                }
-
-                default:
-
+                case 172000:
+                    return TacticalLines.WFZ_REVD;//fewer modifiers
             }
-        } else { // 2525Dchange 1 and older
+        }
+        else{ // 2525Dchange 1 and older
             switch (entityCode) {
                 // Updated in 2525E
-                case 120500: {
-                    return TacticalLines.BASE_CAMP_REVD;
-                }
-
-                case 120600: {
-                    return TacticalLines.GUERILLA_BASE_REVD;
-                }
-
-                case 151000: {
-                    return TacticalLines.FORT_REVD;
-                }
-
-                case 260400: {
-                    return TacticalLines.BCL_REVD;
-                }
-
-                case 310100: {
-                    return TacticalLines.DHA_REVD;
-                }
-
-                // Removed in 2525E
-                case 150300: {
+                case 120500:
+                    return TacticalLines.BASE_CAMP_REVD;//just 'T' modiifer
+                case 120600:
+                    return TacticalLines.GUERILLA_BASE_REVD;//just 'T' modiifer
+                case 260400:
+                    return TacticalLines.BCL_REVD;//label like "BCL T"
+                case 310100:
+                    return TacticalLines.DHA_REVD;//label DHA spelled out
+                // Removed in 2525E/APP6E
+                case 150300:
                     return TacticalLines.ASSY;
-                }
-
-                case 241601: {
+                case 241601:
                     return TacticalLines.SENSOR;
-                }
-
-                case 241602: {
+                case 241602:
                     return TacticalLines.SENSOR_RECTANGULAR;
-                }
-
-                case 241603: {
+                case 241603:
                     return TacticalLines.SENSOR_CIRCULAR;
-                }
-
                 // Updated in 2525Ech1
-                case 172000: {
-                    return TacticalLines.WFZ_REVD;
-                }
-
-                default:
-
+                case 172000:
+                    return TacticalLines.WFZ_REVD;//fewer modifiers
             }
         }
         // Line type isn't specific to a version or doesn't exist
         switch (entityCode) {
-            case 200101: {
+            case 151000:
+                return TacticalLines.FORT;
+            case 110400:
+                return TacticalLines.GENERIC_LINE;
+            case 110500:
+                return TacticalLines.DECISION_LINE;
+            case 120700:
+                return TacticalLines.GENERIC_AREA;
+            case 141800:
+                return TacticalLines.HOL;
+            case 141900:
+                return TacticalLines.BHL;
+            case 310800:
+                return TacticalLines.CSA;
+            case 330500:
+                return TacticalLines.TRAFFIC_ROUTE;
+            case 330501:
+                return TacticalLines.TRAFFIC_ROUTE_ONEWAY;
+            case 330502:
+                return TacticalLines.TRAFFIC_ROUTE_ALT;
+            case 344100:
+                return TacticalLines.FPOL;
+            case 344200:
+                return TacticalLines.RPOL;
+            case 152600:
+                return TacticalLines.AREA_DEFENSE;
+            case 152700:
+                return TacticalLines.FRONTAL_ATTACK;
+            case 152900:
+                return TacticalLines.TURNING_MOVEMENT;
+            case 152800:
+                return TacticalLines.MOBILE_DEFENSE;
+            case 242800:
+                return TacticalLines.KILL_ZONE;
+            case 342900:
+                return TacticalLines.MOVEMENT_TO_CONTACT;
+            case 343100:
+                return TacticalLines.EXPLOIT;
+            case 343300:
+                return TacticalLines.DEMONSTRATE;
+            case 343500:
+                return TacticalLines.ENVELOPMENT;
+            case 343700:
+                return TacticalLines.EXFILTRATION;
+            case 343800:
+                return TacticalLines.INFILTRATION;
+            case 344000:
+                return TacticalLines.PURSUIT;
+            case 344400:
+                return TacticalLines.DISENGAGE;
+            case 344500:
+                return TacticalLines.EVACUATE;
+            case 344700:
+                return TacticalLines.TURN;
+            case 200101:
                 return TacticalLines.LAUNCH_AREA;
-            }
-
-            case 200201: {
+            case 200201:
                 return TacticalLines.DEFENDED_AREA_CIRCULAR;
-            }
-
-            case 200202: {
+            case 200202:
                 return TacticalLines.DEFENDED_AREA_RECTANGULAR;
-            }
-
-            case 120100: {
+            case 120100:
                 return TacticalLines.AO;
-            }
-
-            case 120200: {
+            case 120200:
                 return TacticalLines.NAI;
-            }
-
-            case 120300: {
+            case 120300:
                 return TacticalLines.TAI;
-            }
-
-            case 120400: {
+            case 120400:
                 return TacticalLines.AIRFIELD;
-            }
-
-            case 151401: {
+            case 151401:
                 return TacticalLines.AIRAOA;
-            }
-
-            case 151402: {
+            case 151402:
                 return TacticalLines.AAAAA;
-            }
-
-            case 151403: {
+            case 151403:
                 return TacticalLines.MAIN;
-            }
-
-            case 151404: {
+            case 151404:
                 return TacticalLines.SPT;
-            }
-
-            case 110100: {
+            case 110100:
                 return TacticalLines.BOUNDARY;
-            }
-
-            case 110200: {
+            case 110200:
                 return TacticalLines.LL;
-            }
-
-            case 110300: {
+            case 110300:
                 return TacticalLines.EWL;
-            }
-
-            case 140100: {
+            case 140100:
                 return TacticalLines.FLOT;
-            }
-
-            case 140200: {
+            case 140200:
                 return TacticalLines.LC;
-            }
-
-            case 140300: {
+            case 140300:
                 return TacticalLines.PL;
-            }
-
-            case 140400: {
+            case 140400:
                 return TacticalLines.FEBA;
-            }
-
-            case 140500: {
+            case 140500:
                 return TacticalLines.PDF;
-            }
-
-            case 140601: {
+            case 140601:
                 return TacticalLines.DIRATKAIR;
-            }
-
-            case 140602: {
+            case 140602:
                 return TacticalLines.DIRATKGND;
-            }
-
-            case 140603: {
+            case 140603:
                 return TacticalLines.DIRATKSPT;
-            }
-
-            case 140700: {
+            case 140700:
                 return TacticalLines.FCL;
-            }
-
-            case 140800: {
+            case 140800:
                 return TacticalLines.IL;
-            }
-
-            case 140900: {
+            case 140900:
                 return TacticalLines.LOA;
-            }
-
-            case 141000: {
+            case 141000:
                 return TacticalLines.LOD;
-            }
-
-            case 141100: {
+            case 141100:
                 return TacticalLines.LDLC;
-            }
-
-            case 141200: {
+            case 141200:
                 return TacticalLines.PLD;
-            }
-
-            case 150200: {
+            case 150200:
                 return TacticalLines.ASSY;
-            }
-
-            case 150100: {
+            case 150100:
                 return TacticalLines.GENERAL;
-            }
-
-            case 150501: {
+            case 150501:
                 return TacticalLines.JTAA;
-            }
-
-            case 150502: {
+            case 150502:
                 return TacticalLines.SAA;
-            }
-
-            case 150503: {
+            case 150503:
                 return TacticalLines.SGAA;
-            }
-
-            case 150600: {    //dz no eny
+            case 150600:    //dz no eny
                 return TacticalLines.DZ;
-            }
-
-            case 150700: {    //ez no eny
+            case 150700:    //ez no eny
                 return TacticalLines.EZ;
-            }
-
-            case 150800: {    //lz no eny
+            case 150800:    //lz no eny
                 return TacticalLines.LZ;
-            }
-
-            case 150900: {    //pz no eny
+            case 150900:    //pz no eny
                 return TacticalLines.PZ;
-            }
-
-            case 151100: {
+            case 151100:
                 return TacticalLines.LAA;
-            }
-
-            case 151200: {
+            case 151200:
                 return TacticalLines.BATTLE;
-            }
-
-            case 151202: {
+            case 151202:
                 return TacticalLines.PNO;
-            }
-
-            case 151204: {
+            case 151204:
                 return TacticalLines.CONTAIN;
-            }
-
-            case 151205: {
+            case 151205:
                 return TacticalLines.RETAIN;
-            }
-
-            case 151300: {
+            case 151300:
                 return TacticalLines.EA;
-            }
-
-            case 151203: {
+            case 151203:
                 return TacticalLines.STRONG;
-            }
-
-            case 151500: {
+            case 151500:
                 return TacticalLines.ASSAULT;
-            }
-
-            case 151600: {
+            case 151600:
                 return TacticalLines.ATKPOS;
-            }
-
-            case 151700: {
+            case 151700:
                 return TacticalLines.OBJ;
-            }
-
-            case 151800: {
+            case 151800:
                 return TacticalLines.ENCIRCLE;
-            }
-
-            case 151900: {
+            case 151900:
                 return TacticalLines.PEN;
-            }
-
-            case 152000: {
+            case 152000:
                 return TacticalLines.ATKBYFIRE;
-            }
-
-            case 152100: {
+            case 152100:
                 return TacticalLines.SPTBYFIRE;
-            }
-
-            case 152200: {
+            case 152200:
                 return TacticalLines.SARA;
-            }
-
-            case 141300: {
+            case 141300:
                 return TacticalLines.AIRHEAD;
-            }
-
-            case 141400: {
+            case 141400:
                 return TacticalLines.BRDGHD;
-            }
-
-            case 141500: {
+            case 141500:
                 return TacticalLines.HOLD;
-            }
-
-            case 141600: {
+            case 141600:
                 return TacticalLines.RELEASE;
-            }
-
-            case 141700: {
+            case 141700:
                 return TacticalLines.AMBUSH;
-            }
-
-            case 170100: {
+            case 170100:
                 return TacticalLines.AC;
-            }
-
-            case 170200: {
+            case 170200:
                 return TacticalLines.LLTR;
-            }
-
-            case 170300: {
+            case 170300:
                 return TacticalLines.MRR;
-            }
-
-            case 170400: {
+            case 170400:
                 return TacticalLines.SL;
-            }
-
-            case 170500: {
+            case 170500:
                 return TacticalLines.SAAFR;
-            }
-
-            case 170600: {
+            case 170600:
                 return TacticalLines.TC;
-            }
-
-            case 170700: {
+            case 170700:
                 return TacticalLines.SC;
-            }
-
-            case 170800: {
+            case 170800:
                 return TacticalLines.BDZ;
-            }
-
-            case 170900: {
+            case 170900:
                 return TacticalLines.HIDACZ;
-            }
-
-            case 171000: {
+            case 171000:
                 return TacticalLines.ROZ;
-            }
-
-            case 171100: {
+            case 171100:
                 return TacticalLines.AARROZ;
-            }
-
-            case 171200: {
+            case 171200:
                 return TacticalLines.UAROZ;
-            }
-
-            case 171300: {
+            case 171300:
                 return TacticalLines.WEZ;
-            }
-
-            case 171400: {
+            case 171400:
                 return TacticalLines.FEZ;
-            }
-
-            case 171500: {
+            case 171500:
                 return TacticalLines.JEZ;
-            }
-
-            case 171600: {
+            case 171600:
                 return TacticalLines.MEZ;
-            }
-
-            case 171700: {
+            case 171700:
                 return TacticalLines.LOMEZ;
-            }
-
-            case 171800: {
+            case 171800:
                 return TacticalLines.HIMEZ;
-            }
-
-            case 171900: {
+            case 171900:
                 return TacticalLines.FAADZ;
-            }
-
-            case 200401: {
+            case 200401:
                 return TacticalLines.SHIP_AOI_CIRCULAR;
-            }
-
-            case 240804: {
+            case 240804:
                 return TacticalLines.RECTANGULAR_TARGET;
-            }
-
-            case 220100: {
+            case 220100:
                 return TacticalLines.BEARING;
-            }
-
-            case 220101: {
+            case 230100:
+            case 230200:
+                return TacticalLines.DECEIVE;
+            case 220101:
                 return TacticalLines.ELECTRO;
-            }
-
-            case 220102: {    //EW                //new label
+            case 220102:    //EW                //new label
                 return TacticalLines.BEARING_EW;
-            }
-
-            case 220103: {
+            case 220103:
                 return TacticalLines.ACOUSTIC;
-            }
-
-            case 220104: {
+            case 220104:
                 return TacticalLines.ACOUSTIC_AMB;
-            }
-
-            case 220105: {
+            case 220105:
                 return TacticalLines.TORPEDO;
-            }
-
-            case 220106: {
+            case 220106:
                 return TacticalLines.OPTICAL;
-            }
-
-            case 218400: {
+            case 218400:
                 return TacticalLines.NAVIGATION;
-            }
-
-            case 220107: {    //Jammer                //new label
+            case 220107:    //Jammer                //new label
                 return TacticalLines.BEARING_J;
-            }
-
-            case 220108: {    //RDF                   //new label
+            case 220108:    //RDF                   //new label
                 return TacticalLines.BEARING_RDF;
-            }
-
-            case 240101: {
+            case 240101:
                 return TacticalLines.ACA;
-            }
-
-            case 240102: {
+            case 240102:
                 return TacticalLines.ACA_RECTANGULAR;
-            }
-
-            case 240103: {
+            case 240103:
                 return TacticalLines.ACA_CIRCULAR;
-            }
 
-
-            case 240201: {
+            case 240201:
                 return TacticalLines.FFA;
-            }
-
-            case 240202: {
+            case 240202:
                 return TacticalLines.FFA_RECTANGULAR;
-            }
-
-            case 240203: {
+            case 240203:
                 return TacticalLines.FFA_CIRCULAR;
-            }
 
-
-            case 240301: {
+            case 240301:
                 return TacticalLines.NFA;
-            }
-
-            case 240302: {
+            case 240302:
                 return TacticalLines.NFA_RECTANGULAR;
-            }
-
-            case 240303: {
+            case 240303:
                 return TacticalLines.NFA_CIRCULAR;
-            }
 
-
-            case 240401: {
+            case 240401:
                 return TacticalLines.RFA;
-            }
-
-            case 240402: {
+            case 240402:
                 return TacticalLines.RFA_RECTANGULAR;
-            }
-
-            case 240403: {
+            case 240403:
                 return TacticalLines.RFA_CIRCULAR;
-            }
-
-            case 240503: {
+            case 240503:
                 return TacticalLines.PAA;
-            }
-
-            case 240501: {
+            case 240501:
                 return TacticalLines.PAA_RECTANGULAR;
-            }
-
-            case 240502: {
+            case 240502:
                 return TacticalLines.PAA_CIRCULAR;
-            }
-
-            case 260100: {
+            case 260100:
                 return TacticalLines.FSCL;
-            }
-
-            case 300100: {
+            case 300100:
                 return TacticalLines.ICL;
-            }
-
-            case 190100: {
+            case 190100:
                 return TacticalLines.IFF_OFF;
-            }
-
-            case 190200: {
+            case 190200:
                 return TacticalLines.IFF_ON;
-            }
-
-            case 260200: {
+            case 260200:
                 return TacticalLines.CFL;
-            }
-
-            case 260300: {
+            case 260300:
                 return TacticalLines.NFL;
-            }
-
-            case 260500: {
+            case 260500:
                 return TacticalLines.RFL;
-            }
-
-            case 260600: {
+            case 260600:
                 return TacticalLines.MFP;
-            }
-
-            case 240701: {
+            case 240701:
                 return TacticalLines.LINTGT;
-            }
-
-            case 240702: {
+            case 240702:
                 return TacticalLines.LINTGTS;
-            }
-
-            case 240703: {
+            case 240703:
                 return TacticalLines.FPF;
-            }
-
-            case 240801: {
+            case 240801:
                 return TacticalLines.AT;
-            }
-
-            case 240802: {
+            case 240802:
                 return TacticalLines.RECTANGULAR;
-            }
-
-            case 240803: {
+            case 240803:
                 return TacticalLines.CIRCULAR;
-            }
-
-            case 240805: {
+            case 240805:
                 return TacticalLines.SERIES;
-            }
-
-            case 240806: {
+            case 240806:
                 return TacticalLines.SMOKE;
-            }
-
-            case 240808: {
+            case 240808:
                 return TacticalLines.BOMB;
-            }
-
-            case 241001: {
+            case 241001:
                 return TacticalLines.FSA;
-            }
-
-            case 241002: {
+            case 241002:
                 return TacticalLines.FSA_RECTANGULAR;
-            }
-
-            case 200402: {
+            case 200402:
                 return TacticalLines.SHIP_AOI_RECTANGULAR;
-            }
-
-            case 200600: {
+            case 200600:
                 return TacticalLines.CUED_ACQUISITION;
-            }
-
-            case 200700: {
+            case 200700:
                 return TacticalLines.RADAR_SEARCH;
-            }
-
-            case 241003: {
+            case 241003:
                 return TacticalLines.FSA_CIRCULAR;
-            }
-
-            case 200300: {
+            case 200300:
                 return TacticalLines.NOTACK;
-            }
-
-            case 241101: {
+            case 241101:
                 return TacticalLines.ATI;
-            }
-
-            case 241102: {
+            case 241102:
                 return TacticalLines.ATI_RECTANGULAR;
-            }
-
-            case 241103: {
+            case 241103:
                 return TacticalLines.ATI_CIRCULAR;
-            }
-
-            case 241201: {
+            case 241201:
                 return TacticalLines.CFFZ;
-            }
-
-            case 241202: {
+            case 241202:
                 return TacticalLines.CFFZ_RECTANGULAR;
-            }
-
-            case 241203: {
+            case 241203:
                 return TacticalLines.CFFZ_CIRCULAR;
-            }
-
-            case 241301: {
+            case 241301:
                 return TacticalLines.CENSOR;
-            }
-
-            case 241302: {
+            case 241302:
                 return TacticalLines.CENSOR_RECTANGULAR;
-            }
-
-            case 241303: {
+            case 241303:
                 return TacticalLines.CENSOR_CIRCULAR;
-            }
-
-            case 241401: {
+            case 241401:
                 return TacticalLines.CFZ;
-            }
-
-            case 241402: {
+            case 241402:
                 return TacticalLines.CFZ_RECTANGULAR;
-            }
-
-            case 241403: {
+            case 241403:
                 return TacticalLines.CFZ_CIRCULAR;
-            }
-
-            case 241501: {
+            case 241501:
                 return TacticalLines.DA;
-            }
-
-            case 241502: {
+            case 241502:
                 return TacticalLines.DA_RECTANGULAR;
-            }
-
-            case 241503: {
+            case 241503:
                 return TacticalLines.DA_CIRCULAR;
-            }
-
-            case 241701: {
+            case 241701:
                 return TacticalLines.TBA;
-            }
-
-            case 241702: {
+            case 241702:
                 return TacticalLines.TBA_RECTANGULAR;
-            }
-
-            case 241703: {
+            case 241703:
                 return TacticalLines.TBA_CIRCULAR;
-            }
-
-            case 241801: {
+            case 241801:
                 return TacticalLines.TVAR;
-            }
-
-            case 241802: {
+            case 241802:
                 return TacticalLines.TVAR_RECTANGULAR;
-            }
-
-            case 241803: {
+            case 241803:
                 return TacticalLines.TVAR_CIRCULAR;
-            }
-
-            case 241901: {
+            case 241901:
                 return TacticalLines.ZOR;
-            }
-
-            case 241902: {
+            case 241902:
                 return TacticalLines.ZOR_RECTANGULAR;
-            }
-
-            case 241903: {
+            case 241903:
                 return TacticalLines.ZOR_CIRCULAR;
-            }
-
-            case 242000: {
+            case 242000:
                 return TacticalLines.TGMF;
-            }
-
-            case 242100: {
+            case 242100:
                 return TacticalLines.RANGE_FAN;
-            }
-
-            case 242200: {
+            case 242200:
                 return TacticalLines.RANGE_FAN_SECTOR;
-            }
-
-            case 242301: {
+            case 242301:
                 return TacticalLines.KILLBOXBLUE;
-            }
-
-            case 242302: {
+            case 242302:
                 return TacticalLines.KILLBOXBLUE_RECTANGULAR;
-            }
-
-            case 242303: {
+            case 242303:
                 return TacticalLines.KILLBOXBLUE_CIRCULAR;
-            }
-
-            case 242304: {
+            case 242304:
                 return TacticalLines.KILLBOXPURPLE;
-            }
-
-            case 242305: {
+            case 242305:
                 return TacticalLines.KILLBOXPURPLE_RECTANGULAR;
-            }
-
-            case 242306: {
+            case 242306:
                 return TacticalLines.KILLBOXPURPLE_CIRCULAR;
-            }
-
             case 270100:
-            case 270200: {
+            case 270200:
                 return TacticalLines.ZONE;
-            }
-
-            case 270300: {
+            case 270300:
                 return TacticalLines.OBSFAREA;
-            }
-
-            case 270400: {
+            case 270400:
                 return TacticalLines.OBSAREA;
-            }
-
-            case 270501: {
+            case 270501:
                 return TacticalLines.MNFLDBLK;
-            }
-
-            case 270502: {
+            case 270502:
                 return TacticalLines.MNFLDDIS;
-            }
-
-            case 270503: {
+            case 270503:
                 return TacticalLines.MNFLDFIX;
-            }
-
-            case 270504: {
+            case 270504:
                 return TacticalLines.TURN_REVD;
-            }
-
-            case 270601: {
+            case 270601:
                 return TacticalLines.EASY;
-            }
-
-            case 270602: {
+            case 270602:
                 return TacticalLines.BYDIF;
-            }
-
-            case 270603: {
+            case 270603:
                 return TacticalLines.BYIMP;
-            }
-
-            case 271100: {
+            case 271100:
                 return TacticalLines.GAP;
-            }
-
-            case 271201: {
+            case 271201:
                 return TacticalLines.PLANNED;
-            }
-
-            case 271202: {
+            case 271202:
                 return TacticalLines.ESR1;
-            }
-
-            case 271203: {
+            case 271203:
                 return TacticalLines.ESR2;
-            }
-
-            case 271204: {
+            case 271204:
                 return TacticalLines.ROADBLK;
-            }
-
-            case 280100: {
+            case 280100:
                 return TacticalLines.ABATIS;
-            }
-
-            case 290100: {
+            case 290100:
                 return TacticalLines.LINE;
-            }
-
-            case 290201: {
+            case 290201:
                 return TacticalLines.ATDITCH;
-            }
-
-            case 290202: {
+            case 290202:
                 return TacticalLines.ATDITCHC;
-            }
-
-            case 290203: {
+            case 290203:
                 return TacticalLines.ATDITCHM;
-            }
-
-            case 290204: {
+            case 290204:
                 return TacticalLines.ATWALL;
-            }
-
-            case 290301: {
+            case 290301:
                 return TacticalLines.UNSP;
-            }
-
-            case 290302: {
+            case 290302:
                 return TacticalLines.SFENCE;
-            }
-
-            case 290303: {
+            case 290303:
                 return TacticalLines.DFENCE;
-            }
-
-            case 290304: {
+            case 290304:
                 return TacticalLines.DOUBLEA;
-            }
-
-            case 290305: {
+            case 290305:
                 return TacticalLines.LWFENCE;
-            }
-
-            case 290306: {
+            case 290306:
                 return TacticalLines.HWFENCE;
-            }
-
-            case 290307: {
+            case 290307:
                 return TacticalLines.SINGLEC;
-            }
-
-            case 290308: {
+            case 290308:
                 return TacticalLines.DOUBLEC;
-            }
-
-            case 290309: {
+            case 290309:
                 return TacticalLines.TRIPLE;
-            }
-
-            case 290600: {
+            case 290600:
                 return TacticalLines.MFLANE;
-            }
-
-            case 270707: {
+            case 270707:
                 return TacticalLines.DEPICT;
-            }
-
-            case 270800: {
+            case 270800:
                 return TacticalLines.MINED;
-            }
-
-            case 270801: {
+            case 270801:
                 return TacticalLines.FENCED;
-            }
-
-            case 290101: {
+            case 290101:
                 return TacticalLines.MINE_LINE;
-            }
-
-            case 271000: {
+            case 271000:
                 return TacticalLines.UXO;
-            }
-
-            case 271700: {
+            case 271700:
                 return TacticalLines.BIO;
-            }
-
-            case 271800: {
+            case 271701:
+                return TacticalLines.BIOT;
+            case 271800:
                 return TacticalLines.CHEM;
-            }
-
-            case 271900: {
+            case 271801:
+                return TacticalLines.CHEMT;
+            case 271900:
                 return TacticalLines.NUC;
-            }
-
-            case 272000: {
+            case 272000:
                 return TacticalLines.RAD;
-            }
-
-            case 290400: {
+            case 272001:
+                return TacticalLines.RADT;
+            case 290400:
                 return TacticalLines.CLUSTER;
-            }
-
-            case 290500: {
+            case 290500:
                 return TacticalLines.TRIP;
-            }
-
-            case 282003: {
+            case 282003:
                 return TacticalLines.OVERHEAD_WIRE;
-            }
-
-            case 271300: {
+            case 271300:
                 return TacticalLines.ASLTXING;
-            }
-
-            case 271500: {
+            case 271500:
                 return TacticalLines.FORDSITE;
-            }
-
-            case 271600: {
+            case 271600:
                 return TacticalLines.FORDIF;
-            }
-
-            case 290700: {
+            case 290700:
                 return TacticalLines.FERRY;
-            }
-
-            case 290800: {
+            case 290800:
                 return TacticalLines.RAFT;
-            }
-
-            case 290900: {
+            case 290900:
                 return TacticalLines.FORTL;
-            }
-
-            case 291000: {
+            case 291000:
                 return TacticalLines.FOXHOLE;
-            }
-
-            case 272100: {
+            case 272100:
                 return TacticalLines.MSDZ;
-            }
-
-            case 272200: {
+            case 272200:
                 return TacticalLines.DRCL;
-            }
 
-
-            case 310200: {
+            case 310200:
                 return TacticalLines.EPW;
-            }
-
-            case 310300: {
+            case 310300:
                 return TacticalLines.FARP;
-            }
-
-            case 310400: {
+            case 310400:
                 return TacticalLines.RHA;
-            }
-
-            case 310500: {
+            case 310500:
                 return TacticalLines.RSA;
-            }
-
-            case 310600: {
+            case 310600:
                 return TacticalLines.BSA;
-            }
-
-            case 310700: {
+            case 310700:
                 return TacticalLines.DSA;
-            }
-
-            case 330100: {
+            case 330100:
                 return TacticalLines.CONVOY;
-            }
-
-            case 330200: {
+            case 330200:
                 return TacticalLines.HCONVOY;
-            }
-
-            case 330300: {
+            case 330300:
                 return TacticalLines.MSR;
-            }
-
-            case 330301: {
+            case 330301:
                 return TacticalLines.MSR_ONEWAY;
-            }
-
-            case 330401: {
+            case 330401:
                 return TacticalLines.ASR_ONEWAY;
-            }
-
-            case 330302: {
+            case 330302:
                 return TacticalLines.MSR_TWOWAY;
-            }
-
-            case 330402: {
+            case 330402:
                 return TacticalLines.ASR_TWOWAY;
-            }
-
-            case 330303: {
+            case 330303:
                 return TacticalLines.MSR_ALT;
-            }
-
-            case 330403: {
+            case 330403:
                 return TacticalLines.ASR_ALT;
-            }
 
-
-            case 330400: {
+            case 330400:
                 return TacticalLines.ASR;
-            }
 
-
-            case 340100: {
+            case 340100:
                 return TacticalLines.BLOCK;
-            }
-
-            case 340200: {
+            case 340200:
                 return TacticalLines.BREACH;
-            }
-
-            case 340300: {
+            case 340300:
                 return TacticalLines.BYPASS;
-            }
-
-            case 340400: {
+            case 340400:
                 return TacticalLines.CANALIZE;
-            }
-
-            case 340500: {
+            case 340500:
                 return TacticalLines.CLEAR;
-            }
-
-            case 340600: {
+            case 340600:
                 return TacticalLines.CATK;
-            }
-
-            case 340700: {
+            case 340700:
                 return TacticalLines.CATKBYFIRE;
-            }
 
-
-            case 340800: {
+            case 340800:
                 return TacticalLines.DELAY;
-            }
-
-            case 341000: {
+            case 341000:
                 return TacticalLines.DISRUPT;
-            }
-
-            case 341100: {
+            case 341100:
                 return TacticalLines.FIX;
-            }
-
-            case 341200: {
+            case 341200:
                 return TacticalLines.FOLLA;
-            }
-
-            case 341300: {
+            case 341300:
                 return TacticalLines.FOLSP;
-            }
-
-            case 341500: {
+            case 341500:
                 return TacticalLines.ISOLATE;
-            }
-
-            case 341700: {
+            case 341700:
                 return TacticalLines.OCCUPY;
-            }
-
-            case 341800: {
+            case 341800:
                 return TacticalLines.PENETRATE;
-            }
-
-            case 341900: {
+            case 341900:
                 return TacticalLines.RIP;
-            }
-
-            case 342000: {
+            case 342000:
                 return TacticalLines.RETIRE;
-            }
-
-            case 342100: {
+            case 342100:
                 return TacticalLines.SECURE;
-            }
-
-            case 342201: {
+            case 343200:
+                return TacticalLines.CONTROL;
+            case 343900:
+                return TacticalLines.LOCATE;
+            case 342201:
                 return TacticalLines.COVER;
-            }
-
-            case 342202: {
+            case 342202:
                 return TacticalLines.GUARD;
-            }
-
-            case 342203: {
+            case 342203:
                 return TacticalLines.SCREEN;
-            }
-
-            case 342300: {
+            case 342300:
                 return TacticalLines.SEIZE;
-            }
-
-            case 342400: {
+            case 343000:
+                return TacticalLines.CAPTURE;
+            case 343600:
+                return TacticalLines.ESCORT;
+            case 342400:
                 return TacticalLines.WITHDRAW;
-            }
-
-            case 342500: {
+            case 342500:
                 return TacticalLines.WDRAWUP;
-            }
-
-            case 342600: {
+            case 342600:
                 return TacticalLines.CORDONKNOCK;
-            }
-
-            case 342700: {
+            case 342700:
                 return TacticalLines.CORDONSEARCH;
-            }
-
-            case 272101: {
+            case 343400:
+                return TacticalLines.DENY;
+            case 272101:
                 return TacticalLines.STRIKWARN;
-            }
-
-            default: {
+            default:
                 break;
-            }
-
         }
         return -1;
     }

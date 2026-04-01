@@ -328,8 +328,8 @@ export class clsRenderer2 {
             //at this point tg.Pixels has the points from CELineArray
             //the following line adds modifiers for those sybmols which require
             //the calculated points to use for the modifiers.
-            //currentlly only BLOCK and CONTAIN use tg.Pixels for computing
-            //the modifiers after the call to GetLineArray
+            //currentlly only BLOCK, CONTAIN, ESCORT, Infiltraion and Exfiltration use tg.Pixels
+            //for computing the modifiers after the call to GetLineArray
             //Modifier2.AddModifiers2(tg);//flipped only for 3d for change 1 symbols
             Modifier2.AddModifiers2(tg, converter);
 
@@ -401,6 +401,8 @@ export class clsRenderer2 {
                 }
 
                 case TacticalLines.SECURE:
+                case TacticalLines.CONTROL:
+                case TacticalLines.LOCATE:
                 case TacticalLines.OCCUPY: {
                     if (shapes != null && shapes.length > 0) {
 
@@ -454,7 +456,8 @@ export class clsRenderer2 {
 
                 case TacticalLines.CORDONSEARCH:
                 case TacticalLines.CORDONKNOCK:
-                case TacticalLines.ISOLATE: {
+                case TacticalLines.ISOLATE: 
+                case TacticalLines.DENY: {
                     //set the fillcolor to null for the existing shapes
                     //we are going to create a new fill shape
                     if (shapes != null && shapes.length > 0) {

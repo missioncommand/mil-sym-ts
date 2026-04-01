@@ -400,9 +400,6 @@ export class RendererUtilities {
 
     }
 
-    // Overloaded method to return non-outline symbols as normal.
-    public static setSVGSPCMColors(symbolID: string, svg: string, strokeColor: Color, fillColor: Color): string;
-
     /**
      * For Renderer Use Only
      * Changes colors for single point control measures
@@ -410,131 +407,92 @@ export class RendererUtilities {
      * @param svg
      * @param strokeColor hex value like "#FF0000";
      * @param fillColor hex value like "#FF0000";
-     * @param isOutline true if this represents a thicker outline to render first beneath the normal symbol (the function must be called twice)
+     * @param isOutline default false; true if this represents a thicker outline to render first beneath the normal symbol (the function must be called twice)
      * @return SVG String
      *
      */
-    public static setSVGSPCMColors(symbolID: string, svg: string, strokeColor: Color, fillColor: Color, isOutline: boolean): string;
-    public static setSVGSPCMColors(...args: unknown[]): string {
-        switch (args.length) {
-            case 4: {
-                const [symbolID, svg, strokeColor, fillColor] = args as [string, string, Color, Color];
+    public static setSVGSPCMColors(symbolID: string, svg: string, strokeColor: Color, fillColor: Color, isOutline:boolean=false): string
+    {
+        let returnSVG: string = svg;
+        let hexStrokeColor: string;
+        let hexFillColor: string;
+        let strokeAlpha: float = 1;
+        let fillAlpha: float = 1;
+        let strokeOpacity: string = "";
+        let fillOpacity: string = "";
+        let strokeCapSquare: string = " stroke-linecap=\"square\"";
+        let strokeCapButt: string = " stroke-linecap=\"butt\"";
+        let strokeCapRound: string = " stroke-linecap=\"round\"";
+        let outlineSize:number = 15;
 
 
-                return RendererUtilities.setSVGSPCMColors(symbolID, svg, strokeColor, fillColor, false);
-
-
-                break;
+        let affiliation: int = SymbolID.getAffiliation(symbolID);
+        let defaultFillColor: string;
+        if (strokeColor != null) {
+            if (strokeColor.getAlpha() !== 255) {
+                strokeAlpha = strokeColor.getAlpha() / 255.0;
+                strokeOpacity = " stroke-opacity=\"" + strokeAlpha + "\"";
+                fillOpacity = " fill-opacity=\"" + strokeAlpha + "\"";
             }
 
-            case 5: {
-                let [symbolID, svg, strokeColor, fillColor, isOutline] = args as [string, string, Color, Color, boolean];
+            hexStrokeColor = RendererUtilities.colorToHexString(strokeColor, false);
+            let defaultStrokeColor: string = "#000000";
+            if (symbolID.length === 5) {
+                let mod: int = parseInt(symbolID.substring(2, 4));
+                if (mod >= 13) {
 
-                let returnSVG: string = svg;
-                let hexStrokeColor: string;
-                let hexFillColor: string;
-                let strokeAlpha: float = 1;
-                let fillAlpha: float = 1;
-                let strokeOpacity: string = "";
-                let fillOpacity: string = "";
-                let strokeCapSquare: string = " stroke-linecap=\"square\"";
-                let strokeCapButt: string = " stroke-linecap=\"butt\"";
-                let strokeCapRound: string = " stroke-linecap=\"round\"";
-
-                let affiliation: int = SymbolID.getAffiliation(symbolID);
-                let defaultFillColor: string;
-                if (strokeColor != null) {
-                    if (strokeColor.getAlpha() !== 255) {
-                        strokeAlpha = strokeColor.getAlpha() / 255.0;
-                        strokeOpacity = " stroke-opacity=\"" + strokeAlpha + "\"";
-                        fillOpacity = " fill-opacity=\"" + strokeAlpha + "\"";
-                    }
-
-                    hexStrokeColor = RendererUtilities.colorToHexString(strokeColor, false);
-                    let defaultStrokeColor: string = "#000000";
-                    if (symbolID.length === 5) {
-                        let mod: int = parseInt(symbolID.substring(2, 4));
-                        if (mod >= 13) {
-
-                            defaultStrokeColor = "#00A651";
-                        }
+                    defaultStrokeColor = "#00A651";
+                }
 
 
-                    }
-                    //key terrain
-                    if (symbolID.length >= 20 &&
-                        SymbolUtilities.getBasicSymbolID(symbolID) === "25132100" &&
-                        SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E) {
+            }
+            
+            if(symbolID.length >= 20)
+                {
+                    if(SymbolUtilities.getBasicSymbolID(symbolID)=="25132100" && //key terrain
+                            SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E)
                         defaultStrokeColor = "#800080";
-                    }
-                    returnSVG = returnSVG.replaceAll("stroke=\"" + defaultStrokeColor + "\"", "stroke=\"" + hexStrokeColor + "\"" + strokeOpacity);
-                    returnSVG = returnSVG.replaceAll("fill=\"" + defaultStrokeColor + "\"", "fill=\"" + hexStrokeColor + "\"" + fillOpacity);
+                    else if(isOutline && SymbolUtilities.getBasicSymbolID(symbolID).startsWith("2535"))//space debris doesn't change color
+                        defaultStrokeColor = "black";
                 }
-                else {
-                    strokeColor = Color.BLACK;
-                }
-
-                if (isOutline) {
-                    // Capture and scale stroke-widths to create outlines. Note that some stroke-widths are not integral numbers.
-                    let pattern = RegExp("(stroke-width=\")(\\d+\\.?\\d*)\"", "g");
-                    let matches = [...returnSVG.matchAll(pattern)]
-                    let strokeWidths: Set<number> = new Set();
-                    for (let match of matches) {
-                        // match is ["stroke-width="n"", "stroke-width="", "n"]
-                        strokeWidths.add(parseFloat(match[2]));
-                    }
-                    // replace stroke width values in SVG from greatest to least to avoid unintended replacements
-                    for (let f of Array.from(strokeWidths).sort((a, b) => b - a)) {
-                        let replacement: string = "stroke-width=\"" + (f * RendererUtilities.OUTLINE_SCALING_FACTOR) + "\"";
-                        returnSVG = returnSVG.replaceAll("stroke-width=\"" + f + "\"", replacement);
-                    }
-
-                    // add stroke-width and stroke (color) to all groups
-                    let replacement: string = "<g" + strokeCapSquare + " stroke-width=\"" + (2.5 * RendererUtilities.OUTLINE_SCALING_FACTOR) + "\" stroke=\"#" + RendererUtilities.ColorToHex(strokeColor).substring(2) + "\" ";
-                    returnSVG = returnSVG.replaceAll("<g", replacement);
-                }
-                else {
-                    /* //this code just returned the entire svg string back.  Maybe because there's no line breaks.
-                    Pattern pattern = Pattern.compile("(font-size=\"\\d+\\.?\\d*)\"");
-                    Matcher m = pattern.matcher(svg);
-                    TreeSet<String> fontStrings = new TreeSet<>();
-                    while (m.find()) {
-                        fontStrings.push(m.group(0));
-                    }
-                    for (String target : fontStrings) {
-                        String replacement = target + " fill=\"#" + ColorToHex(strokeColor).substring(2) + "\" ";
-                        returnSVG = returnSVG.replace(target, replacement);
-                    }
-                    //*/
-                    let replacement: string = " fill=\"#" + RendererUtilities.ColorToHex(strokeColor).substring(2) + "\" ";
-                    returnSVG = returnSVG.replace("fill=\"#000000\"", replacement);//only replace black fills, leave white fills alone.
-
-                    //In case there are lines that don't have stroke defined, apply stroke color to the top level group.
-                    let topGroupTag: string = "<g id=\"" + SymbolUtilities.getBasicSymbolID(symbolID) + "\">";//<g id="25212902">
-                    let newGroupTag: string = "<g id=\"" + SymbolUtilities.getBasicSymbolID(symbolID) + "\" stroke=\"" + hexStrokeColor + "\"" + strokeOpacity + " " + replacement + ">";
-                    returnSVG = returnSVG.replace(topGroupTag, newGroupTag);
-
-                }
-
-                if (fillColor != null) {
-                    if (fillColor.getAlpha() !== 255) {
-                        fillAlpha = fillColor.getAlpha() / 255.0;
-                        fillOpacity = " fill-opacity=\"" + fillAlpha + "\"";
-                    }
-
-                    hexFillColor = RendererUtilities.colorToHexString(fillColor, false);
-                    defaultFillColor = "fill=\"#000000\"";
-
-                    returnSVG = returnSVG.replaceAll(defaultFillColor, "fill=\"" + hexFillColor + "\"" + fillOpacity);
-                }
-
-                return returnSVG;
-            }
-
-            default: {
-                throw Error(`Invalid number of arguments`);
-            }
+            returnSVG = returnSVG.replaceAll("stroke=\"" + defaultStrokeColor + "\"", "stroke=\"" + hexStrokeColor + "\"" + strokeOpacity);
+            returnSVG = returnSVG.replaceAll("fill=\"" + defaultStrokeColor + "\"", "fill=\"" + hexStrokeColor + "\"" + fillOpacity);
         }
+        else {
+            strokeColor = Color.BLACK;
+        }
+
+        if (isOutline) {
+            //increase stroke-width so the white outline shows around the symbol
+            returnSVG = RendererUtilities.increaseStrokeWidth(returnSVG,(outlineSize));
+            //set the stroke color for the group so filled shapes without stokes get outlined as well.
+            returnSVG = returnSVG.replace("<g", "<g stroke=\"" + hexStrokeColor + "\" " + strokeOpacity + " stroke-linecap=\"square\"");
+        }
+        else {
+
+            let replacement: string = " fill=\"#" + RendererUtilities.ColorToHex(strokeColor).substring(2) + "\" ";
+            returnSVG = returnSVG.replace("fill=\"#000000\"", replacement);//only replace black fills, leave white fills alone.
+
+            //In case there are lines that don't have stroke defined, apply stroke color to the top level group.
+            let topGroupTag: string = "<g id=\"" + SymbolUtilities.getBasicSymbolID(symbolID) + "\">";//<g id="25212902">
+            let newGroupTag: string = "<g id=\"" + SymbolUtilities.getBasicSymbolID(symbolID) + "\" stroke=\"" + hexStrokeColor + "\"" + strokeOpacity + " " + replacement + ">";
+            returnSVG = returnSVG.replace(topGroupTag, newGroupTag);
+
+        }
+
+        if (fillColor != null) {
+            if (fillColor.getAlpha() !== 255) {
+                fillAlpha = fillColor.getAlpha() / 255.0;
+                fillOpacity = " fill-opacity=\"" + fillAlpha + "\"";
+            }
+
+            hexFillColor = RendererUtilities.colorToHexString(fillColor, false);
+            defaultFillColor = "fill=\"#000000\"";
+
+            returnSVG = returnSVG.replaceAll(defaultFillColor, "fill=\"" + hexFillColor + "\"" + fillOpacity);
+        }
+
+        return returnSVG;
     }
 
     /**
@@ -611,17 +569,17 @@ export class RendererUtilities {
     }
 
     /**
-     * Searches an SVG string and increments all stroke-width values by 2.
+     * Searches an SVG string and increments all stroke-width values by the increaseBy value.
      * @param svgString The input SVG content as a string.
      * @param increaseBy the number to add to the current stroke value
      * @returns A new SVG string with updated stroke-width values.
      */
     public static  increaseStrokeWidth(svgString: string, increaseBy:number): string {
-    // Regex matches 'stroke-width="' followed by one or more digits/decimals
-    // and capturing the numeric part.
-    const strokeWidthRegex = /stroke-width="([\d.]+)"/g;
-  
-    return svgString.replace(strokeWidthRegex, (match, value) => {
+        // Regex matches 'stroke-width="' followed by one or more digits/decimals
+        // and capturing the numeric part.
+        const strokeWidthRegex = /stroke-width="([\d.]+)"/g;
+    
+        let returnVal = svgString.replace(strokeWidthRegex, (match, value) => {
       const numericValue = parseFloat(value);
       
         // Check if the value is a valid number before adding
@@ -633,6 +591,10 @@ export class RendererUtilities {
         // Return original match if parsing fails
         return match;
         });
+
+        let firstGroup:number = returnVal.indexOf("<g");
+        returnVal = returnVal.replace("<g", "<g stroke-width=\"" + increaseBy + "\" ");
+        return returnVal;
     }
 
     public static getDistanceBetweenPoints(pt1:Point2D, pt2:Point2D):int
@@ -690,22 +652,30 @@ export class RendererUtilities {
             bbox = icon.getBbox();
         let length:number = 0;
         if(bbox != null)
+        {
             length = Math.max(bbox.getWidth(),bbox.getHeight());
-        if(length < 100 && length > 0 &&
+            //adjust max size for narrow, tall icons
+            if(bbox.getWidth() < 60 && bbox.getHeight() > 90)
+                maxSize = 200;
+
+            if(SVGLookup.getMainIconID(symbolID).length == 8 && length < 145 && length > 0 &&
+                bbox.getHeight() < 105 &&
                 SymbolID.getCommonModifier1(symbolID)==0 &&
                 SymbolID.getCommonModifier2(symbolID)==0 &&
                 SymbolID.getModifier1(symbolID)==0 &&
-                SymbolID.getModifier2(symbolID)==0)//if largest side smaller than 100 and there are no section mods, make it bigger
-        {
-            let ratio:number = maxSize / length;
-            let transx:number = ((bbox.getX() + (bbox.getWidth()/2)) * ratio) - (bbox.getX() + (bbox.getWidth()/2));
-            let transy:number = ((bbox.getY() + (bbox.getHeight()/2)) * ratio) - (bbox.getY() + (bbox.getHeight()/2));
-            let transform:string = " transform=\"translate(-" + transx + ",-" + transy + ") scale(" + ratio + " " + ratio + ")\">";
-            let svg:string = icon.getSVG();
-            svg = svg.replace(">",transform);
-            let newBbox:Rectangle2D = new Rectangle2D(bbox.getX() - transx,bbox.getY() - transy,bbox.getWidth() * ratio, bbox.getHeight() * ratio);
-            retVal = new SVGInfo(icon.getID(),newBbox,svg);
+                SymbolID.getModifier2(symbolID)==0)//if largest side smaller than 145 and there are no section mods, make it bigger
+            {
+                let ratio:number = maxSize / length;
+                let transx:number = ((bbox.getX() + (bbox.getWidth()/2)) * ratio) - (bbox.getX() + (bbox.getWidth()/2));
+                let transy:number = ((bbox.getY() + (bbox.getHeight()/2)) * ratio) - (bbox.getY() + (bbox.getHeight()/2));
+                let transform:string = " transform=\"translate(-" + transx + ",-" + transy + ") scale(" + ratio + " " + ratio + ")\">";
+                let svg:string = icon.getSVG();
+                svg = svg.replace(">",transform);
+                let newBbox:Rectangle2D = new Rectangle2D(bbox.getX() - transx,bbox.getY() - transy,bbox.getWidth() * ratio, bbox.getHeight() * ratio);
+                retVal = new SVGInfo(icon.getID(),newBbox,svg);
+            }
         }
+        
         return retVal;
     }
 
