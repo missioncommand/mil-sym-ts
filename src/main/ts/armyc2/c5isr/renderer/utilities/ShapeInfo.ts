@@ -68,6 +68,8 @@ export class ShapeInfo {
     private _Position: Point2D = null;
     private _ModifierString: string = null;
     private _ModifierPosition: Point2D = null;
+    private _ModifierAnchor:Point2D = null;
+    private _ModifierAnchorOffset:Point2D = null;
 
     private _ModifierImageInfo: SVGSymbolInfo = null;
     private _ModifierAngle: double = 0;
@@ -183,8 +185,41 @@ export class ShapeInfo {
         this._ModifierPosition = value;
     }
 
+    /**
+     * Location to draw modifier if you can't use pixel offsets
+     * @return
+     */
     public getModifierPosition(): Point2D {
         return this._ModifierPosition;
+    }
+
+    public setModifierAnchor(value:Point2D):void
+    {
+        this._ModifierAnchor = value;
+    }
+
+    /**
+     * Location to draw modifier if you are able to use AnchorOffset(Pixel Offset).
+     * This keeps the modifier near the symbol when zooming in.
+     * @return
+     */
+    public getModifierAnchor():Point2D
+    {
+        return this._ModifierAnchor;
+    }
+
+    public setModifierAnchorOffset(value:Point2D):void
+    {
+        this._ModifierAnchorOffset = value;
+    }
+
+    /**
+     * The pixel offset to use when placing the modifier with the point from getModifierAnchor()
+     * @return
+     */
+    public getModifierAnchorOffset():Point2D
+    {
+        return this._ModifierAnchorOffset;
     }
 
     //angle to draw ModifierString.

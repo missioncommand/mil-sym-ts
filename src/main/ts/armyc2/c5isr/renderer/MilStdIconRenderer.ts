@@ -161,7 +161,7 @@ export class MilStdIconRenderer
         let temp: ImageInfo;
         let svgTemp: SVGSymbolInfo;
         let msi: MSInfo = MSLookup.getInstance().getMSLInfo(symbolID);
-        if (msi == null) 
+        /*if (msi == null) 
         {
             //Attempt to fix the code or set if to invalid symbol if unfixable
             symbolID = SymbolUtilities.reconcileSymbolID(symbolID);
@@ -173,7 +173,7 @@ export class MilStdIconRenderer
         }
         if (msi != null && msi.getDrawRule() === DrawRules.DONOTDRAW) {
             return null;
-        }
+        }//*/
 
         //Check in case attributes are something other than Map<string,string>, null or undefined
         if(attributes != null && attributes instanceof Map === false)

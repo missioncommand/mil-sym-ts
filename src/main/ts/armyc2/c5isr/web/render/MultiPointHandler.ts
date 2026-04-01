@@ -1160,6 +1160,19 @@ export class MultiPointHandler {
                 let longitude: double = geoCoord.getX();
                 label.setModifierPosition(new Point2D(longitude, latitude));
 
+                //Anchor Point for use with Anchor Offset////////////////////////
+                pixelCoord = label.getModifierAnchor();
+
+                geoCoord = ipc.PixelsToGeo(pixelCoord);
+
+                if (normalize) {
+                    geoCoord = MultiPointHandler.NormalizeCoordToGECoord(geoCoord);
+                }
+                latitude = geoCoord.getY();
+                longitude = geoCoord.getX();
+
+                label.setModifierAnchor(new Point2D(longitude, latitude));
+
             }
 
             ////////////////////////////////////////////////////////////////////

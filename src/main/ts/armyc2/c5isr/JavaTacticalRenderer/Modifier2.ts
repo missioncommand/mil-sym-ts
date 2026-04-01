@@ -5462,6 +5462,9 @@ export class Modifier2 {
                 g2d.setBackground(Color.white);
             }
 
+            let anchor:Point2D = null;
+            let anchorOffset:Point2D = null;
+
             let direction: int = -1;
             let glyphPosition: Point;
             for (j = 0; j < tg.modifiers.length; j++) {
@@ -5528,32 +5531,48 @@ export class Modifier2 {
                             justify = ShapeInfo.justify_left;
                         }
 
+                        //3rd point value is location to start perpendicular line from
                         pt3 = lineutility.ExtendDirectedLine(pt1, pt0, pt0, direction, lineFactor * stringHeight);
+                        //pt3 is the end point of the perpendicularline
 
                         glyphPosition = new Point(pt3.x as int, pt3.y as int);
                         modifierPosition = new Point2D(pt3.x, pt3.y);
+                        
+                        anchor = new Point2D(pt0.x, pt0.y);
+                        anchorOffset = new Point2D(pt3.x - pt0.x, pt3.y - pt0.y);
+
                         break;
                     }
 
                     case Modifier2.aboveStartInside: {
+                        //returns pt3 which is based on the specified distance from pt0 along the line of pt0 to pt1.
                         pt3 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
 
                         glyphPosition = new Point(pt3.x as int, pt3.y as int);
                         modifierPosition = new Point2D(pt3.x as int, pt3.y);
+                        
+                        anchor = new Point2D(pt0.x, pt0.y);
+                        anchorOffset = new Point2D(pt3.x - pt0.x, pt3.y - pt0.y);
                         break;
                     }
 
                     case Modifier2.aboveEndInside: {
+                        //returns pt3 which is based on the specified distance from pt0 along the line of pt1 to pt0.
                         pt3 = lineutility.ExtendAlongLineDouble(pt1, pt0, stringWidth);
 
                         glyphPosition = new Point(pt3.x as int, pt3.y as int);
                         modifierPosition = new Point2D(pt3.x as int, pt3.y);
+                        
+                        anchor = new Point2D(pt1.x, pt1.y);
+                        anchorOffset = new Point2D(pt3.x - pt1.x, pt3.y - pt1.y);
                         break;
                     }
 
                     case Modifier2.aboveMiddle:
                     case Modifier2.aboveMiddlePerpendicular: {
                         pt2 = midPt;
+                        anchor = new Point2D(midPt.x,midPt.y);
+
                         if (tg.get_Client() === "2D") {
                             lineFactor += 0.5;
                         }
@@ -5578,6 +5597,10 @@ export class Modifier2 {
                         glyphPosition = new Point(pt3.x as int, pt3.y as int);
                         justify = ShapeInfo.justify_center;
                         modifierPosition = new Point2D(midPt.x, midPt.y);
+
+                        //anchor = new Point2D.Double(midPt.x, midPt.y);
+                        anchorOffset = new Point2D(midPt.x - anchor.getX(), midPt.y - anchor.getY());
+
 
                         if (modifier.type === Modifier2.aboveMiddlePerpendicular) {
                             // Need to negate the original rotation
@@ -5604,6 +5627,9 @@ export class Modifier2 {
                         glyphPosition = new Point(x, y);
                         justify = ShapeInfo.justify_center;
                         modifierPosition = new Point2D(x, y);
+                        
+                        anchor = new Point2D(x1, y1);
+                        anchorOffset = new Point2D(x - x1, y - y1);
                         break;
                     }
 
@@ -5611,6 +5637,9 @@ export class Modifier2 {
                         glyphPosition = new Point(x1 as int, y1 as int);
                         justify = ShapeInfo.justify_center;
                         modifierPosition = new Point2D(x1 as int, y1 as int);
+                        
+                        anchor = new Point2D(x1, y1);
+                        anchorOffset = new Point2D(0, 0);
                         break;
                     }
 
@@ -5657,10 +5686,12 @@ export class Modifier2 {
                             x = x1 as int - stringWidth as int / 2;
                             y = y1 as int - Math.trunc(stringHeight / 2) + (lineFactor * stringHeight) as int;
                             y = y1 as int + (stringHeight / 2) as int + (lineFactor * stringHeight) as int;
+                            anchor = new Point2D(x1, y1);
                         } else {
                             theta = 0;
                             x = tg.Pixels[0].x as int;
                             y = tg.Pixels[0].y as int;
+                            anchor = new Point2D(x, y);
                             x = x as int - stringWidth as int / 2;
                             y = y as int - Math.trunc(stringHeight / 2) + (lineFactor * stringHeight) as int;
                             y = y as int + (stringHeight / 2) as int + (lineFactor * stringHeight) as int;
@@ -5668,6 +5699,8 @@ export class Modifier2 {
 
                         glyphPosition = new Point(x, y);
                         //glyphPosition=new Point2D(x,y);
+                        //anchor = new Point2D.Double(x1, y1);
+                        anchorOffset = new Point2D(x - anchor.getX(), y - anchor.getY());
                         break;
                     }
 
@@ -5714,7 +5747,9 @@ export class Modifier2 {
                 //shape2.setModifierStringPosition(glyphPosition);//M. Deutch 7-6-11
                 shape2.setModifierAngle(theta * 180 / Math.PI);
                 shape2.setModifierPosition(modifierPosition);
-
+                shape2.setModifierAnchor(anchor);
+                shape2.setModifierAnchorOffset(anchorOffset);
+                
                 if (shape2 != null) {
                     shapes.push(shape2);
                 }
