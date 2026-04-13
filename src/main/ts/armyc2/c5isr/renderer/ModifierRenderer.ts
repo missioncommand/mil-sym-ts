@@ -5817,7 +5817,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     if(temp != null && temp !== "")
                         mods.push(new Modifier("V AF", temp, x, y, centered));
                 }
-                else
+                else if(!strict)
                 {
                     centered = false;
                 }
@@ -5901,7 +5901,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     if(temp != null && temp !== "")
                         mods.push(new Modifier("AD", temp, x, y, centered));
                 }
-                else
+                else if(!strict)
                 {
                     centered = false;
                 }
@@ -6723,6 +6723,26 @@ export class ModifierRenderer implements SettingsEventListener {
                     //Do right side labels
                     x = 1;//on right
                     centered = false;
+
+                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
+                            modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                    {
+                        y = 0;
+                        centered = true;
+                        temp = "";
+                        if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
+                            temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
+                        if(modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
+                            temp += modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
+                        temp = temp.trim();
+                        if(temp != null && temp !== "")
+                            mods.push(new Modifier("H AE", temp, x, y, centered));
+                    }
+                    else if(!strict)
+                    {
+                        //if no "H/AE', bring G and M closer to the center
+                        centered = false;
+                    }
     
                     if(modifiers.has(Modifiers.G_STAFF_COMMENTS) || modifiers.has(Modifiers.AQ_GUARDED_UNIT))
                     {
@@ -6746,20 +6766,6 @@ export class ModifierRenderer implements SettingsEventListener {
     
                         if(temp != null && temp !== "")
                             mods.push(new Modifier("AS", temp, x, y, centered));
-                    }
-    
-                    if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1) ||
-                            modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
-                    {
-                        y = 0;
-                        temp = "";
-                        if(modifiers.has(Modifiers.H_ADDITIONAL_INFO_1))
-                            temp = modifiers.get(Modifiers.H_ADDITIONAL_INFO_1) + sep;
-                        if(modifiers.has(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME))
-                            temp += modifiers.get(Modifiers.AE_EQUIPMENT_TEARDOWN_TIME);
-                        temp = temp.trim();
-                        if(temp != null && temp !== "")
-                            mods.push(new Modifier("H AE", temp, x, y, centered));
                     }
     
                     if( modifiers.has(Modifiers.M_HIGHER_FORMATION))
