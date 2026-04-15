@@ -2854,8 +2854,8 @@ export class Modifier2 {
                     let ptDP1:POINT2 = lineutility.ExtendLine2Double(pt1,pt0,si.getSymbolBounds().getWidth()/2,0);
                     let ptDP2:POINT2 = lineutility.ExtendLine2Double(ptNextToLast, ptLast,si.getSymbolBounds().getWidth()/2,0);
 
-                    Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,ptDP1,ptDP1,false);
-                    Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,ptDP2,ptDP2,false);
+                    Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,pt0,ptDP1,false);
+                    Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,ptLast,ptDP2,false);
                     break;
                 case TacticalLines.BS_LINE:
                 case TacticalLines.BBS_LINE: {
@@ -5540,6 +5540,8 @@ export class Modifier2 {
                         
                         anchor = new Point2D(pt0.x, pt0.y);
                         anchorOffset = new Point2D(pt3.x - pt0.x, pt3.y - pt0.y);
+                        if(image != null)//images are centered and don't have text justification
+                            anchorOffset = new Point2D(pt1.x - pt0.x, pt1.y - pt0.y);
 
                         break;
                     }

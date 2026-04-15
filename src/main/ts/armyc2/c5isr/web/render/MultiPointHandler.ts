@@ -2189,7 +2189,28 @@ export class MultiPointHandler {
             //JSONed += (",\"labelAlign\":\"lm\"");
             JSONed += (",\"labelAlign\":\"");
             JSONed += (strJustify);
-            JSONed += ("\",\"labelBaseline\":\"alphabetic");
+            JSONed += ("\",\"labelBaseline\":\"alphabetic\"");
+
+            //Process Anchor point if available
+            if(shapeInfo.getModifierAnchor() != null)
+            {
+                let anchorPoint:Point2D = ipc.PixelsToGeo(shapeInfo.getModifierAnchor());
+                if(normalize)
+                    anchorPoint = this.NormalizeCoordToGECoord(anchorPoint);
+                anchorPoint = new Point2D(Math.round(anchorPoint.getX() * 100000000.0) / 100000000.0,Math.round(anchorPoint.getY() * 100000000.0) / 100000000.0);
+
+                JSONed += (",\"anchorPoint\":{\"type\":\"Point\",\"coordinates\":[");
+                JSONed += (anchorPoint.getX());
+                JSONed += (",");
+                JSONed += (anchorPoint.getY());
+                JSONed += ("]");
+                JSONed += ("}");
+
+                JSONed += (",\"anchorOffsetX\":") + (Math.round(shapeInfo.getModifierAnchorOffset().getX()));
+                JSONed += (",\"anchorOffsetY\":") + (Math.round(shapeInfo.getModifierAnchorOffset().getY()));
+            }
+
+
             JSONed += ("\",\"labelXOffset\":0");
             JSONed += (",\"labelYOffset\":0");
             JSONed += (",\"labelOutlineColor\":\"");
@@ -2426,6 +2447,24 @@ export class MultiPointHandler {
             JSONed += (angle);
             JSONed += (",\"angle\":");
             JSONed += (angle);
+            //Process Anchor point if available
+            if(shapeInfo.getModifierAnchor() != null)
+            {
+                let anchorPoint:Point2D = ipc.PixelsToGeo(shapeInfo.getModifierAnchor());
+                if(normalize)
+                    anchorPoint = this.NormalizeCoordToGECoord(anchorPoint);
+                anchorPoint = new Point2D(Math.round(anchorPoint.getX() * 100000000.0) / 100000000.0,Math.round(anchorPoint.getY() * 100000000.0) / 100000000.0);
+
+                JSONed += (",\"anchorPoint\":{\"type\":\"Point\",\"coordinates\":[");
+                JSONed += (anchorPoint.getX());
+                JSONed += (",");
+                JSONed += (anchorPoint.getY());
+                JSONed += ("]");
+                JSONed += ("}");
+
+                JSONed += (",\"anchorOffsetX\":") + (Math.round(shapeInfo.getModifierAnchorOffset().getX()));
+                JSONed += (",\"anchorOffsetY\":") + (Math.round(shapeInfo.getModifierAnchorOffset().getY()));
+            }
             JSONed += ("},");
             JSONed += ("\"geometry\":{\"type\":\"Point\",\"coordinates\":[");
             JSONed += (longitude);

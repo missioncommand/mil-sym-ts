@@ -1180,7 +1180,7 @@ export class MilStdSymbol {
                 case 343300://Demonstrate
                 case 343400://Deny
                 case 343500://Development
-                case 343600://Escort
+                //case 343600://Escort
                 case 343700://Exfiltration
                 case 343800://Infiltration
                 case 343900://Locate
