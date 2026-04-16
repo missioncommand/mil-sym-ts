@@ -4,11 +4,11 @@
 [
   {
     "id": "02102",
-    "X": "362.375",
-    "Y": "335.390625",
+    "X": "362.125",
+    "Y": "335.2978210449219",
     "Width": "43.734375",
-    "Height": "111.53125",
-    "SVG": "<g id=\"02102\">        <text font-family=\"sans-serif\" font-size=\"75\" x=\"360\" y=\"446\">S</text>        <text font-family=\"sans-serif\" font-size=\"75\" x=\"359\" y=\"390\">S</text>    </g>"
+    "Height": "111.94046020507812",
+    "SVG": "<g id=\"02102\">        <text font-family=\"sans-serif\" font-size=\"75\" x=\"359.75\" y=\"446.3164\">S</text>        <text font-family=\"sans-serif\" font-size=\"75\" x=\"358.75\" y=\"389.9072\">S</text>    </g>"
   },
   {
     "id": "27401",
@@ -20,11 +20,11 @@
   },
   {
     "id": "01012",
-    "X": "281.8125",
-    "Y": "445.15625",
+    "X": "281.120361328125",
+    "Y": "444.7119445800781",
     "Width": "47.71875",
     "Height": "60.84375",
-    "SVG": "<g id=\"01012\">        <text font-family=\"sans-serif\" font-size=\"85\" id=\"H\" x=\"275\" y=\"506\">H</text>    </g>"
+    "SVG": "<g id=\"01012\">        <text font-family=\"sans-serif\" font-size=\"85\" id=\"H\" text-anchor=\"middle\" x=\"305\" y=\"505.5557\">H</text>    </g>"
   },
   {
     "id": "27120101",
@@ -69,18 +69,18 @@
   {
     "id": "27081",
     "X": "262.7978515625",
-    "Y": "301.046875",
+    "Y": "300.5497741699219",
     "Width": "83.93359375",
     "Height": "42.953125",
-    "SVG": "<g id=\"27081\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"344\">MN</text>    </g>"
+    "SVG": "<g id=\"27081\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">MN</text>    </g>"
   },
   {
     "id": "27082",
-    "X": "265.31281777086303",
+    "X": "269.05134512290795",
     "Y": "447.7890319824219",
-    "Width": "78.4760942683871",
+    "Width": "71.08342050209205",
     "Height": "52.421875",
-    "SVG": "<g id=\"27082\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0244 499.3359)\">J5</text>    </g>"
+    "SVG": "<g id=\"27082\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J5</text>    </g>"
   },
   {
     "id": "25271801",
@@ -132,11 +132,11 @@
   },
   {
     "id": "01241",
-    "X": "246.515625",
+    "X": "242.3388671875",
     "Y": "296.859375",
     "Width": "125.44140625",
     "Height": "45.921875",
-    "SVG": "<g id=\"01241\">        <text font-family=\"sans-serif\" font-size=\"62\" font-weight=\"bold\" id=\"ES\" x=\"242\" y=\"342\">ESM</text>    </g>"
+    "SVG": "<g id=\"01241\">        <text font-family=\"sans-serif\" font-size=\"62\" font-weight=\"bold\" id=\"ES\" text-anchor=\"middle\" x=\"305\" y=\"342\">ESM</text>    </g>"
   },
   {
     "id": "27110103_3",
@@ -157,10 +157,10 @@
   {
     "id": "27091",
     "X": "242.7880859375",
-    "Y": "300.3125",
+    "Y": "299.8153991699219",
     "Width": "124.046875",
     "Height": "44.421875",
-    "SVG": "<g id=\"27091\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"344\">MSU</text>    </g>"
+    "SVG": "<g id=\"27091\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">MSU</text>    </g>"
   },
   {
     "id": "10141801",
@@ -172,11 +172,11 @@
   },
   {
     "id": "27092",
-    "X": "265.31281777086303",
+    "X": "269.05134512290795",
     "Y": "447.5859069824219",
-    "Width": "78.01034428005471",
+    "Width": "70.66154550209205",
     "Height": "52.625",
-    "SVG": "<g id=\"27092\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0244 499.3359)\">J6</text>    </g>"
+    "SVG": "<g id=\"27092\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J6</text>    </g>"
   },
   {
     "id": "27501",
@@ -196,11 +196,11 @@
   },
   {
     "id": "02122",
-    "X": "358.375",
-    "Y": "335.390625",
+    "X": "358.125",
+    "Y": "335.2978210449219",
     "Width": "48.828125",
-    "Height": "110.609375",
-    "SVG": "<g id=\"02122\">        <text font-family=\"sans-serif\" font-size=\"75\" x=\"354\" y=\"446\">R</text>        <text font-family=\"sans-serif\" font-size=\"75\" x=\"355\" y=\"390\">S</text>    </g>"
+    "Height": "111.01858520507812",
+    "SVG": "<g id=\"02122\">        <text font-family=\"sans-serif\" font-size=\"75\" x=\"353.75\" y=\"446.3164\">R</text>        <text font-family=\"sans-serif\" font-size=\"75\" x=\"354.75\" y=\"389.9072\">S</text>    </g>"
   },
   {
     "id": "15130903",
@@ -212,11 +212,11 @@
   },
   {
     "id": "01032",
-    "X": "287.859375",
-    "Y": "447.734375",
+    "X": "288.61328125",
+    "Y": "447.2900695800781",
     "Width": "35.78125",
     "Height": "57.265625",
-    "SVG": "<g id=\"01032\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"L\" x=\"282\" y=\"505\">L</text>    </g>"
+    "SVG": "<g id=\"01032\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"L\" text-anchor=\"middle\" x=\"305\" y=\"504.5557\">L</text>    </g>"
   },
   {
     "id": "15130904",
@@ -236,11 +236,11 @@
   },
   {
     "id": "27061",
-    "X": "242.609375",
-    "Y": "301.78125",
+    "X": "223.837890625",
+    "Y": "301.2841491699219",
     "Width": "163.7705078125",
     "Height": "42.921875",
-    "SVG": "<g id=\"27061\">        <text font-family=\"sans-serif\" font-size=\"58px\" x=\"240\" y=\"344\">SWAT</text>    </g>"
+    "SVG": "<g id=\"27061\">        <text font-family=\"sans-serif\" font-size=\"58px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">SWAT</text>    </g>"
   },
   {
     "id": "27182",
@@ -252,11 +252,11 @@
   },
   {
     "id": "27062",
-    "X": "265.3118106907849",
+    "X": "269.05134512290795",
     "Y": "447.5859069824219",
-    "Width": "78.06209427875831",
+    "Width": "70.70842050209205",
     "Height": "52.671875",
-    "SVG": "<g id=\"27062\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0234 499.3359)\">J3</text>    </g>"
+    "SVG": "<g id=\"27062\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J3</text>    </g>"
   },
   {
     "id": "27181",
@@ -284,19 +284,19 @@
   },
   {
     "id": "27511",
-    "X": "301.921875",
-    "Y": "281.15625",
+    "X": "301.114013671875",
+    "Y": "280.7119445800781",
     "Width": "8.0625",
     "Height": "60.84375",
-    "SVG": "<g id=\"27511\">        <text font-family=\"sans-serif\" font-size=\"85\" id=\"I\" x=\"294\" y=\"342\">I</text>    </g>"
+    "SVG": "<g id=\"27511\">        <text font-family=\"sans-serif\" font-size=\"85\" id=\"I\" text-anchor=\"middle\" x=\"305\" y=\"341.5557\">I</text>    </g>"
   },
   {
     "id": "02112",
-    "X": "363.296875",
-    "Y": "365.734375",
+    "X": "363.0917663574219",
+    "Y": "365.2509765625",
     "Width": "50.46875",
     "Height": "57.265625",
-    "SVG": "<g id=\"02112\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"R\" x=\"357\" y=\"423\">R</text>    </g>"
+    "SVG": "<g id=\"02112\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"R\" x=\"356.7949\" y=\"422.5166\">R</text>    </g>"
   },
   {
     "id": "27110104_0",
@@ -308,11 +308,11 @@
   },
   {
     "id": "01022",
-    "X": "278.9375",
-    "Y": "447.734375",
+    "X": "277.6171875",
+    "Y": "447.2900695800781",
     "Width": "54.65625",
     "Height": "57.265625",
-    "SVG": "<g id=\"01022\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"M\" x=\"273\" y=\"505\">M</text>    </g>"
+    "SVG": "<g id=\"01022\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"M\" text-anchor=\"middle\" x=\"305\" y=\"504.5557\">M</text>    </g>"
   },
   {
     "id": "27110104_1",
@@ -348,11 +348,11 @@
   },
   {
     "id": "27072",
-    "X": "265.31281777086303",
+    "X": "269.05134512290795",
     "Y": "447.7890319824219",
-    "Width": "77.82059428480818",
+    "Width": "70.48967050209205",
     "Height": "52.421875",
-    "SVG": "<g id=\"27072\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0244 499.3359)\">J4</text>    </g>"
+    "SVG": "<g id=\"27072\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J4</text>    </g>"
   },
   {
     "id": "27191",
@@ -365,10 +365,10 @@
   {
     "id": "27071",
     "X": "241.2431640625",
-    "Y": "300.28125",
+    "Y": "299.7841491699219",
     "Width": "129.390625",
     "Height": "44.453125",
-    "SVG": "<g id=\"27071\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"344\">NGO</text>    </g>"
+    "SVG": "<g id=\"27071\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">NGO</text>    </g>"
   },
   {
     "id": "27192",
@@ -468,11 +468,11 @@
   },
   {
     "id": "30101",
-    "X": "250.75",
+    "X": "252.890625",
     "Y": "299.1875",
     "Width": "108.25",
     "Height": "45.8125",
-    "SVG": "<g id=\"30101\">        <text font-family=\"sans-serif\" font-size=\"64\" id=\"MIW\" x=\"246\" y=\"345\">MW</text>    </g>"
+    "SVG": "<g id=\"30101\">        <text font-family=\"sans-serif\" font-size=\"64\" id=\"MIW\" text-anchor=\"middle\" x=\"305\" y=\"345\">MW</text>    </g>"
   },
   {
     "id": "10130303_1",
@@ -493,10 +493,10 @@
   {
     "id": "27041",
     "X": "246.0185546875",
-    "Y": "300.3125",
+    "Y": "299.8153991699219",
     "Width": "118.2890625",
     "Height": "44.421875",
-    "SVG": "<g id=\"27041\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"344\">SEC</text>    </g>"
+    "SVG": "<g id=\"27041\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">SEC</text>    </g>"
   },
   {
     "id": "27162",
@@ -516,11 +516,11 @@
   },
   {
     "id": "27042",
-    "X": "265.3118106907849",
+    "X": "269.05134512290795",
     "Y": "447.5859069824219",
-    "Width": "67.07384455402746",
+    "Width": "60.75529550209205",
     "Height": "52.625",
-    "SVG": "<g id=\"27042\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0234 499.3359)\">J1</text>    </g>"
+    "SVG": "<g id=\"27042\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J1</text>    </g>"
   },
   {
     "id": "10130303_3",
@@ -596,19 +596,19 @@
   },
   {
     "id": "27052",
-    "X": "265.3118106907849",
+    "X": "269.05134512290795",
     "Y": "447.5859069824219",
-    "Width": "77.47559429345085",
+    "Width": "70.17717050209205",
     "Height": "52.625",
-    "SVG": "<g id=\"27052\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0234 499.3359)\">J2</text>    </g>"
+    "SVG": "<g id=\"27052\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J2</text>    </g>"
   },
   {
     "id": "02092",
-    "X": "360.359375",
-    "Y": "335.46875",
+    "X": "360.109375",
+    "Y": "335.3759460449219",
     "Width": "42.6875",
-    "Height": "111.453125",
-    "SVG": "<g id=\"02092\">        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"362\" y=\"446\">6</text>        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"357\" y=\"390\">S</text>    </g>"
+    "Height": "111.86233520507812",
+    "SVG": "<g id=\"02092\">        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"361.75\" y=\"446.3164\">6</text>        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"356.75\" y=\"389.9072\">S</text>    </g>"
   },
   {
     "id": "27171",
@@ -700,11 +700,11 @@
   },
   {
     "id": "01112",
-    "X": "260.40625",
-    "Y": "445.890625",
+    "X": "265.6650390625",
+    "Y": "445.9375305175781",
     "Width": "81.5830078125",
     "Height": "50.109375",
-    "SVG": "<g id=\"01112\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"DL\" x=\"255\" y=\"496\">DL</text>    </g>"
+    "SVG": "<g id=\"01112\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"DL\" text-anchor=\"middle\" x=\"305\" y=\"496.0469\">DL</text>    </g>"
   },
   {
     "id": "40130402",
@@ -733,10 +733,10 @@
   {
     "id": "27021",
     "X": "242.9892578125",
-    "Y": "300.3125",
+    "Y": "299.8153991699219",
     "Width": "124.62890625",
     "Height": "44.421875",
-    "SVG": "<g id=\"27021\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"344\">CRC</text>    </g>"
+    "SVG": "<g id=\"27021\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">CRC</text>    </g>"
   },
   {
     "id": "27142",
@@ -804,19 +804,19 @@
   },
   {
     "id": "01102",
-    "X": "260.125",
-    "Y": "445.890625",
+    "X": "265.3837890625",
+    "Y": "445.9375305175781",
     "Width": "83.4619140625",
     "Height": "50.109375",
-    "SVG": "<g id=\"01102\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"LR\" x=\"255\" y=\"496\">LR</text>    </g>"
+    "SVG": "<g id=\"01102\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"LR\" text-anchor=\"middle\" x=\"305\" y=\"496.0469\">LR</text>    </g>"
   },
   {
     "id": "27032",
-    "X": "269.1644068285823",
+    "X": "230.564453125",
     "Y": "447.7890319824219",
-    "Width": "164.48305837949738",
+    "Width": "148.98828125",
     "Height": "51.546875",
-    "SVG": "<g id=\"27032\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0234 499.3359)\">DEM</text>    </g>"
+    "SVG": "<g id=\"27032\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">DEM</text>    </g>"
   },
   {
     "id": "27151",
@@ -837,10 +837,10 @@
   {
     "id": "27031",
     "X": "244.740234375",
-    "Y": "300.28125",
+    "Y": "299.7841491699219",
     "Width": "122.080078125",
     "Height": "44.453125",
-    "SVG": "<g id=\"27031\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"344\">EOD</text>    </g>"
+    "SVG": "<g id=\"27031\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">EOD</text>    </g>"
   },
   {
     "id": "27152",
@@ -916,11 +916,11 @@
   },
   {
     "id": "02062",
-    "X": "360.640625",
-    "Y": "365.59375",
+    "X": "360.4355163574219",
+    "Y": "365.1103515625",
     "Width": "51.921875",
     "Height": "54.40625",
-    "SVG": "<g id=\"02062\">        <text font-family=\"sans-serif\" font-size=\"76\" id=\"M\" x=\"355\" y=\"420\">M</text>    </g>"
+    "SVG": "<g id=\"02062\">        <text font-family=\"sans-serif\" font-size=\"76\" id=\"M\" x=\"354.7949\" y=\"419.5166\">M</text>    </g>"
   },
   {
     "id": "27121",
@@ -940,19 +940,19 @@
   },
   {
     "id": "27481",
-    "X": "288.953125",
-    "Y": "293.375",
+    "X": "288.28515625",
+    "Y": "292.9609069824219",
     "Width": "33.609375",
     "Height": "37.015625",
-    "SVG": "<g id=\"27481\">        <text font-family=\"sans-serif\" font-size=\"48px\" x=\"287\" y=\"329\">Ø</text>    </g>"
+    "SVG": "<g id=\"27481\">        <text font-family=\"sans-serif\" font-size=\"48px\" text-anchor=\"middle\" x=\"305\" y=\"328.5859\">Ø</text>    </g>"
   },
   {
     "id": "01092",
-    "X": "257.828125",
-    "Y": "448.46875",
+    "X": "259.284912109375",
+    "Y": "448.5156555175781",
     "Width": "95.4267578125",
     "Height": "46.53125",
-    "SVG": "<g id=\"01092\">        <text font-family=\"sans-serif\" font-size=\"65\" id=\"MR\" x=\"253\" y=\"495\">MR</text>    </g>"
+    "SVG": "<g id=\"01092\">        <text font-family=\"sans-serif\" font-size=\"65\" id=\"MR\" text-anchor=\"middle\" x=\"305\" y=\"495.0469\">MR</text>    </g>"
   },
   {
     "id": "27361",
@@ -964,11 +964,11 @@
   },
   {
     "id": "27122",
-    "X": "265.31281777086303",
+    "X": "269.05134512290795",
     "Y": "447.5859069824219",
-    "Width": "78.1655942761655",
+    "Width": "70.80217050209205",
     "Height": "52.625",
-    "SVG": "<g id=\"27122\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0244 499.3359)\">J9</text>    </g>"
+    "SVG": "<g id=\"27122\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J9</text>    </g>"
   },
   {
     "id": "25343200",
@@ -980,11 +980,11 @@
   },
   {
     "id": "02052",
-    "X": "365.859375",
-    "Y": "359.734375",
+    "X": "365.6542663574219",
+    "Y": "359.2509765625",
     "Width": "35.78125",
     "Height": "57.265625",
-    "SVG": "<g id=\"02052\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"L\" x=\"360\" y=\"417\">L</text>    </g>"
+    "SVG": "<g id=\"02052\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"L\" x=\"359.7949\" y=\"416.5166\">L</text>    </g>"
   },
   {
     "id": "27131",
@@ -1005,10 +1005,10 @@
   {
     "id": "27011",
     "X": "249.625",
-    "Y": "300.3125",
+    "Y": "299.8153991699219",
     "Width": "111.12109375",
     "Height": "44.421875",
-    "SVG": "<g id=\"27011\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"344\">CLP</text>    </g>"
+    "SVG": "<g id=\"27011\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">CLP</text>    </g>"
   },
   {
     "id": "27132",
@@ -1020,11 +1020,11 @@
   },
   {
     "id": "01082",
-    "X": "256.140625",
-    "Y": "446.03125",
+    "X": "259.52001953125",
+    "Y": "446.0781555175781",
     "Width": "93.205078125",
     "Height": "51.828125",
-    "SVG": "<g id=\"01082\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"SR\" x=\"253\" y=\"497\">SR</text>    </g>"
+    "SVG": "<g id=\"01082\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"SR\" text-anchor=\"middle\" x=\"305\" y=\"497.0469\">SR</text>    </g>"
   },
   {
     "id": "27371",
@@ -1172,11 +1172,11 @@
   },
   {
     "id": "02082",
-    "X": "360.359375",
-    "Y": "335.46875",
+    "X": "360.109375",
+    "Y": "335.3759460449219",
     "Width": "42.6875",
-    "Height": "110.53125",
-    "SVG": "<g id=\"02082\">        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"362\" y=\"446\">2</text>        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"357\" y=\"390\">S</text>    </g>"
+    "Height": "110.94046020507812",
+    "SVG": "<g id=\"02082\">        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"361.75\" y=\"446.3164\">2</text>        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"356.75\" y=\"389.9072\">S</text>    </g>"
   },
   {
     "id": "15201100",
@@ -1188,11 +1188,11 @@
   },
   {
     "id": "27102",
-    "X": "265.31281777086303",
+    "X": "269.05134512290795",
     "Y": "447.7890319824219",
-    "Width": "78.06209427875831",
+    "Width": "70.70842050209205",
     "Height": "52.421875",
-    "SVG": "<g id=\"27102\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0244 499.3359)\">J7</text>    </g>"
+    "SVG": "<g id=\"27102\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J7</text>    </g>"
   },
   {
     "id": "27221",
@@ -1205,10 +1205,10 @@
   {
     "id": "27101",
     "X": "261.517578125",
-    "Y": "300.28125",
+    "Y": "299.7841491699219",
     "Width": "87.451171875",
     "Height": "44.453125",
-    "SVG": "<g id=\"27101\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"344\">GO</text>    </g>"
+    "SVG": "<g id=\"27101\">        <text font-family=\"sans-serif\" font-size=\"60px\" text-anchor=\"middle\" x=\"305\" y=\"343.5029\">GO</text>    </g>"
   },
   {
     "id": "27222",
@@ -1220,11 +1220,11 @@
   },
   {
     "id": "20151",
-    "X": "246.90049715909092",
+    "X": "242.73741122159092",
     "Y": "297.75",
     "Width": "121.01258877840908",
     "Height": "48.0625",
-    "SVG": "<g id=\"20151\">        <text font-family=\"sans-serif\" font-size=\"66\" x=\"245\" y=\"345\">JNN</text>    </g>"
+    "SVG": "<g id=\"20151\">        <text font-family=\"sans-serif\" font-size=\"66\" text-anchor=\"middle\" x=\"305\" y=\"345\">JNN</text>    </g>"
   },
   {
     "id": "25343100",
@@ -1236,19 +1236,19 @@
   },
   {
     "id": "10482",
-    "X": "286.015625",
+    "X": "280.74951171875",
     "Y": "447.4375",
     "Width": "48.796875",
     "Height": "61.5625",
-    "SVG": "<g id=\"10482\">        <text font-family=\"sans-serif\" font-size=\"86\" x=\"284\" y=\"509\">T</text>    </g>"
+    "SVG": "<g id=\"10482\">        <text font-family=\"sans-serif\" font-size=\"86\" text-anchor=\"middle\" x=\"305\" y=\"509\">T</text>    </g>"
   },
   {
     "id": "30191",
-    "X": "281.359375",
+    "X": "278.6796875",
     "Y": "287.734375",
     "Width": "52.375",
     "Height": "57.265625",
-    "SVG": "<g id=\"30191\">        <text font-family=\"sans-serif\" font-size=\"80\" x=\"281\" y=\"345\">V</text>    </g>"
+    "SVG": "<g id=\"30191\">        <text font-family=\"sans-serif\" font-size=\"80\" text-anchor=\"middle\" x=\"305\" y=\"345\">V</text>    </g>"
   },
   {
     "id": "25343900",
@@ -1276,19 +1276,19 @@
   },
   {
     "id": "02072",
-    "X": "366.171875",
-    "Y": "365.734375",
+    "X": "365.9667663574219",
+    "Y": "365.2509765625",
     "Width": "43.71875",
     "Height": "57.265625",
-    "SVG": "<g id=\"02072\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"P\" x=\"360\" y=\"423\">P</text>    </g>"
+    "SVG": "<g id=\"02072\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"P\" x=\"359.7949\" y=\"422.5166\">P</text>    </g>"
   },
   {
     "id": "27471",
-    "X": "288.953125",
-    "Y": "293.375",
+    "X": "288.28515625",
+    "Y": "292.9609069824219",
     "Width": "33.609375",
     "Height": "37.015625",
-    "SVG": "<g id=\"27471\">        <text font-family=\"sans-serif\" font-size=\"48px\" x=\"287\" y=\"329\">Ø</text>    </g>"
+    "SVG": "<g id=\"27471\">        <text font-family=\"sans-serif\" font-size=\"48px\" text-anchor=\"middle\" x=\"305\" y=\"328.5859\">Ø</text>    </g>"
   },
   {
     "id": "27111",
@@ -1308,19 +1308,19 @@
   },
   {
     "id": "27112",
-    "X": "265.31281777086303",
+    "X": "269.05134512290795",
     "Y": "447.5859069824219",
-    "Width": "78.1655942761655",
+    "Width": "70.80217050209205",
     "Height": "52.625",
-    "SVG": "<g id=\"27112\">        <text font-family=\"sans-serif\" font-size=\"72px\" transform=\"matrix(1.104 0 0 1 263.0244 499.3359)\">J8</text>    </g>"
+    "SVG": "<g id=\"27112\">        <text font-family=\"sans-serif\" font-size=\"72px\" text-anchor=\"middle\" x=\"305\" y=\"499.3359\">J8</text>    </g>"
   },
   {
     "id": "20161",
-    "X": "243.28125",
+    "X": "238.607421875",
     "Y": "296.953125",
     "Width": "130.6533203125",
     "Height": "48.859375",
-    "SVG": "<g id=\"20161\">        <text font-family=\"sans-serif\" font-size=\"66\" x=\"240\" y=\"345\">CPN</text>    </g>"
+    "SVG": "<g id=\"20161\">        <text font-family=\"sans-serif\" font-size=\"66\" text-anchor=\"middle\" x=\"305\" y=\"345\">CPN</text>    </g>"
   },
   {
     "id": "25182600",
@@ -1380,11 +1380,11 @@
   },
   {
     "id": "02022",
-    "X": "363.59375",
-    "Y": "358.75",
+    "X": "363.3886413574219",
+    "Y": "358.2666015625",
     "Width": "45.59375",
     "Height": "59.234375",
-    "SVG": "<g id=\"02022\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"S\" x=\"360\" y=\"417\">S</text>    </g>"
+    "SVG": "<g id=\"02022\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"S\" x=\"359.7949\" y=\"416.5166\">S</text>    </g>"
   },
   {
     "id": "27202",
@@ -1396,11 +1396,11 @@
   },
   {
     "id": "02142",
-    "X": "361.34375",
-    "Y": "345.328125",
+    "X": "361.09375",
+    "Y": "345.2353210449219",
     "Width": "42.90625",
-    "Height": "101.671875",
-    "SVG": "<g id=\"02142\">        <text font-family=\"sans-serif\" font-size=\"68\" x=\"356\" y=\"447\">R</text>        <text font-family=\"sans-serif\" font-size=\"68\" x=\"369\" y=\"394\">I</text>    </g>"
+    "Height": "102.08108520507812",
+    "SVG": "<g id=\"02142\">        <text font-family=\"sans-serif\" font-size=\"68\" x=\"355.75\" y=\"447.3164\">R</text>        <text font-family=\"sans-serif\" font-size=\"68\" x=\"368.75\" y=\"393.9072\">I</text>    </g>"
   },
   {
     "id": "27441",
@@ -1412,11 +1412,11 @@
   },
   {
     "id": "01052",
-    "X": "288.171875",
-    "Y": "449.734375",
+    "X": "282.28515625",
+    "Y": "449.2900695800781",
     "Width": "47.34375",
     "Height": "57.265625",
-    "SVG": "<g id=\"01052\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"D\" x=\"282\" y=\"507\">D</text>    </g>"
+    "SVG": "<g id=\"01052\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"D\" text-anchor=\"middle\" x=\"305\" y=\"506.5557\">D</text>    </g>"
   },
   {
     "id": "27321",
@@ -1436,11 +1436,11 @@
   },
   {
     "id": "20141",
-    "X": "239.71875",
+    "X": "228.0537109375",
     "Y": "301.3125",
     "Width": "155.482421875",
     "Height": "44.421875",
-    "SVG": "<g id=\"20141\">        <text font-family=\"sans-serif\" font-size=\"60\" x=\"235\" y=\"345\">RTNS</text>    </g>"
+    "SVG": "<g id=\"20141\">        <text font-family=\"sans-serif\" font-size=\"60\" text-anchor=\"middle\" x=\"305\" y=\"345\">RTNS</text>    </g>"
   },
   {
     "id": "27110101_0",
@@ -1484,11 +1484,11 @@
   },
   {
     "id": "02012",
-    "X": "359.875",
-    "Y": "359.734375",
+    "X": "359.6698913574219",
+    "Y": "359.2509765625",
     "Width": "53.609375",
     "Height": "57.265625",
-    "SVG": "<g id=\"02012\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"A\" x=\"360\" y=\"417\">A</text>    </g>"
+    "SVG": "<g id=\"02012\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"A\" x=\"359.7949\" y=\"416.5166\">A</text>    </g>"
   },
   {
     "id": "27212",
@@ -1500,19 +1500,19 @@
   },
   {
     "id": "02132",
-    "X": "359.046875",
-    "Y": "345.328125",
+    "X": "358.796875",
+    "Y": "345.2353210449219",
     "Width": "46.453125",
-    "Height": "101.671875",
-    "SVG": "<g id=\"02132\">        <text font-family=\"sans-serif\" font-size=\"68\" x=\"357\" y=\"447\">R</text>        <text font-family=\"sans-serif\" font-size=\"68\" x=\"354\" y=\"394\">M</text>    </g>"
+    "Height": "102.08108520507812",
+    "SVG": "<g id=\"02132\">        <text font-family=\"sans-serif\" font-size=\"68\" x=\"356.75\" y=\"447.3164\">R</text>        <text font-family=\"sans-serif\" font-size=\"68\" x=\"353.75\" y=\"393.9072\">M</text>    </g>"
   },
   {
     "id": "01042",
-    "X": "287.859375",
-    "Y": "447.734375",
+    "X": "284.1796875",
+    "Y": "447.2900695800781",
     "Width": "43.25",
     "Height": "57.265625",
-    "SVG": "<g id=\"01042\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"B\" x=\"282\" y=\"505\">B</text>    </g>"
+    "SVG": "<g id=\"01042\">        <text font-family=\"sans-serif\" font-size=\"80\" id=\"B\" text-anchor=\"middle\" x=\"305\" y=\"504.5557\">B</text>    </g>"
   },
   {
     "id": "27331",
@@ -1588,11 +1588,11 @@
   },
   {
     "id": "02162",
-    "X": "359.59375",
-    "Y": "338.453125",
+    "X": "359.34375",
+    "Y": "338.3603210449219",
     "Width": "45.5625",
-    "Height": "109.421875",
-    "SVG": "<g id=\"02162\">        <text font-family=\"sans-serif\" font-size=\"72\" x=\"356\" y=\"447\">C</text>        <text font-family=\"sans-serif\" font-size=\"72\" x=\"372\" y=\"390\">I</text>    </g>"
+    "Height": "109.83108520507812",
+    "SVG": "<g id=\"02162\">        <text font-family=\"sans-serif\" font-size=\"72\" x=\"355.75\" y=\"447.3164\">C</text>        <text font-family=\"sans-serif\" font-size=\"72\" x=\"371.75\" y=\"389.9072\">I</text>    </g>"
   },
   {
     "id": "01110121",
@@ -1604,11 +1604,11 @@
   },
   {
     "id": "01072",
-    "X": "253.484375",
-    "Y": "445.03125",
+    "X": "257.9326171875",
+    "Y": "445.0781555175781",
     "Width": "96.7236328125",
     "Height": "51.828125",
-    "SVG": "<g id=\"01072\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"CR\" x=\"250\" y=\"496\">CR</text>    </g>"
+    "SVG": "<g id=\"01072\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"CR\" text-anchor=\"middle\" x=\"305\" y=\"496.0469\">CR</text>    </g>"
   },
   {
     "id": "25281701",
@@ -1652,11 +1652,11 @@
   },
   {
     "id": "02042",
-    "X": "360.359375",
-    "Y": "335.46875",
+    "X": "360.109375",
+    "Y": "335.3759460449219",
     "Width": "42.6875",
-    "Height": "110.53125",
-    "SVG": "<g id=\"02042\">        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"357\" y=\"390\">S</text>        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"356\" y=\"446\">P</text>    </g>"
+    "Height": "110.94046020507812",
+    "SVG": "<g id=\"02042\">        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"356.75\" y=\"389.9072\">S</text>        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"355.75\" y=\"446.3164\">P</text>    </g>"
   },
   {
     "id": "27541",
@@ -1692,11 +1692,11 @@
   },
   {
     "id": "01062",
-    "X": "255.125",
-    "Y": "445.03125",
+    "X": "251.7802734375",
+    "Y": "445.0781555175781",
     "Width": "107.8408203125",
     "Height": "51.828125",
-    "SVG": "<g id=\"01062\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"B_x2F_D\" x=\"250\" y=\"496\">B/D</text>    </g>"
+    "SVG": "<g id=\"01062\">        <text font-family=\"sans-serif\" font-size=\"70\" id=\"B_x2F_D\" text-anchor=\"middle\" x=\"305\" y=\"496.0469\">B/D</text>    </g>"
   },
   {
     "id": "27110102_0",
@@ -1748,11 +1748,11 @@
   },
   {
     "id": "02032",
-    "X": "360.359375",
-    "Y": "335.46875",
+    "X": "360.109375",
+    "Y": "335.3759460449219",
     "Width": "43.703125",
-    "Height": "111.453125",
-    "SVG": "<g id=\"02032\">        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"356\" y=\"446\">U</text>        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"357\" y=\"390\">S</text>    </g>"
+    "Height": "111.86233520507812",
+    "SVG": "<g id=\"02032\">        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"355.75\" y=\"446.3164\">U</text>        <text font-family=\"sans-serif\" font-size=\"74.919\" x=\"356.75\" y=\"389.9072\">S</text>    </g>"
   },
   {
     "id": "27551",
@@ -1764,11 +1764,11 @@
   },
   {
     "id": "02152",
-    "X": "361.65625",
-    "Y": "338.453125",
+    "X": "361.40625",
+    "Y": "338.3603210449219",
     "Width": "45.421875",
-    "Height": "108.546875",
-    "SVG": "<g id=\"02152\">        <text font-family=\"sans-serif\" font-size=\"72\" x=\"356\" y=\"447\">R</text>        <text font-family=\"sans-serif\" font-size=\"72\" x=\"357\" y=\"390\">L</text>    </g>"
+    "Height": "108.95608520507812",
+    "SVG": "<g id=\"02152\">        <text font-family=\"sans-serif\" font-size=\"72\" x=\"355.75\" y=\"447.3164\">R</text>        <text font-family=\"sans-serif\" font-size=\"72\" x=\"356.75\" y=\"389.9072\">L</text>    </g>"
   },
   {
     "id": "27431",
