@@ -2210,9 +2210,6 @@ export class MultiPointHandler {
                 JSONed += (",\"anchorOffsetY\":") + (Math.round(shapeInfo.getModifierAnchorOffset().getY()));
             }
 
-
-            JSONed += ("\",\"labelXOffset\":0");
-            JSONed += (",\"labelYOffset\":0");
             JSONed += (",\"labelOutlineColor\":\"");
             JSONed += (RendererUtilities.colorToHexString(outlineColor, false));
             JSONed += ("\",\"labelOutlineWidth\":");

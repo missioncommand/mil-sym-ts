@@ -705,6 +705,9 @@
 
         try
         {
+            var geoJSON = C5Ren.WebRenderer.RenderSymbol2D(id, name, description,symbolID, controlPoints, pw,ph, bbox, modifiers, attributes, C5Ren.WebRenderer.OUTPUT_FORMAT_GEOJSON);
+            console.log("GeoJSON:");
+            console.log(geoJSON);
 
             var geoSVG = C5Ren.WebRenderer.RenderSymbol2D(id, name, description,symbolID, controlPoints, pw,ph, bbox, modifiers, attributes, C5Ren.WebRenderer.OUTPUT_FORMAT_GEOSVG);
             console.log("GeoSVG:");
