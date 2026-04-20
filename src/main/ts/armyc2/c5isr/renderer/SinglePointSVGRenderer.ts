@@ -524,11 +524,9 @@ export class SinglePointSVGRenderer {
                         hasAPFill = true;
                     }
                 }
-                if (lineColor == null) {
-
-                    lineColor = RendererUtilities.colorToHexString(SymbolUtilities.getDefaultLineColor(symbolID), false);
-                }
             }
+            if (lineColor == null) 
+                lineColor = RendererUtilities.colorToHexString(SymbolUtilities.getDefaultLineColor(symbolID), false);
 
 
             //fillColor = "#FF0000";
