@@ -5948,7 +5948,7 @@
         "code": "141700",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line19",
+        "drawRules": "Line29",
         "modifiers": "",
         "aux1": ""
       },
