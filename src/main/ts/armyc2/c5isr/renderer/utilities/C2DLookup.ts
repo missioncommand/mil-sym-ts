@@ -288,6 +288,7 @@ export class C2DLookup {
         {
             case 151406://Axis of Advance for a Feint
             case 140605://Direction of attack feint
+            case 230200://Decoy
             case 270705://Dummy Minefield
             case 270706://Dummy Minefield, Dynamic
             case 270900://Decoy Mined Area
