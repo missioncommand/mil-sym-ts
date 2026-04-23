@@ -672,6 +672,14 @@ export class RendererUtilities {
                 let svg:string = icon.getSVG();
                 svg = svg.replace(">",transform);
                 let newBbox:Rectangle2D = new Rectangle2D(bbox.getX() - transx,bbox.getY() - transy,bbox.getWidth() * ratio, bbox.getHeight() * ratio);
+
+                //Adjust stroke widths so they remain the same and don't scale up.
+                svg =  svg.replace(/stroke-width="([\d.]+)"/g, (match: string, p1: string) => {
+                    const original = parseFloat(p1);
+                    const adjusted = original * 1.5 / ratio;//multiply by 1.5 to reduce but not eliminate scaling
+                    return `stroke-width="${adjusted.toFixed(3)}"`;
+                });
+
                 retVal = new SVGInfo(icon.getID(),newBbox,svg);
             }
         }
