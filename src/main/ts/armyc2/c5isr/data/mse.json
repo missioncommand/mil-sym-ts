@@ -21358,7 +21358,7 @@
         "et": "",
         "est": "",
         "code": "130000",
-        "versions": "15,16"
+        "versions": "15"
       },
       {
         "ss": "",
@@ -21366,7 +21366,7 @@
         "et": "Firewall",
         "est": "",
         "code": "130100",
-        "versions": "15,16"
+        "versions": "15"
       },
       {
         "ss": "",
@@ -21374,7 +21374,7 @@
         "et": "Firmware",
         "est": "",
         "code": "130200",
-        "versions": "15,16"
+        "versions": "15"
       },
       {
         "ss": "",
@@ -21382,7 +21382,247 @@
         "et": "",
         "est": "",
         "code": "140000",
-        "versions": "15,16"
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Fileserver",
+        "est": "",
+        "code": "140200",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Search Engine",
+        "est": "",
+        "code": "140300",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Social Media",
+        "est": "",
+        "code": "140400",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "Threat",
+        "et": "",
+        "est": "",
+        "code": "150000",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Malware",
+        "est": "",
+        "code": "150100",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Phishing",
+        "est": "",
+        "code": "150200",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "Data",
+        "et": "",
+        "est": "",
+        "code": "160000",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Digital Currency",
+        "est": "",
+        "code": "160100",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Persona",
+        "est": "",
+        "code": "160200",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "Endpoint",
+        "et": "",
+        "est": "",
+        "code": "170000",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Server",
+        "est": "",
+        "code": "170100",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Workstation",
+        "est": "",
+        "code": "170200",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Portable Electronic Device (PED)",
+        "est": "",
+        "code": "170300",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Smartphone",
+        "code": "170301",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Tablet",
+        "code": "170302",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Laptop",
+        "code": "170303",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Health Monitor",
+        "code": "170304",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Smartvest",
+        "code": "170305",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Smartwatch",
+        "code": "170306",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "",
+        "est": "Wearable",
+        "code": "170307",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Internet of Things Device",
+        "est": "",
+        "code": "170400",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Printer",
+        "est": "",
+        "code": "170500",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Router",
+        "est": "",
+        "code": "170600",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Switch",
+        "est": "",
+        "code": "170700",
+        "versions": "15"
+      },
+      {
+        "ss": "",
+        "e": "Network",
+        "et": "",
+        "est": "",
+        "code": "180000",
+        "versions": "15"
+      },
+      {
+        "ss": "64",
+        "e": "Unspecified",
+        "et": "",
+        "est": "",
+        "code": "0",
+        "versions": "16"
+      },
+      {
+        "ss": "",
+        "e": "Agent",
+        "et": "",
+        "est": "",
+        "code": "130000",
+        "versions": "16"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Firewall",
+        "est": "",
+        "code": "130100",
+        "versions": "16"
+      },
+      {
+        "ss": "",
+        "e": "",
+        "et": "Firmware",
+        "est": "",
+        "code": "130200",
+        "versions": "16"
+      },
+      {
+        "ss": "",
+        "e": "Application",
+        "et": "",
+        "est": "",
+        "code": "140000",
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21398,7 +21638,7 @@
         "et": "Fileserver",
         "est": "",
         "code": "140200",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21406,7 +21646,7 @@
         "et": "Search Engine",
         "est": "",
         "code": "140300",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21414,7 +21654,7 @@
         "et": "Social Media",
         "est": "",
         "code": "140400",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21438,7 +21678,7 @@
         "et": "",
         "est": "",
         "code": "150000",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21446,7 +21686,7 @@
         "et": "Malware",
         "est": "",
         "code": "150100",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21454,7 +21694,7 @@
         "et": "Phishing",
         "est": "",
         "code": "150200",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21462,7 +21702,7 @@
         "et": "",
         "est": "",
         "code": "160000",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21470,7 +21710,7 @@
         "et": "Digital Currency",
         "est": "",
         "code": "160100",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21478,7 +21718,7 @@
         "et": "Persona",
         "est": "",
         "code": "160200",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21486,7 +21726,7 @@
         "et": "",
         "est": "",
         "code": "170000",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21494,7 +21734,7 @@
         "et": "Server",
         "est": "",
         "code": "170100",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21502,7 +21742,7 @@
         "et": "Workstation",
         "est": "",
         "code": "170200",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21510,7 +21750,7 @@
         "et": "Portable Electronic Device (PED)",
         "est": "",
         "code": "170300",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21518,7 +21758,7 @@
         "et": "",
         "est": "Smartphone",
         "code": "170301",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21526,7 +21766,7 @@
         "et": "",
         "est": "Tablet",
         "code": "170302",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21534,7 +21774,7 @@
         "et": "",
         "est": "Laptop",
         "code": "170303",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21542,7 +21782,7 @@
         "et": "",
         "est": "Health Monitor",
         "code": "170304",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21550,7 +21790,7 @@
         "et": "",
         "est": "Smartvest",
         "code": "170305",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21558,7 +21798,7 @@
         "et": "",
         "est": "Smartwatch",
         "code": "170306",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21566,7 +21806,7 @@
         "et": "",
         "est": "Wearable",
         "code": "170307",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21574,7 +21814,7 @@
         "et": "Internet of Things Device",
         "est": "",
         "code": "170400",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21582,7 +21822,7 @@
         "et": "Printer",
         "est": "",
         "code": "170500",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21590,7 +21830,7 @@
         "et": "Router",
         "est": "",
         "code": "170600",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21598,7 +21838,7 @@
         "et": "Switch",
         "est": "",
         "code": "170700",
-        "versions": "15,16"
+        "versions": "16"
       },
       {
         "ss": "",
@@ -21614,7 +21854,7 @@
         "et": "",
         "est": "",
         "code": "180000",
-        "versions": "15,16"
+        "versions": "16"
       }
     ]
   }}

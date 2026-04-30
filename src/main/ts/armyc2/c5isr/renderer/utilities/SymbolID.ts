@@ -197,6 +197,11 @@ export class SymbolID {
 
     public static readonly SymbolSet_CyberSpace: number = 60;
 
+    /**
+     * APP6Ev2 only
+     */
+    public static readonly SymbolSet_CyberSpace_Equipment: number = 64;
+
     public static readonly SymbolSet_InvalidSymbol: number = 98;
     public static readonly SymbolSet_VersionExtensionFlag: number = 99;
 
@@ -1127,6 +1132,7 @@ export class SymbolID {
             }
 
             case SymbolID.SymbolSet_LandEquipment:
+            case SymbolID.SymbolSet_CyberSpace_Equipment:
             {
                 return SymbolID.FrameShape_LandEquipment;
             }

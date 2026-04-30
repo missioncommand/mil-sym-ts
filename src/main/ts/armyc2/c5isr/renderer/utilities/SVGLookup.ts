@@ -591,7 +591,8 @@ export class SVGLookup
                     ss !== SymbolID.SymbolSet_SignalsIntelligence_Land &&
                     ss !== SymbolID.SymbolSet_SignalsIntelligence_SeaSurface &&
                     ss !== SymbolID.SymbolSet_SignalsIntelligence_SeaSubsurface &&
-                    ss !== SymbolID.SymbolSet_CyberSpace) 
+                    ss !== SymbolID.SymbolSet_CyberSpace &&
+                    ss !== SymbolID.SymbolSet_CyberSpace_Equipment) 
         {
             mainIconID = "98100000";//invalid symbol, inverted question mark
         }
