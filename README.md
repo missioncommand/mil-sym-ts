@@ -24,7 +24,7 @@ Ports
 
 MIL-STD-2525
 -----------
-The MIL-STD-2525 standard defines how to visualize military symbology.  This project provides support for the entire MIL-STD-2525D Change 1 and 2525E Change 1.
+The MIL-STD-2525 standard defines how to visualize military symbology.  This project provides support for the entire MIL-STD-2525D Change 1 and 2525E Change 1.  APP6D support has been added as well.  Note that this implementation included the latest change proposals so things may not line up if you're just looking at the base APP6D document.  
 
 Notes
 -----------
