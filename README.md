@@ -29,8 +29,8 @@ The MIL-STD-2525 standard defines how to visualize military symbology.  This pro
 Features
 -----------
 * Support for MilStd 2525 Dch1 (11), Ech1(15), NATO APP6D(10) and partial support for APP6Ev2 (16)(icons only)  
-* [Rendering icons](https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview/_edit#22-singlepoint-icon-symbology) as a BufferedImage (Java), Bitmap (Android), and SVG.  
-* [Rendering of multipoints](https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview/_edit#33-multipoint-symbology) as [GeoJSON](https://github.com/missioncommand/mil-sym-java/wiki/Interpreting-GeoJSON-Output), [GeoSVG](https://github.com/missioncommand/mil-sym-java/wiki/Interpreting-GeoSVG-Output) or as a [MilStdSymbol Object](https://github.com/missioncommand/mil-sym-java/wiki/Making-Use-of-MilStdSymbol) with all the information needed to draw on your map.  
+* [Rendering icons](https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#22-singlepoint-icon-symbology) as a BufferedImage (Java), Bitmap (Android), and SVG.  
+* [Rendering of multipoints](https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#33-multipoint-symbology) as [GeoJSON](https://github.com/missioncommand/mil-sym-java/wiki/Interpreting-GeoJSON-Output), [GeoSVG](https://github.com/missioncommand/mil-sym-java/wiki/Interpreting-GeoSVG-Output) or as a [MilStdSymbol Object](https://github.com/missioncommand/mil-sym-java/wiki/Making-Use-of-MilStdSymbol) with all the information needed to draw on your map.  
 * [MSLookup](https://github.com/missioncommand/mil-sym-java/wiki/2525D--Renderer-Overview#5-mslookup) class to get information on any symbol such as point count, draw rule, applicable modifier, etc...  
 * The ability to add [custom icons](https://github.com/missioncommand/mil-sym-java/wiki/Adding-Custom-Symbols) to an existing symbol set.
 
