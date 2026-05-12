@@ -6179,7 +6179,7 @@
         "est": "",
         "code": "150100",
         "versions": "10,11",
-        "geometry": "",
+        "geometry": "Area",
         "drawRules": "Area1",
         "modifiers": "",
         "aux1": ""
@@ -6515,7 +6515,7 @@
         "est": "",
         "code": "151800",
         "versions": "10,11",
-        "geometry": "",
+        "geometry": "Area",
         "drawRules": "Area1",
         "modifiers": "",
         "aux1": ""
