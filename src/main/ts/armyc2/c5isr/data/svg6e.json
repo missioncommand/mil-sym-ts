@@ -419,6 +419,14 @@
     "SVG": "<g id=\"64130300\">        <text font-family=\"sans-serif\" font-size=\"100\" text-anchor=\"middle\" x=\"305\" y=\"432.25\">UNK</text>    </g>"
   },
   {
+    "id": "60111100",
+    "X": "201.150390625",
+    "Y": "357.140625",
+    "Width": "208.248046875",
+    "Height": "74.078125",
+    "SVG": "<g id=\"60111100\">        <text font-family=\"sans-serif\" font-size=\"100px\" text-anchor=\"middle\" x=\"305\" y=\"430\">SOC</text>    </g>"
+  },
+  {
     "id": "25152300",
     "X": "63.62112045288086",
     "Y": "81.86396190341343",
