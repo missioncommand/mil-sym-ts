@@ -773,6 +773,11 @@ export class MSInfo {
                         break;
                     }
 
+                    case "64": {
+                        name = "Cyberspace Equipment";
+                        break;
+                    }
+
                     default: {
                         name = "UNKNOWN";
                     }

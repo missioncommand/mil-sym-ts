@@ -21387,14 +21387,6 @@
       {
         "ss": "",
         "e": "",
-        "et": "Fileserver",
-        "est": "",
-        "code": "140200",
-        "versions": "15"
-      },
-      {
-        "ss": "",
-        "e": "",
         "et": "Search Engine",
         "est": "",
         "code": "140300",
@@ -21630,14 +21622,6 @@
         "et": "Banking",
         "est": "",
         "code": "140100",
-        "versions": "16"
-      },
-      {
-        "ss": "",
-        "e": "",
-        "et": "Fileserver",
-        "est": "",
-        "code": "140200",
         "versions": "16"
       },
       {
