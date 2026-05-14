@@ -1980,11 +1980,11 @@
   },
   {
     "id": "64180000",
-    "X": "238.2197265625",
+    "X": "205.234375",
     "Y": "358.3691101074219",
-    "Width": "171.01956176757812",
+    "Width": "205.607421875",
     "Height": "77.3125",
-    "SVG": "<g id=\"64180000\">        <text font-family=\"sans-serif\" font-size=\"108px\" text-anchor=\"middle\" x=\"305\" y=\"435.6816\">NE</text>        <text font-family=\"sans-serif\" font-size=\"108px\" x=\"345.4268\" y=\"435.6816\">T</text>    </g>"
+    "SVG": "<g id=\"64180000\">        <text font-family=\"sans-serif\" font-size=\"108px\" text-anchor=\"middle\" x=\"305\" y=\"435.6816\">NET</text>    </g>"
   },
   {
     "id": "185_1",
