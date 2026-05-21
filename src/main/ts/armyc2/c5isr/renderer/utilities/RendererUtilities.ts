@@ -411,7 +411,7 @@ export class RendererUtilities {
      * @return SVG String
      *
      */
-    public static setSVGSPCMColors(symbolID: string, svg: string, strokeColor: Color, fillColor: Color, isOutline:boolean=false): string
+    public static setSVGSPCMColors(symbolID: string, svg: string, strokeColor: Color, fillColor: Color, isOutline:boolean=false, bounds:Rectangle2D=null, pixelSize:number=0, outlineWidth:number=0): string
     {
         let returnSVG: string = svg;
         let hexStrokeColor: string;
@@ -462,9 +462,15 @@ export class RendererUtilities {
             strokeColor = Color.BLACK;
         }
 
-        if (isOutline) {
+        if (isOutline && bounds != null) {
+            let p:number = pixelSize;
+            let h:number = bounds.getHeight();
+            let w:number = bounds.getWidth();
+            let ratio:number = Math.min((p / h), (p / w));
+
+            outlineSize = Math.round(outlineWidth / ratio);
             //increase stroke-width so the white outline shows around the symbol
-            returnSVG = RendererUtilities.increaseStrokeWidth(returnSVG,(outlineSize));
+            returnSVG = RendererUtilities.increaseStrokeWidth(returnSVG,outlineSize);
             //set the stroke color for the group so filled shapes without stokes get outlined as well.
             returnSVG = returnSVG.replace("<g", "<g stroke=\"" + hexStrokeColor + "\" " + strokeOpacity + " stroke-linecap=\"square\"");
         }
@@ -640,6 +646,11 @@ export class RendererUtilities {
                 ErrorLogger.LogException("RendererUtilities","calculateMapScale",e,LogLevel.WARNING);
         }
         return 0;
+    }
+
+    public static calculateOutlineWidth():number
+    {
+        return RendererSettings.getInstance().getDeviceDPI()>100 ? RendererSettings.getInstance().getDeviceDPI()/96 * 3 : 3;
     }
 
     public static scaleIcon(symbolID:string, icon:SVGInfo):SVGInfo
