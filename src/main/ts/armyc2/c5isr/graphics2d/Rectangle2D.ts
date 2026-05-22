@@ -93,10 +93,10 @@ export class Rectangle2D {
         return this.y;
     }
     public getCenterX(): double {
-        return (this.x + this.width) / 2;
+        return (this.x + (this.width/2));
     }
     public getCenterY(): double {
-        return (this.y + this.height) / 2;
+        return (this.y + (this.height/2));
     }
     public getMinX(): double {
         return this.x;

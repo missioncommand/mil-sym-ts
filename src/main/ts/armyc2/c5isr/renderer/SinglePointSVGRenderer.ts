@@ -473,6 +473,7 @@ export class SinglePointSVGRenderer {
         let scale: double = 1.0;
         let lineColor: string = null;//SymbolUtilitiesD.getLineColorOfAffiliation(symbolID);
         let fillColor: string = null;
+        let outlineWidth: number = RendererUtilities.calculateOutlineWidth();
         let alpha: float = -1;
 
         let keepUnitRatio: boolean = true;
@@ -487,18 +488,17 @@ export class SinglePointSVGRenderer {
         let siIcon: SVGInfo = null;
         let mod1ID: string = null;
         let siMod1: SVGInfo = null;
-        let top: int = 0;
-        let left: int = 0;
-        let width: int = 0;
-        let height: int = 0;
+        let top: number = 0;
+        let left: number = 0;
+        let width: number = 0;
+        let height: number = 0;
         let svgStart: string = null;
         let strSVG: string = null;
 
         let ratio: double = 0;
 
         let symbolBounds: Rectangle2D = null;
-        let fullBounds: Rectangle2D = null;
-        let fullBMP: ImageBitmap = null;
+        let imageBounds: Rectangle2D = null;
 
 
         let ii: ImageInfo;
@@ -641,7 +641,9 @@ export class SinglePointSVGRenderer {
                 let borderPadding: float = 0;
                 if (outlineSymbol && siIcon != null) 
                 {
-                    borderPadding = RendererUtilities.findWidestStrokeWidth(siIcon.getSVG());
+                    borderPadding = Math.ceil(outlineWidth/2);
+                    if(borderPadding % 2 > 0)
+                        borderPadding++;
                 }
 
                 //Oceanographic / Bottom Feature - essentially italic serif fonts need more vertical space
@@ -699,12 +701,29 @@ export class SinglePointSVGRenderer {
 
                 //Set dash array depending on affiliation and status
                 siIcon = RendererUtilities.setAffiliationDashArray(symbolID, siIcon);
+                
+                //Generate Affiliation Planned Circle for version 16
+                let circle:SVGSymbolInfo = ModifierRenderer.createPlannedCircle(siIcon.getBbox(),symbolID);
+                let svgCircle:string = "";
+                if(circle != null)
+                {
+                    symbolBounds = circle.getImageBounds();
+                    top = Math.floor(circle.getImageBounds().getY());
+                    left = Math.floor(circle.getImageBounds().getX());
+                    width = Math.ceil(circle.getImageBounds().getWidth() + (circle.getImageBounds().getX() - left));
+                    height = Math.ceil(circle.getImageBounds().getHeight() + (circle.getImageBounds().getY() - top));
+                    if(keepUnitRatio)
+                        pixelSize = Math.ceil(pixelSize * (width / Math.max(siIcon.getBbox().getWidth(),siIcon.getBbox().getHeight())));
+                    let newSVG:string = siIcon.getSVG().substring(0,siIcon.getSVG().lastIndexOf("</g>"));
+                    newSVG += circle.getSVG() + "</g>";
+                    siIcon = new SVGInfo(siIcon.getID(),circle.getImageBounds(), newSVG);
+                }
 
                 //update line and fill color of frame SVG
                 if (msi.getSymbolSet() === SymbolID.SymbolSet_ControlMeasure && (lineColor != null || fillColor != null)) {
                     if (outlineSymbol) {
                         // create outline with larger stroke-width first (if selected)
-                        strSVGIcon = RendererUtilities.setSVGSPCMColors(symbolID, siIcon.getSVG(), RendererUtilities.getIdealOutlineColor(RendererUtilities.getColorFromHexString(lineColor)), RendererUtilities.getColorFromHexString(fillColor), true);
+                        strSVGIcon = RendererUtilities.setSVGSPCMColors(symbolID, siIcon.getSVG(), RendererUtilities.getIdealOutlineColor(RendererUtilities.getColorFromHexString(lineColor)), RendererUtilities.getColorFromHexString(fillColor), true, siIcon.getBbox(), pixelSize, outlineWidth);
                     }
                     else {
 
@@ -713,7 +732,7 @@ export class SinglePointSVGRenderer {
 
 
                     // append normal symbol SVG to be layered on top of outline
-                    strSVGIcon += RendererUtilities.setSVGSPCMColors(symbolID, siIcon.getSVG(), RendererUtilities.getColorFromHexString(lineColor), RendererUtilities.getColorFromHexString(fillColor), false);
+                    strSVGIcon += RendererUtilities.setSVGSPCMColors(symbolID, siIcon.getSVG(), RendererUtilities.getColorFromHexString(lineColor), RendererUtilities.getColorFromHexString(fillColor));
                 }
                 else {
                     //weather symbol (don't change color of weather graphics)
@@ -725,15 +744,21 @@ export class SinglePointSVGRenderer {
                 if (SymbolID.getEntityCode(symbolID) === 270701 && siMod1 != null) {
                     if (outlineSymbol) {
                         // create outline with larger stroke-width first (if selected)
-                        strSVGIcon += RendererUtilities.setSVGSPCMColors(mod1ID, siMod1.getSVG(), RendererUtilities.getIdealOutlineColor(RendererUtilities.getColorFromHexString("#00A651")), RendererUtilities.getColorFromHexString("#00A651"), true);
+                        strSVGIcon += RendererUtilities.setSVGSPCMColors(mod1ID, siMod1.getSVG(), RendererUtilities.getIdealOutlineColor(RendererUtilities.getColorFromHexString("#00A651")), RendererUtilities.getColorFromHexString("#00A651"), true, siIcon.getBbox(), pixelSize, outlineWidth);
                     }
                     //strSVGIcon += siMod1.getSVG();
-                    strSVGIcon += RendererUtilities.setSVGSPCMColors(mod1ID, siMod1.getSVG(), RendererUtilities.getColorFromHexString(lineColor), RendererUtilities.getColorFromHexString(fillColor), false);
+                    strSVGIcon += RendererUtilities.setSVGSPCMColors(mod1ID, siMod1.getSVG(), RendererUtilities.getColorFromHexString(lineColor), RendererUtilities.getColorFromHexString(fillColor));
                 }
 
-                if (pixelSize > 0) {
-                    symbolBounds = RectUtilities.toRectangle2D(left, top, width, height);//actual measurement of symbol svg
-                    rect = RectUtilities.copyRect(symbolBounds);
+                if (pixelSize > 0) 
+                {
+                    imageBounds = RectUtilities.toRectangle2D(left,top,width,height);//makeRect(left,top,width,height);
+                    if(circle != null)
+                        symbolBounds = circle.getSymbolBounds();
+                    else
+                        symbolBounds = RectUtilities.copyRect(imageBounds);
+
+                    rect = RectUtilities.copyRect(imageBounds);
 
                     //adjust size
                     let p: float = pixelSize;
@@ -743,35 +768,33 @@ export class SinglePointSVGRenderer {
                     ratio = Math.min((p / h), (p / w));
 
                     //measurement of target size/location of symbol after being translated/scaled into the new SVG
-                    symbolBounds = RectUtilities.toRectangle2D(0, 0, w * ratio, h * ratio);//.makeRect(0f, 0f, w * ratio, h * ratio);
+                    symbolBounds = RectUtilities.toRectangle2D((symbolBounds.getX() - imageBounds.getX())*ratio, (symbolBounds.getY() - imageBounds.getY())*ratio, symbolBounds.getWidth() * ratio, symbolBounds.getHeight() * ratio);
+                    imageBounds = RectUtilities.toRectangle2D(0, 0, w * ratio, h * ratio);
 
                     //make sure border padding isn't excessive.
                     w = symbolBounds.getWidth();
                     h = symbolBounds.getHeight();
 
-                    if (borderPadding > (h * 0.1)) {
+                    /*if (borderPadding > (h * 0.1)) {
                         borderPadding = (h * 0.1) as float;
                     }
                     else {
                         if (borderPadding > (w * 0.1)) {
                             borderPadding = (w * 0.1) as float;
                         }
-                    }
-                    //*/
+                    }//*/
 
                 }
 
                 let borderPaddingBounds: Rectangle2D;
                 let offset: int = 0;
                 if (msi.getSymbolSet() === SymbolID.SymbolSet_ControlMeasure && outlineSymbol && borderPadding !== 0) {
-                    borderPaddingBounds = RectUtilities.toRectangle2D(0, 0, (rect.getWidth() + (borderPadding)) * ratio, (rect.getHeight() + (borderPadding)) * ratio);//.makeRect(0f, 0f, w * ratio, h * ratio);
-                    symbolBounds = borderPaddingBounds;
-
-                    //grow size SVG to accommodate the outline we added
-                    offset = borderPadding as int / 2;//4;
-                    RectUtilities.grow(rect, offset);
-
+                    RectUtilities.grow(rect, Math.ceil(borderPadding / ratio));
+                    offset = borderPadding;
                 }
+
+                imageBounds = RectUtilities.toRectangle2D(0, 0, (imageBounds.getWidth() + Math.round(borderPadding)*2), (imageBounds.getHeight() + Math.round(borderPadding)*2));
+                RectUtilities.shift(symbolBounds,offset,offset);
 
                 let strLineJoin: string = "";
 
@@ -789,13 +812,15 @@ export class SinglePointSVGRenderer {
                 }
 
                 //Point centerPoint = SymbolUtilities.getCMSymbolAnchorPoint(symbolID, RectUtilities.makeRectangle2DFromRect(offset, offset, symbolBounds.getWidth()-offset, symbolBounds.getHeight()-offset));
-                let centerPoint: Point = SymbolUtilities.getCMSymbolAnchorPoint(symbolID, RectUtilities.makeRectangle2DFromRect(0, 0, symbolBounds.getWidth(), symbolBounds.getHeight()));
+                let centerPoint: Point = SymbolUtilities.getCMSymbolAnchorPoint(symbolID, symbolBounds);
+                if(symbolBounds.getX() > 0 || symbolBounds.getY() > 0)
+                    centerPoint.shift(symbolBounds.getX(),symbolBounds.getY());
 
-                /*if (borderPaddingBounds != null) {
-                    RectUtilities.grow(symbolBounds, 4);
-                }//*/
+                //now that we're done building symbol and applying outlines if needed,
+                //imageBounds and symbolBounds can be considered to be the same
+                symbolBounds = RectUtilities.copyRect(imageBounds);
 
-                si = new SVGSymbolInfo(sbGroupUnit.toString().valueOf(), centerPoint.toPoint2D(), symbolBounds, symbolBounds);
+                si = new SVGSymbolInfo(sbGroupUnit.toString().valueOf(), centerPoint.toPoint2D(), symbolBounds, imageBounds);
 
             }
 
@@ -852,7 +877,7 @@ export class SinglePointSVGRenderer {
             let transX: double = si.getImageBounds().getX() * -1;
             let transY: double = si.getImageBounds().getY() * -1;
             let anchor: Point2D = si.getSymbolCenterPoint();
-            let imageBounds: Rectangle2D = si.getImageBounds();
+            imageBounds = si.getImageBounds();
             if (transX > 0 || transY > 0) {
                 ShapeUtilities.offset(anchor, transX, transY);
                 ShapeUtilities.offset(symbolBounds, transX, transY);
@@ -904,6 +929,8 @@ export class SinglePointSVGRenderer {
 
         let lineColor:string = null;
         let fillColor:string = null;//SymbolUtilities.getFillColorOfAffiliation(symbolID);
+
+        let outlineWidth:number = RendererUtilities.calculateOutlineWidth();
 
         let alpha:number = -1;
 
@@ -1012,7 +1039,7 @@ export class SinglePointSVGRenderer {
             if(msi.getSymbolSet() == SymbolID.SymbolSet_ControlMeasure && (lineColor != null || fillColor != null))
             {
                 if(drawCustomOutline)
-                    strSVGIcon += RendererUtilities.setSVGSPCMColors(iconID,siIcon.getSVG(), RendererUtilities.getIdealOutlineColor(RendererUtilities.getColorFromHexString(lineColor)), RendererUtilities.getColorFromHexString(fillColor),true);
+                    strSVGIcon += RendererUtilities.setSVGSPCMColors(iconID,siIcon.getSVG(), RendererUtilities.getIdealOutlineColor(RendererUtilities.getColorFromHexString(lineColor)), RendererUtilities.getColorFromHexString(fillColor),true, siIcon.getBbox(), pixelSize, outlineWidth);
                 strSVGIcon += RendererUtilities.setSVGSPCMColors(iconID, siIcon.getSVG(), RendererUtilities.getColorFromHexString(lineColor), RendererUtilities.getColorFromHexString(fillColor));
             }
             else

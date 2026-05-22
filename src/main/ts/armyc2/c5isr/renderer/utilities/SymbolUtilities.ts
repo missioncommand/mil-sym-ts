@@ -1361,7 +1361,7 @@ export class SymbolUtilities {
                 }
 
                 case DrawRules.POINT16: {//Tower  //circle at base of tower
-                    centerY = (bounds.getHeight() * 0.87);
+                    centerY = (bounds.getHeight() * 0.89);
                     break;
                 }
 
