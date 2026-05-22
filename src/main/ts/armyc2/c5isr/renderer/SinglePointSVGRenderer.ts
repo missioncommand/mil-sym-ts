@@ -816,9 +816,9 @@ export class SinglePointSVGRenderer {
                 if(symbolBounds.getX() > 0 || symbolBounds.getY() > 0)
                     centerPoint.shift(symbolBounds.getX(),symbolBounds.getY());
 
-                /*if (borderPaddingBounds != null) {
-                    RectUtilities.grow(symbolBounds, 4);
-                }//*/
+                //now that we're done building symbol and applying outlines if needed,
+                //imageBounds and symbolBounds can be considered to be the same
+                symbolBounds = RectUtilities.copyRect(imageBounds);
 
                 si = new SVGSymbolInfo(sbGroupUnit.toString().valueOf(), centerPoint.toPoint2D(), symbolBounds, imageBounds);
 

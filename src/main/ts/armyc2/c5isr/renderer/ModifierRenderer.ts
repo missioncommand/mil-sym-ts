@@ -3741,7 +3741,8 @@ export class ModifierRenderer implements SettingsEventListener {
                 ssi = sdi as SVGSymbolInfo;
                 let sbSVG:string =  "";
                 sbSVG += (ssi.getSVG());
-                sbSVG += (ModifierRenderer.renderTextElements(arrMods, textColor, textBackgroundColor));
+                if(arrMods != null && arrMods.length >0)
+                    sbSVG += (ModifierRenderer.renderTextElements(arrMods, textColor, textBackgroundColor));
 
                 // <editor-fold defaultstate="collapsed" desc="DOM arrow">
                 if (domBounds != null) {
@@ -3792,6 +3793,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     fdiPath.moveTo(fdiTop.getX(), fdiTop.getY());
                     fdiPath.lineTo(fdiRight.getX(), fdiRight.getY());//*/
 
+                    fdiPath.setLineDash(svgFDIDashArray);
                     sbSVG += (fdiPath.toSVGElement(svgStroke, svgStrokeWidth, null));
                 }
                 //</editor-fold>
@@ -4318,6 +4320,8 @@ export class ModifierRenderer implements SettingsEventListener {
     }
 
     private static renderTextElements(tiArray: Array<TextInfo>, color: Color, backgroundColor: Color | null): string {
+        if(tiArray == null || tiArray.length == 0)
+            return "";
         let style: string;
         let name: string = tiArray[0].getFontName();//RendererSettings.getInstance().getLabelFont().getName(); + ", sans-serif";//"SansSerif";
         if(!name.endsWith("serif"))
