@@ -1145,6 +1145,7 @@ export class MilStdSymbol {
                 case 240701://Linear Target
                 case 240702://Linear Smoke Target
                 case 240703://Final Protective Fire
+                case 242200://Sector Range Fan
                 case 270502://Disrupt
                 case 270504://Turn
                 case 270601://Obstacle Bypass Easy

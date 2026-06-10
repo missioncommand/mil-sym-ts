@@ -862,7 +862,9 @@
                 console.log(name);
 
                 //code conversion test
-                /*var newCode = C5Ren.C2DLookup.getInstance().getDCode("GFGPDAE---**USX",true);
+                var newCode = C5Ren.C2DLookup.getInstance().getDCode("GFGPDAE---**USX",true);
+                console.log(newCode);
+                newCode = C5Ren.C2DLookup.getInstance().getDCode("SFAPWMCM--**USX",true);
                 console.log(newCode);
                 var country = C5Ren.GENCLookup.getInstance().get3CharCode(840);
                 console.log(country);
@@ -874,11 +876,11 @@
                 console.log(country);
                 country = C5Ren.GENCLookup.getInstance().get3DigitCode("BR");
                 console.log(country);
-                country = SymbolID.setCountryCode("000000000000000000000000000000",76);
+                country = C5Ren.SymbolID.setCountryCode("000000000000000000000000000000",76);
                 C5Ren.ErrorLogger.LogMessage(country);
-                country = SymbolID.setCountryCode("000000000000000000000000000000","76");
+                country = C5Ren.SymbolID.setCountryCode("000000000000000000000000000000","76");
                 C5Ren.ErrorLogger.LogMessage(country);
-                country = SymbolID.setCountryCode("000000000000000000000000000000","076");
+                country = C5Ren.SymbolID.setCountryCode("000000000000000000000000000000","076");
                 C5Ren.ErrorLogger.LogMessage(country);//*/
 
                 testBasicShape();

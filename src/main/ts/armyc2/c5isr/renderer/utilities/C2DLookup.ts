@@ -47,8 +47,10 @@ export class C2DLookup {
         type c2dIn = 
         {
             "basic": string;
+            "ver": string;
             "ss": string;
             "ec": string;
+            "em": string;
             "s1": string;
             "s2": string;
         }
@@ -60,7 +62,7 @@ export class C2DLookup {
                 
                 let c2dJSON: c2dIn[] = C2DLookup.c2d["c2d"]["symbols"]
                 for (let symbolJSON of c2dJSON) {
-                    C2DLookup._C2DLookup.set(symbolJSON["basic"], [symbolJSON["ss"],symbolJSON["ec"],symbolJSON["s1"],symbolJSON["s2"]]);
+                    C2DLookup._C2DLookup.set(symbolJSON["basic"], [symbolJSON["ver"],symbolJSON["ss"],symbolJSON["ec"],symbolJSON["em"],symbolJSON["s1"],symbolJSON["s2"]]);
                 }
                 
             } catch (e) {
@@ -90,16 +92,21 @@ export class C2DLookup {
         if(parts==null)
             return null;
 
+        //set version
+        newCode = SymbolID.setVersion(newCode, parseInt(parts[0]));
         //set symbol set
-        newCode = SymbolID.setSymbolSet(newCode, parseInt(parts[0]));
+        newCode = SymbolID.setSymbolSet(newCode, parseInt(parts[1]));
         //set entity code
-        newCode = SymbolID.setEntityCode(newCode, parseInt(parts[1]));
+        newCode = SymbolID.setEntityCode(newCode, parseInt(parts[2]));
+        //Set Echelon/Mobility (not used currently)
+        /*if(parts[3]!=="")
+            newCode = SymbolID.setEchelonMobility(newCode, (parts[3]));*/
         //set sector modifier 1
-        if(parts[2]!=="")
-            newCode = SymbolID.setModifier1(newCode, (parts[2]));
+        if(parts[4]!=="")
+            newCode = SymbolID.setModifier1(newCode, (parts[4]));
         //set sector modifier 2
-        if(parts[3]!=="")
-            newCode = SymbolID.setModifier1(newCode, (parts[3]));
+        if(parts[5]!=="")
+            newCode = SymbolID.setModifier2(newCode, (parts[5]));
 
         //get affiliation to set context and affiliation
         let aff:string = symbolID.charAt(1);
@@ -282,21 +289,6 @@ export class C2DLookup {
                         break;
                 }
             }
-        }
-
-        switch(SymbolID.getEntityCode(newCode))
-        {
-            case 151406://Axis of Advance for a Feint
-            case 140605://Direction of attack feint
-            case 230200://Decoy
-            case 270705://Dummy Minefield
-            case 270706://Dummy Minefield, Dynamic
-            case 270900://Decoy Mined Area
-            case 270901://Decoy Mined Area, Fenced
-                newCode = SymbolID.setVersion(newCode,10);
-                break;
-            default:
-                break;
         }
 
         //country code
