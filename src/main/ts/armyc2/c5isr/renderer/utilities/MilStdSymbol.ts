@@ -1212,7 +1212,7 @@ export class MilStdSymbol {
                 case 270200://Obstacle Zone
                 case 270300://Obstacle Free Zone
                 case 270400://Obstacle Restricted Zone
-                //case 270503://Fix?
+                case 270503://Fix?
                 case 270801://Mined Area, Fenced
                 case 282003://Overhead Wire
                 case 290100://Obstacle Line
@@ -1240,9 +1240,9 @@ export class MilStdSymbol {
                 case 330402://ASR Two Way Traffic
                 case 330403://ASR Alternating Traffic
                 case 341100://Fix
-                //case 341500://Isolate, most detail contained inside
-                //case 342600://Cordon and Knock, most detail contained inside
-                //case 342700://Cordon and Search, most detail contained inside
+                case 341500://Isolate, most detail contained inside
+                case 342600://Cordon and Knock, most detail contained inside
+                case 342700://Cordon and Search, most detail contained inside
                     return 2;//decoration
 
                 //Areas with Pattern Fill

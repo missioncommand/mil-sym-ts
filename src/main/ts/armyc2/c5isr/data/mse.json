@@ -5780,9 +5780,9 @@
         "code": "140601",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line9",
+        "drawRules": "Line1",
         "modifiers": "T,W,W1",
-        "aux1": "std says line 1, I think it's wrong"
+        "aux1": ""
       },
       {
         "ss": "",
@@ -5792,9 +5792,9 @@
         "code": "140602",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line9",
+        "drawRules": "Line1",
         "modifiers": "T,W,W1",
-        "aux1": "std says line 1, I think it's wrong"
+        "aux1": ""
       },
       {
         "ss": "",
@@ -5804,9 +5804,9 @@
         "code": "140603",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line9",
+        "drawRules": "Line1",
         "modifiers": "T,W,W1",
-        "aux1": "std says line 1, I think it's wrong"
+        "aux1": ""
       },
       {
         "ss": "",
@@ -5816,7 +5816,7 @@
         "code": "140605",
         "versions": "16",
         "geometry": "Line",
-        "drawRules": "Line9",
+        "drawRules": "Line1",
         "modifiers": "T,W,W1",
         "aux1": ""
       },
@@ -12512,7 +12512,7 @@
         "code": "340800",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line14",
+        "drawRules": "Line24",
         "modifiers": "W",
         "aux1": ""
       },
@@ -12656,7 +12656,7 @@
         "code": "342000",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line14",
+        "drawRules": "Line24",
         "modifiers": "",
         "aux1": ""
       },
@@ -12944,7 +12944,7 @@
         "code": "344100",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line14",
+        "drawRules": "Line24",
         "modifiers": "",
         "aux1": ""
       },
@@ -12956,7 +12956,7 @@
         "code": "344200",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line14",
+        "drawRules": "Line24",
         "modifiers": "",
         "aux1": ""
       },
@@ -12981,7 +12981,7 @@
         "code": "344400",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line14",
+        "drawRules": "Line24",
         "modifiers": "",
         "aux1": "",
         "aux2": ""
@@ -12994,7 +12994,7 @@
         "code": "344500",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line17",
+        "drawRules": "Line27",
         "modifiers": "",
         "aux1": "",
         "aux2": ""

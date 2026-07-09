@@ -8290,6 +8290,17 @@
             "et": "Engineering Equipment Production,  Bridge"
           },
           {
+            "basic": "S*G*IMC---H****",
+            "ver": "11",
+            "ss": "20",
+            "ec": "110600",
+            "em": "",
+            "s1": "00",
+            "s2": "01",
+            "e": "",
+            "et": "Chem & Bio Warfare Production"
+          },
+          {
             "basic": "S*G*IE----H****",
             "ver": "11",
             "ss": "20",

@@ -5964,9 +5964,9 @@
         "code": "140601",
         "versions": "10,11",
         "geometry": "Line",
-        "drawRules": "Line9",
+        "drawRules": "Line1",
         "modifiers": "T,W,W1",
-        "aux1": "std says line 1, I think it's wrong"
+        "aux1": ""
       },
       {
         "ss": "",
@@ -5976,9 +5976,9 @@
         "code": "140602",
         "versions": "10,11",
         "geometry": "Line",
-        "drawRules": "Line9",
+        "drawRules": "Line1",
         "modifiers": "T,W,W1",
-        "aux1": "std says line 1, I think it's wrong"
+        "aux1": ""
       },
       {
         "ss": "",
@@ -5988,9 +5988,9 @@
         "code": "140603",
         "versions": "10,11",
         "geometry": "Line",
-        "drawRules": "Line9",
+        "drawRules": "Line1",
         "modifiers": "T,W,W1",
-        "aux1": "std says line 1, I think it's wrong"
+        "aux1": ""
       },
       {
         "ss": "",
@@ -6000,9 +6000,9 @@
         "code": "140605",
         "versions": "10",
         "geometry": "Line",
-        "drawRules": "Line9",
+        "drawRules": "Line1",
         "modifiers": "T,W,W1",
-        "aux1": "std says line 1, I think it's wrong"
+        "aux1": ""
       },
       {
         "ss": "",
@@ -6977,7 +6977,7 @@
       {
         "ss": "",
         "e": "",
-        "et": "Downed Aircraft Pick-up Point",
+        "et": "Downed Aircrew Pick-up Point",
         "est": "",
         "code": "180300",
         "versions": "11",

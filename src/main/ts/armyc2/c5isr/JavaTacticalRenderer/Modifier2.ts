@@ -4583,8 +4583,10 @@ export class Modifier2 {
                 case TacticalLines.CONTAIN: {
                     pt0 = tg.Pixels[13];
                     pt1 = tg.Pixels[14];
+                    //ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);//maybe figure out which points are center line to apply an angle
+                    ptCenter = tg.Pixels[13];//always rightside up at mid-point of curve
                     //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
 
                     // Contain always has "ENY" even if friendly (not N modifier)
                     for (j = 0; j < n; j++) {
