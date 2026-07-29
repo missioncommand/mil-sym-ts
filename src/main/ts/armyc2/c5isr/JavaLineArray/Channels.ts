@@ -2960,9 +2960,12 @@ export class Channels {
                 }//end switch
             }   //end for
             //a requirement was added to enable fill for the axis of advance line types
-            let fillShapes: Array<Shape2> = Channels.getAXADFillShapes(vbiDrawThis, pLinePoints);
-            if (fillShapes != null && fillShapes.length > 0) {
-                shapes.unshift(...fillShapes); // shapes.addAll(0,fillShapes);
+            if(tg.get_FillColor() != null)//if there's a fill color, create fill shape
+            {
+                let fillShapes: Array<Shape2> = Channels.getAXADFillShapes(vbiDrawThis, pLinePoints);
+                if (fillShapes != null && fillShapes.length > 0) {
+                    shapes.unshift(...fillShapes); // shapes.addAll(0,fillShapes);
+                }
             }
 
             //diagnostic
