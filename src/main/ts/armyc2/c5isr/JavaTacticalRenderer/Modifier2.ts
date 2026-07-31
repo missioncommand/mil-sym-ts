@@ -1737,7 +1737,7 @@ export class Modifier2 {
 
         let stringWidth: double = metrics.stringWidth(combinedDTG);
 
-        if (stringWidth < maxDTGWidth) {
+        /*if (stringWidth < maxDTGWidth) {
             // Add on one line
             Modifier2.AddModifier(tg, combinedDTG, type, lineFactor1, pt0, pt1);
         } else {
@@ -1745,7 +1745,9 @@ export class Modifier2 {
             // Use min and max on lineFactors. Always want W1 on top. This fixes when lineFactor < 0 W1 should use lineFactor1
             Modifier2.AddModifier(tg, tg.get_DTG() + dash, type, Math.min(lineFactor1, lineFactor2), pt0, pt1);
             Modifier2.AddModifier(tg, tg.get_DTG1(), type, Math.max(lineFactor1, lineFactor2), pt0, pt1);
-        }
+        }*///Always draw DTG1 & DTG2 on two lines
+        Modifier2.AddModifier(tg, tg.get_DTG() + dash, type, Math.min(lineFactor1, lineFactor2), pt0, pt1);
+        Modifier2.AddModifier(tg, tg.get_DTG1(), type, Math.max(lineFactor1, lineFactor2), pt0, pt1);
     }
 
     private static getVisibleMiddleSegment(tg: TGLight, clipBounds: Rectangle2D | Array<Point2D> | null): int {
@@ -4628,9 +4630,9 @@ export class Modifier2 {
 
                 case TacticalLines.SHIP_AOI_RECTANGULAR: {
                     if (tg.Pixels[0].x > tg.Pixels[3].x) {
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, csFactor, tg.Pixels[0], tg.Pixels[3], false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0.6 * csFactor, tg.Pixels[0], tg.Pixels[3], false);
                     } else {
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, csFactor, tg.Pixels[1], tg.Pixels[2], false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0.6 * csFactor, tg.Pixels[1], tg.Pixels[2], false);
                     }
                     break;
                 }
@@ -4721,7 +4723,7 @@ export class Modifier2 {
                     break;
                 }
 
-                case TacticalLines.ACA_RECTANGULAR: {
+                /*case TacticalLines.ACA_RECTANGULAR: {
                     ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
                     ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
                     Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -3 * csFactor, ptLeft, ptRight, false);
@@ -4732,8 +4734,9 @@ export class Modifier2 {
                     Modifier2.AddModifier2(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.aboveMiddle, 2 * csFactor, ptLeft, ptRight, false, "W");
                     Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 3 * csFactor, ptLeft, ptRight, false, "W1");
                     break;
-                }
+                }//*/
 
+                case TacticalLines.ACA_RECTANGULAR://text always right-side-up like circular
                 case TacticalLines.ACA_CIRCULAR: {
                     ptCenter = lineutility.CalcCenterPointDouble2(tg.Pixels, tg.Pixels.length);
                     Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -3 * csFactor, ptCenter, ptCenter, false);
@@ -4773,16 +4776,16 @@ export class Modifier2 {
                     ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[51], 0);
                     switch (rfaLines) {
                         case 3: { //2 valid modifiers and a label
-                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, true);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, true);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
                             Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
                             break;
                         }
 
                         case 2: { //one valid modifier and a label
-                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
                             if (tg.get_Name() != null && tg.get_Name().length > 0) {
-                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, true);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
                             } else {
                                 Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
                             }
@@ -4790,7 +4793,7 @@ export class Modifier2 {
                         }
 
                         default: {    //one label only
-                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, true);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
                             break;
                         }
 
@@ -4815,20 +4818,21 @@ export class Modifier2 {
                     rfaLines = Modifier2.getRFALines(tg);
                     pt0 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
                     pt1 = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
                     switch (rfaLines) {
                         case 3: { //two valid modifiers and one label
-                            Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -1 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, pt1, false);
-                            Modifier2.addDTG(tg, Modifier2.aboveMiddle, 1 * csFactor, 2 * csFactor, pt0, pt1, metrics);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                            Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
                             break;
                         }
 
                         case 2: { //one valid modifier and one label
-                            Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.5 * csFactor, pt0, pt1, false);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
                             if (tg.get_Name() != null && tg.get_Name().length > 0) {
-                                Modifier2.AddModifier2(tg, tg.get_Name(), Modifier2.aboveMiddle, 0.5 * csFactor, pt0, pt1, false);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
                             } else {
-                                Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0.5 * csFactor, 1.5 * csFactor, pt0, pt1, metrics);
+                                Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
                             }
                             break;
                         }
@@ -4854,10 +4858,19 @@ export class Modifier2 {
                 case TacticalLines.ZOR_RECTANGULAR:
                 case TacticalLines.TBA_RECTANGULAR:
                 case TacticalLines.TVAR_RECTANGULAR: {
+                    
                     ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
                     ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
-                    Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.5 * csFactor, ptLeft, ptRight, false);
-                    Modifier2.AddModifier2(tg, tg.get_Name(), Modifier2.aboveMiddle, 0.5 * csFactor, ptLeft, ptRight, false);
+                    ptCenter = lineutility.MidPointDouble(ptLeft, ptRight, 0);
+
+                    //labels upright
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+
+                    //labels on angle
+                    //Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.5 * csFactor, ptLeft, ptRight, false);
+                    //Modifier2.AddModifier2(tg, tg.get_Name(), Modifier2.aboveMiddle, 0.5 * csFactor, ptLeft, ptRight, false);
+
                     pt0 = tg.Pixels[0];
                     pt1 = tg.Pixels[1];
                     pt2 = tg.Pixels[2];
@@ -4871,6 +4884,8 @@ export class Modifier2 {
                         clsUtility.shiftModifiersLeft(pt0, pt3, 12.5);
                         clsUtility.shiftModifiersLeft(pt1, pt2, 12.5);
                     }
+
+                    /*//modifiers top left following angle
                     if (ptLeft.x === ptRight.x) {
                         ptRight.x += 1;
                     }
@@ -4880,31 +4895,70 @@ export class Modifier2 {
                     } else {
                         Modifier2.AddModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0, pt2, pt1);//was 3,0 //switched for CPOF
                         Modifier2.AddModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1 * csFactor, pt2, pt1);//was 3,0
+                    }//*/
+
+                    //top left-ish of rectangle
+                    let leftmost:POINT2 = tg.Pixels[0];
+                    for (let p of tg.Pixels) {
+                        if (p.x < leftmost.x || (p.x == leftmost.x && p.y > leftmost.y)) {
+                            leftmost = p;
+                        }
+                    }
+                    let highest:POINT2 = tg.Pixels[0];
+                    for (let p of tg.Pixels) {
+                        if (p.y < highest.y || (p.y == highest.y && p.x < highest.x)) {
+                            highest = p;
+                        }
                     }
 
+                    let dtgPosition:POINT2;
+                    if (highest.x < ptCenter.x) {
+                        dtgPosition = highest;
+                    } else {
+                        dtgPosition = leftmost;
+                    }
+
+                    //DTG at north west-ish point and right-side-up
+                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0.5 * csFactor, dtgPosition, new POINT2(dtgPosition.x+1,dtgPosition.y,0), false);
+                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1() + " ", Modifier2.toEnd, 1.5 * csFactor, dtgPosition, new POINT2(dtgPosition.x+1,dtgPosition.y,0), false);
+
+                    //DTG at first point and angled with rectangle
+                    //Modifier2.AddOffsetModifier(tg, tg.get_DTG() + WDash, toEnd, -1 * csFactor, tg.Pixels.size() / 2, 0, 4, "left");
+                    //Modifier2.AddOffsetModifier(tg, tg.get_DTG1(), toEnd, 0, tg.Pixels.size() / 2, 0, 4, "left");
+
                     break;
-                }
+                }//*/
 
                 case TacticalLines.PAA_RECTANGULAR: {
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddlePerpendicular, 0, 0, 1, true);
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 1, 2, true);
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddlePerpendicular, 0, 2, 3, true);
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 3, 0, true);
+
+                    ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);//label level
+                    //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddlePerpendicular, 0, 0, 1, true);//label angled with line
+                    ptCenter = lineutility.MidPointDouble(tg.Pixels[1], tg.Pixels[2], 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
+                    //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 1, 2, true);
+                    ptCenter = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
+                    //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddlePerpendicular, 0, 2, 3, true);
+                    ptCenter = lineutility.MidPointDouble(tg.Pixels[3], tg.Pixels[0], 0);
+                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
+                    //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 3, 0, true);
                     rfaLines = Modifier2.getRFALines(tg);
                     pt0 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
                     pt1 = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
                     switch (rfaLines) {
                         case 3: { // two valid modifiers
-                            Modifier2.AddModifier2(tg, tg.get_Name(), Modifier2.aboveMiddle, -0.5, pt0, pt1, false);
-                            Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0.5 * csFactor, 1.5 * csFactor, pt0, pt1, metrics);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5, ptCenter, ptCenter, false);
+                            Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
                             break;
                         }
 
                         case 2: { // one valid modifier
                             if (tg.get_Name() != null && tg.get_Name().length > 0) {
-                                Modifier2.AddModifier2(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, pt1, false);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
                             } else {
-                                Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0, csFactor, pt0, pt1, metrics);
+                                Modifier2.addDTG(tg, Modifier2.area, 0, csFactor, ptCenter, ptCenter, metrics);
                             }
                             break;
                         }
@@ -4926,7 +4980,7 @@ export class Modifier2 {
                     ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[Math.trunc(n / 2.0 + 0.5)], 0);
                     switch (rfaLines) {
                         case 3: { // two valid modifiers
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5, ptCenter, ptCenter, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5, ptCenter, ptCenter, false);
                             Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
                             break;
                         }
