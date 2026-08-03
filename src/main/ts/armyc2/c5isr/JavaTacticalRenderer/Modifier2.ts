@@ -3819,10 +3819,10 @@ export class Modifier2 {
                     Modifier2.GetMBR(tg, ul, ur, lr, ll);
                     let ptLeft: POINT2 = ul;
                     let ptRight: POINT2 = ur;
-                    if (tg.get_Client().toLowerCase() == "ge") {
+                    /*if (tg.get_Client().toLowerCase() == "ge") {
                         ptLeft.x -= font.getSize() / 2;
                         ptRight.x -= font.getSize() / 2;
-                    }
+                    }*/
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0.5 * csFactor, ptLeft, ptRight, false, "W");
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1.5 * csFactor, ptLeft, ptRight, false, "W1");
                     break;
@@ -4897,26 +4897,40 @@ export class Modifier2 {
                         Modifier2.AddModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1 * csFactor, pt2, pt1);//was 3,0
                     }//*/
 
-                    //top left-ish of rectangle
-                    let leftmost:POINT2 = tg.Pixels[0];
-                    for (let p of tg.Pixels) {
-                        if (p.x < leftmost.x || (p.x == leftmost.x && p.y > leftmost.y)) {
-                            leftmost = p;
+                    //highest point left of center
+                    let highest:POINT2 = tg.Pixels[0];
+                    /*for (let p of tg.Pixels)
+                    {
+                        if(p.x < ptCenter.x)
+                        {
+                            highest = p;
+                            break;
                         }
                     }
-                    let highest:POINT2 = tg.Pixels[0];
                     for (let p of tg.Pixels) {
-                        if (p.y < highest.y || (p.y == highest.y && p.x < highest.x)) {
+                        if(p.x < ptCenter.x)
+
+                        if (p.y < highest.y && p.x <= ptCenter.x) {
                             highest = p;
+                        }
+                    }*/
+
+                    let validPointFound:boolean = false;
+                    for (let p of tg.Pixels)//loop through points
+                    {
+                        if(p.x <= ptCenter.x)//we only care about points left of center
+                        {
+                            if(!validPointFound)//find initial left-of-center point
+                            {
+                                highest = p;//set initial value
+                                validPointFound = true;
+                            }
+                            else if(p.y < highest.y)//see if this point is higher than the current point
+                                highest = p;//set new highest, left-of-center point
                         }
                     }
 
-                    let dtgPosition:POINT2;
-                    if (highest.x < ptCenter.x) {
-                        dtgPosition = highest;
-                    } else {
-                        dtgPosition = leftmost;
-                    }
+                    let dtgPosition:POINT2 = highest;
 
                     //DTG at north west-ish point and right-side-up
                     Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0.5 * csFactor, dtgPosition, new POINT2(dtgPosition.x+1,dtgPosition.y,0), false);
@@ -5596,6 +5610,13 @@ export class Modifier2 {
                         
                         anchor = new Point2D(pt0.x, pt0.y);
                         anchorOffset = new Point2D(pt3.x - pt0.x, pt3.y - pt0.y);
+
+                        //adjust so it doesn't start right on top of the line.
+                        if(justify == ShapeInfo.justify_right)
+                            anchorOffset.setLocation(anchorOffset.getX() - font.getSize()/2,anchorOffset.getY());
+                        else if(justify == ShapeInfo.justify_left)
+                            anchorOffset.setLocation(anchorOffset.getX() + font.getSize()/2,anchorOffset.getY());
+
                         if(image != null)//images are centered and don't have text justification
                             anchorOffset = new Point2D(pt1.x - pt0.x, pt1.y - pt0.y);
 
