@@ -63,6 +63,12 @@ export class RendererSettings {
     private static _AutoCollapseModifiers: boolean = true;
 
     /**
+     * group labels thant tend to be close (like W, W1) into a single modifier with an
+     * end-line character '\n' to create the multiline effect
+     */
+    private static _GroupModifiers: boolean = true;
+
+    /**
      * @deprecated
      */
     private static _SymbolOutlineWidth: int = 1;
@@ -357,6 +363,16 @@ export class RendererSettings {
 
     public getAutoCollapseModifiers(): boolean { return RendererSettings._AutoCollapseModifiers; }
 
+
+    /**
+     * If labels on your map engine support the end-line character '\n', group modifiers
+     * into a single label so that they don't conflict and potentially get dropped due to
+     * proximity which some 3D maps tend to do with labels.
+     * @param value
+     */
+    public setGroupModifiers(value: boolean): void { RendererSettings._GroupModifiers = value; }
+
+    public getGroupModifiers(): boolean { return RendererSettings._GroupModifiers; }
 
 
     /**

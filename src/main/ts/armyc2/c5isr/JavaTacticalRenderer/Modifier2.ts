@@ -2842,653 +2842,765 @@ export class Modifier2 {
             let dAngle1: double = 0;
             let stringHeight: int = 0;
 
-            switch (linetype) {
-                case TacticalLines.PL: {
-                    Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
-                    Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
-                    break;
-                }
-                case TacticalLines.DECISION_LINE:
-                    if(tg.get_AS() == null || tg.get_AS() !== "")
-                        tg.set_AS(GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(tg.get_SymbolId()).toString()));
-                    let si:SVGSymbolInfo =  Modifier2.GetImageModifier(tg);
-
-                    let ptDP1:POINT2 = lineutility.ExtendLine2Double(pt1,pt0,si.getSymbolBounds().getWidth()/2,0);
-                    let ptDP2:POINT2 = lineutility.ExtendLine2Double(ptNextToLast, ptLast,si.getSymbolBounds().getWidth()/2,0);
-
-                    Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,pt0,ptDP1,false);
-                    Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,ptLast,ptDP2,false);
-                    break;
-                case TacticalLines.BS_LINE:
-                case TacticalLines.BBS_LINE: {
-                    if (tg.get_T1() == null || tg.get_T1() == "") {
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
-                    } else {
-                        if (tg.get_T1() == "1") {
-                            for (j = 0; j < tg.Pixels.length - 1; j++) {
-                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, tg.Pixels[j], tg.Pixels[j + 1], false);
-                            }
-                        } else if (tg.get_T1() == "2") {
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
-                        } else if (tg.get_T1() == "3") {
-                            //either end of the polyline
-                            dist = lineutility.CalcDistanceDouble(pt0, pt1);
-                            stringWidth = metrics.stringWidth(tg.get_Name());
-                            stringWidth /= 2;
-                            pt2 = lineutility.ExtendAlongLineDouble2(pt1, pt0, dist + stringWidth);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt2, pt2, false);
-                            dist = lineutility.CalcDistanceDouble(ptNextToLast, ptLast);
-                            pt2 = lineutility.ExtendAlongLineDouble2(ptNextToLast, ptLast, dist + stringWidth);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt2, pt2, false);
-                            //the intermediate points
-                            for (j = 1; j < tg.Pixels.length - 1; j++) {
-                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, tg.Pixels[j], tg.Pixels[j], false);
-                            }
-                        } else //t1 is set inadvertantly or for other graphics
-                        {
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
-                        }
-                    }
-                    break;
-                }
-
-                case TacticalLines.BS_AREA:
-                case TacticalLines.BBS_AREA: {
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.FEBA: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, pt0, pt1, false);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, ptLast, ptNextToLast, false);
-                    break;
-                }
-
-                // T before label
-                case TacticalLines.FSCL: {
-                    pt0 = tg.Pixels[0];
-                    pt1 = tg.Pixels[1];
-                    pt2 = tg.Pixels[tg.Pixels.length - 1];
-                    pt3 = tg.Pixels[tg.Pixels.length - 2];
-                    dist = lineutility.CalcDistanceDouble(pt0, pt1);
-                    dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
-                    stringWidth = (metrics.stringWidth(tg.get_Name() + " " + label) as double) as int;
-                    stringWidth2 = (metrics.stringWidth(tg.get_DTG()) as double) as int;
-                    if (stringWidth2 > stringWidth) {
-                        stringWidth = stringWidth2;
-                    }
-
-                    if (tg.Pixels.length === 2) //one segment
-                    {
-                        pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                        Modifier2.AddModifier2(tg, tg.get_Name() + " " + label, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                        Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                        Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        if (dist > 3.5 * stringWidth)//was 28stringwidth+5
-                        {
-                            pt0 = tg.Pixels[tg.Pixels.length - 1];
-                            pt1 = tg.Pixels[tg.Pixels.length - 2];
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, tg.get_Name() + " " + label, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                    } else //more than one semgent
-                    {
-                        let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
-                        if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, tg.get_Name() + " " + label, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                        if (dist2 > stringWidth + 5 || dist2 > dist || dist3 > stringWidth + 5) {
-                            pt0 = tg.Pixels[tg.Pixels.length - 1];
-                            pt1 = tg.Pixels[tg.Pixels.length - 2];
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, tg.get_Name() + " " + label, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                    }
-                    break;
-                }
-
-                // T after label
-                case TacticalLines.ICL:
-                case TacticalLines.NFL:
-                case TacticalLines.BCL_REVD:
-                case TacticalLines.RFL: 
-                case TacticalLines.BCL:
+            let modifiersGrouped:boolean = false;
+            if(RendererSettings.getInstance().getGroupModifiers())
+            {
+                switch(tg.get_LineType())
                 {
-                    pt0 = tg.Pixels[0];
-                    pt1 = tg.Pixels[1];
-                    pt2 = tg.Pixels[tg.Pixels.length - 1];
-                    pt3 = tg.Pixels[tg.Pixels.length - 2];
-                    dist = lineutility.CalcDistanceDouble(pt0, pt1);
-                    dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
-                    
-                    let TMod:string = ""; // Don't add parenthesis if T modifier is empty
+                    case TacticalLines.PAA:
+                        Modifier2.addModifierOnLine("PAA", tg);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg, label), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        modifiersGrouped = true;
+                        break;
+                    case TacticalLines.ACA:
+                    case TacticalLines.FFA:
+                    case TacticalLines.RFA:
+                    case TacticalLines.NFA:
+                    case TacticalLines.FSA:
+                    case TacticalLines.WFZ_REVD:
+                    case TacticalLines.WFZ:
+                    case TacticalLines.OBSFAREA:
+                    case TacticalLines.OBSAREA:
+                    case TacticalLines.ROZ:
+                    case TacticalLines.AARROZ:
+                    case TacticalLines.UAROZ:
+                    case TacticalLines.WEZ:
+                    case TacticalLines.FEZ:
+                    case TacticalLines.JEZ:
+                    case TacticalLines.FAADZ:
+                    case TacticalLines.HIDACZ:
+                    case TacticalLines.MEZ:
+                    case TacticalLines.LOMEZ:
+                    case TacticalLines.HIMEZ:
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg, label), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        modifiersGrouped = true;
+                        break;
+                    case TacticalLines.ATI:
+                    case TacticalLines.CFFZ:
+                    case TacticalLines.CFZ:
+                    case TacticalLines.TBA:
+                    case TacticalLines.TVAR:
+                    case TacticalLines.ZOR:
+                    case TacticalLines.DA:
+                    case TacticalLines.SENSOR:
+                    case TacticalLines.CENSOR:
+                    case TacticalLines.KILLBOXBLUE:
+                    case TacticalLines.KILLBOXPURPLE:
+                        //Center Labels
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg,label), Modifier2.area, 0 * csFactor, ptCenter, ptCenter, false);
 
-                    let version:number = SymbolID.getVersion(tg.get_SymbolId());
-                    if(version < SymbolID.Version_2525E) {
-                        TMod = tg.get_Name();
-                        stringWidth =  (metrics.stringWidth(TMod + " " + label));
-                    }
-                    else if(version == SymbolID.Version_2525E || version == SymbolID.Version_2525Ech1) {
-                        if(linetype == TacticalLines.BCL) {
-                            if (tg.get_Name() != null && tg.get_Name()!=="")
-                                TMod = " (" + tg.get_Name() + ")";
-                            stringWidth = ( metrics.stringWidth(label + TMod));
-                        }
-                        else
+                        //DTG Labels at highest left-of-center point
+                        let highest:POINT2 = Modifier2.getHighestPointLeftOfCenter(tg.Pixels,ptCenter);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, 0 * csFactor, highest, new POINT2(highest.x + 0.001, highest.y, 0), false);
+
+                        //DTG labels at top left of BBOX
+                        //GetMBR(tg, ul, ur, lr, ll);
+                        //POINT2 ptLeft = ul;
+                        //POINT2 ptRight = ur;
+                        //AddIntegralAreaModifier(tg, buildAreaGroupDTGString(tg), toEnd, 1 * csFactor, ptLeft, new POINT2(ptLeft.x + 0.001, ptLeft.y, 0), false);
+                        modifiersGrouped = true;
+                        break;
+                    case TacticalLines.SPT:
+                    case TacticalLines.FRONTAL_ATTACK:
+                    case TacticalLines.TURNING_MOVEMENT:
+                    case TacticalLines.MOVEMENT_TO_CONTACT:
+                    case TacticalLines.AIRAOA:
+                    case TacticalLines.AAAAA:
+                    case TacticalLines.MAIN:
+                        if (tg.Pixels.length == 3) //one segment
                         {
-                            TMod = tg.get_Name();
-                            stringWidth = (metrics.stringWidth(tg.get_Name() + " " + label));
-                        }
-                    }
-                    else if((version == SymbolID.Version_APP6Ech2)) {
-                        if (tg.get_Name() != null && tg.get_Name() !== "")
-                            TMod += " " + tg.get_Name();
-                        if(tg.get_AS() != null && tg.get_AS() !== "")
-                            TMod += " (" + tg.get_AS() + ")";
-                        stringWidth = (metrics.stringWidth(label + TMod));
+                            midPt = lineutility.MidPointDouble(pt0, pt1, 0);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash + '\n' + tg.get_DTG() + '\n' + tg.get_Name(), Modifier2.area, 0, midPt, midPt, false);
 
-                    }
-
-                    stringWidth2 = (metrics.stringWidth(tg.get_DTG()));
-                    if (stringWidth2 > stringWidth) {
-                        stringWidth = stringWidth2;
-                    }
-
-
-                    if (tg.Pixels.length === 2) //one segment
-                    {
-                        pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                        Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                        Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                        Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        if (dist > 3.5 * stringWidth)//was 28stringwidth+5
-                        {
-                            pt0 = tg.Pixels[tg.Pixels.length - 1];
-                            pt1 = tg.Pixels[tg.Pixels.length - 2];
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                    } else //more than one semgent
-                    {
-                        let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
-                        if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                        if (dist2 > stringWidth + 5 || dist2 > dist || dist3 > stringWidth + 5) {
-                            pt0 = tg.Pixels[tg.Pixels.length - 1];
-                            pt1 = tg.Pixels[tg.Pixels.length - 2];
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                    }
-                    break;
-                }
-
-                case TacticalLines.BCL: {
-                    pt0 = tg.Pixels[0];
-                    pt1 = tg.Pixels[1];
-                    pt2 = tg.Pixels[tg.Pixels.length - 1];
-                    pt3 = tg.Pixels[tg.Pixels.length - 2];
-                    dist = lineutility.CalcDistanceDouble(pt0, pt1);
-                    dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
-                    let TMod: string = ""; // Don't add parenthesis if T modifier is empty
-                    if (tg.get_Name() != null && tg.get_Name().length > 0) {
-
-                        TMod = " (" + tg.get_Name() + ")";
-                    }
-
-                    stringWidth = (metrics.stringWidth(label + TMod) as double) as int;
-                    stringWidth2 = (metrics.stringWidth(tg.get_DTG()) as double) as int;
-                    if (stringWidth2 > stringWidth) {
-                        stringWidth = stringWidth2;
-                    }
-
-                    if (tg.Pixels.length === 2) //one segment
-                    {
-                        pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                        Modifier2.AddModifier2(tg, label + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                        Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                        Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        if (dist > 3.5 * stringWidth)//was 28stringwidth+5
-                        {
-                            pt0 = tg.Pixels[tg.Pixels.length - 1];
-                            pt1 = tg.Pixels[tg.Pixels.length - 2];
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                    } else //more than one semgent
-                    {
-                        let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
-                        if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                        if (dist2 > stringWidth + 5 || dist2 > dist || dist3 > stringWidth + 5) {
-                            pt0 = tg.Pixels[tg.Pixels.length - 1];
-                            pt1 = tg.Pixels[tg.Pixels.length - 2];
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, label + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                    }
-                    break;
-                }
-
-                case TacticalLines.DIRATKSPT:
-                case TacticalLines.DIRATKAIR:
-                case TacticalLines.DIRATKGND: {
-                    midPt = lineutility.MidPointDouble(pt0, pt1, 0);
-                    //midPt=lineutility.MidPointDouble(pt0, midPt, 0);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, midPt, false);
-                    Modifier2.addDTG(tg, Modifier2.aboveMiddle, csFactor, 2 * csFactor, pt0, pt1, metrics);
-                    break;
-                }
-
-
-                case TacticalLines.SPT:
-                case TacticalLines.FRONTAL_ATTACK:
-                case TacticalLines.TURNING_MOVEMENT:
-                case TacticalLines.MOVEMENT_TO_CONTACT:
-                case TacticalLines.AIRAOA:
-                case TacticalLines.AAAAA:
-                case TacticalLines.MAIN: {
-                    if (tg.Pixels.length === 3) //one segment
-                    {
-                        midPt = lineutility.MidPointDouble(pt0, pt1, 0);
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0, midPt, midPt, false);
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.aboveMiddle, csFactor, midPt, midPt, false);
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 2 * csFactor, midPt, midPt, false);
-
-                    } else {
-                        if (tg.Pixels.length === 4) //2 segments
+                        } else if (tg.Pixels.length == 4) //2 segments
                         {
                             midPt = lineutility.MidPointDouble(pt1, pt2, 0);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0, midPt, midPt, false);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.aboveMiddle, csFactor, midPt, midPt, false);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 2 * csFactor, midPt, midPt, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash + '\n' + tg.get_DTG() + '\n' + tg.get_Name(), Modifier2.area, 0, midPt, midPt, false);
                         } else // 3 or more segments
                         {
                             midPt = lineutility.MidPointDouble(pt1, pt2, 0);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, -csFactor / 2, midPt, midPt, false);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.aboveMiddle, csFactor / 2, midPt, midPt, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash + '\n' + tg.get_DTG(), Modifier2.area, 0, midPt, midPt, false);
                             midPt = lineutility.MidPointDouble(pt2, pt3, 0);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, -csFactor / 2, midPt, midPt, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, midPt, midPt, false);
                         }
+                        break;
+                }
+            }
+
+            //modifiers aren't grouped or the symbol doesn't leverage grouped modifiers
+            if(!modifiersGrouped) {
+                switch (linetype) {
+                    case TacticalLines.PL: {
+                        Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
+                        Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
+                        break;
                     }
-                    break;
-                }
+                    case TacticalLines.DECISION_LINE:
+                        if(tg.get_AS() == null || tg.get_AS() !== "")
+                            tg.set_AS(GENCLookup.getInstance().get3CharCode(SymbolID.getCountryCode(tg.get_SymbolId()).toString()));
+                        let si:SVGSymbolInfo =  Modifier2.GetImageModifier(tg);
 
-                case TacticalLines.LL:
-                case TacticalLines.LOD:
-                case TacticalLines.LDLC:
-                case TacticalLines.PLD:
-                case TacticalLines.RELEASE:
-                case TacticalLines.HOL:
-                case TacticalLines.BHL:
-                case TacticalLines.FCL:
-                case TacticalLines.HOLD:
-                case TacticalLines.BRDGHD:
-                case TacticalLines.HOLD_GE:
-                case TacticalLines.BRDGHD_GE:
-                case TacticalLines.LOA:
-                case TacticalLines.IFF_OFF:
-                case TacticalLines.IFF_ON: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveEnd, -csFactor, pt0, pt1, false);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveEnd, -csFactor, ptLast, ptNextToLast, false);
-                    break;
-                }
+                        let ptDP1:POINT2 = lineutility.ExtendLine2Double(pt1,pt0,si.getSymbolBounds().getWidth()/2,0);
+                        let ptDP2:POINT2 = lineutility.ExtendLine2Double(ptNextToLast, ptLast,si.getSymbolBounds().getWidth()/2,0);
 
-                case TacticalLines.EWL: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveEnd, -csFactor, pt0, pt1, false);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveEnd, -csFactor, ptLast, ptNextToLast, false);
-                    tg.set_EchelonSymbol("");
-                    if (clipRect != null) {
-                        Modifier2.AddBoundaryModifiers(tg, g2d, clipRect);
-                    } else {
-                        Modifier2.AddBoundaryModifiers(tg, g2d, clipArray);
-                    }
-                    break;
-                }
-
-                case TacticalLines.AIRFIELD: {
-                    ur = new POINT2();
-                    ul = new POINT2();
-                    ll = new POINT2();
-                    lr = new POINT2();
-                    Modifier2.GetMBR(tg, ul, ur, lr, ll);
-                    stringWidth = metrics.stringWidth(tg.get_H());
-                    pt0.x = ur.x + stringWidth / 2 + 1;
-                    //pt0.x=ptUr.x+1;
-                    //pt0.y=(ptUr.y+ptLr.y)/2-metrics.getFont().getSize()
-                    pt0.y = (ur.y + lr.y) / 2 - font.getSize();
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.area, csFactor, pt0, pt0, false);
-                    break;
-                }
-
-                case TacticalLines.LAUNCH_AREA:
-                case TacticalLines.DEFENDED_AREA_CIRCULAR: {
-                    Modifier2.AddIntegralAreaModifier(tg, label + TDash + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.JTAA:
-                case TacticalLines.SAA:
-                case TacticalLines.SGAA: {
-                    Modifier2.addNModifier(tg);
-                    Modifier2.AddIntegralAreaModifier(tg, label + TDash + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                    Modifier2.addDTG(tg, Modifier2.area, csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
-                    break;
-                }
-
-                case TacticalLines.FORT:
-                case TacticalLines.ZONE: {
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.BDZ: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt0, pt0, false);
-                    break;
-                }
-
-                case TacticalLines.ASSAULT:
-                case TacticalLines.ATKPOS:
-                case TacticalLines.OBJ:
-                case TacticalLines.NAI:
-                case TacticalLines.TAI:
-                case TacticalLines.BASE_CAMP_REVD:
-                case TacticalLines.GUERILLA_BASE_REVD:
-                case TacticalLines.ASSY:
-                case TacticalLines.EA:
-                case TacticalLines.DZ:
-                case TacticalLines.EZ:
-                case TacticalLines.LZ:
-                case TacticalLines.PZ:
-                case TacticalLines.AO: {
-                    Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.BASE_CAMP:
-                case TacticalLines.GUERILLA_BASE: {
-                    Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddModifier(tg, tg.get_H(), Modifier2.area, 0, ptCenter, ptCenter);
-                    Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
-                    Modifier2.addNModifier(tg);
-                    Modifier2.addModifierBottomSegment(tg, tg.get_EchelonSymbol());
-                    break;
-                }
-
-                case TacticalLines.GENERIC_AREA: {
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
-                    Modifier2.addNModifier(tg);
-                    break;
-                }
-
-                case TacticalLines.AIRHEAD: {
-                    Modifier2.GetMBR(tg, ul, ur, lr, ll);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, csFactor, ll, lr, false);
-                    break;
-                }
-
-                case TacticalLines.AC:
-                case TacticalLines.LLTR:
-                case TacticalLines.MRR:
-                case TacticalLines.SL:
-                case TacticalLines.TC:
-                case TacticalLines.SAAFR:
-                case TacticalLines.SC: {
-                    Modifier2.AddIntegralModifier(tg, "Name: " + tg.get_Name(), Modifier2.aboveMiddle, -7 * csFactor, middleSegment, middleSegment + 1, false);
-                    Modifier2.AddIntegralModifier(tg, "Width: " + Modifier2.removeDecimal(tg.get_AM()), Modifier2.aboveMiddle, -6 * csFactor, middleSegment, middleSegment + 1, false);
-                    Modifier2.AddIntegralModifier(tg, "Min Alt: " + tg.get_X(), Modifier2.aboveMiddle, -5 * csFactor, middleSegment, middleSegment + 1, false);
-                    Modifier2.AddIntegralModifier(tg, "Max Alt: " + tg.get_X1(), Modifier2.aboveMiddle, -4 * csFactor, middleSegment, middleSegment + 1, false);
-                    Modifier2.AddIntegralModifier(tg, "DTG Start: " + tg.get_DTG(), Modifier2.aboveMiddle, -3 * csFactor, middleSegment, middleSegment + 1, false);
-                    Modifier2.AddIntegralModifier(tg, "DTG End: " + tg.get_DTG1(), Modifier2.aboveMiddle, -2 * csFactor, middleSegment, middleSegment + 1, false);
-                    Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, false);
-                    break;
-                }
-
-                case TacticalLines.BEARING_J:
-                case TacticalLines.BEARING_RDF:
-                case TacticalLines.BEARING:
-                case TacticalLines.ELECTRO:
-                case TacticalLines.BEARING_EW:
-                case TacticalLines.ACOUSTIC:
-                case TacticalLines.ACOUSTIC_AMB:
-                case TacticalLines.TORPEDO:
-                case TacticalLines.OPTICAL: {
-                    midPt = lineutility.MidPointDouble(pt0, pt1, 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, midPt, midPt, true);
-                    pt3 = lineutility.ExtendDirectedLine(pt0, pt1, pt1, 3, font.getSize() / 2.0);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.aboveMiddle, 1, pt3, pt3, true);
-                    break;
-                }
-
-                case TacticalLines.ACA: {
-                    Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -3 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_T1(), Modifier2.area, -2 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false, "H");
-                    Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 0, ptCenter, ptCenter, false, "H1");
-                    Modifier2.AddIntegralAreaModifier(tg, "GRID " + tg.get_Location(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, false, "H2");
-                    Modifier2.AddModifier2(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.area, 2 * csFactor, ptCenter, ptCenter, false, "W");
-                    Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.area, 3 * csFactor, ptCenter, ptCenter, false, "W1");
-                    break;
-                }
-
-                case TacticalLines.MFP: {
-                    pt0 = tg.Pixels[middleSegment];
-                    pt1 = tg.Pixels[middleSegment + 1];
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, true);
-                    Modifier2.AddIntegralModifier(tg, tg.get_DTG() + WDash, Modifier2.aboveEnd, 1 * csFactor, 0, 1, false);
-                    Modifier2.AddIntegralModifier(tg, tg.get_DTG1(), Modifier2.aboveEnd, 2 * csFactor, 0, 1, false);
-                    break;
-                }
-
-                case TacticalLines.LINTGT: {
-                    Modifier2.AddIntegralModifier(tg, ap, Modifier2.aboveMiddle, -0.7 * csFactor, middleSegment, middleSegment + 1, false);
-                    break;
-                }
-
-                case TacticalLines.LINTGTS: {
-                    Modifier2.AddIntegralModifier(tg, ap, Modifier2.aboveMiddle, -0.7 * csFactor, middleSegment, middleSegment + 1, false);
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0.7 * csFactor, middleSegment, middleSegment + 1, false);
-                    break;
-                }
-
-                case TacticalLines.FPF: {
-                    Modifier2.AddIntegralModifier(tg, ap, Modifier2.aboveMiddle, -0.7 * csFactor, 0, 1, false);
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, .7 * csFactor, 0, 1, false);
-                    Modifier2.AddIntegralModifier(tg, tg.get_T1(), Modifier2.aboveMiddle, 1.7 * csFactor, 0, 1, false);
-                    Modifier2.AddIntegralModifier(tg, v, Modifier2.aboveMiddle, 2.7 * csFactor, 0, 1, false);
-                    break;
-                }
-
-                case TacticalLines.AT: {
-                    Modifier2.AddIntegralAreaModifier(tg, ap, Modifier2.area, 0, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.RECTANGULAR:
-                case TacticalLines.CIRCULAR: {
-                    Modifier2.AddIntegralAreaModifier(tg, ap, Modifier2.area, 0, pt0, pt0, false);
-                    break;
-                }
-
-                case TacticalLines.PBS_CIRCLE:
-                case TacticalLines.PBS_ELLIPSE:
-                case TacticalLines.PBS_RECTANGLE:
-                case TacticalLines.BBS_POINT: {
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt0, pt0, false);
-                    break;
-                }
-
-                case TacticalLines.RECTANGULAR_TARGET: {
-                    stringWidth = metrics.stringWidth(tg.get_Name());
-                    let offsetCenterPoint: POINT2 = new POINT2(ptCenter.x + (stringWidth as double) / 2.0, ptCenter.y);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1 * csFactor, offsetCenterPoint, offsetCenterPoint, false);
-                    break;
-                }
-
-                case TacticalLines.SMOKE: {
-                    Modifier2.AddIntegralAreaModifier(tg, ap, Modifier2.area, -csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
-                    Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
-                    break;
-                }
-
-                case TacticalLines.LINE: {
-                    Modifier2.AddIntegralModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, csFactor, middleSegment, middleSegment + 1, false);
-                    break;
-                }
-
-                case TacticalLines.MINED: {
-                    if (tg.isHostile()) {
-                        pt1 = lineutility.MidPointDouble(pt0, pt1, 0);
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
-                        if (middleSegment !== 0) {
-                            pt0 = tg.Pixels[middleSegment];
-                            pt1 = tg.Pixels[middleSegment + 1];
-                            pt1 = lineutility.MidPointDouble(pt0, pt1, 0);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                        Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,pt0,ptDP1,false);
+                        Modifier2.AddIntegralAreaImageModifier(tg,si,Modifier2.toEnd,0,ptLast,ptDP2,false);
+                        break;
+                    case TacticalLines.BS_LINE:
+                    case TacticalLines.BBS_LINE: {
+                        if (tg.get_T1() == null || tg.get_T1() == "") {
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
+                        } else {
+                            if (tg.get_T1() == "1") {
+                                for (j = 0; j < tg.Pixels.length - 1; j++) {
+                                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, tg.Pixels[j], tg.Pixels[j + 1], false);
+                                }
+                            } else if (tg.get_T1() == "2") {
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
+                            } else if (tg.get_T1() == "3") {
+                                //either end of the polyline
+                                dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                                stringWidth = metrics.stringWidth(tg.get_Name());
+                                stringWidth /= 2;
+                                pt2 = lineutility.ExtendAlongLineDouble2(pt1, pt0, dist + stringWidth);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt2, pt2, false);
+                                dist = lineutility.CalcDistanceDouble(ptNextToLast, ptLast);
+                                pt2 = lineutility.ExtendAlongLineDouble2(ptNextToLast, ptLast, dist + stringWidth);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt2, pt2, false);
+                                //the intermediate points
+                                for (j = 1; j < tg.Pixels.length - 1; j++) {
+                                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, tg.Pixels[j], tg.Pixels[j], false);
+                                }
+                            } else //t1 is set inadvertantly or for other graphics
+                            {
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, pt0, pt1, false);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.toEnd, T1LineFactor, ptLast, ptNextToLast, false);
+                            }
                         }
+                        break;
                     }
-                    Modifier2.GetMBR(tg, ul, ur, lr, ll);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.aboveMiddle, -1.5 * csFactor, ul, ur, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG(), Modifier2.aboveMiddle, 1.5 * csFactor, ll, lr, false);
-                    Modifier2.addModifierOnLine("M", tg);
-                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    break;
-                }
 
-                case TacticalLines.FENCED: {
-                    if (tg.isHostile()) {
-                        pt1 = lineutility.MidPointDouble(pt0, pt1, 0);
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
-                        if (middleSegment !== 0) {
-                            pt0 = tg.Pixels[middleSegment];
-                            pt1 = tg.Pixels[middleSegment + 1];
-                            pt1 = lineutility.MidPointDouble(pt0, pt1, 0);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
-                        }
+                    case TacticalLines.BS_AREA:
+                    case TacticalLines.BBS_AREA: {
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        break;
                     }
-                    Modifier2.addModifierOnLine("M", tg);
-                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    break;
-                }
 
-                case TacticalLines.ASLTXING: {
-                    if (tg.Pixels[1].y > tg.Pixels[0].y) {
-                        pt0 = tg.Pixels[1];
-                        pt1 = tg.Pixels[3];
-                        pt2 = tg.Pixels[0];
-                        pt3 = tg.Pixels[2];
-                    } else {
+                    case TacticalLines.FEBA: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, pt0, pt1, false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, ptLast, ptNextToLast, false);
+                        break;
+                    }
+
+                    // T before label
+                    case TacticalLines.FSCL: {
                         pt0 = tg.Pixels[0];
-                        pt1 = tg.Pixels[2];
-                        pt2 = tg.Pixels[1];
-                        pt3 = tg.Pixels[3];
-                    }
-                    pt2 = lineutility.ExtendAlongLineDouble2(pt0, pt2, -20);
-                    pt3 = lineutility.ExtendAlongLineDouble2(pt1, pt3, -20);
-                    Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0, csFactor, pt2, pt3, metrics);
-                    break;
-                }
-
-                case TacticalLines.SERIES:
-                case TacticalLines.DRCL: {
-                    Modifier2.addModifierTopSegment(tg, tg.get_Name());
-                    break;
-                }
-
-                case TacticalLines.STRIKWARN: {
-                    Modifier2.AddIntegralModifier(tg, "1", Modifier2.aboveMiddle, 0, index, index + 1, true);
-                    Modifier2.AddIntegralModifier(tg, "2", Modifier2.aboveMiddle, 0, Math.trunc(size / 2), Math.trunc(size / 2) + 1, true);
-                    break;
-                }
-
-                case TacticalLines.SCREEN:
-                case TacticalLines.COVER:
-                case TacticalLines.GUARD: {
-                    if (tg.Pixels.length === 4) {
-                        pt1 = new POINT2(tg.Pixels[1]);
-                        pt2 = new POINT2(tg.Pixels[2]);
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt1, pt1, true);
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt2, pt2, true);
-                    } else {
-                        stringHeight = Math.trunc(0.5 * font.getSize() as double);
-                        dAngle0 = Math.atan2(tg.Pixels[0].y - tg.Pixels[1].y, tg.Pixels[0].x - tg.Pixels[1].x);
-                        dAngle1 = Math.atan2(tg.Pixels[0].y - tg.Pixels[2].y, tg.Pixels[0].x - tg.Pixels[2].x);
-                        pt0 = new POINT2(tg.Pixels[0]);
-                        pt0.x -= 30 * Math.cos(dAngle0);
-                        pt0.y -= 30 * Math.sin(dAngle0) + stringHeight;
-                        pt1 = new POINT2(tg.Pixels[0]);
-                        pt1.x -= 30 * Math.cos(dAngle1);
-                        pt1.y -= 30 * Math.sin(dAngle1) + stringHeight;
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt0, pt0, true);
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt1, pt1, true);
-                    }
-                    break;
-                }
-
-                case TacticalLines.MSR_ONEWAY:
-                case TacticalLines.ASR_ONEWAY:
-                case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
-                case TacticalLines.MSR_TWOWAY:
-                case TacticalLines.ASR_TWOWAY:
-                case TacticalLines.MSR_ALT:
-                case TacticalLines.ASR_ALT:
-                case TacticalLines.TRAFFIC_ROUTE_ALT: {
-                    stringWidth = (1.5 * metrics.stringWidth(label + TSpace + tg.get_Name()) as double) as int;
-                    let arrowOffset: double = 10 * DPIScaleFactor;
-                    if (linetype === TacticalLines.MSR_TWOWAY || linetype === TacticalLines.ASR_TWOWAY) {
-
-                        arrowOffset = 25 * DPIScaleFactor;
-                    }
-
-                    let isAlt: boolean = linetype === TacticalLines.MSR_ALT || linetype === TacticalLines.ASR_ALT || linetype === TacticalLines.TRAFFIC_ROUTE_ALT;
-                    if (isAlt) {
-                        stringWidth2 = (1.5 * metrics.stringWidth("ALT") as double) as int;
+                        pt1 = tg.Pixels[1];
+                        pt2 = tg.Pixels[tg.Pixels.length - 1];
+                        pt3 = tg.Pixels[tg.Pixels.length - 2];
+                        dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                        dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
+                        stringWidth = (metrics.stringWidth(tg.get_Name() + " " + label) as double) as int;
+                        stringWidth2 = (metrics.stringWidth(tg.get_DTG()) as double) as int;
                         if (stringWidth2 > stringWidth) {
                             stringWidth = stringWidth2;
                         }
+
+                        if (tg.Pixels.length === 2) //one segment
+                        {
+                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                            Modifier2.AddModifier2(tg, tg.get_Name() + " " + label, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            if (dist > 3.5 * stringWidth)//was 28stringwidth+5
+                            {
+                                pt0 = tg.Pixels[tg.Pixels.length - 1];
+                                pt1 = tg.Pixels[tg.Pixels.length - 2];
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, tg.get_Name() + " " + label, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                        } else //more than one semgent
+                        {
+                            let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
+                            if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, tg.get_Name() + " " + label, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                            if (dist2 > stringWidth + 5 || dist2 > dist || dist3 > stringWidth + 5) {
+                                pt0 = tg.Pixels[tg.Pixels.length - 1];
+                                pt1 = tg.Pixels[tg.Pixels.length - 2];
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, tg.get_Name() + " " + label, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                        }
+                        break;
                     }
 
-                    foundSegment = false;
-                    //acevedo - 11/30/2017 - adding option to render only 2 labels.
-                    if (RendererSettings.getInstance().getTwoLabelOnly() === false) {
-                        for (j = 0; j < tg.Pixels.length - 1; j++) {
-                            pt0 = tg.Pixels[j];
-                            pt1 = tg.Pixels[j + 1];
-                            dist = lineutility.CalcDistanceDouble(pt0, pt1);
-                            let arrowSide: int = arraysupport.SupplyRouteArrowSide(pt0, pt1);
-                            if (dist < stringWidth) {
-                                continue;
-                            } else {
+                    // T after label
+                    case TacticalLines.ICL:
+                    case TacticalLines.NFL:
+                    case TacticalLines.BCL_REVD:
+                    case TacticalLines.RFL: 
+                    case TacticalLines.BCL:
+                    {
+                        pt0 = tg.Pixels[0];
+                        pt1 = tg.Pixels[1];
+                        pt2 = tg.Pixels[tg.Pixels.length - 1];
+                        pt3 = tg.Pixels[tg.Pixels.length - 2];
+                        dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                        dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
+                        
+                        let TMod:string = ""; // Don't add parenthesis if T modifier is empty
+
+                        let version:number = SymbolID.getVersion(tg.get_SymbolId());
+                        if(version < SymbolID.Version_2525E) {
+                            TMod = tg.get_Name();
+                            stringWidth =  (metrics.stringWidth(TMod + " " + label));
+                        }
+                        else if(version == SymbolID.Version_2525E || version == SymbolID.Version_2525Ech1) {
+                            if(linetype == TacticalLines.BCL) {
+                                if (tg.get_Name() != null && tg.get_Name()!=="")
+                                    TMod = " (" + tg.get_Name() + ")";
+                                stringWidth = ( metrics.stringWidth(label + TMod));
+                            }
+                            else
+                            {
+                                TMod = tg.get_Name();
+                                stringWidth = (metrics.stringWidth(tg.get_Name() + " " + label));
+                            }
+                        }
+                        else if((version == SymbolID.Version_APP6Ech2)) {
+                            if (tg.get_Name() != null && tg.get_Name() !== "")
+                                TMod += " " + tg.get_Name();
+                            if(tg.get_AS() != null && tg.get_AS() !== "")
+                                TMod += " (" + tg.get_AS() + ")";
+                            stringWidth = (metrics.stringWidth(label + TMod));
+
+                        }
+
+                        stringWidth2 = (metrics.stringWidth(tg.get_DTG()));
+                        if (stringWidth2 > stringWidth) {
+                            stringWidth = stringWidth2;
+                        }
+
+
+                        if (tg.Pixels.length === 2) //one segment
+                        {
+                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                            Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            if (dist > 3.5 * stringWidth)//was 28stringwidth+5
+                            {
+                                pt0 = tg.Pixels[tg.Pixels.length - 1];
+                                pt1 = tg.Pixels[tg.Pixels.length - 2];
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                        } else //more than one semgent
+                        {
+                            let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
+                            if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                            if (dist2 > stringWidth + 5 || dist2 > dist || dist3 > stringWidth + 5) {
+                                pt0 = tg.Pixels[tg.Pixels.length - 1];
+                                pt1 = tg.Pixels[tg.Pixels.length - 2];
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, label + TSpace + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.BCL: {
+                        pt0 = tg.Pixels[0];
+                        pt1 = tg.Pixels[1];
+                        pt2 = tg.Pixels[tg.Pixels.length - 1];
+                        pt3 = tg.Pixels[tg.Pixels.length - 2];
+                        dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                        dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
+                        let TMod: string = ""; // Don't add parenthesis if T modifier is empty
+                        if (tg.get_Name() != null && tg.get_Name().length > 0) {
+
+                            TMod = " (" + tg.get_Name() + ")";
+                        }
+
+                        stringWidth = (metrics.stringWidth(label + TMod) as double) as int;
+                        stringWidth2 = (metrics.stringWidth(tg.get_DTG()) as double) as int;
+                        if (stringWidth2 > stringWidth) {
+                            stringWidth = stringWidth2;
+                        }
+
+                        if (tg.Pixels.length === 2) //one segment
+                        {
+                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                            Modifier2.AddModifier2(tg, label + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            if (dist > 3.5 * stringWidth)//was 28stringwidth+5
+                            {
+                                pt0 = tg.Pixels[tg.Pixels.length - 1];
+                                pt1 = tg.Pixels[tg.Pixels.length - 2];
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, label + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                        } else //more than one semgent
+                        {
+                            let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
+                            if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, label + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                            if (dist2 > stringWidth + 5 || dist2 > dist || dist3 > stringWidth + 5) {
+                                pt0 = tg.Pixels[tg.Pixels.length - 1];
+                                pt1 = tg.Pixels[tg.Pixels.length - 2];
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, label + TMod, Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.DIRATKSPT:
+                    case TacticalLines.DIRATKAIR:
+                    case TacticalLines.DIRATKGND: {
+                        midPt = lineutility.MidPointDouble(pt0, pt1, 0);
+                        //midPt=lineutility.MidPointDouble(pt0, midPt, 0);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, midPt, false);
+                        Modifier2.addDTG(tg, Modifier2.aboveMiddle, csFactor, 2 * csFactor, pt0, pt1, metrics);
+                        break;
+                    }
+
+
+                    case TacticalLines.SPT:
+                    case TacticalLines.FRONTAL_ATTACK:
+                    case TacticalLines.TURNING_MOVEMENT:
+                    case TacticalLines.MOVEMENT_TO_CONTACT:
+                    case TacticalLines.AIRAOA:
+                    case TacticalLines.AAAAA:
+                    case TacticalLines.MAIN: {
+                        if (tg.Pixels.length === 3) //one segment
+                        {
+                            midPt = lineutility.MidPointDouble(pt0, pt1, 0);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0, midPt, midPt, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.aboveMiddle, csFactor, midPt, midPt, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 2 * csFactor, midPt, midPt, false);
+
+                        } else {
+                            if (tg.Pixels.length === 4) //2 segments
+                            {
+                                midPt = lineutility.MidPointDouble(pt1, pt2, 0);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0, midPt, midPt, false);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.aboveMiddle, csFactor, midPt, midPt, false);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 2 * csFactor, midPt, midPt, false);
+                            } else // 3 or more segments
+                            {
+                                midPt = lineutility.MidPointDouble(pt1, pt2, 0);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, -csFactor / 2, midPt, midPt, false);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.aboveMiddle, csFactor / 2, midPt, midPt, false);
+                                midPt = lineutility.MidPointDouble(pt2, pt3, 0);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, -csFactor / 2, midPt, midPt, false);
+                            }
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.LL:
+                    case TacticalLines.LOD:
+                    case TacticalLines.LDLC:
+                    case TacticalLines.PLD:
+                    case TacticalLines.RELEASE:
+                    case TacticalLines.HOL:
+                    case TacticalLines.BHL:
+                    case TacticalLines.FCL:
+                    case TacticalLines.HOLD:
+                    case TacticalLines.BRDGHD:
+                    case TacticalLines.HOLD_GE:
+                    case TacticalLines.BRDGHD_GE:
+                    case TacticalLines.LOA:
+                    case TacticalLines.IFF_OFF:
+                    case TacticalLines.IFF_ON: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveEnd, -csFactor, pt0, pt1, false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveEnd, -csFactor, ptLast, ptNextToLast, false);
+                        break;
+                    }
+
+                    case TacticalLines.EWL: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveEnd, -csFactor, pt0, pt1, false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveEnd, -csFactor, ptLast, ptNextToLast, false);
+                        tg.set_EchelonSymbol("");
+                        if (clipRect != null) {
+                            Modifier2.AddBoundaryModifiers(tg, g2d, clipRect);
+                        } else {
+                            Modifier2.AddBoundaryModifiers(tg, g2d, clipArray);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.AIRFIELD: {
+                        ur = new POINT2();
+                        ul = new POINT2();
+                        ll = new POINT2();
+                        lr = new POINT2();
+                        Modifier2.GetMBR(tg, ul, ur, lr, ll);
+                        stringWidth = metrics.stringWidth(tg.get_H());
+                        pt0.x = ur.x + stringWidth / 2 + 1;
+                        //pt0.x=ptUr.x+1;
+                        //pt0.y=(ptUr.y+ptLr.y)/2-metrics.getFont().getSize()
+                        pt0.y = (ur.y + lr.y) / 2 - font.getSize();
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.area, csFactor, pt0, pt0, false);
+                        break;
+                    }
+
+                    case TacticalLines.LAUNCH_AREA:
+                    case TacticalLines.DEFENDED_AREA_CIRCULAR: {
+                        Modifier2.AddIntegralAreaModifier(tg, label + TDash + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.JTAA:
+                    case TacticalLines.SAA:
+                    case TacticalLines.SGAA: {
+                        Modifier2.addNModifier(tg);
+                        Modifier2.AddIntegralAreaModifier(tg, label + TDash + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        Modifier2.addDTG(tg, Modifier2.area, csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.FORT:
+                    case TacticalLines.ZONE: {
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.BDZ: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt0, pt0, false);
+                        break;
+                    }
+
+                    case TacticalLines.ASSAULT:
+                    case TacticalLines.ATKPOS:
+                    case TacticalLines.OBJ:
+                    case TacticalLines.NAI:
+                    case TacticalLines.TAI:
+                    case TacticalLines.BASE_CAMP_REVD:
+                    case TacticalLines.GUERILLA_BASE_REVD:
+                    case TacticalLines.ASSY:
+                    case TacticalLines.EA:
+                    case TacticalLines.DZ:
+                    case TacticalLines.EZ:
+                    case TacticalLines.LZ:
+                    case TacticalLines.PZ:
+                    case TacticalLines.AO: {
+                        Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.BASE_CAMP:
+                    case TacticalLines.GUERILLA_BASE: {
+                        Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddModifier(tg, tg.get_H(), Modifier2.area, 0, ptCenter, ptCenter);
+                        Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
+                        Modifier2.addNModifier(tg);
+                        Modifier2.addModifierBottomSegment(tg, tg.get_EchelonSymbol());
+                        break;
+                    }
+
+                    case TacticalLines.GENERIC_AREA: {
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
+                        Modifier2.addNModifier(tg);
+                        break;
+                    }
+
+                    case TacticalLines.AIRHEAD: {
+                        Modifier2.GetMBR(tg, ul, ur, lr, ll);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, csFactor, ll, lr, false);
+                        break;
+                    }
+
+                    case TacticalLines.AC:
+                    case TacticalLines.LLTR:
+                    case TacticalLines.MRR:
+                    case TacticalLines.SL:
+                    case TacticalLines.TC:
+                    case TacticalLines.SAAFR:
+                    case TacticalLines.SC: {
+                        Modifier2.AddIntegralModifier(tg, "Name: " + tg.get_Name(), Modifier2.aboveMiddle, -7 * csFactor, middleSegment, middleSegment + 1, false);
+                        Modifier2.AddIntegralModifier(tg, "Width: " + Modifier2.removeDecimal(tg.get_AM()), Modifier2.aboveMiddle, -6 * csFactor, middleSegment, middleSegment + 1, false);
+                        Modifier2.AddIntegralModifier(tg, "Min Alt: " + tg.get_X(), Modifier2.aboveMiddle, -5 * csFactor, middleSegment, middleSegment + 1, false);
+                        Modifier2.AddIntegralModifier(tg, "Max Alt: " + tg.get_X1(), Modifier2.aboveMiddle, -4 * csFactor, middleSegment, middleSegment + 1, false);
+                        Modifier2.AddIntegralModifier(tg, "DTG Start: " + tg.get_DTG(), Modifier2.aboveMiddle, -3 * csFactor, middleSegment, middleSegment + 1, false);
+                        Modifier2.AddIntegralModifier(tg, "DTG End: " + tg.get_DTG1(), Modifier2.aboveMiddle, -2 * csFactor, middleSegment, middleSegment + 1, false);
+                        Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, false);
+                        break;
+                    }
+
+                    case TacticalLines.BEARING_J:
+                    case TacticalLines.BEARING_RDF:
+                    case TacticalLines.BEARING:
+                    case TacticalLines.ELECTRO:
+                    case TacticalLines.BEARING_EW:
+                    case TacticalLines.ACOUSTIC:
+                    case TacticalLines.ACOUSTIC_AMB:
+                    case TacticalLines.TORPEDO:
+                    case TacticalLines.OPTICAL: {
+                        midPt = lineutility.MidPointDouble(pt0, pt1, 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, midPt, midPt, true);
+                        pt3 = lineutility.ExtendDirectedLine(pt0, pt1, pt1, 3, font.getSize() / 2.0);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.aboveMiddle, 1, pt3, pt3, true);
+                        break;
+                    }
+
+                    case TacticalLines.ACA: {
+                        Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -3 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_T1(), Modifier2.area, -2 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false, "H");
+                        Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 0, ptCenter, ptCenter, false, "H1");
+                        Modifier2.AddIntegralAreaModifier(tg, "GRID " + tg.get_Location(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, false, "H2");
+                        Modifier2.AddModifier2(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.area, 2 * csFactor, ptCenter, ptCenter, false, "W");
+                        Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.area, 3 * csFactor, ptCenter, ptCenter, false, "W1");
+                        break;
+                    }
+
+                    case TacticalLines.MFP: {
+                        pt0 = tg.Pixels[middleSegment];
+                        pt1 = tg.Pixels[middleSegment + 1];
+                        Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, true);
+                        Modifier2.AddIntegralModifier(tg, tg.get_DTG() + WDash, Modifier2.aboveEnd, 1 * csFactor, 0, 1, false);
+                        Modifier2.AddIntegralModifier(tg, tg.get_DTG1(), Modifier2.aboveEnd, 2 * csFactor, 0, 1, false);
+                        break;
+                    }
+
+                    case TacticalLines.LINTGT: {
+                        Modifier2.AddIntegralModifier(tg, ap, Modifier2.aboveMiddle, -0.7 * csFactor, middleSegment, middleSegment + 1, false);
+                        break;
+                    }
+
+                    case TacticalLines.LINTGTS: {
+                        Modifier2.AddIntegralModifier(tg, ap, Modifier2.aboveMiddle, -0.7 * csFactor, middleSegment, middleSegment + 1, false);
+                        Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0.7 * csFactor, middleSegment, middleSegment + 1, false);
+                        break;
+                    }
+
+                    case TacticalLines.FPF: {
+                        Modifier2.AddIntegralModifier(tg, ap, Modifier2.aboveMiddle, -0.7 * csFactor, 0, 1, false);
+                        Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, .7 * csFactor, 0, 1, false);
+                        Modifier2.AddIntegralModifier(tg, tg.get_T1(), Modifier2.aboveMiddle, 1.7 * csFactor, 0, 1, false);
+                        Modifier2.AddIntegralModifier(tg, v, Modifier2.aboveMiddle, 2.7 * csFactor, 0, 1, false);
+                        break;
+                    }
+
+                    case TacticalLines.AT: {
+                        Modifier2.AddIntegralAreaModifier(tg, ap, Modifier2.area, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.RECTANGULAR:
+                    case TacticalLines.CIRCULAR: {
+                        Modifier2.AddIntegralAreaModifier(tg, ap, Modifier2.area, 0, pt0, pt0, false);
+                        break;
+                    }
+
+                    case TacticalLines.PBS_CIRCLE:
+                    case TacticalLines.PBS_ELLIPSE:
+                    case TacticalLines.PBS_RECTANGLE:
+                    case TacticalLines.BBS_POINT: {
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, pt0, pt0, false);
+                        break;
+                    }
+
+                    case TacticalLines.RECTANGULAR_TARGET: {
+                        stringWidth = metrics.stringWidth(tg.get_Name());
+                        let offsetCenterPoint: POINT2 = new POINT2(ptCenter.x + (stringWidth as double) / 2.0, ptCenter.y);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1 * csFactor, offsetCenterPoint, offsetCenterPoint, false);
+                        break;
+                    }
+
+                    case TacticalLines.SMOKE: {
+                        Modifier2.AddIntegralAreaModifier(tg, ap, Modifier2.area, -csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
+                        Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.LINE: {
+                        Modifier2.AddIntegralModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, csFactor, middleSegment, middleSegment + 1, false);
+                        break;
+                    }
+
+                    case TacticalLines.MINED: {
+                        if (tg.isHostile()) {
+                            pt1 = lineutility.MidPointDouble(pt0, pt1, 0);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                            if (middleSegment !== 0) {
+                                pt0 = tg.Pixels[middleSegment];
+                                pt1 = tg.Pixels[middleSegment + 1];
+                                pt1 = lineutility.MidPointDouble(pt0, pt1, 0);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                            }
+                        }
+                        Modifier2.GetMBR(tg, ul, ur, lr, ll);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.aboveMiddle, -1.5 * csFactor, ul, ur, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG(), Modifier2.aboveMiddle, 1.5 * csFactor, ll, lr, false);
+                        Modifier2.addModifierOnLine("M", tg);
+                        //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.FENCED: {
+                        if (tg.isHostile()) {
+                            pt1 = lineutility.MidPointDouble(pt0, pt1, 0);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                            if (middleSegment !== 0) {
+                                pt0 = tg.Pixels[middleSegment];
+                                pt1 = tg.Pixels[middleSegment + 1];
+                                pt1 = lineutility.MidPointDouble(pt0, pt1, 0);
+                                Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                            }
+                        }
+                        Modifier2.addModifierOnLine("M", tg);
+                        //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.ASLTXING: {
+                        if (tg.Pixels[1].y > tg.Pixels[0].y) {
+                            pt0 = tg.Pixels[1];
+                            pt1 = tg.Pixels[3];
+                            pt2 = tg.Pixels[0];
+                            pt3 = tg.Pixels[2];
+                        } else {
+                            pt0 = tg.Pixels[0];
+                            pt1 = tg.Pixels[2];
+                            pt2 = tg.Pixels[1];
+                            pt3 = tg.Pixels[3];
+                        }
+                        pt2 = lineutility.ExtendAlongLineDouble2(pt0, pt2, -20);
+                        pt3 = lineutility.ExtendAlongLineDouble2(pt1, pt3, -20);
+                        Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0, csFactor, pt2, pt3, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.SERIES:
+                    case TacticalLines.DRCL: {
+                        Modifier2.addModifierTopSegment(tg, tg.get_Name());
+                        break;
+                    }
+
+                    case TacticalLines.STRIKWARN: {
+                        Modifier2.AddIntegralModifier(tg, "1", Modifier2.aboveMiddle, 0, index, index + 1, true);
+                        Modifier2.AddIntegralModifier(tg, "2", Modifier2.aboveMiddle, 0, Math.trunc(size / 2), Math.trunc(size / 2) + 1, true);
+                        break;
+                    }
+
+                    case TacticalLines.SCREEN:
+                    case TacticalLines.COVER:
+                    case TacticalLines.GUARD: {
+                        if (tg.Pixels.length === 4) {
+                            pt1 = new POINT2(tg.Pixels[1]);
+                            pt2 = new POINT2(tg.Pixels[2]);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt1, pt1, true);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt2, pt2, true);
+                        } else {
+                            stringHeight = Math.trunc(0.5 * font.getSize() as double);
+                            dAngle0 = Math.atan2(tg.Pixels[0].y - tg.Pixels[1].y, tg.Pixels[0].x - tg.Pixels[1].x);
+                            dAngle1 = Math.atan2(tg.Pixels[0].y - tg.Pixels[2].y, tg.Pixels[0].x - tg.Pixels[2].x);
+                            pt0 = new POINT2(tg.Pixels[0]);
+                            pt0.x -= 30 * Math.cos(dAngle0);
+                            pt0.y -= 30 * Math.sin(dAngle0) + stringHeight;
+                            pt1 = new POINT2(tg.Pixels[0]);
+                            pt1.x -= 30 * Math.cos(dAngle1);
+                            pt1.y -= 30 * Math.sin(dAngle1) + stringHeight;
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt0, pt0, true);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, pt1, pt1, true);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.MSR_ONEWAY:
+                    case TacticalLines.ASR_ONEWAY:
+                    case TacticalLines.TRAFFIC_ROUTE_ONEWAY:
+                    case TacticalLines.MSR_TWOWAY:
+                    case TacticalLines.ASR_TWOWAY:
+                    case TacticalLines.MSR_ALT:
+                    case TacticalLines.ASR_ALT:
+                    case TacticalLines.TRAFFIC_ROUTE_ALT: {
+                        stringWidth = (1.5 * metrics.stringWidth(label + TSpace + tg.get_Name()) as double) as int;
+                        let arrowOffset: double = 10 * DPIScaleFactor;
+                        if (linetype === TacticalLines.MSR_TWOWAY || linetype === TacticalLines.ASR_TWOWAY) {
+
+                            arrowOffset = 25 * DPIScaleFactor;
+                        }
+
+                        let isAlt: boolean = linetype === TacticalLines.MSR_ALT || linetype === TacticalLines.ASR_ALT || linetype === TacticalLines.TRAFFIC_ROUTE_ALT;
+                        if (isAlt) {
+                            stringWidth2 = (1.5 * metrics.stringWidth("ALT") as double) as int;
+                            if (stringWidth2 > stringWidth) {
+                                stringWidth = stringWidth2;
+                            }
+                        }
+
+                        foundSegment = false;
+                        //acevedo - 11/30/2017 - adding option to render only 2 labels.
+                        if (RendererSettings.getInstance().getTwoLabelOnly() === false) {
+                            for (j = 0; j < tg.Pixels.length - 1; j++) {
+                                pt0 = tg.Pixels[j];
+                                pt1 = tg.Pixels[j + 1];
+                                dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                                let arrowSide: int = arraysupport.SupplyRouteArrowSide(pt0, pt1);
+                                if (dist < stringWidth) {
+                                    continue;
+                                } else {
+                                    if (arrowSide === 1 || arrowSide === 2) {
+                                        // Shift points to account for arrow shift with DPI
+                                        pt0 = lineutility.ExtendDirectedLine(pt1, pt0, pt0, arrowSide, arrowOffset);
+                                        pt1 = lineutility.ExtendDirectedLine(pt1, pt0, pt1, arrowSide, arrowOffset);
+                                        Modifier2.AddModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1.7 * csFactor, pt0, pt1);
+                                        if (isAlt) {
+
+                                            Modifier2.AddModifier(tg, "ALT", Modifier2.aboveMiddle, 0, pt0, pt1);
+                                        }
+
+                                    } else {
+                                        Modifier2.AddModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1);
+                                        if (isAlt) {
+                                            pt0 = lineutility.ExtendDirectedLine(pt1, pt0, pt0, arrowSide, arrowOffset);
+                                            pt1 = lineutility.ExtendDirectedLine(pt1, pt0, pt1, arrowSide, arrowOffset);
+                                            Modifier2.AddModifier(tg, "ALT", Modifier2.aboveMiddle, 0, pt0, pt1);
+                                        }
+                                    }
+                                    foundSegment = true;
+                                }
+                            }
+                            if (foundSegment === false) {
+                                pt0 = tg.Pixels[middleSegment];
+                                pt1 = tg.Pixels[middleSegment + 1];
+                                let arrowSide: int = arraysupport.SupplyRouteArrowSide(pt0, pt1);
                                 if (arrowSide === 1 || arrowSide === 2) {
                                     // Shift points to account for arrow shift with DPI
                                     pt0 = lineutility.ExtendDirectedLine(pt1, pt0, pt0, arrowSide, arrowOffset);
@@ -3507,577 +3619,559 @@ export class Modifier2 {
                                         Modifier2.AddModifier(tg, "ALT", Modifier2.aboveMiddle, 0, pt0, pt1);
                                     }
                                 }
-                                foundSegment = true;
                             }
                         }
-                        if (foundSegment === false) {
-                            pt0 = tg.Pixels[middleSegment];
-                            pt1 = tg.Pixels[middleSegment + 1];
-                            let arrowSide: int = arraysupport.SupplyRouteArrowSide(pt0, pt1);
-                            if (arrowSide === 1 || arrowSide === 2) {
-                                // Shift points to account for arrow shift with DPI
-                                pt0 = lineutility.ExtendDirectedLine(pt1, pt0, pt0, arrowSide, arrowOffset);
-                                pt1 = lineutility.ExtendDirectedLine(pt1, pt0, pt1, arrowSide, arrowOffset);
-                                Modifier2.AddModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1.7 * csFactor, pt0, pt1);
-                                if (isAlt) {
+                        else {
+                            // 2 labels one to the north and the other to the south of graphic.
+                            northestPtIndex = 0;
+                            northestPt = tg.Pixels[northestPtIndex];
+                            southestPtIndex = 0;
+                            southestPt = tg.Pixels[southestPtIndex];
 
-                                    Modifier2.AddModifier(tg, "ALT", Modifier2.aboveMiddle, 0, pt0, pt1);
+                            for (j = 0; j < tg.Pixels.length - 1; j++) {
+                                pt0 = tg.Pixels[j];
+                                if (pt0.y >= northestPt.y) {
+                                    northestPt = pt0;
+                                    northestPtIndex = j;
                                 }
-
-                            } else {
-                                Modifier2.AddModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1);
-                                if (isAlt) {
-                                    pt0 = lineutility.ExtendDirectedLine(pt1, pt0, pt0, arrowSide, arrowOffset);
-                                    pt1 = lineutility.ExtendDirectedLine(pt1, pt0, pt1, arrowSide, arrowOffset);
-                                    Modifier2.AddModifier(tg, "ALT", Modifier2.aboveMiddle, 0, pt0, pt1);
+                                if (pt0.y <= southestPt.y) {
+                                    southestPt = pt0;
+                                    southestPtIndex = j;
                                 }
                             }
-                        }
-                    }
-                    else {
-                        // 2 labels one to the north and the other to the south of graphic.
-                        northestPtIndex = 0;
-                        northestPt = tg.Pixels[northestPtIndex];
-                        southestPtIndex = 0;
-                        southestPt = tg.Pixels[southestPtIndex];
 
-                        for (j = 0; j < tg.Pixels.length - 1; j++) {
-                            pt0 = tg.Pixels[j];
-                            if (pt0.y >= northestPt.y) {
-                                northestPt = pt0;
-                                northestPtIndex = j;
-                            }
-                            if (pt0.y <= southestPt.y) {
-                                southestPt = pt0;
-                                southestPtIndex = j;
-                            }
-                        }
-
-                        Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1.7 * csFactor, northestPtIndex, northestPtIndex + 1, false);
-                        if (isAlt) {
-
-                            Modifier2.AddIntegralModifier(tg, "ALT", Modifier2.aboveMiddle, -0.7 * csFactor, northestPtIndex, northestPtIndex + 1, false);
-                        }
-
-
-                        if (northestPtIndex !== southestPtIndex) {
-                            Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1.7 * csFactor, southestPtIndex, southestPtIndex + 1, false);
+                            Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1.7 * csFactor, northestPtIndex, northestPtIndex + 1, false);
                             if (isAlt) {
 
-                                Modifier2.AddIntegralModifier(tg, "ALT", Modifier2.aboveMiddle, -0.7 * csFactor, southestPtIndex, southestPtIndex + 1, false);
+                                Modifier2.AddIntegralModifier(tg, "ALT", Modifier2.aboveMiddle, -0.7 * csFactor, northestPtIndex, northestPtIndex + 1, false);
                             }
 
+
+                            if (northestPtIndex !== southestPtIndex) {
+                                Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1.7 * csFactor, southestPtIndex, southestPtIndex + 1, false);
+                                if (isAlt) {
+
+                                    Modifier2.AddIntegralModifier(tg, "ALT", Modifier2.aboveMiddle, -0.7 * csFactor, southestPtIndex, southestPtIndex + 1, false);
+                                }
+
+                            }
+                        }//else
+                        break;
+                    }
+
+                    case TacticalLines.DHA_REVD: {
+                        Modifier2.AddIntegralAreaModifier(tg, "DETAINEE", Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, "HOLDING", Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, "AREA", Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.EPW: {
+                        Modifier2.AddIntegralAreaModifier(tg, "EPW", Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, "HOLDING", Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, "AREA", Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.UXO: {
+                        Modifier2.addModifierOnLine("UXO", tg, true);
+                        break;
+                    }
+
+                    case TacticalLines.GENERAL: {
+                        Modifier2.addNModifier(tg);
+                        break;
+                    }
+
+                    case TacticalLines.DHA:
+                    case TacticalLines.KILL_ZONE:
+                    case TacticalLines.FARP: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.BSA:
+                    case TacticalLines.DSA:
+                    case TacticalLines.CSA:
+                    case TacticalLines.RSA: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.RHA: {
+                        Modifier2.AddIntegralAreaModifier(tg, "REFUGEE", Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, "HOLDING", Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, "AREA", Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.MSR:
+                    case TacticalLines.ASR:
+                    case TacticalLines.TRAFFIC_ROUTE: {
+                        //AddIntegralModifier(tg, label + tg.get_Name(), aboveMiddle, -1*csFactor, middleSegment, middleSegment + 1,false);
+                        foundSegment = false;
+                        //acevedo - 11/30/2017 - adding option to render only 2 labels.
+                        if (RendererSettings.getInstance().getTwoLabelOnly() === false) {
+                            for (j = 0; j < tg.Pixels.length - 1; j++) {
+                                pt0 = tg.Pixels[j];
+                                pt1 = tg.Pixels[j + 1];
+                                stringWidth = (1.5 * metrics.stringWidth(label + TSpace + tg.get_Name()) as double) as int;
+                                dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                                if (dist < stringWidth) {
+                                    continue;
+                                } else {
+                                    Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1 * csFactor, j, j + 1, false);
+                                    foundSegment = true;
+                                }
+                            }
+                            if (foundSegment === false) {
+                                Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1 * csFactor, middleSegment, middleSegment + 1, false);
+                            }
                         }
-                    }//else
-                    break;
-                }
+                        else {
+                            // 2 labels one to the north and the other to the south of graphic.
+                            for (j = 0; j < tg.Pixels.length; j++) {
+                                pt0 = tg.Pixels[j];
 
-                case TacticalLines.DHA_REVD: {
-                    Modifier2.AddIntegralAreaModifier(tg, "DETAINEE", Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, "HOLDING", Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, "AREA", Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false);
-                    break;
-                }
+                                if (northestPt == null) {
+                                    northestPt = pt0;
+                                    northestPtIndex = j;
+                                }
+                                if (southestPt == null) {
+                                    southestPt = pt0;
+                                    southestPtIndex = j;
+                                }
+                                if (pt0.y >= northestPt.y) {
+                                    northestPt = pt0;
+                                    northestPtIndex = j;
+                                }
 
-                case TacticalLines.EPW: {
-                    Modifier2.AddIntegralAreaModifier(tg, "EPW", Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, "HOLDING", Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, "AREA", Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false);
-                    break;
-                }
+                                if (pt0.y <= southestPt.y) {
+                                    southestPt = pt0;
+                                    southestPtIndex = j;
+                                }
+                            }//for
+                            middleSegment = northestPtIndex;
+                            middleSegment2 = southestPtIndex;
 
-                case TacticalLines.UXO: {
-                    Modifier2.addModifierOnLine("UXO", tg, true);
-                    break;
-                }
+                            if (middleSegment === tg.Pixels.length - 1) {
+                                middleSegment -= 1;
+                            }
+                            if (middleSegment2 === tg.Pixels.length - 1) {
+                                middleSegment2 -= 1;
+                            }
+                            if (middleSegment === middleSegment2) {
+                                middleSegment2 -= 1;
+                            }
 
-                case TacticalLines.GENERAL: {
-                    Modifier2.addNModifier(tg);
-                    break;
-                }
+                            // if (middleSegment != middleSegment2) {
+                            Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, false);
+                            //}
+                            Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, 0, middleSegment2, middleSegment2 + 1, false);
 
-                case TacticalLines.DHA:
-                case TacticalLines.KILL_ZONE:
-                case TacticalLines.FARP: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-                    break;
-                }
+                        }//else
+                        break;
+                    }
 
-                case TacticalLines.BSA:
-                case TacticalLines.DSA:
-                case TacticalLines.CSA:
-                case TacticalLines.RSA: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.RHA: {
-                    Modifier2.AddIntegralAreaModifier(tg, "REFUGEE", Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, "HOLDING", Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, "AREA", Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.MSR:
-                case TacticalLines.ASR:
-                case TacticalLines.TRAFFIC_ROUTE: {
-                    //AddIntegralModifier(tg, label + tg.get_Name(), aboveMiddle, -1*csFactor, middleSegment, middleSegment + 1,false);
-                    foundSegment = false;
-                    //acevedo - 11/30/2017 - adding option to render only 2 labels.
-                    if (RendererSettings.getInstance().getTwoLabelOnly() === false) {
+                    case TacticalLines.TRIP: {
+                        foundSegment = false;
+                        stringWidth = (1.5 * metrics.stringWidth(label) as double) as int;
                         for (j = 0; j < tg.Pixels.length - 1; j++) {
                             pt0 = tg.Pixels[j];
                             pt1 = tg.Pixels[j + 1];
-                            stringWidth = (1.5 * metrics.stringWidth(label + TSpace + tg.get_Name()) as double) as int;
+                            midPt = lineutility.MidPointDouble(pt0, pt1, 0);
                             dist = lineutility.CalcDistanceDouble(pt0, pt1);
-                            if (dist < stringWidth) {
-                                continue;
-                            } else {
-                                Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1 * csFactor, j, j + 1, false);
+                            if (dist > stringWidth) {
+                                Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.7 * csFactor, midPt, midPt, false);
                                 foundSegment = true;
                             }
                         }
-                        if (foundSegment === false) {
-                            Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -1 * csFactor, middleSegment, middleSegment + 1, false);
-                        }
-                    }
-                    else {
-                        // 2 labels one to the north and the other to the south of graphic.
-                        for (j = 0; j < tg.Pixels.length; j++) {
-                            pt0 = tg.Pixels[j];
-
-                            if (northestPt == null) {
-                                northestPt = pt0;
-                                northestPtIndex = j;
-                            }
-                            if (southestPt == null) {
-                                southestPt = pt0;
-                                southestPtIndex = j;
-                            }
-                            if (pt0.y >= northestPt.y) {
-                                northestPt = pt0;
-                                northestPtIndex = j;
-                            }
-
-                            if (pt0.y <= southestPt.y) {
-                                southestPt = pt0;
-                                southestPtIndex = j;
-                            }
-                        }//for
-                        middleSegment = northestPtIndex;
-                        middleSegment2 = southestPtIndex;
-
-                        if (middleSegment === tg.Pixels.length - 1) {
-                            middleSegment -= 1;
-                        }
-                        if (middleSegment2 === tg.Pixels.length - 1) {
-                            middleSegment2 -= 1;
-                        }
-                        if (middleSegment === middleSegment2) {
-                            middleSegment2 -= 1;
-                        }
-
-                        // if (middleSegment != middleSegment2) {
-                        Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, false);
-                        //}
-                        Modifier2.AddIntegralModifier(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, 0, middleSegment2, middleSegment2 + 1, false);
-
-                    }//else
-                    break;
-                }
-
-                case TacticalLines.TRIP: {
-                    foundSegment = false;
-                    stringWidth = (1.5 * metrics.stringWidth(label) as double) as int;
-                    for (j = 0; j < tg.Pixels.length - 1; j++) {
-                        pt0 = tg.Pixels[j];
-                        pt1 = tg.Pixels[j + 1];
-                        midPt = lineutility.MidPointDouble(pt0, pt1, 0);
-                        dist = lineutility.CalcDistanceDouble(pt0, pt1);
-                        if (dist > stringWidth) {
+                        if (!foundSegment) {
+                            midPt = lineutility.MidPointDouble(tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], 0);
                             Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.7 * csFactor, midPt, midPt, false);
-                            foundSegment = true;
                         }
+                        break;
                     }
-                    if (!foundSegment) {
-                        midPt = lineutility.MidPointDouble(tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], 0);
-                        Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.7 * csFactor, midPt, midPt, false);
-                    }
-                    break;
-                }
 
-                case TacticalLines.GAP: {
-                    if (tg.Pixels[1].y > tg.Pixels[0].y) {
-                        pt0 = tg.Pixels[1];
-                        pt1 = tg.Pixels[3];
-                        pt2 = tg.Pixels[0];
-                        pt3 = tg.Pixels[2];
-                    } else {
+                    case TacticalLines.GAP: {
+                        if (tg.Pixels[1].y > tg.Pixels[0].y) {
+                            pt0 = tg.Pixels[1];
+                            pt1 = tg.Pixels[3];
+                            pt2 = tg.Pixels[0];
+                            pt3 = tg.Pixels[2];
+                        } else {
+                            pt0 = tg.Pixels[0];
+                            pt1 = tg.Pixels[2];
+                            pt2 = tg.Pixels[1];
+                            pt3 = tg.Pixels[3];
+                        }
+                        pt2 = lineutility.ExtendAlongLineDouble2(pt0, pt2, -20);
+                        pt3 = lineutility.ExtendAlongLineDouble2(pt1, pt3, -20);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, pt1, false);
+                        Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0, csFactor, pt2, pt3, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.BIO:
+                    case TacticalLines.BIOT:
+                    case TacticalLines.CHEM:
+                    case TacticalLines.CHEMT:
+                    case TacticalLines.NUC:
+                    case TacticalLines.RAD: 
+                    case TacticalLines.RADT: 
+                    {
+                        //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.ANCHORAGE_LINE: {
+                        //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.15 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
+                        Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.15 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
+                        break;
+                    }
+
+                    case TacticalLines.ANCHORAGE_AREA: {
+                        // Add anchor on segment with lowest midpoint
+                        y = pt0.y + pt1.y;
+                        index = 0;
+                        for (j = 1; j < size - 1; j++) {
+                            if (y < tg.Pixels[j].y + tg.Pixels[j + 1].y) {
+                                index = j;
+                                y = tg.Pixels[index].y + tg.Pixels[index + 1].y;
+                            }
+                        }
+                        //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.25 * csFactor, tg.Pixels[index], tg.Pixels[index + 1], false);
+                        Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.25 * csFactor, tg.Pixels[index], tg.Pixels[index + 1], false);
+                        break;
+                    }
+
+                    case TacticalLines.MINE_LINE: {
+                        //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.2 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
+                        Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.2 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
+                        if (tg.isHostile()) {
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, 0.0, pt0, pt1, false);                       
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, 0.0, ptLast, ptNextToLast, false);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.DEPICT: {
+                        Modifier2.GetMBR(tg, ul, ur, lr, ll);
+                        Modifier2.addNModifier(tg);
+                        //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.FFA:
+                    case TacticalLines.RFA:
+                    case TacticalLines.NFA: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.PAA: {
+                        Modifier2.addModifierOnLine("PAA", tg);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.FSA: {
+                        Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.ATI:
+                    case TacticalLines.CFFZ:
+                    case TacticalLines.CFZ:
+                    case TacticalLines.TBA:
+                    case TacticalLines.TVAR:
+                    case TacticalLines.ZOR:
+                    case TacticalLines.DA:
+                    case TacticalLines.SENSOR:
+                    case TacticalLines.CENSOR:
+                    case TacticalLines.KILLBOXBLUE:
+                    case TacticalLines.KILLBOXPURPLE: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+                        
+                        //DTG label top left point of BBOX
+                        /*Modifier2.GetMBR(tg, ul, ur, lr, ll);
+                        let ptLeft: POINT2 = ul;
+                        let ptRight: POINT2 = ur;
+                        //if (tg.get_Client().toLowerCase() == "ge") {
+                        //    ptLeft.x -= font.getSize() / 2;
+                        //    ptRight.x -= font.getSize() / 2;
+                        //}
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0.5 * csFactor, ptLeft, ptRight, false, "W");
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1.5 * csFactor, ptLeft, ptRight, false, "W1");//*/
+
+                        let highest:POINT2 = Modifier2.getHighestPointLeftOfCenter(tg.Pixels,ptCenter);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0.5 * csFactor, highest, new POINT2(highest.x + 0.001, highest.y), false, "W");
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1.5 * csFactor, highest, new POINT2(highest.x + 0.001, highest.y), false, "W1");
+                        break;
+                    }
+
+                    case TacticalLines.BATTLE:
+                    case TacticalLines.STRONG: {
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        Modifier2.addModifierBottomSegment(tg, tg.get_EchelonSymbol());
+                        break;
+                    }
+
+                    case TacticalLines.PNO: {
+                        Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        Modifier2.addModifierBottomSegment(tg, tg.get_EchelonSymbol());
+                        Modifier2.addNModifier(tg);
+                        break;
+                    }
+
+                    case TacticalLines.WFZ_REVD: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, true);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
+                        Modifier2.AddIntegralAreaModifier(tg, "TIME FROM: " + tg.get_DTG(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, true, "W");
+                        Modifier2.AddIntegralAreaModifier(tg, "TIME TO: " + tg.get_DTG1(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, true, "W1");
+                        break;
+                    }
+                    
+                    case TacticalLines.WFZ: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -2.5 * csFactor, ptCenter, ptCenter, true);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, true);
+                        Modifier2.AddIntegralAreaModifier(tg, "TIME FROM: " + tg.get_DTG(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true, "W");
+                        Modifier2.AddIntegralAreaModifier(tg, "TIME TO: " + tg.get_DTG1(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, true, "W1");
+                        Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false, "H");
+                        Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 2.5, ptCenter, ptCenter, false, "H1");
+                        break;
+                    }
+
+                    case TacticalLines.OBSFAREA: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false, "W");
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false, "W1");
+                        break;
+                    }
+
+                    case TacticalLines.OBSAREA: {
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, true);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.area, 0, ptCenter, ptCenter, true, "W");
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, true, "W1");
+                        break;
+                    }
+
+                    case TacticalLines.ROZ:
+                    case TacticalLines.AARROZ:
+                    case TacticalLines.UAROZ:
+                    case TacticalLines.WEZ:
+                    case TacticalLines.FEZ:
+                    case TacticalLines.JEZ:
+                    case TacticalLines.FAADZ:
+                    case TacticalLines.HIDACZ:
+                    case TacticalLines.MEZ:
+                    case TacticalLines.LOMEZ:
+                    case TacticalLines.HIMEZ: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -2.5, ptCenter, ptCenter, false, "");
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5, ptCenter, ptCenter, false, "T");
+                        Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, -0.5, ptCenter, ptCenter, false, "H");
+                        Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 0.5, ptCenter, ptCenter, false, "H1");
+                        Modifier2.AddIntegralAreaModifier(tg, "TIME FROM: " + tg.get_DTG(), Modifier2.area, 1.5, ptCenter, ptCenter, false, "W");
+                        Modifier2.AddIntegralAreaModifier(tg, "TIME TO: " + tg.get_DTG1(), Modifier2.area, 2.5, ptCenter, ptCenter, false, "W1");
+                        break;
+                    }
+
+                    case TacticalLines.ENCIRCLE: {
+                        if (tg.isHostile()) {
+                            Modifier2.AddIntegralModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, 0, 1, true);
+                            Modifier2.AddIntegralModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, true);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.LAA: {
+                        //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
+                        break;
+                    }
+
+                    case TacticalLines.BOUNDARY: {
+                        if (clipRect != null) {
+                            Modifier2.AddBoundaryModifiers(tg, g2d, clipRect);
+                        } else {
+                            Modifier2.AddBoundaryModifiers(tg, g2d, clipArray);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.CFL: {
+                        stringWidth = (metrics.stringWidth(label + TSpace + tg.get_Name()) as double) as int;
+                        stringWidth2 = (metrics.stringWidth(tg.get_DTG() + WDash + tg.get_DTG1()) as double) as int;
+                        if (stringWidth2 > stringWidth) {
+                            stringWidth = stringWidth2;
+                        }
+                        pt0 = new POINT2(tg.Pixels[middleSegment]);
+                        pt1 = new POINT2(tg.Pixels[middleSegment + 1]);
+                        Modifier2.getPixelsMiddleSegment(tg, stringWidth, pt0, pt1);
+                        Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                        Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0.7 * csFactor, 1.7 * csFactor, pt0, pt1, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.FLOT: {
+                        if (tg.get_H() === "1") {
+                            label = "LC";
+                        } else {
+                            if (tg.get_H() === "2") {
+                                label = "";
+                            }
+                        }
+
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, pt0, pt1, false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, ptLast, ptNextToLast, false);
+
+                        if (tg.isHostile()) {
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, -1 * csFactor, pt0, pt1, false);
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, -1 * csFactor, ptLast, ptNextToLast, false);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.LC: {
+                        let shiftFactor: double = 1;
+                        if (shiftLines) {
+                            shiftFactor = 0.5;
+                        }
+                        if (tg.isHostile()) {
+                            if (pt0.x < pt1.x) {
+                                TLineFactor = -shiftFactor;//was -1
+                            } else {
+                                TLineFactor = shiftFactor;//was 1
+                            }
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, TLineFactor, pt0, pt1, false);
+                            if (ptNextToLast.x < ptLast.x) {
+                                TLineFactor = -shiftFactor;//was -1
+                            } else {
+                                TLineFactor = shiftFactor;//was 1
+                            }
+                            Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, TLineFactor, ptLast, ptNextToLast, false);
+                        }
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, pt0, pt1, false);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, ptLast, ptNextToLast, false);
+                        break;
+                    }
+
+                    case TacticalLines.CATK: {
+                        Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 1, 0, false);
+                        break;
+                    }
+
+                    case TacticalLines.CATKBYFIRE: {
+                        stringWidth = (1.5 * metrics.stringWidth(label) as double) as int;
+                        pt2 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                        Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, 0, pt1, pt2, false);
+                        break;
+                    }
+
+                    case TacticalLines.IL: {
+                        Modifier2.AddIntegralModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, 1, 0, false);
+                        break;
+                    }
+
+                    case TacticalLines.RETIRE:
+                    case TacticalLines.PURSUIT:
+                    case TacticalLines.WITHDRAW:
+                    case TacticalLines.DISENGAGE:
+                    case TacticalLines.WDRAWUP:
+                    case TacticalLines.FPOL:
+                    case TacticalLines.RPOL:
+                    case TacticalLines.DEMONSTRATE: {
+                        Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
+                        break;
+                    }
+
+                    case TacticalLines.RIP:
+                    case TacticalLines.BOMB:
+                    case TacticalLines.TGMF: {
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, true);
+                        break;
+                    }
+
+                    case TacticalLines.MSDZ: {
+                        Modifier2.AddIntegralAreaModifier(tg, "1", Modifier2.area, 0, pt1, pt1, true);
+                        Modifier2.AddIntegralAreaModifier(tg, "2", Modifier2.area, 0, pt2, pt2, true);
+                        Modifier2.AddIntegralAreaModifier(tg, "3", Modifier2.area, 0, pt3, pt3, true);
+                        break;
+                    }
+
+                    case TacticalLines.DELAY: {
+                        Modifier2.AddIntegralModifier(tg, tg.get_DTG(), Modifier2.aboveMiddle, -1 * csFactor, 0, 1, false);
+                        Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
+                        break;
+                    }
+
+                    case TacticalLines.GENERIC_LINE: {
                         pt0 = tg.Pixels[0];
-                        pt1 = tg.Pixels[2];
-                        pt2 = tg.Pixels[1];
-                        pt3 = tg.Pixels[3];
-                    }
-                    pt2 = lineutility.ExtendAlongLineDouble2(pt0, pt2, -20);
-                    pt3 = lineutility.ExtendAlongLineDouble2(pt1, pt3, -20);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, pt1, false);
-                    Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0, csFactor, pt2, pt3, metrics);
-                    break;
-                }
-
-                case TacticalLines.BIO:
-                case TacticalLines.BIOT:
-                case TacticalLines.CHEM:
-                case TacticalLines.CHEMT:
-                case TacticalLines.NUC:
-                case TacticalLines.RAD: 
-                case TacticalLines.RADT: 
-                {
-                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.ANCHORAGE_LINE: {
-                    //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.15 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
-                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.15 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
-                    break;
-                }
-
-                case TacticalLines.ANCHORAGE_AREA: {
-                    // Add anchor on segment with lowest midpoint
-                    y = pt0.y + pt1.y;
-                    index = 0;
-                    for (j = 1; j < size - 1; j++) {
-                        if (y < tg.Pixels[j].y + tg.Pixels[j + 1].y) {
-                            index = j;
-                            y = tg.Pixels[index].y + tg.Pixels[index + 1].y;
+                        pt1 = tg.Pixels[1];
+                        pt2 = tg.Pixels[tg.Pixels.length - 1];
+                        pt3 = tg.Pixels[tg.Pixels.length - 2];
+                        dist = lineutility.CalcDistanceDouble(pt0, pt1);
+                        dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
+                        stringWidth = (metrics.stringWidth(tg.get_H() + " " + tg.get_Name()) as double) as int;
+                        stringWidth2 = (metrics.stringWidth(tg.get_DTG()) as double) as int;
+                        if (stringWidth2 > stringWidth) {
+                            stringWidth = stringWidth2;
                         }
-                    }
-                    //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.25 * csFactor, tg.Pixels[index], tg.Pixels[index + 1], false);
-                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.25 * csFactor, tg.Pixels[index], tg.Pixels[index + 1], false);
-                    break;
-                }
 
-                case TacticalLines.MINE_LINE: {
-                    //Modifier2.AddImageModifier(tg, Modifier2.aboveMiddle, -0.2 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
-                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.aboveMiddle, -0.2 * csFactor, tg.Pixels[middleSegment], tg.Pixels[middleSegment + 1], false);
-                    if (tg.isHostile()) {
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, 0.0, pt0, pt1, false);                       
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, 0.0, ptLast, ptNextToLast, false);
-                    }
-                    break;
-                }
-
-                case TacticalLines.DEPICT: {
-                    Modifier2.GetMBR(tg, ul, ur, lr, ll);
-                    Modifier2.addNModifier(tg);
-                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.FFA:
-                case TacticalLines.RFA:
-                case TacticalLines.NFA: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                    Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
-                    break;
-                }
-
-                case TacticalLines.PAA: {
-                    Modifier2.addModifierOnLine("PAA", tg);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
-                    break;
-                }
-
-                case TacticalLines.FSA: {
-                    Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
-                    break;
-                }
-
-                case TacticalLines.ATI:
-                case TacticalLines.CFFZ:
-                case TacticalLines.CFZ:
-                case TacticalLines.TBA:
-                case TacticalLines.TVAR:
-                case TacticalLines.ZOR:
-                case TacticalLines.DA:
-                case TacticalLines.SENSOR:
-                case TacticalLines.CENSOR:
-                case TacticalLines.KILLBOXBLUE:
-                case TacticalLines.KILLBOXPURPLE: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.GetMBR(tg, ul, ur, lr, ll);
-                    let ptLeft: POINT2 = ul;
-                    let ptRight: POINT2 = ur;
-                    /*if (tg.get_Client().toLowerCase() == "ge") {
-                        ptLeft.x -= font.getSize() / 2;
-                        ptRight.x -= font.getSize() / 2;
-                    }*/
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0.5 * csFactor, ptLeft, ptRight, false, "W");
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1.5 * csFactor, ptLeft, ptRight, false, "W1");
-                    break;
-                }
-
-                case TacticalLines.BATTLE:
-                case TacticalLines.STRONG: {
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                    Modifier2.addModifierBottomSegment(tg, tg.get_EchelonSymbol());
-                    break;
-                }
-
-                case TacticalLines.PNO: {
-                    Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                    Modifier2.addModifierBottomSegment(tg, tg.get_EchelonSymbol());
-                    Modifier2.addNModifier(tg);
-                    break;
-                }
-
-                case TacticalLines.WFZ_REVD: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, true);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
-                    Modifier2.AddIntegralAreaModifier(tg, "TIME FROM: " + tg.get_DTG(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, true, "W");
-                    Modifier2.AddIntegralAreaModifier(tg, "TIME TO: " + tg.get_DTG1(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, true, "W1");
-                    break;
-                }
-                
-                case TacticalLines.WFZ: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -2.5 * csFactor, ptCenter, ptCenter, true);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, true);
-                    Modifier2.AddIntegralAreaModifier(tg, "TIME FROM: " + tg.get_DTG(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true, "W");
-                    Modifier2.AddIntegralAreaModifier(tg, "TIME TO: " + tg.get_DTG1(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, true, "W1");
-                    Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false, "H");
-                    Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 2.5, ptCenter, ptCenter, false, "H1");
-                    break;
-                }
-
-                case TacticalLines.OBSFAREA: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false, "W");
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.area, 1.5 * csFactor, ptCenter, ptCenter, false, "W1");
-                    break;
-                }
-
-                case TacticalLines.OBSAREA: {
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, true);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.area, 0, ptCenter, ptCenter, true, "W");
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, true, "W1");
-                    break;
-                }
-
-                case TacticalLines.ROZ:
-                case TacticalLines.AARROZ:
-                case TacticalLines.UAROZ:
-                case TacticalLines.WEZ:
-                case TacticalLines.FEZ:
-                case TacticalLines.JEZ:
-                case TacticalLines.FAADZ:
-                case TacticalLines.HIDACZ:
-                case TacticalLines.MEZ:
-                case TacticalLines.LOMEZ:
-                case TacticalLines.HIMEZ: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -2.5, ptCenter, ptCenter, false, "");
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5, ptCenter, ptCenter, false, "T");
-                    Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, -0.5, ptCenter, ptCenter, false, "H");
-                    Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 0.5, ptCenter, ptCenter, false, "H1");
-                    Modifier2.AddIntegralAreaModifier(tg, "TIME FROM: " + tg.get_DTG(), Modifier2.area, 1.5, ptCenter, ptCenter, false, "W");
-                    Modifier2.AddIntegralAreaModifier(tg, "TIME TO: " + tg.get_DTG1(), Modifier2.area, 2.5, ptCenter, ptCenter, false, "W1");
-                    break;
-                }
-
-                case TacticalLines.ENCIRCLE: {
-                    if (tg.isHostile()) {
-                        Modifier2.AddIntegralModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, 0, 1, true);
-                        Modifier2.AddIntegralModifier(tg, tg.get_N(), Modifier2.aboveMiddle, 0, middleSegment, middleSegment + 1, true);
-                    }
-                    break;
-                }
-
-                case TacticalLines.LAA: {
-                    //Modifier2.AddImageModifier(tg, Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaImageModifier(tg, Modifier2.GetImageModifier(tg), Modifier2.areaImage, 0, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
-                    break;
-                }
-
-                case TacticalLines.BOUNDARY: {
-                    if (clipRect != null) {
-                        Modifier2.AddBoundaryModifiers(tg, g2d, clipRect);
-                    } else {
-                        Modifier2.AddBoundaryModifiers(tg, g2d, clipArray);
-                    }
-                    break;
-                }
-
-                case TacticalLines.CFL: {
-                    stringWidth = (metrics.stringWidth(label + TSpace + tg.get_Name()) as double) as int;
-                    stringWidth2 = (metrics.stringWidth(tg.get_DTG() + WDash + tg.get_DTG1()) as double) as int;
-                    if (stringWidth2 > stringWidth) {
-                        stringWidth = stringWidth2;
-                    }
-                    pt0 = new POINT2(tg.Pixels[middleSegment]);
-                    pt1 = new POINT2(tg.Pixels[middleSegment + 1]);
-                    Modifier2.getPixelsMiddleSegment(tg, stringWidth, pt0, pt1);
-                    Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                    Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0.7 * csFactor, 1.7 * csFactor, pt0, pt1, metrics);
-                    break;
-                }
-
-                case TacticalLines.FLOT: {
-                    if (tg.get_H() === "1") {
-                        label = "LC";
-                    } else {
-                        if (tg.get_H() === "2") {
-                            label = "";
-                        }
-                    }
-
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, pt0, pt1, false);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, ptLast, ptNextToLast, false);
-
-                    if (tg.isHostile()) {
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, -1 * csFactor, pt0, pt1, false);
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, -1 * csFactor, ptLast, ptNextToLast, false);
-                    }
-                    break;
-                }
-
-                case TacticalLines.LC: {
-                    let shiftFactor: double = 1;
-                    if (shiftLines) {
-                        shiftFactor = 0.5;
-                    }
-                    if (tg.isHostile()) {
-                        if (pt0.x < pt1.x) {
-                            TLineFactor = -shiftFactor;//was -1
-                        } else {
-                            TLineFactor = shiftFactor;//was 1
-                        }
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, TLineFactor, pt0, pt1, false);
-                        if (ptNextToLast.x < ptLast.x) {
-                            TLineFactor = -shiftFactor;//was -1
-                        } else {
-                            TLineFactor = shiftFactor;//was 1
-                        }
-                        Modifier2.AddIntegralAreaModifier(tg, tg.get_N(), Modifier2.toEnd, TLineFactor, ptLast, ptNextToLast, false);
-                    }
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, pt0, pt1, false);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, ptLast, ptNextToLast, false);
-                    break;
-                }
-
-                case TacticalLines.CATK: {
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 1, 0, false);
-                    break;
-                }
-
-                case TacticalLines.CATKBYFIRE: {
-                    stringWidth = (1.5 * metrics.stringWidth(label) as double) as int;
-                    pt2 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                    Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, 0, pt1, pt2, false);
-                    break;
-                }
-
-                case TacticalLines.IL: {
-                    Modifier2.AddIntegralModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, 1, 0, false);
-                    break;
-                }
-
-                case TacticalLines.RETIRE:
-                case TacticalLines.PURSUIT:
-                case TacticalLines.FPOL:
-                case TacticalLines.RPOL:
-                case TacticalLines.WITHDRAW:
-                case TacticalLines.DISENGAGE:
-                case TacticalLines.WDRAWUP:
-                case TacticalLines.DEMONSTRATE: {
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
-                    break;
-                }
-
-                case TacticalLines.RIP:
-                case TacticalLines.BOMB:
-                case TacticalLines.TGMF: {
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, true);
-                    break;
-                }
-
-                case TacticalLines.MSDZ: {
-                    Modifier2.AddIntegralAreaModifier(tg, "1", Modifier2.area, 0, pt1, pt1, true);
-                    Modifier2.AddIntegralAreaModifier(tg, "2", Modifier2.area, 0, pt2, pt2, true);
-                    Modifier2.AddIntegralAreaModifier(tg, "3", Modifier2.area, 0, pt3, pt3, true);
-                    break;
-                }
-
-                case TacticalLines.DELAY: {
-                    Modifier2.AddIntegralModifier(tg, tg.get_DTG(), Modifier2.aboveMiddle, -1 * csFactor, 0, 1, false);
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
-                    break;
-                }
-
-                case TacticalLines.GENERIC_LINE: {
-                    pt0 = tg.Pixels[0];
-                    pt1 = tg.Pixels[1];
-                    pt2 = tg.Pixels[tg.Pixels.length - 1];
-                    pt3 = tg.Pixels[tg.Pixels.length - 2];
-                    dist = lineutility.CalcDistanceDouble(pt0, pt1);
-                    dist2 = lineutility.CalcDistanceDouble(pt2, pt3);
-                    stringWidth = (metrics.stringWidth(tg.get_H() + " " + tg.get_Name()) as double) as int;
-                    stringWidth2 = (metrics.stringWidth(tg.get_DTG()) as double) as int;
-                    if (stringWidth2 > stringWidth) {
-                        stringWidth = stringWidth2;
-                    }
-
-                    if (tg.Pixels.length === 2) //one segment
-                    {
-                        pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                        Modifier2.AddModifier2(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                        Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                        Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        if (dist > 3.5 * stringWidth)//was 28stringwidth+5
+                        if (tg.Pixels.length === 2) //one segment
                         {
-                            pt0 = tg.Pixels[tg.Pixels.length - 1];
-                            pt1 = tg.Pixels[tg.Pixels.length - 2];
                             pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
                             Modifier2.AddModifier2(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
                             Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
                             Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            if (dist > 3.5 * stringWidth)//was 28stringwidth+5
+                            {
+                                pt0 = tg.Pixels[tg.Pixels.length - 1];
+                                pt1 = tg.Pixels[tg.Pixels.length - 2];
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                        } else //more than one semgent
+                        {
+                            let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
+                            if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
+                            if (dist2 > stringWidth + 5 || dist2 > dist || dist3 > stringWidth + 5) {
+                                pt0 = tg.Pixels[tg.Pixels.length - 1];
+                                pt1 = tg.Pixels[tg.Pixels.length - 2];
+                                pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
+                                Modifier2.AddModifier2(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
+                                Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
+                            }
                         }
-                    } else //more than one semgent
-                    {
-                        let dist3: double = lineutility.CalcDistanceDouble(pt0, pt2);
-                        if (dist > stringWidth + 5 || dist >= dist2 || dist3 > stringWidth + 5) {
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
-                        if (dist2 > stringWidth + 5 || dist2 > dist || dist3 > stringWidth + 5) {
-                            pt0 = tg.Pixels[tg.Pixels.length - 1];
-                            pt1 = tg.Pixels[tg.Pixels.length - 2];
-                            pt1 = lineutility.ExtendAlongLineDouble(pt0, pt1, stringWidth);
-                            Modifier2.AddModifier2(tg, tg.get_H() + " " + tg.get_Name(), Modifier2.aboveMiddle, -0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG() + WDash, Modifier2.aboveMiddle, 0.7 * csFactor, pt0, pt1, false);
-                            Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 1.7 * csFactor, pt0, pt1, false);
-                        }
+                        break;
                     }
-                    break;
-                }
 
-                default: {
-                    break;
-                }
+                    default: {
+                        break;
+                    }
 
+                }
             }
             Modifier2.scaleModifiers(tg);
             tg.Pixels = origPoints;
@@ -4503,572 +4597,637 @@ export class Modifier2 {
             }
 
             let pts: POINT2[];
-            // if the client is the 3d map (CS) then we want to shrink the spacing bnetween
+            // if the client is the 3d map (CS) then we want to shrink the spacing between
             // the lines of text
             if (tg.get_Client() === "cpof3d") {
                 csFactor = 0.9;
             }
 
             Modifier2.shiftModifierPath(tg, pt0, pt1, ptLast, ptNextToLast);
-            switch (linetype) {
-                case TacticalLines.BS_RECTANGLE:
-                case TacticalLines.BBS_RECTANGLE:{
-                    pts = new Array<POINT2>(4);
-                    for (j = 0; j < 4; j++) {
-                        pts[j] = tg.Pixels[j];
-                    }
-                    ptCenter = lineutility.CalcCenterPointDouble2(pts, 4);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.125 * csFactor, ptCenter, ptCenter, false);
-                    break;
-                }
-                
-                case TacticalLines.CONVOY:
-                case TacticalLines.HCONVOY: {
-                    pt2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[3], 0);
-                    pt3 = lineutility.MidPointDouble(tg.Pixels[1], tg.Pixels[2], 0);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_V(), Modifier2.aboveEndInside, 0, pt2, pt3, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.aboveStartInside, 0, pt2, pt3, false);
-                    Modifier2.addDTG(tg, Modifier2.aboveMiddle, 1.2 * csFactor, 2.2 * csFactor, pt2, pt3, metrics);
-                    break;
-                }
 
-                case TacticalLines.BREACH:
-                case TacticalLines.BYPASS:
-                case TacticalLines.CANALIZE: {
-                    pt0 = tg.Pixels[1];
-                    pt1 = tg.Pixels[2];
-                    //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddlePerpendicular, -0.125 * csFactor, pt0, pt1, true);
-                    break;
+            let modifiersGrouped:boolean = false;
+            if(RendererSettings.getInstance().getGroupModifiers())
+            {
+                switch (linetype) {
+                    case TacticalLines.PAA_RECTANGULAR:
+                    case TacticalLines.PAA_CIRCULAR:
+                        //too complex to duplicate, simpler to group labels in next switch statement
+                        break;
+                    case TacticalLines.ACA_RECTANGULAR:
+                    case TacticalLines.ACA_CIRCULAR:
+                        ptCenter = lineutility.CalcCenterPointDouble2(tg.Pixels, tg.Pixels.length);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg, label), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        modifiersGrouped = true;
+                        break;
+                    case TacticalLines.FSA_CIRCULAR:
+                    case TacticalLines.ATI_CIRCULAR:
+                    case TacticalLines.CFFZ_CIRCULAR:
+                    case TacticalLines.SENSOR_CIRCULAR:
+                    case TacticalLines.CENSOR_CIRCULAR:
+                    case TacticalLines.DA_CIRCULAR:
+                    case TacticalLines.CFZ_CIRCULAR:
+                    case TacticalLines.ZOR_CIRCULAR:
+                    case TacticalLines.TBA_CIRCULAR:
+                    case TacticalLines.TVAR_CIRCULAR:
+                    case TacticalLines.KILLBOXBLUE_CIRCULAR:
+                    case TacticalLines.KILLBOXPURPLE_CIRCULAR:
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[tg.Pixels.length / 2], 0);
+                        //center labels
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg, label), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        //DTG on top left
+                        let dtgCircularPosition:POINT2 = tg.Pixels[Math.round(tg.Pixels.length * 0.5625)];
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, -2 * csFactor, dtgCircularPosition, new POINT2(dtgCircularPosition.x + 0.001, dtgCircularPosition.y, 0), false);
+                        modifiersGrouped = true;
+                        break;
+                    case TacticalLines.FFA_CIRCULAR:
+                    case TacticalLines.NFA_CIRCULAR:
+                    case TacticalLines.RFA_CIRCULAR:
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[51], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg, label), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        modifiersGrouped = true;
+                        break;
+                    case TacticalLines.FFA_RECTANGULAR:
+                    case TacticalLines.NFA_RECTANGULAR:
+                    case TacticalLines.RFA_RECTANGULAR:
+                        pt0 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                        pt1 = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                        ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg, label), Modifier2.area, 0, ptCenter, ptCenter, false);
+                        modifiersGrouped = true;
+                        break;
+                    case TacticalLines.KILLBOXBLUE_RECTANGULAR:
+                    case TacticalLines.KILLBOXPURPLE_RECTANGULAR:
+                    case TacticalLines.FSA_RECTANGULAR:
+                    case TacticalLines.ATI_RECTANGULAR:
+                    case TacticalLines.CFFZ_RECTANGULAR:
+                    case TacticalLines.SENSOR_RECTANGULAR:
+                    case TacticalLines.CENSOR_RECTANGULAR:
+                    case TacticalLines.DA_RECTANGULAR:
+                    case TacticalLines.CFZ_RECTANGULAR:
+                    case TacticalLines.ZOR_RECTANGULAR:
+                    case TacticalLines.TBA_RECTANGULAR:
+                    case TacticalLines.TVAR_RECTANGULAR:
+                        ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                        ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                        ptCenter = lineutility.MidPointDouble(ptLeft, ptRight, 0);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg,label), Modifier2.area, 0 * csFactor, ptCenter, ptCenter, false);
+
+                        //highest point left of center
+                        let dtgPosition:POINT2 = Modifier2.getHighestPointLeftOfCenter(tg.Pixels,ptCenter);
+
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, 0 * csFactor, dtgPosition, new POINT2(dtgPosition.x + 0.001, dtgPosition.y, 0), false);
+                        modifiersGrouped = true;
+                        break;
                 }
+            }
 
-                case TacticalLines.PENETRATE:
-                case TacticalLines.CLEAR: {
-                    pt0 = tg.Pixels[2];
-                    pt1 = tg.Pixels[3];
-                    //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
-                    break;
-                }
-
-                case TacticalLines.DISRUPT: {
-                    pt0 = tg.Pixels[4];
-                    pt1 = tg.Pixels[5];
-                    //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
-                    break;
-                }
-
-                case TacticalLines.FIX: {
-                    pt0 = tg.Pixels[0];
-                    pt1 = tg.Pixels[1];
-                    //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
-                    break;
-                }
-
-                case TacticalLines.ISOLATE:
-                case TacticalLines.OCCUPY:
-                case TacticalLines.RETAIN:
-                case TacticalLines.SECURE:
-                case TacticalLines.CONTROL:
-                case TacticalLines.LOCATE:
-                case TacticalLines.AREA_DEFENSE: {
-                    pt0 = tg.Pixels[13];
-                    pt1 = tg.Pixels[14];
-                    //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
-                    break;
-                }
-
-                case TacticalLines.CONTAIN: {
-                    pt0 = tg.Pixels[13];
-                    pt1 = tg.Pixels[14];
-                    //ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);//maybe figure out which points are center line to apply an angle
-                    ptCenter = tg.Pixels[13];//always rightside up at mid-point of curve
-                    //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
-
-                    // Contain always has "ENY" even if friendly (not N modifier)
-                    for (j = 0; j < n; j++) {
-                        if (tg.Pixels[j].style === 14) {
-                            pt0 = tg.Pixels[j];
-                            pt1 = tg.Pixels[j + 1];
-                            Modifier2.AddIntegralAreaModifier(tg, "ENY", Modifier2.aboveMiddle, 0, pt0, pt1, true);
-                            break;
+            if(!modifiersGrouped) {
+                switch (linetype) {
+                    case TacticalLines.BS_RECTANGLE:
+                    case TacticalLines.BBS_RECTANGLE:{
+                        pts = new Array<POINT2>(4);
+                        for (j = 0; j < 4; j++) {
+                            pts[j] = tg.Pixels[j];
                         }
+                        ptCenter = lineutility.CalcCenterPointDouble2(pts, 4);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -0.125 * csFactor, ptCenter, ptCenter, false);
+                        break;
                     }
-                    break;
-                }
-
-                case TacticalLines.TURN: {
-                    pt0 = tg.Pixels[12];
-                    pt1 = tg.Pixels[13];
-                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.125 * csFactor, ptCenter, ptCenter, true);
-                    break;
-                }
-
-                case TacticalLines.SEIZE:
-                case TacticalLines.CAPTURE:
-                case TacticalLines.EVACUATE: {
-                    pt0 = tg.Pixels[26];
-                    pt1 = tg.Pixels[27];
-                    //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
-                    break;
-                }
-
-                case TacticalLines.DEFENDED_AREA_RECTANGULAR: {
-                    ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
-                    ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label + TDash + tg.get_Name(), Modifier2.aboveMiddle, 0, ptLeft, ptRight, false);
-                    break;
-                }
-
-                case TacticalLines.SHIP_AOI_RECTANGULAR: {
-                    if (tg.Pixels[0].x > tg.Pixels[3].x) {
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0.6 * csFactor, tg.Pixels[0], tg.Pixels[3], false);
-                    } else {
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0.6 * csFactor, tg.Pixels[1], tg.Pixels[2], false);
-                    }
-                    break;
-                }
-
-                case TacticalLines.NOTACK: {
-                    ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[Math.trunc(tg.Pixels.length / 2)], 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1, ptCenter, ptCenter, false);
-                    Modifier2.addDTG(tg, Modifier2.area, csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
-                    break;
-                }
-
-                case TacticalLines.SHIP_AOI_CIRCULAR: {
-                    // Moved from AddModifiersGeo()
-                    // AddModifiersGeo() called before getGeoEllipse(). Unable to use getMBR with single anchor point
-
-                    // Get variables from AddModifiersGeo
-                    let lr: POINT2 = new POINT2(tg.Pixels[0]);
-                    let ll: POINT2 = new POINT2(tg.Pixels[0]);
-                    let ul: POINT2 = new POINT2(tg.Pixels[0]);
-                    let ur: POINT2 = new POINT2(tg.Pixels[0]);
-                    Modifier2.GetMBR(tg, ul, ur, lr, ll);
-
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, csFactor, ll, lr, false);
-                    break;
-                }
-
-                case TacticalLines.MFLANE: {
-                    //pt0=tg.Pixels[7];
-                    //pt1=tg.Pixels[5];
-                    pt0 = tg.Pixels[4];
-                    pt1 = tg.Pixels[2];
-                    if (tg.Pixels[0].y < tg.Pixels[1].y) {
-                        Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0.5 * csFactor, 1.5 * csFactor, pt0, pt1, metrics);
-                    } else {
-                        Modifier2.addDTG(tg, Modifier2.aboveMiddle, -0.5 * csFactor, -1.5 * csFactor, pt0, pt1, metrics);
-                    }
-                    break;
-                }
-
-                case TacticalLines.CORDONKNOCK:
-                case TacticalLines.CORDONSEARCH: 
-                case TacticalLines.DENY: {
-                    pt0 = tg.Pixels[13];
-                    pt1 = tg.Pixels[0];
-                    stringWidth = metrics.stringWidth(label);
-                    if (pt0.x < pt1.x) {
-                        stringWidth = -stringWidth;
-                    }
-                    pt1 = lineutility.ExtendAlongLineDouble2(pt0, pt1, 0.75 * stringWidth);
-                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, ptCenter, ptCenter, true);
-                    break;
-                }
-
-                case TacticalLines.ESCORT: {
-                    if(tg.Pixels.length == 6) {
-                        if (tg.Pixels[2].x == tg.Pixels[3].x &&
-                                tg.Pixels[2].y == tg.Pixels[3].y) {
-                            //No Room for E labels
-                            break;//?
-                        }
-                        //This function put the pabel 
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, tg.Pixels[2], tg.Pixels[1], true);
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, tg.Pixels[3], tg.Pixels[4], true);
-                    }
-                    break;
-                }
-
-                case TacticalLines.EXFILTRATION:
-                    case TacticalLines.INFILTRATION: {
-                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1 , true);
+                    
+                    case TacticalLines.CONVOY:
+                    case TacticalLines.HCONVOY: {
+                        pt2 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[3], 0);
+                        pt3 = lineutility.MidPointDouble(tg.Pixels[1], tg.Pixels[2], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_V(), Modifier2.aboveEndInside, 0, pt2, pt3, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_H(), Modifier2.aboveStartInside, 0, pt2, pt3, false);
+                        Modifier2.addDTG(tg, Modifier2.aboveMiddle, 1.2 * csFactor, 2.2 * csFactor, pt2, pt3, metrics);
                         break;
                     }
 
-                case TacticalLines.FOLLA: {
-                    pt0 = tg.Pixels[0];
-                    pt1 = lineutility.MidPointDouble(tg.Pixels[5], tg.Pixels[6], 0);
-                    pt1 = lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
-                    break;
-                }
+                    case TacticalLines.BREACH:
+                    case TacticalLines.BYPASS:
+                    case TacticalLines.CANALIZE: {
+                        pt0 = tg.Pixels[1];
+                        pt1 = tg.Pixels[2];
+                        //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddlePerpendicular, -0.125 * csFactor, pt0, pt1, true);
+                        break;
+                    }
 
-                case TacticalLines.FOLSP: {
-                    pt0 = tg.Pixels[3];
-                    pt1 = tg.Pixels[6];
-                    pt1 = lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
-                    break;
-                }
+                    case TacticalLines.PENETRATE:
+                    case TacticalLines.CLEAR: {
+                        pt0 = tg.Pixels[2];
+                        pt1 = tg.Pixels[3];
+                        //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
+                        break;
+                    }
 
-                /*case TacticalLines.ACA_RECTANGULAR: {
-                    ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
-                    ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
-                    Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -3 * csFactor, ptLeft, ptRight, false);
-                    Modifier2.AddModifier2(tg, tg.get_T1(), Modifier2.aboveMiddle, -2 * csFactor, ptLeft, ptRight, false, "T1");
-                    Modifier2.AddModifier2(tg, "MIN ALT: " + tg.get_X(), Modifier2.aboveMiddle, -1 * csFactor, ptLeft, ptRight, false, "H");
-                    Modifier2.AddModifier2(tg, "MAX ALT: " + tg.get_X1(), Modifier2.aboveMiddle, 0, ptLeft, ptRight, false, "H1");
-                    Modifier2.AddModifier2(tg, "GRID " + tg.get_Location(), Modifier2.aboveMiddle, 1 * csFactor, ptLeft, ptRight, false, "H2");
-                    Modifier2.AddModifier2(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.aboveMiddle, 2 * csFactor, ptLeft, ptRight, false, "W");
-                    Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 3 * csFactor, ptLeft, ptRight, false, "W1");
-                    break;
-                }//*/
+                    case TacticalLines.DISRUPT: {
+                        pt0 = tg.Pixels[4];
+                        pt1 = tg.Pixels[5];
+                        //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
+                        break;
+                    }
 
-                case TacticalLines.ACA_RECTANGULAR://text always right-side-up like circular
-                case TacticalLines.ACA_CIRCULAR: {
-                    ptCenter = lineutility.CalcCenterPointDouble2(tg.Pixels, tg.Pixels.length);
-                    Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -3 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddModifier2(tg, tg.get_T1(), Modifier2.area, -2 * csFactor, ptCenter, ptCenter, false, "T1");
-                    Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false, "H");
-                    Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 0, ptCenter, ptCenter, false, "H1");
-                    Modifier2.AddIntegralAreaModifier(tg, "GRID " + tg.get_Location(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, false, "H2");
-                    Modifier2.AddIntegralAreaModifier(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.area, 2 * csFactor, ptCenter, ptCenter, false, "W");
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.area, 3 * csFactor, ptCenter, ptCenter, false, "W1");
-                    break;
-                }
+                    case TacticalLines.FIX: {
+                        pt0 = tg.Pixels[0];
+                        pt1 = tg.Pixels[1];
+                        //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, pt0, pt1, true);
+                        break;
+                    }
 
-                case TacticalLines.FSA_CIRCULAR:
-                case TacticalLines.ATI_CIRCULAR:
-                case TacticalLines.CFFZ_CIRCULAR:
-                case TacticalLines.SENSOR_CIRCULAR:
-                case TacticalLines.CENSOR_CIRCULAR:
-                case TacticalLines.DA_CIRCULAR:
-                case TacticalLines.CFZ_CIRCULAR:
-                case TacticalLines.ZOR_CIRCULAR:
-                case TacticalLines.TBA_CIRCULAR:
-                case TacticalLines.TVAR_CIRCULAR:
-                case TacticalLines.KILLBOXBLUE_CIRCULAR:
-                case TacticalLines.KILLBOXPURPLE_CIRCULAR: {
-                    ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[Math.trunc(tg.Pixels.length / 2)], 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddOffsetModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, -1 * csFactor, tg.Pixels.length / 2, 0, 4, "left");
-                    Modifier2.AddOffsetModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 0, tg.Pixels.length / 2, 0, 4, "left");
-                    break;
-                }
+                    case TacticalLines.ISOLATE:
+                    case TacticalLines.OCCUPY:
+                    case TacticalLines.RETAIN:
+                    case TacticalLines.SECURE:
+                    case TacticalLines.CONTROL:
+                    case TacticalLines.LOCATE:
+                    case TacticalLines.AREA_DEFENSE: {
+                        pt0 = tg.Pixels[13];
+                        pt1 = tg.Pixels[14];
+                        //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
+                        break;
+                    }
 
-                case TacticalLines.FFA_CIRCULAR:
-                case TacticalLines.NFA_CIRCULAR:
-                case TacticalLines.RFA_CIRCULAR: {
-                    rfaLines = Modifier2.getRFALines(tg);
-                    ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[51], 0);
-                    switch (rfaLines) {
-                        case 3: { //2 valid modifiers and a label
-                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                            Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
-                            break;
-                        }
+                    case TacticalLines.CONTAIN: {
+                        pt0 = tg.Pixels[13];
+                        pt1 = tg.Pixels[14];
+                        //ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);//maybe figure out which points are center line to apply an angle
+                        ptCenter = tg.Pixels[13];//always rightside up at mid-point of curve
+                        //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
 
-                        case 2: { //one valid modifier and a label
-                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                            if (tg.get_Name() != null && tg.get_Name().length > 0) {
-                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-                            } else {
-                                Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
+                        // Contain always has "ENY" even if friendly (not N modifier)
+                        for (j = 0; j < n; j++) {
+                            if (tg.Pixels[j].style === 14) {
+                                pt0 = tg.Pixels[j];
+                                pt1 = tg.Pixels[j + 1];
+                                Modifier2.AddIntegralAreaModifier(tg, "ENY", Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                                break;
                             }
-                            break;
                         }
-
-                        default: {    //one label only
-                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
-                            break;
-                        }
-
+                        break;
                     }
-                    break;
-                }
 
-                case TacticalLines.BLOCK: {
-                    //for (j = 0; j < tg.Pixels.length; j++)
-                    for (j = 0; j < n; j++) {
-                        if (tg.Pixels[j].style === 14) {
-                            Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, j, j + 1);
-                            break;
-                        }
+                    case TacticalLines.TURN: {
+                        pt0 = tg.Pixels[12];
+                        pt1 = tg.Pixels[13];
+                        ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.125 * csFactor, ptCenter, ptCenter, true);
+                        break;
                     }
-                    break;
-                }
 
-                case TacticalLines.FFA_RECTANGULAR:
-                case TacticalLines.NFA_RECTANGULAR:
-                case TacticalLines.RFA_RECTANGULAR: {
-                    rfaLines = Modifier2.getRFALines(tg);
-                    pt0 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
-                    pt1 = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
-                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
-                    switch (rfaLines) {
-                        case 3: { //two valid modifiers and one label
-                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                            Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
-                            break;
+                    case TacticalLines.SEIZE:
+                    case TacticalLines.CAPTURE:
+                    case TacticalLines.EVACUATE: {
+                        pt0 = tg.Pixels[26];
+                        pt1 = tg.Pixels[27];
+                        //pt1=lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, -0.125 * csFactor, ptCenter, ptCenter, true);
+                        break;
+                    }
+
+                    case TacticalLines.DEFENDED_AREA_RECTANGULAR: {
+                        ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                        ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label + TDash + tg.get_Name(), Modifier2.aboveMiddle, 0, ptLeft, ptRight, false);
+                        break;
+                    }
+
+                    case TacticalLines.SHIP_AOI_RECTANGULAR: {
+                        if (tg.Pixels[0].x > tg.Pixels[3].x) {
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0.6 * csFactor, tg.Pixels[0], tg.Pixels[3], false);
+                        } else {
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0.6 * csFactor, tg.Pixels[1], tg.Pixels[2], false);
                         }
+                        break;
+                    }
 
-                        case 2: { //one valid modifier and one label
-                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                            if (tg.get_Name() != null && tg.get_Name().length > 0) {
-                                Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-                            } else {
-                                Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
+                    case TacticalLines.NOTACK: {
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[Math.trunc(tg.Pixels.length / 2)], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1, ptCenter, ptCenter, false);
+                        Modifier2.addDTG(tg, Modifier2.area, csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
+                        break;
+                    }
+
+                    case TacticalLines.SHIP_AOI_CIRCULAR: {
+                        // Moved from AddModifiersGeo()
+                        // AddModifiersGeo() called before getGeoEllipse(). Unable to use getMBR with single anchor point
+
+                        // Get variables from AddModifiersGeo
+                        let lr: POINT2 = new POINT2(tg.Pixels[0]);
+                        let ll: POINT2 = new POINT2(tg.Pixels[0]);
+                        let ul: POINT2 = new POINT2(tg.Pixels[0]);
+                        let ur: POINT2 = new POINT2(tg.Pixels[0]);
+                        Modifier2.GetMBR(tg, ul, ur, lr, ll);
+
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, csFactor, ll, lr, false);
+                        break;
+                    }
+
+                    case TacticalLines.MFLANE: {
+                        //pt0=tg.Pixels[7];
+                        //pt1=tg.Pixels[5];
+                        pt0 = tg.Pixels[4];
+                        pt1 = tg.Pixels[2];
+                        if (tg.Pixels[0].y < tg.Pixels[1].y) {
+                            Modifier2.addDTG(tg, Modifier2.aboveMiddle, 0.5 * csFactor, 1.5 * csFactor, pt0, pt1, metrics);
+                        } else {
+                            Modifier2.addDTG(tg, Modifier2.aboveMiddle, -0.5 * csFactor, -1.5 * csFactor, pt0, pt1, metrics);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.CORDONKNOCK:
+                    case TacticalLines.CORDONSEARCH: 
+                    case TacticalLines.DENY: {
+                        pt0 = tg.Pixels[13];
+                        pt1 = tg.Pixels[0];
+                        stringWidth = metrics.stringWidth(label);
+                        if (pt0.x < pt1.x) {
+                            stringWidth = -stringWidth;
+                        }
+                        pt1 = lineutility.ExtendAlongLineDouble2(pt0, pt1, 0.75 * stringWidth);
+                        ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, ptCenter, ptCenter, true);
+                        break;
+                    }
+
+                    case TacticalLines.ESCORT: {
+                        if(tg.Pixels.length == 6) {
+                            if (tg.Pixels[2].x == tg.Pixels[3].x &&
+                                    tg.Pixels[2].y == tg.Pixels[3].y) {
+                                //No Room for E labels
+                                break;//?
                             }
+                            //This function put the pabel 
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, tg.Pixels[2], tg.Pixels[1], true);
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.toEnd, 0, tg.Pixels[3], tg.Pixels[4], true);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.EXFILTRATION:
+                        case TacticalLines.INFILTRATION: {
+                            Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1 , true);
                             break;
                         }
 
-                        default: {    //one label only
-                            Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1, false);
-                            break;
-                        }
-
-                    }
-                    break;
-                }
-
-                case TacticalLines.KILLBOXBLUE_RECTANGULAR:
-                case TacticalLines.KILLBOXPURPLE_RECTANGULAR:
-                case TacticalLines.FSA_RECTANGULAR:
-                case TacticalLines.ATI_RECTANGULAR:
-                case TacticalLines.CFFZ_RECTANGULAR:
-                case TacticalLines.SENSOR_RECTANGULAR:
-                case TacticalLines.CENSOR_RECTANGULAR:
-                case TacticalLines.DA_RECTANGULAR:
-                case TacticalLines.CFZ_RECTANGULAR:
-                case TacticalLines.ZOR_RECTANGULAR:
-                case TacticalLines.TBA_RECTANGULAR:
-                case TacticalLines.TVAR_RECTANGULAR: {
-                    
-                    ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
-                    ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
-                    ptCenter = lineutility.MidPointDouble(ptLeft, ptRight, 0);
-
-                    //labels upright
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
-
-                    //labels on angle
-                    //Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.5 * csFactor, ptLeft, ptRight, false);
-                    //Modifier2.AddModifier2(tg, tg.get_Name(), Modifier2.aboveMiddle, 0.5 * csFactor, ptLeft, ptRight, false);
-
-                    pt0 = tg.Pixels[0];
-                    pt1 = tg.Pixels[1];
-                    pt2 = tg.Pixels[2];
-                    pt3 = tg.Pixels[3];
-                    if (tg.get_Client().toLowerCase() == "ge") {
-                        pt0.x -= font.getSize() / 2;
-                        pt2.x -= font.getSize() / 2;
-                    }
-                    if (tg.get_Client().toLowerCase() !== "ge")//added 2-27-12
-                    {
-                        clsUtility.shiftModifiersLeft(pt0, pt3, 12.5);
-                        clsUtility.shiftModifiersLeft(pt1, pt2, 12.5);
+                    case TacticalLines.FOLLA: {
+                        pt0 = tg.Pixels[0];
+                        pt1 = lineutility.MidPointDouble(tg.Pixels[5], tg.Pixels[6], 0);
+                        pt1 = lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                        break;
                     }
 
-                    /*//modifiers top left following angle
-                    if (ptLeft.x === ptRight.x) {
-                        ptRight.x += 1;
+                    case TacticalLines.FOLSP: {
+                        pt0 = tg.Pixels[3];
+                        pt1 = tg.Pixels[6];
+                        pt1 = lineutility.ExtendAlongLineDouble(pt1, pt0, -10);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.aboveMiddle, 0, pt0, pt1, true);
+                        break;
                     }
-                    if (ptLeft.x < ptRight.x) {
-                        Modifier2.AddModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0, pt0, pt3);//was 1,2 switched for CPOF
-                        Modifier2.AddModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1 * csFactor, pt0, pt3);//was 1,2
-                    } else {
-                        Modifier2.AddModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0, pt2, pt1);//was 3,0 //switched for CPOF
-                        Modifier2.AddModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1 * csFactor, pt2, pt1);//was 3,0
+
+                    /*case TacticalLines.ACA_RECTANGULAR: {
+                        ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                        ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                        Modifier2.AddModifier2(tg, label + TSpace + tg.get_Name(), Modifier2.aboveMiddle, -3 * csFactor, ptLeft, ptRight, false);
+                        Modifier2.AddModifier2(tg, tg.get_T1(), Modifier2.aboveMiddle, -2 * csFactor, ptLeft, ptRight, false, "T1");
+                        Modifier2.AddModifier2(tg, "MIN ALT: " + tg.get_X(), Modifier2.aboveMiddle, -1 * csFactor, ptLeft, ptRight, false, "H");
+                        Modifier2.AddModifier2(tg, "MAX ALT: " + tg.get_X1(), Modifier2.aboveMiddle, 0, ptLeft, ptRight, false, "H1");
+                        Modifier2.AddModifier2(tg, "GRID " + tg.get_Location(), Modifier2.aboveMiddle, 1 * csFactor, ptLeft, ptRight, false, "H2");
+                        Modifier2.AddModifier2(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.aboveMiddle, 2 * csFactor, ptLeft, ptRight, false, "W");
+                        Modifier2.AddModifier2(tg, tg.get_DTG1(), Modifier2.aboveMiddle, 3 * csFactor, ptLeft, ptRight, false, "W1");
+                        break;
                     }//*/
 
-                    //highest point left of center
-                    let highest:POINT2 = tg.Pixels[0];
-                    /*for (let p of tg.Pixels)
-                    {
-                        if(p.x < ptCenter.x)
-                        {
-                            highest = p;
-                            break;
-                        }
-                    }
-                    for (let p of tg.Pixels) {
-                        if(p.x < ptCenter.x)
-
-                        if (p.y < highest.y && p.x <= ptCenter.x) {
-                            highest = p;
-                        }
-                    }*/
-
-                    let validPointFound:boolean = false;
-                    for (let p of tg.Pixels)//loop through points
-                    {
-                        if(p.x <= ptCenter.x)//we only care about points left of center
-                        {
-                            if(!validPointFound)//find initial left-of-center point
-                            {
-                                highest = p;//set initial value
-                                validPointFound = true;
-                            }
-                            else if(p.y < highest.y)//see if this point is higher than the current point
-                                highest = p;//set new highest, left-of-center point
-                        }
+                    case TacticalLines.ACA_RECTANGULAR://text always right-side-up like circular
+                    case TacticalLines.ACA_CIRCULAR: {
+                        ptCenter = lineutility.CalcCenterPointDouble2(tg.Pixels, tg.Pixels.length);
+                        Modifier2.AddIntegralAreaModifier(tg, label + TSpace + tg.get_Name(), Modifier2.area, -3 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddModifier2(tg, tg.get_T1(), Modifier2.area, -2 * csFactor, ptCenter, ptCenter, false, "T1");
+                        Modifier2.AddIntegralAreaModifier(tg, "MIN ALT: " + tg.get_X(), Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false, "H");
+                        Modifier2.AddIntegralAreaModifier(tg, "MAX ALT: " + tg.get_X1(), Modifier2.area, 0, ptCenter, ptCenter, false, "H1");
+                        Modifier2.AddIntegralAreaModifier(tg, "GRID " + tg.get_Location(), Modifier2.area, 1 * csFactor, ptCenter, ptCenter, false, "H2");
+                        Modifier2.AddIntegralAreaModifier(tg, "EFF " + tg.get_DTG() + WDash, Modifier2.area, 2 * csFactor, ptCenter, ptCenter, false, "W");
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.area, 3 * csFactor, ptCenter, ptCenter, false, "W1");
+                        break;
                     }
 
-                    let dtgPosition:POINT2 = highest;
+                    case TacticalLines.FSA_CIRCULAR:
+                    case TacticalLines.ATI_CIRCULAR:
+                    case TacticalLines.CFFZ_CIRCULAR:
+                    case TacticalLines.SENSOR_CIRCULAR:
+                    case TacticalLines.CENSOR_CIRCULAR:
+                    case TacticalLines.DA_CIRCULAR:
+                    case TacticalLines.CFZ_CIRCULAR:
+                    case TacticalLines.ZOR_CIRCULAR:
+                    case TacticalLines.TBA_CIRCULAR:
+                    case TacticalLines.TVAR_CIRCULAR:
+                    case TacticalLines.KILLBOXBLUE_CIRCULAR:
+                    case TacticalLines.KILLBOXPURPLE_CIRCULAR: {
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[Math.trunc(tg.Pixels.length / 2)], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
 
-                    //DTG at north west-ish point and right-side-up
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0.5 * csFactor, dtgPosition, new POINT2(dtgPosition.x+1,dtgPosition.y,0), false);
-                    Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1() + " ", Modifier2.toEnd, 1.5 * csFactor, dtgPosition, new POINT2(dtgPosition.x+1,dtgPosition.y,0), false);
+                        //labels left of circle
+                        //Modifier2.AddOffsetModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, -1 * csFactor, tg.Pixels.length / 2, 0, 4, "left");
+                        //Modifier2.AddOffsetModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 0, tg.Pixels.length / 2, 0, 4, "left");
 
-                    //DTG at first point and angled with rectangle
-                    //Modifier2.AddOffsetModifier(tg, tg.get_DTG() + WDash, toEnd, -1 * csFactor, tg.Pixels.size() / 2, 0, 4, "left");
-                    //Modifier2.AddOffsetModifier(tg, tg.get_DTG1(), toEnd, 0, tg.Pixels.size() / 2, 0, 4, "left");
+                        //labels top left of circle
+                        let dtgCircularPosition:POINT2 = tg.Pixels[Math.round(tg.Pixels.length * 0.5625)];
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, -2 * csFactor, dtgCircularPosition, new POINT2(dtgCircularPosition.x + 0.001, dtgCircularPosition.y, 0), false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1(), Modifier2.toEnd, -1 * csFactor, dtgCircularPosition, new POINT2(dtgCircularPosition.x + 0.001, dtgCircularPosition.y, 0), false);
+                        break;
+                    }
 
-                    break;
-                }//*/
-
-                case TacticalLines.PAA_RECTANGULAR: {
-
-                    ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);//label level
-                    //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddlePerpendicular, 0, 0, 1, true);//label angled with line
-                    ptCenter = lineutility.MidPointDouble(tg.Pixels[1], tg.Pixels[2], 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
-                    //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 1, 2, true);
-                    ptCenter = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
-                    //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddlePerpendicular, 0, 2, 3, true);
-                    ptCenter = lineutility.MidPointDouble(tg.Pixels[3], tg.Pixels[0], 0);
-                    Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
-                    //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 3, 0, true);
-                    rfaLines = Modifier2.getRFALines(tg);
-                    pt0 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
-                    pt1 = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
-                    ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
-                    switch (rfaLines) {
-                        case 3: { // two valid modifiers
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5, ptCenter, ptCenter, false);
-                            Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
-                            break;
-                        }
-
-                        case 2: { // one valid modifier
-                            if (tg.get_Name() != null && tg.get_Name().length > 0) {
+                    case TacticalLines.FFA_CIRCULAR:
+                    case TacticalLines.NFA_CIRCULAR:
+                    case TacticalLines.RFA_CIRCULAR: {
+                        rfaLines = Modifier2.getRFALines(tg);
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[51], 0);
+                        switch (rfaLines) {
+                            case 3: { //2 valid modifiers and a label
+                                Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
                                 Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                            } else {
-                                Modifier2.addDTG(tg, Modifier2.area, 0, csFactor, ptCenter, ptCenter, metrics);
+                                Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
+                                break;
                             }
-                            break;
-                        }
 
-                        default: {
-                            break;
-                        }
+                            case 2: { //one valid modifier and a label
+                                Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                                if (tg.get_Name() != null && tg.get_Name().length > 0) {
+                                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+                                } else {
+                                    Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
+                                }
+                                break;
+                            }
 
+                            default: {    //one label only
+                                Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
+                                break;
+                            }
+
+                        }
+                        break;
                     }
-                    break;
-                }
 
-                case TacticalLines.PAA_CIRCULAR: {
-                    for (let i: int = 0; i < 4; i++) {
-                        Modifier2.AddIntegralModifier(tg, label, Modifier2.area, -0.5 * csFactor, n / 4 * i, n / 4 * i, false);
+                    case TacticalLines.BLOCK: {
+                        //for (j = 0; j < tg.Pixels.length; j++)
+                        for (j = 0; j < n; j++) {
+                            if (tg.Pixels[j].style === 14) {
+                                Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, j, j + 1);
+                                break;
+                            }
+                        }
+                        break;
                     }
 
-                    rfaLines = Modifier2.getRFALines(tg);
-                    ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[Math.trunc(n / 2.0 + 0.5)], 0);
-                    switch (rfaLines) {
-                        case 3: { // two valid modifiers
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5, ptCenter, ptCenter, false);
-                            Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
-                            break;
-                        }
-
-                        case 2: { // one valid modifier
-                            if (tg.get_Name() != null && tg.get_Name().length > 0) {
+                    case TacticalLines.FFA_RECTANGULAR:
+                    case TacticalLines.NFA_RECTANGULAR:
+                    case TacticalLines.RFA_RECTANGULAR: {
+                        rfaLines = Modifier2.getRFALines(tg);
+                        pt0 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                        pt1 = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                        ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                        switch (rfaLines) {
+                            case 3: { //two valid modifiers and one label
+                                Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -1 * csFactor, ptCenter, ptCenter, false);
                                 Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
-                            } else {
-                                Modifier2.addDTG(tg, Modifier2.area, 0, csFactor, ptCenter, ptCenter, metrics);
+                                Modifier2.addDTG(tg, Modifier2.area, 1 * csFactor, 2 * csFactor, ptCenter, ptCenter, metrics);
+                                break;
                             }
-                            break;
-                        }
 
-                        default: {
-                            break;
-                        }
-
-                    }
-                    break;
-                }
-
-                case TacticalLines.RANGE_FAN: {
-                    if (tg.get_X() != null) {
-                        X = tg.get_X().split(",");
-                        for (j = 0; j < X.length; j++) {
-                            if (tg.Pixels.length > j * 102 + 25) {
-                                pt0 = tg.Pixels[j * 102 + 25];
-                                Modifier2.AddAreaModifier(tg, "ALT " + X[j], Modifier2.area, 0, pt0, pt0);
-                            }
-                        }
-                    }
-                    if (!tg.get_HideOptionalLabels()) {
-                        let am: string[] = tg.get_AM().split(",");
-                        for (j = 0; j < am.length; j++) {
-                            if (tg.Pixels.length > j * 102 + 25) {
-                                pt0 = tg.Pixels[j * 102 + 25];
-                                //AddAreaModifier(tg, "RG " + am[j], area, -1, pt0, pt0);
-                                if (j === 0) {
-
-                                    Modifier2.AddAreaModifier(tg, "MIN RG " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
+                            case 2: { //one valid modifier and one label
+                                Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                                if (tg.get_Name() != null && tg.get_Name().length > 0) {
+                                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+                                } else {
+                                    Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
                                 }
+                                break;
+                            }
 
-                                else {
+                            default: {    //one label only
+                                Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, 0, pt0, pt1, false);
+                                break;
+                            }
 
-                                    Modifier2.AddAreaModifier(tg, "MAX RG " + "(" + j.toString() + ") " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.KILLBOXBLUE_RECTANGULAR:
+                    case TacticalLines.KILLBOXPURPLE_RECTANGULAR:
+                    case TacticalLines.FSA_RECTANGULAR:
+                    case TacticalLines.ATI_RECTANGULAR:
+                    case TacticalLines.CFFZ_RECTANGULAR:
+                    case TacticalLines.SENSOR_RECTANGULAR:
+                    case TacticalLines.CENSOR_RECTANGULAR:
+                    case TacticalLines.DA_RECTANGULAR:
+                    case TacticalLines.CFZ_RECTANGULAR:
+                    case TacticalLines.ZOR_RECTANGULAR:
+                    case TacticalLines.TBA_RECTANGULAR:
+                    case TacticalLines.TVAR_RECTANGULAR: {
+                        
+                        ptLeft = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                        ptRight = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                        ptCenter = lineutility.MidPointDouble(ptLeft, ptRight, 0);
+
+                        //labels upright
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0.5 * csFactor, ptCenter, ptCenter, false);
+
+                        //labels on angle
+                        //Modifier2.AddModifier2(tg, label, Modifier2.aboveMiddle, -0.5 * csFactor, ptLeft, ptRight, false);
+                        //Modifier2.AddModifier2(tg, tg.get_Name(), Modifier2.aboveMiddle, 0.5 * csFactor, ptLeft, ptRight, false);
+
+                        /*//DTG modifiers top left following angle
+                        pt0 = tg.Pixels[0];
+                        pt1 = tg.Pixels[1];
+                        pt2 = tg.Pixels[2];
+                        pt3 = tg.Pixels[3];
+
+                        if (tg.get_Client().toLowerCase() == "ge") {
+                            pt0.x -= font.getSize() / 2;
+                            pt2.x -= font.getSize() / 2;
+                        }
+                        if (tg.get_Client().toLowerCase() !== "ge")//added 2-27-12
+                        {
+                            clsUtility.shiftModifiersLeft(pt0, pt3, 12.5);
+                            clsUtility.shiftModifiersLeft(pt1, pt2, 12.5);
+                        }
+
+                        if (ptLeft.x === ptRight.x) {
+                            ptRight.x += 1;
+                        }
+                        if (ptLeft.x < ptRight.x) {
+                            Modifier2.AddModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0, pt0, pt3);//was 1,2 switched for CPOF
+                            Modifier2.AddModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1 * csFactor, pt0, pt3);//was 1,2
+                        } else {
+                            Modifier2.AddModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0, pt2, pt1);//was 3,0 //switched for CPOF
+                            Modifier2.AddModifier(tg, tg.get_DTG1(), Modifier2.toEnd, 1 * csFactor, pt2, pt1);//was 3,0
+                        }//*/
+
+                        //highest point left of center
+                        let dtgPosition:POINT2 = Modifier2.getHighestPointLeftOfCenter(tg.Pixels, ptCenter);
+
+                        //DTG at north west-ish point and right-side-up
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash, Modifier2.toEnd, 0.5 * csFactor, dtgPosition, new POINT2(dtgPosition.x+1,dtgPosition.y,0), false);
+                        Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG1() + " ", Modifier2.toEnd, 1.5 * csFactor, dtgPosition, new POINT2(dtgPosition.x+1,dtgPosition.y,0), false);
+
+                        //DTG at first point and angled with rectangle
+                        //Modifier2.AddOffsetModifier(tg, tg.get_DTG() + WDash, toEnd, -1 * csFactor, tg.Pixels.size() / 2, 0, 4, "left");
+                        //Modifier2.AddOffsetModifier(tg, tg.get_DTG1(), toEnd, 0, tg.Pixels.size() / 2, 0, 4, "left");
+
+                        break;
+                    }//*/
+
+                    case TacticalLines.PAA_RECTANGULAR: {
+
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);//label level
+                        //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddlePerpendicular, 0, 0, 1, true);//label angled with line
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[1], tg.Pixels[2], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
+                        //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 1, 2, true);
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
+                        //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddlePerpendicular, 0, 2, 3, true);
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[3], tg.Pixels[0], 0);
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, -0.5 * csFactor, ptCenter, ptCenter, true);
+                        //Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 3, 0, true);
+                        rfaLines = Modifier2.getRFALines(tg);
+                        pt0 = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[1], 0);
+                        pt1 = lineutility.MidPointDouble(tg.Pixels[2], tg.Pixels[3], 0);
+                        ptCenter = lineutility.MidPointDouble(pt0, pt1, 0);
+                        switch (rfaLines) {
+                            case 3: { // two valid modifiers
+                                if (!RendererSettings.getInstance().getGroupModifiers()) {
+                                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5, ptCenter, ptCenter, false);
+                                    Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
+                                } else {
+                                    let modifier:string = Modifier2.buildAreaGroupString(tg, label);
+                                    Modifier2.AddIntegralAreaModifier(tg, modifier, Modifier2.area, 0, ptCenter, ptCenter, false);
                                 }
+                                break;
+                            }
 
+                            case 2: { // one valid modifier
+                                if (tg.get_Name() != null && tg.get_Name().length > 0) {
+                                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                                } else {
+                                    Modifier2.addDTG(tg, Modifier2.area, 0, csFactor, ptCenter, ptCenter, metrics);
+                                }
+                                break;
+                            }
+
+                            default: {
+                                break;
+                            }
+
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.PAA_CIRCULAR: {
+                        for (let i: int = 0; i < 4; i++) {
+                            Modifier2.AddIntegralModifier(tg, label, Modifier2.area, -0.5 * csFactor, n / 4 * i, n / 4 * i, false);
+                        }
+
+                        rfaLines = Modifier2.getRFALines(tg);
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[Math.trunc(n / 2.0 + 0.5)], 0);
+                        switch (rfaLines) {
+                            case 3: { // two valid modifiers
+                                if (!RendererSettings.getInstance().getGroupModifiers()) {
+                                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, -1.5, ptCenter, ptCenter, false);
+                                    Modifier2.addDTG(tg, Modifier2.area, 0.5 * csFactor, 1.5 * csFactor, ptCenter, ptCenter, metrics);
+                                } else {
+                                    let modifier:string = Modifier2.buildAreaGroupString(tg, label);
+                                    Modifier2.AddIntegralAreaModifier(tg, modifier, Modifier2.area, 0, ptCenter, ptCenter, false);
+                                }
+                                break;
+                            }
+
+                            case 2: { // one valid modifier
+                                if (tg.get_Name() != null && tg.get_Name().length > 0) {
+                                    Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, ptCenter, ptCenter, false);
+                                } else {
+                                    Modifier2.addDTG(tg, Modifier2.area, 0, csFactor, ptCenter, ptCenter, metrics);
+                                }
+                                break;
+                            }
+
+                            default: {
+                                break;
+                            }
+
+                        }
+                        break;
+                    }
+
+                    case TacticalLines.RANGE_FAN: {
+                        if (tg.get_X() != null) {
+                            X = tg.get_X().split(",");
+                            for (j = 0; j < X.length; j++) {
+                                if (tg.Pixels.length > j * 102 + 25) {
+                                    pt0 = tg.Pixels[j * 102 + 25];
+                                    Modifier2.AddAreaModifier(tg, "ALT " + X[j], Modifier2.area, 0, pt0, pt0);
+                                }
                             }
                         }
-                    }// end if set range fan text
-                    break;
-                }
+                        if (!tg.get_HideOptionalLabels()) {
+                            let am: string[] = tg.get_AM().split(",");
+                            for (j = 0; j < am.length; j++) {
+                                if (tg.Pixels.length > j * 102 + 25) {
+                                    pt0 = tg.Pixels[j * 102 + 25];
+                                    //AddAreaModifier(tg, "RG " + am[j], area, -1, pt0, pt0);
+                                    if (j === 0) {
 
-                case TacticalLines.RANGE_FAN_SECTOR:
-                case TacticalLines.RADAR_SEARCH: {
-                    Modifier2.addSectorModifiers(tg, converter);
-                    break;
-                }
+                                        Modifier2.AddAreaModifier(tg, "MIN RG " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
+                                    }
 
-                case TacticalLines.ENVELOPMENT: {
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
-                    break;
-                }
+                                    else {
 
-                case TacticalLines.MOBILE_DEFENSE: {
-                    Modifier2.AddIntegralModifier(tg, label, Modifier2.area, 0, 16, 16, true);
-                    break;
-                }
+                                        Modifier2.AddAreaModifier(tg, "MAX RG " + "(" + j.toString() + ") " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
+                                    }
 
-                default: {
-                    break;
-                }
+                                }
+                            }
+                        }// end if set range fan text
+                        break;
+                    }
 
-            }//end switch
+                    case TacticalLines.RANGE_FAN_SECTOR:
+                    case TacticalLines.RADAR_SEARCH: {
+                        Modifier2.addSectorModifiers(tg, converter);
+                        break;
+                    }
+
+                    case TacticalLines.ENVELOPMENT: {
+                        Modifier2.AddIntegralModifier(tg, label, Modifier2.aboveMiddle, 0, 0, 1, true);
+                        break;
+                    }
+
+                    case TacticalLines.MOBILE_DEFENSE: {
+                        Modifier2.AddIntegralModifier(tg, label, Modifier2.area, 0, 16, 16, true);
+                        break;
+                    }
+
+                    default: {
+                        break;
+                    }
+
+                }//end switch
+            }
             Modifier2.scaleModifiers(tg);
             tg.Pixels = origPoints;
         } catch (exc) {
@@ -5080,6 +5239,165 @@ export class Modifier2 {
             }
         }
     }
+
+    /**
+     * Calculates the highest point that is left-of-center given symbol center point and points
+     * @param pixels Points that make the symbol
+     * @param ptCenter Represents the center of the symbol
+     * @return Point that is the highest point, left-of-center
+     */
+    private static getHighestPointLeftOfCenter(pixels:POINT2[], ptCenter:POINT2):POINT2
+    {
+        //highest point left of center
+        let highest:POINT2 = pixels[0];
+        let validPointFound:boolean = false;
+        for (const p of pixels) //loop through points
+        {
+            if(p.x <= ptCenter.x)//we only care about points left of center
+            {
+                if(!validPointFound)//find initial left-of-center point
+                {
+                    highest = p;//set initial value
+                    validPointFound = true;
+                }
+                else if(p.y < highest.y)//see if this point is higher than the current point
+                    highest = p;//set new highest, left-of-center point
+            }
+        }
+        return highest;
+    }
+    private static buildAreaGroupString(tg:TGLight, label:string):string
+    {
+        let linetype:number = tg.get_LineType();
+        let modifier:string = "";
+        switch (linetype)
+        {
+            case TacticalLines.PAA:
+            case TacticalLines.PAA_CIRCULAR:
+            case TacticalLines.PAA_RECTANGULAR:
+                modifier = tg.get_Name();
+                if(tg.get_DTG() != null && tg.get_DTG() != "")
+                    modifier += "\n" + tg.get_DTG() + " -";
+                if(tg.get_DTG1() != null && tg.get_DTG1() != "")
+                    modifier += "\n" + tg.get_DTG1();
+                break;
+            case TacticalLines.ACA:
+            case TacticalLines.ACA_CIRCULAR:
+            case TacticalLines.ACA_RECTANGULAR:
+                modifier += label + " " + tg.get_Name();
+                modifier += "\n" + tg.get_T1();
+                modifier += "\n" + "MIN ALT: " + tg.get_X();
+                modifier += "\n" + "MAX ALT: " + tg.get_X1();
+                modifier += "\n" + "GRID: " + tg.get_Location();
+                modifier += "\n" + "EFF: " + tg.get_DTG() + " -";
+                modifier += "\n" + tg.get_DTG1();
+                break;
+            case TacticalLines.FFA:
+            case TacticalLines.NFA:
+            case TacticalLines.RFA:
+            case TacticalLines.FFA_RECTANGULAR:
+            case TacticalLines.NFA_RECTANGULAR:
+            case TacticalLines.RFA_RECTANGULAR:
+            case TacticalLines.FFA_CIRCULAR:
+            case TacticalLines.NFA_CIRCULAR:
+            case TacticalLines.RFA_CIRCULAR:
+                modifier = label + "\n" + tg.get_Name();
+                if(tg.get_DTG() != null && tg.get_DTG() != "")
+                    modifier += "\n" + tg.get_DTG() + " -";
+                if(tg.get_DTG1() != null && tg.get_DTG1() != "")
+                    modifier += "\n" + tg.get_DTG1();
+                break;
+            case TacticalLines.FSA:
+                modifier = label + " " + tg.get_Name();
+                if(tg.get_DTG() != null && tg.get_DTG() != "")
+                    modifier += "\n" + tg.get_DTG() + " -";
+                if(tg.get_DTG1() != null && tg.get_DTG1() != "")
+                    modifier += "\n" + tg.get_DTG1();
+                break;
+            case TacticalLines.ATI:
+            case TacticalLines.CFFZ:
+            case TacticalLines.CFZ:
+            case TacticalLines.TBA:
+            case TacticalLines.TVAR:
+            case TacticalLines.ZOR:
+            case TacticalLines.DA:
+            case TacticalLines.SENSOR:
+            case TacticalLines.CENSOR:
+            case TacticalLines.KILLBOXBLUE:
+            case TacticalLines.KILLBOXPURPLE:
+            case TacticalLines.KILLBOXBLUE_RECTANGULAR:
+            case TacticalLines.KILLBOXPURPLE_RECTANGULAR:
+            case TacticalLines.FSA_RECTANGULAR:
+            case TacticalLines.ATI_RECTANGULAR:
+            case TacticalLines.CFFZ_RECTANGULAR:
+            case TacticalLines.SENSOR_RECTANGULAR:
+            case TacticalLines.CENSOR_RECTANGULAR:
+            case TacticalLines.DA_RECTANGULAR:
+            case TacticalLines.CFZ_RECTANGULAR:
+            case TacticalLines.ZOR_RECTANGULAR:
+            case TacticalLines.TBA_RECTANGULAR:
+            case TacticalLines.TVAR_RECTANGULAR:
+            case TacticalLines.FSA_CIRCULAR:
+            case TacticalLines.ATI_CIRCULAR:
+            case TacticalLines.CFFZ_CIRCULAR:
+            case TacticalLines.SENSOR_CIRCULAR:
+            case TacticalLines.CENSOR_CIRCULAR:
+            case TacticalLines.DA_CIRCULAR:
+            case TacticalLines.CFZ_CIRCULAR:
+            case TacticalLines.ZOR_CIRCULAR:
+            case TacticalLines.TBA_CIRCULAR:
+            case TacticalLines.TVAR_CIRCULAR:
+            case TacticalLines.KILLBOXBLUE_CIRCULAR:
+            case TacticalLines.KILLBOXPURPLE_CIRCULAR:
+                modifier = label + "\n" + tg.get_Name();
+                break;
+            case TacticalLines.WFZ_REVD:
+            case TacticalLines.OBSFAREA:
+                modifier = label;
+                modifier += "\n" + tg.get_Name();
+                modifier += "\n" + "TIME FROM: " + tg.get_DTG();
+                modifier += "\n" + "TIME TO: " + tg.get_DTG1();
+                break;
+            case TacticalLines.OBSAREA:
+                modifier = tg.get_Name();
+                modifier += "\n" + "TIME FROM: " + tg.get_DTG();
+                modifier += "\n" + "TIME TO: " + tg.get_DTG1();
+                break;
+            case TacticalLines.WFZ:
+            case TacticalLines.ROZ:
+            case TacticalLines.AARROZ:
+            case TacticalLines.UAROZ:
+            case TacticalLines.WEZ:
+            case TacticalLines.FEZ:
+            case TacticalLines.JEZ:
+            case TacticalLines.FAADZ:
+            case TacticalLines.HIDACZ:
+            case TacticalLines.MEZ:
+            case TacticalLines.LOMEZ:
+            case TacticalLines.HIMEZ:
+                modifier = label;
+                modifier += "\n" + tg.get_Name();
+                modifier += "\n" + "MIN ALT: " + tg.get_X();
+                modifier += "\n" + "MAX ALT: " + tg.get_X1();
+                modifier += "\n" + "TIME FROM: " + tg.get_DTG();
+                modifier += "\n" + "TIME TO: " + tg.get_DTG1();
+                break;
+        }
+        return modifier;
+    }
+
+    private static buildAreaGroupDTGString(tg:TGLight):string
+    {
+        let modifier:string = "";
+
+        if(tg.get_DTG() != null && tg.get_DTG() != "")
+            modifier += "\n" + tg.get_DTG() + " -";
+        if(tg.get_DTG1() != null && tg.get_DTG1() != "")
+            modifier += "\n" + tg.get_DTG1();
+
+        return modifier;
+    }
+
 
     /**
      * Displays the tg modifiers using a client Graphics2D, this is an option
