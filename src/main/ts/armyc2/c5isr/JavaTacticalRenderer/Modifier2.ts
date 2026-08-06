@@ -2891,7 +2891,7 @@ export class Modifier2 {
 
                         //DTG Labels at highest left-of-center point
                         let highest:POINT2 = Modifier2.getHighestPointLeftOfCenter(tg.Pixels,ptCenter);
-                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, 0 * csFactor, highest, new POINT2(highest.x + 0.001, highest.y, 0), false);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, 1 * csFactor, highest, new POINT2(highest.x + 0.001, highest.y, 0), false);
 
                         //DTG labels at top left of BBOX
                         //GetMBR(tg, ul, ur, lr, ll);
@@ -2907,19 +2907,32 @@ export class Modifier2 {
                     case TacticalLines.AIRAOA:
                     case TacticalLines.AAAAA:
                     case TacticalLines.MAIN:
+                        let axisMod:string = Modifier2.buildAreaGroupDTGString(tg);
                         if (tg.Pixels.length == 3) //one segment
                         {
                             midPt = lineutility.MidPointDouble(pt0, pt1, 0);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash + '\n' + tg.get_DTG1() + '\n' + tg.get_Name(), Modifier2.area, 0, midPt, midPt, false);
+                            if(tg.get_Name() != "")
+                            {
+                                if(axisMod != "")
+                                    axisMod += '\n';
+                                axisMod += tg.get_Name();
+                            }
+                            Modifier2.AddIntegralAreaModifier(tg, axisMod, Modifier2.area, 0, midPt, midPt, false);
 
                         } else if (tg.Pixels.length == 4) //2 segments
                         {
                             midPt = lineutility.MidPointDouble(pt1, pt2, 0);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash + '\n' + tg.get_DTG1() + '\n' + tg.get_Name(), Modifier2.area, 0, midPt, midPt, false);
+                            if(tg.get_Name() != "")
+                            {
+                                if(axisMod != "")
+                                    axisMod += '\n';
+                                axisMod += tg.get_Name();
+                            }
+                            Modifier2.AddIntegralAreaModifier(tg, axisMod, Modifier2.area, 0, midPt, midPt, false);
                         } else // 3 or more segments
                         {
                             midPt = lineutility.MidPointDouble(pt1, pt2, 0);
-                            Modifier2.AddIntegralAreaModifier(tg, tg.get_DTG() + WDash + '\n' + tg.get_DTG1(), Modifier2.area, 0, midPt, midPt, false);
+                            Modifier2.AddIntegralAreaModifier(tg, axisMod, Modifier2.area, 0, midPt, midPt, false);
                             midPt = lineutility.MidPointDouble(pt2, pt3, 0);
                             Modifier2.AddIntegralAreaModifier(tg, tg.get_Name(), Modifier2.area, 0, midPt, midPt, false);
                         }
@@ -4635,7 +4648,7 @@ export class Modifier2 {
                         Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupString(tg, label), Modifier2.area, 0, ptCenter, ptCenter, false);
                         //DTG on top left
                         let dtgCircularPosition:POINT2 = tg.Pixels[Math.round(tg.Pixels.length * 0.5625)];
-                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, -2 * csFactor, dtgCircularPosition, new POINT2(dtgCircularPosition.x + 0.001, dtgCircularPosition.y, 0), false);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, -1 * csFactor, dtgCircularPosition, new POINT2(dtgCircularPosition.x + 0.001, dtgCircularPosition.y, 0), false);
                         modifiersGrouped = true;
                         break;
                     case TacticalLines.FFA_CIRCULAR:
@@ -4674,7 +4687,7 @@ export class Modifier2 {
                         //highest point left of center
                         let dtgPosition:POINT2 = Modifier2.getHighestPointLeftOfCenter(tg.Pixels,ptCenter);
 
-                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, 0 * csFactor, dtgPosition, new POINT2(dtgPosition.x + 0.001, dtgPosition.y, 0), false);
+                        Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, 1 * csFactor, dtgPosition, new POINT2(dtgPosition.x + 0.001, dtgPosition.y, 0), false);
                         modifiersGrouped = true;
                         break;
                 }
@@ -5390,7 +5403,7 @@ export class Modifier2 {
         let modifier:string = "";
 
         if(tg.get_DTG() != null && tg.get_DTG() != "")
-            modifier += "\n" + tg.get_DTG() + " -";
+            modifier += tg.get_DTG() + " -";
         if(tg.get_DTG1() != null && tg.get_DTG1() != "")
             modifier += "\n" + tg.get_DTG1();
 
