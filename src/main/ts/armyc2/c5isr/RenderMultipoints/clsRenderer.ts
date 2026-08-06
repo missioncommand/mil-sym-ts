@@ -1544,10 +1544,32 @@ export class clsRenderer {
             } else if (drawRule === DrawRules.AXIS1 || drawRule === DrawRules.AXIS2) {
                 // Axis of Advance symbols
                 let points: Array<POINT2> = shapes[0].getPoints();
-                let midPointIndex = Math.trunc(points.length / 2);
+
+                //find arrowhead points
+                let tipIndex:number =0, leftIndex =0, rightIndex =0;//arrowhead points
+                let mCount:number = 0;//moveTo counter
+                for(let i=0; i<points.length; i++)
+                {
+                    if(points[i].style==0)
+                        mCount++;
+                    if(mCount==3) {
+                        tipIndex = i;
+                        //get left
+                        leftIndex = i+1;
+                        rightIndex = i+4;
+                        //get right/
+                        i =points.length;
+                    }
+                }
+
+                let ptA:POINT2 = new POINT2(points[leftIndex]);
+                let ptB:POINT2 = new POINT2(points[tipIndex]);
+                let ptC:POINT2 = new POINT2(points[rightIndex]);
+
+                /*let midPointIndex = Math.trunc(points.length / 2);
                 let ptA: POINT2 = new POINT2(points[midPointIndex - 1]);
                 let ptB: POINT2 = new POINT2(points[midPointIndex]);
-                let ptC: POINT2 = new POINT2(points[midPointIndex + 1]);
+                let ptC: POINT2 = new POINT2(points[midPointIndex + 1]);//*/
                 shapes.push(DISMSupport.getFDIShape(tg, ptA, ptB, ptC));
             }
             // Direction of attack symbols

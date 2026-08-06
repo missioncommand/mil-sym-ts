@@ -66,7 +66,7 @@ export class RendererSettings {
      * group labels thant tend to be close (like W, W1) into a single modifier with an
      * end-line character '\n' to create the multiline effect
      */
-    private static _GroupModifiers: boolean = true;
+    private static _GroupModifiers: boolean = false;
 
     /**
      * @deprecated
