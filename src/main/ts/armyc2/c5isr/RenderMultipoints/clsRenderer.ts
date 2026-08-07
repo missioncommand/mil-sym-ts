@@ -1545,6 +1545,13 @@ export class clsRenderer {
                 // Axis of Advance symbols
                 //symbol shape is last index, fill is first if present.
                 let points: Array<POINT2> = shapes[shapes.length-1].getPoints();
+                if(SymbolID.getEntityCode(tg.get_SymbolId())==342900)//movement to contact
+                {
+                    if(tg.get_FillColor() != null)
+                        points = shapes[3].getPoints();
+                    else
+                        points = shapes[2].getPoints();
+                }
 
                 //find arrowhead points
                 let tipIndex:number =0, leftIndex =0, rightIndex =0;//arrowhead points
