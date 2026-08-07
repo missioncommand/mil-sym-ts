@@ -2999,6 +2999,9 @@ export class Channels {
      * @return
      */
     private static getAXADFillShapes(lineType: int, pLinePoints: POINT2[]): Array<Shape2> {
+        
+        let extraPoints:number=0;
+        let tempMP:POINT2 = null;
         let shapes: Array<Shape2>;
         try {
             let newPts: Array<POINT2> = new Array();
@@ -3037,7 +3040,6 @@ export class Channels {
                     break;
                 }
 
-                case TacticalLines.AIRAOA:
                 case TacticalLines.SPT:
                 case TacticalLines.CATK:
                 case TacticalLines.SPT_STRAIGHT: {
@@ -3075,8 +3077,13 @@ export class Channels {
                         newPts.push(pLinePoints[j]);
                     }
                     //add the arrow outline
-                    newPts.push(pLinePoints[n - 6]);
-                    newPts.push(pLinePoints[n - 5]);
+                    //newPts.push(pLinePoints[n - 6]);//Just fill inner triangle
+                    //newPts.push(pLinePoints[n - 5]);
+                    newPts.push(pLinePoints[n-6]);//Fill entire triangle
+                    newPts.push(pLinePoints[n-7]);
+                    newPts.push(pLinePoints[n-8]);
+                    newPts.push(pLinePoints[n-3]);
+                    newPts.push(pLinePoints[n-4]);
                     for (j = n - 9; j >= (n - 8) / 2; j--) {
                         newPts.push(pLinePoints[j]);
                     }
@@ -3090,21 +3097,37 @@ export class Channels {
                     break;
                 }
 
-                case TacticalLines.AAAAA: {
-                    //for(j=0;j<(pLinePoints.length-19)/2;j++)
-                    for (j = 0; j < (n - 19) / 2; j++) {
-                        newPts.push(pLinePoints[j]);
-                    }
-                    //add the arrow outline
-                    newPts.push(pLinePoints[n - 17]);
-                    newPts.push(pLinePoints[n - 18]);;
-                    newPts.push(pLinePoints[n - 19]);
-                    newPts.push(pLinePoints[n - 14]);;
-                    newPts.push(pLinePoints[n - 15]);
+                case TacticalLines.AAAAA: {//Attack Helicopter
+                    //arrowhead and extra detail points + 3 because of duplicate tip points
+                    extraPoints = 21;//Attack Helicopter
 
-                    for (j = n - 20; j >= (n - 19) / 2; j--) {
+                    //right side of channel
+                    for(j=n-extraPoints;j>(n-extraPoints)/2;j--)
+                    {
                         newPts.push(pLinePoints[j]);
                     }
+
+                    //left side of channel ends at left index
+                    for(j=0;j<(n-extraPoints)/2;j++)
+                    {
+                        newPts.push(pLinePoints[j]);
+                    }
+
+                    //mid point twist
+                    tempMP = lineutility.MidPointDouble(newPts[newPts.length - 1], pLinePoints[n - 17], 0);
+                    newPts.push(tempMP);
+
+                    //triangle
+                    newPts.push(pLinePoints[n - 15]);//left inner//
+                    newPts.push(pLinePoints[n - 14]);//left outer
+                    newPts.push(pLinePoints[n - 13]);//tip
+                    newPts.push(pLinePoints[n - 18]);//right outer
+                    newPts.push(pLinePoints[n - 17]);//right inner//
+
+                    //mid point
+                    newPts.push(tempMP);
+
+
                     shape = new Shape2(Shape2.SHAPE_TYPE_FILL);
                     shape.moveTo(newPts[0]);
                     t = newPts.length;
@@ -3114,24 +3137,102 @@ export class Channels {
                     }
                     break;
                 }
+                case TacticalLines.AIRAOA://AoA Airborne/Aviation
+                {
+                    extraPoints = 10;//AoA Airborne/Aviation
 
-                case TacticalLines.FRONTAL_ATTACK:
-                case TacticalLines.TURNING_MOVEMENT: {
-                    for(j=0;j<(n-10)/2;j++)
+                    //right side of channel
+                    for(j=n-extraPoints;j>(n-extraPoints)/2;j--)
                     {
                         newPts.push(pLinePoints[j]);
                     }
+
+                    //left side of channel ends at left index
+                    for(j=0;j<(n-extraPoints)/2;j++)
+                    {
+                        newPts.push(pLinePoints[j]);
+                    }
+
+                    //mid point twist
+                    tempMP = lineutility.MidPointDouble(newPts[newPts.length - 1], pLinePoints[n - 6], 0);
+                    newPts.push(tempMP);//*/
+
+                    //triangle
+                    newPts.push(pLinePoints[n - 4]);//left inner//
+                    newPts.push(pLinePoints[n - 3]);//left outer
+                    newPts.push(pLinePoints[n - 2]);//tip
+                    newPts.push(pLinePoints[n - 7]);//right outer
+                    newPts.push(pLinePoints[n - 6]);//right inner//
+
+                    //mid point
+                    newPts.push(tempMP);//*/
+
+                    shape=new Shape2(Shape2.SHAPE_TYPE_FILL);
+                    shape.moveTo(newPts[0]);
+                    t=newPts.length;
+                    //for(j=1;j<newPts.size();j++)
+                    for(j=1;j<t;j++)
+                    {
+                        shape.lineTo(newPts[j]);
+                    }
+                    break;
+                }
+                case TacticalLines.FRONTAL_ATTACK: {
+                    //arrowhead and extra detail points + 3 because of duplicate tip points
+                    let frontalAttackExtraPoints:number = 15;
+                    //left side of channel ends at left index
+                    for(j=0;j<(n-frontalAttackExtraPoints)/2;j++)
+                    {
+                        newPts.push(pLinePoints[j]);
+                    }
+
                     //add the arrow outline
-                    newPts.push(pLinePoints[n-8]);
+                    newPts.push(pLinePoints[n-13]);
+                    newPts.push(pLinePoints[n-14]);
                     newPts.push(pLinePoints[n-9]);
                     newPts.push(pLinePoints[n-10]);
-                    newPts.push(pLinePoints[n-5]);
-                    newPts.push(pLinePoints[n-6]);
+                    newPts.push(pLinePoints[n-11]);
 
-                    for(j=n-11;j>=(n-10)/2;j--)
+                    //right side of channel
+                    for(j=n-frontalAttackExtraPoints-1;j>=(n-frontalAttackExtraPoints)/2;j--)
+                    {
+                        newPts.push(pLinePoints[j]);
+                    }//*/
+
+                    //create fill shape and add points
+                    shape=new Shape2(Shape2.SHAPE_TYPE_FILL);
+                    shape.moveTo(newPts[0]);
+                    t=newPts.length;
+                    for(j=1;j<t;j++)
+                    {
+                        shape.lineTo(newPts[j]);
+                    }
+                    break;
+                }
+
+                case TacticalLines.TURNING_MOVEMENT: {
+                    //arrowhead and extra detail points + 3 because of duplicate tip points
+                    extraPoints = 14;
+                    //left side of channel ends at left index
+                    for(j=0;j<(n-extraPoints)/2;j++)
                     {
                         newPts.push(pLinePoints[j]);
                     }
+
+                    //add the arrow outline
+                    newPts.push(pLinePoints[n-(extraPoints-2)]);//left inner
+                    newPts.push(pLinePoints[n-(extraPoints-1)]);//left outer
+                    newPts.push(pLinePoints[n-extraPoints]);//tip
+                    newPts.push(pLinePoints[n-(extraPoints-5)]);//right outer
+                    newPts.push(pLinePoints[n-(extraPoints-4)]);//right inner//*/
+
+                    //right side of channel
+                    for(j=n-extraPoints-1;j>=(n-extraPoints)/2;j--)
+                    {
+                        newPts.push(pLinePoints[j]);
+                    }//*/
+
+                    //create fill shape and add points
                     shape=new Shape2(Shape2.SHAPE_TYPE_FILL);
                     shape.moveTo(newPts[0]);
                     t=newPts.length;
