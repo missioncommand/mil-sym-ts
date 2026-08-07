@@ -1543,7 +1543,8 @@ export class clsRenderer {
                 shapes.push(DISMSupport.getFDIShape(tg, ptA, ptB, ptC));
             } else if (drawRule === DrawRules.AXIS1 || drawRule === DrawRules.AXIS2) {
                 // Axis of Advance symbols
-                let points: Array<POINT2> = shapes[0].getPoints();
+                //symbol shape is last index, fill is first if present.
+                let points: Array<POINT2> = shapes[shapes.length-1].getPoints();
 
                 //find arrowhead points
                 let tipIndex:number =0, leftIndex =0, rightIndex =0;//arrowhead points
@@ -1566,6 +1567,7 @@ export class clsRenderer {
                 let ptB:POINT2 = new POINT2(points[tipIndex]);
                 let ptC:POINT2 = new POINT2(points[rightIndex]);
 
+                //get points off fill shape, doesn't work for Axis symbols
                 /*let midPointIndex = Math.trunc(points.length / 2);
                 let ptA: POINT2 = new POINT2(points[midPointIndex - 1]);
                 let ptB: POINT2 = new POINT2(points[midPointIndex]);
