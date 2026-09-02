@@ -31,6 +31,7 @@ export { SymbolID } from "./src/main/ts/armyc2/c5isr/renderer/utilities/SymbolID
 export { ShapeInfo } from "./src/main/ts/armyc2/c5isr/renderer/utilities/ShapeInfo";
 export { MilStdSymbol } from "./src/main/ts/armyc2/c5isr/renderer/utilities/MilStdSymbol";
 
+export { LinePattern }  from "./src/main/ts/armyc2/c5isr/JavaLineArray/LinePattern";
 export { BasicShapes } from "./src/main/ts/armyc2/c5isr/JavaLineArray/BasicShapes";
 export { Basic3DShapes } from "./src/main/ts/armyc2/c5isr/web/render/utilities/Basic3DShapes";
 

@@ -83,6 +83,8 @@ export class MilStdSymbol {
 
     private static _useDashArray: boolean = true;
 
+    private static _useLinePattern: boolean = false;
+
     private static _hideOptionalLabels: boolean = false;
 
     private static _DrawAffiliationModifierAsLabel: boolean = true;
@@ -290,6 +292,14 @@ export class MilStdSymbol {
 
     public setUseDashArray(value: boolean): void {
         MilStdSymbol._useDashArray = value;
+    }
+
+    public getUseLinePattern(): boolean {
+        return MilStdSymbol._useLinePattern;
+    }
+
+    public setUseLinePattern(value: boolean): void {
+        MilStdSymbol._useLinePattern = value;
     }
 
     public getHideOptionalLabels(): boolean {

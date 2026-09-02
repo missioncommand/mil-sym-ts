@@ -25,6 +25,7 @@ import { clsUtilityCPOF } from "../RenderMultipoints/clsUtilityCPOF"
 import { clsMETOC } from "../JavaTacticalRenderer/clsMETOC";
 
 import { type int, type double } from "../../c5isr/graphics2d/BasicTypes";
+import { LinePattern } from "../JavaLineArray/LinePattern"
 
 /**
  * Rendering helper class
@@ -302,12 +303,22 @@ export class clsRenderer2 {
                             clsRenderer2.getMSRShapes(tg, shapes);
                         }
                         else {
-                            tg.Pixels = arraysupport.GetLineArray2(tg, tg.Pixels, shapes, clipBounds2, converter);
+                            //if not using line patterns, generate points
+                            if(!(tg.get_UseLinePattern() && LinePattern.supportsLinePattern(tg.get_SymbolId())))
+                                tg.Pixels=arraysupport.GetLineArray2(tg, tg.Pixels,shapes, clipBounds2, converter);
+                            else {
+                                clsChannelUtility.DrawChannelPatterns(tg.get_Pixels(),tg,shapes);
+                            }
                         }
                     }
                     else //channel type
                     {
-                        clsChannelUtility.DrawChannel(tg.Pixels, lineType, tg, shapes, null, clipBounds2, converter);
+                        //if not using line patterns, generate points
+                        if(!(tg.get_UseLinePattern() && LinePattern.supportsLinePattern(tg.get_SymbolId())))
+                            clsChannelUtility.DrawChannel(tg.Pixels, lineType, tg,shapes, null, clipBounds2, converter);
+                        else {
+                            clsChannelUtility.DrawChannelPatterns(tg.get_Pixels(),tg,shapes);
+                        }
                     }
                 }
             }

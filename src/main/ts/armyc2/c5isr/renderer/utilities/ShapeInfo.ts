@@ -1,5 +1,5 @@
 import { type int, type double } from "../../graphics2d/BasicTypes";
-
+import {LinePattern } from "../../JavaLineArray/LinePattern";
 import { AffineTransform } from "../../graphics2d/AffineTransform"
 import { BasicStroke } from "../../graphics2d/BasicStroke"
 import { GeneralPath } from "../../graphics2d/GeneralPath"
@@ -79,6 +79,7 @@ export class ShapeInfo {
      */
     private _shader: ImageBitmap = null;
     private _patternFillInfo: SVGSymbolInfo = null;
+    private _linePattern: LinePattern  = null;
     private _justify: int = ShapeInfo.justify_left;
     //for google earth
     private _Polylines: Array<Array<Point2D>> = null;
@@ -542,6 +543,17 @@ public Rectangle getBounds()
     public getPatternFillImage(): string {
         if (this._patternFillInfo)
             return this._patternFillInfo.getSVGDataURI();
+        else
+            return null;
+    }
+
+    public setLinePattern(lp: LinePattern): void {
+        this._linePattern = lp;
+    }
+
+    public getLinePattern(): LinePattern {
+        if (this._linePattern)
+            return this._linePattern;
         else
             return null;
     }

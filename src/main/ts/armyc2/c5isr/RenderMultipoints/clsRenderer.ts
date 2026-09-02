@@ -573,7 +573,7 @@ export class clsRenderer {
      * @param converter geographic to pixels to converter
      * @return MilstdSymbol object
      */
-    public static createMilStdSymboFromTGLight(tg: TGLight, converter: IPointConversion): MilStdSymbol {
+    public static createMilStdSymbolFromTGLight(tg: TGLight, converter: IPointConversion): MilStdSymbol {
         let milStd: MilStdSymbol;
         try {
             let symbolId: string = tg.get_SymbolId();
@@ -667,6 +667,8 @@ export class clsRenderer {
                     tg.set_LineThickness(milStd.getLineWidth());
                     tg.set_TexturePaint(milStd.getFillStyle());
                     tg.set_patternScale(milStd.getPatternScale());
+                    tg.set_UseLinePattern(milStd.getUseLinePattern());
+                    
 
                     tg.setIconSize(milStd.getUnitSize());
                     tg.set_KeepUnitRatio(milStd.getKeepUnitRatio());
