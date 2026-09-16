@@ -1346,5 +1346,40 @@ export class DrawRules {
      */
     public static readonly ARC1: number = 1001;
 
+        /**
+     * Converts a DrawRules constant into its corresponding draw-rule string.
+     *
+     * @param drawRule the DrawRules constant
+     * @return the draw-rule name, or "DoNotDraw" if no match exists
+     */
+    public static getDrawRuleName(drawRule:number):string
+    {
+        let name:string = null;
+        if(drawRule == 0)
+            return "DoNotDraw";
+        else if(drawRule < 200)
+            name = "Area" + (drawRule-100);
+        else if(drawRule < 300)
+            name = "Point" + (drawRule-200);
+        else if(drawRule < 400)
+            name = "Line" + (drawRule-300);
+        else if(drawRule < 500)
+            name = "Corridor" + (drawRule-400);
+        else if(drawRule < 600)
+            name = "Axis" + (drawRule-500);
+        else if(drawRule < 700)
+            name = "Polyline" + (drawRule-600);
+        else if(drawRule < 800)
+            name = "Ellipse" + (drawRule-700);
+        else if(drawRule < 900)
+            name = "Rectangular" + (drawRule-800);
+        else if(drawRule < 1000)
+            name = "Circular" + (drawRule-900);
+        else if(drawRule < 1100)
+            name = "Arc" + (drawRule-1000);
+        else
+            name = "DoNotDraw";
+        return name;
+    }
 
 }

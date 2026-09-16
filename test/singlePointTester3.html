@@ -285,7 +285,7 @@
 			id += document.getElementById("lbAmp").value.split("-")[0];
 			id += basicID.substring(2);
 			
-			var s1m = document.getElementById("tbS1Mod").value;
+			/*var s1m = document.getElementById("tbS1Mod").value;
 			if(s1m.length == 2)
 			{
 				id += s1m;
@@ -297,6 +297,30 @@
 			if(s2m.length == 2)
 			{
 				id += s2m;
+			}
+			else
+				id += "00";//*/
+
+            var s1m = document.getElementById("lbS1Mod").value;
+            if(s1m.length == 2)
+			{
+				id += s1m;
+			}
+            else if(s1m.length == 3)//common modifier
+			{
+				id += s1m.substring(1);
+			}
+			else
+				id += "00";
+
+            var s2m = document.getElementById("lbS2Mod").value;
+            if(s2m.length == 2)
+			{
+				id += s2m;
+			}
+            else if(s2m.length == 3)//common modifier
+			{
+				id += s2m.substring(1);
 			}
 			else
 				id += "00";
@@ -318,8 +342,72 @@
 
             document.getElementById("tbSymbolID").value = id;
 
+            updateSMLists();
+
 			return id;
             
+        }
+
+        function updateSMLists()
+        {
+            try
+            {
+                var version = document.getElementById("lbVersion").value.split("-")[0];
+                var symbolID = document.getElementById("tbSymbolID").value;
+                var ss = C5Ren.SymbolID.getSymbolSet(symbolID);
+                var cm1 = document.getElementById("lbS1").value;//C5Ren.SymbolID.getCommonModifier1(symbolID);
+                var cm2 = document.getElementById("lbS2").value;//C5Ren.SymbolID.getCommonModifier2(symbolID);
+                var myList = document.getElementById("lbS1Mod");
+                var s1OldName = myList.name;
+                var s1NewName = version + "-S1-" + cm1 + "-" + ss;
+                if(s1OldName != s1NewName)
+                {
+                    if(cm1 > 0)
+                        ss = 0;
+
+                    var list = C5Ren.SectorModUtils.getInstance().getSectorModList(version,ss,1);
+
+                    //clear list
+                    myList.options.length = 0;
+
+                    list.forEach((item, index) => {
+                        var newOption = new Option()
+                        myList.options.add(new Option(item[0] + " - " + item[1],item[0]));
+                    });
+                    myList.name = s1NewName;
+                    myList.selectedIndex = 0;
+                }
+
+                //sector mods 2 /////////////////////////////////////////////////////////
+                myList = document.getElementById("lbS2Mod");
+                var s2OldName = myList.name;
+                var s2NewName = version + "-S2-" + cm2 + "-" + ss;
+                if(s2OldName != s2NewName)
+                {
+                    if(cm2 > 0)
+                        ss = 0;
+                    else
+                        ss = C5Ren.SymbolID.getSymbolSet(symbolID);
+                    
+                    var list = C5Ren.SectorModUtils.getInstance().getSectorModList(version,ss,2);
+                    
+                    //clear list
+                    myList.options.length = 0;
+
+                    list.forEach((item, index) => {
+                        var newOption = new Option()
+                        myList.options.add(new Option(item[0] + " - " + item[1],item[0]));
+                    });
+
+                    myList.name = s2NewName;
+                    myList.selectedIndex = 0;
+                }
+            }
+            catch(error)
+            {
+                console.log(error);
+            }
+
         }
         
         function renderFE()
@@ -458,6 +546,12 @@
 
     function versionChange()
     {
+        var ver = parseInt(document.getElementById("lbVersion").value.substring(0,2));
+        if(ver < 15)
+        {
+            document.getElementById("lbS1").selectedIndex=0;
+            document.getElementById("lbS2").selectedIndex=0;
+        }
         buildSymbolID();
         populateListBox();
     }
@@ -541,6 +635,10 @@
         lbU.remove(1);
         lbU.onselect = renderFE;
         lbU.onchange = renderFE;
+
+        lbTG.selectedIndex=1;
+        lbU.selectedIndex=1;
+        renderFE();
 
         
     }
@@ -940,11 +1038,11 @@
 </head>
    
 <BODY bgcolor="#5f95e9" onload="setup();">
-    <select id="lbTG" size="10" style="width: 300px;" >
+    <select id="lbTG" size="10" style="width: 300px;">
         <option>Single Point Tactical</option>
         <option>Populating Values...</option>
     </select>        
-    <select id="lbU" size="10" style="width: 300px;" >
+    <select id="lbU" size="10" style="width: 300px;">
         <option>Single Point Warfighting</option>
         <option>Populating Values...</option>
     </select>       
@@ -985,30 +1083,6 @@ Status: <select id = lbStatus onchange="buildSymbolID();">
     <option>3-Damaged</option>
     <option>4-Destroyed</option>
     <option>5-Full to capacity</option>
-</select>
-S1: <select id = lbS1 onchange="buildSymbolID();">
-    <option>0</option>
-    <option>1</option>
-    <option>2</option>
-    <option>3</option>
-    <option>4</option>
-    <option>5</option>
-    <option>6</option>
-	<option>7</option>
-    <option>8</option>
-    <option>9</option>
-</select>
-S2: <select id = lbS2 onchange="buildSymbolID();">
-    <option>0</option>
-    <option>1</option>
-    <option>2</option>
-    <option>3</option>
-    <option>4</option>
-    <option>5</option>
-    <option>6</option>
-	<option>7</option>
-    <option>8</option>
-    <option>9</option>
 </select>
 <br>
 HQTFD: <select id = lbHQTFD onchange="buildSymbolID();">
@@ -1052,8 +1126,6 @@ Amplifier: <select id = lbAmp onchange="buildSymbolID();">
 	<option>62-Long Towed Array</option>
 	<option>71-Leader Individual</option>
 </select>
-S1Mod: <input id="tbS1Mod" type="text" value="00" maxlength="2" size="2" onchange="buildSymbolID();">
-S2Mod: <input id="tbS2Mod" type="text" value="00" maxlength="2" size="2" onchange="buildSymbolID();">
 Frame Shape: <select id = lbFrame>
     <option>0-Unknown</option>
     <option>1-Space</option>
@@ -1067,7 +1139,39 @@ Frame Shape: <select id = lbFrame>
     <option>9-Cyber</option>
     <option>A-SeaSurface</option>
 </select>
-Size: <input id="tbSize" type="number" value="100" style="width: 4em"><br/>
+Size: <input id="tbSize" type="number" value="100" style="width: 4em">
+<br>
+Common S1: <select id = lbS1 onchange="buildSymbolID();">
+    <option>0</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+	<option>7</option>
+    <option>8</option>
+    <option>9</option>
+</select>
+Common S2: <select id = lbS2 onchange="buildSymbolID();">
+    <option>0</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+	<option>7</option>
+    <option>8</option>
+    <option>9</option>
+</select>
+<!-- S1Mod: <input id="tbS1Mod" type="text" value="00" maxlength="2" size="2" onchange="buildSymbolID();">
+S2Mod: <input id="tbS2Mod" type="text" value="00" maxlength="2" size="2" onchange="buildSymbolID();"> -->
+S1Mod: <select name="S1-0-01" id = lbS1Mod onchange="buildSymbolID();" style="width: 10em"> 
+</select>
+S2Mod: <select name="S2-0-01" id = lbS2Mod onchange="buildSymbolID();" style="width: 10em">
+</select>
+<br/>
 Keep Unit Ratio: <input id="cbKeepUnitRatio" type="checkbox" checked><br/>
 Labels:  <input id="cbLabels" type="checkbox"><br/>
 Draw as Icon:  <input id="cbDrawAsIcon" type="checkbox"><br/>
