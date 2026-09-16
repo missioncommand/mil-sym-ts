@@ -1,3 +1,5 @@
+import { DrawRules } from "./DrawRules";
+
 /**
  * Draw Rules for METEOROLOGICAL AND OCEANOGRAPHIC SYMBOLOGY
  *
@@ -215,5 +217,14 @@ export class MODrawRules {
      */
     public static readonly LINE8: number = 308;
 
-
+    /**
+     * Converts a DrawRules constant into its corresponding draw-rule string.
+     *
+     * @param drawRule the DrawRules constant
+     * @return the draw-rule name, or "DoNotDraw" if no match exists
+     */
+    public static getDrawRuleName(drawRule:number):string
+    {
+        return DrawRules.getDrawRuleName(drawRule);
+    }
 }

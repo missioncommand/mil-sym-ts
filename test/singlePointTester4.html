@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta line required for IE-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="UTF-8" />
+  <title>MIL-STD Renderer Demo</title>
+
+  <!-- WebPack bundle -->
+  <!-- <script src="dist/C5Ren.umd.js" type="text/javascript"></script> -->
+  
+  <script type = "module">
+        import * as C5Ren from '../dist/C5Ren.mjs';
+        console.log("Available exports:", C5Ren);
+        window.C5Ren = C5Ren;
+    </script>
+
+  <style>
+    /* Global layout and typography */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .app-header {
+      background: #1f2937;
+      color: #f9fafb;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .app-header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .app-header span {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .app-main {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .panel {
+      background: #ffffff;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      padding: 12px 16px;
+      box-sizing: border-box;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .panel h3 {
+      margin: 12px 0 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .panel-left {
+      flex: 0 0 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-center {
+      flex: 0 0 420px;
+    }
+
+    .panel-right {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    /* Form controls */
+    label {
+      font-size: 0.85rem;
+      color: #374151;
+    }
+
+    select, input[type="number"], input[type="text"] {
+      font-size: 0.85rem;
+      padding: 3px 4px;
+      border-radius: 4px;
+      border: 1px solid #d1d5db;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 3px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 6px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .form-col {
+      flex: 1;
+    }
+
+    .small-input {
+      width: 4em;
+    }
+
+    /* Buttons */
+    button {
+      font-size: 0.85rem;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #d1d5db;
+      background: #e5e7eb;
+      cursor: pointer;
+      margin-right: 6px;
+    }
+
+    button.primary {
+      background: #1d4ed8; /* darker blue */
+	  border-color: #1d4ed8;
+    }
+	
+	button.primary.active {
+	  background: #1d4ed8; /* darker blue */
+	  border-color: #1d4ed8;
+	}
+	
+	/* Highlight the button when the currently selected symbol is multipoint-capable */
+	button.multipoint-capable {
+	  border-color: #2563eb;
+	  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.7);
+	}
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    /* Canvas & SVG preview */
+    .preview-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .preview-header {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+
+    #preview {
+      border: 1px solid #9ca3af;
+      border-radius: 4px;
+      background: #ffffff;
+    }
+
+    .svg-preview-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .section-divider {
+      margin: 12px 0;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    /* Tree styling */
+    #symbolTree {
+      max-height: 420px;
+      overflow: auto;
+      font-size: 0.86rem;
+    }
+
+    #symbolTree summary:hover {
+      color: #2563eb;
+    }
+
+    #symbolTree a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <script type="text/javascript">
+    // Global state variables
+    var drawMPMode = false;
+    var mpPoints = null;
+    var mpcp = null;
+    var mpPointCount = 0;
+    var fontCheckTimer =  null;
+    var retries = 15;
+    var attempts = 0;
+    var _symbolID = null;
+    var _symStd = null;
+    var _modifiers = null;
+    var Modifiers = null;
+	var _drawMPAlertShown = false;
+	
+	// Cache of symbol sets + symbols for the current version
+	var symbolTreeData = null;
+
+    function populateModifiers() {
+      var modifiers = new Map();
+
+      modifiers.set(C5Ren.Modifiers.H_ADDITIONAL_INFO_1, "H");
+      modifiers.set(C5Ren.Modifiers.H1_ADDITIONAL_INFO_2,"H1");
+      modifiers.set(C5Ren.Modifiers.AP_TARGET_NUMBER,"AP");
+      modifiers.set(C5Ren.Modifiers.AP1_TARGET_NUMBER_EXTENSION,"AP1");
+      modifiers.set(C5Ren.Modifiers.X_ALTITUDE_DEPTH,"0,10");
+      modifiers.set(C5Ren.Modifiers.K_COMBAT_EFFECTIVENESS,"100");
+      modifiers.set(C5Ren.Modifiers.Q_DIRECTION_OF_MOVEMENT,"45");
+
+      modifiers.set(C5Ren.Modifiers.W_DTG_1,C5Ren.SymbolUtilities.getDateLabel(new Date()));
+      modifiers.set(C5Ren.Modifiers.W1_DTG_2,C5Ren.SymbolUtilities.getDateLabel(new Date()));
+      modifiers.set(C5Ren.Modifiers.J_EVALUATION_RATING,"J");
+      modifiers.set(C5Ren.Modifiers.M_HIGHER_FORMATION,"M");
+      modifiers.set(C5Ren.Modifiers.N_HOSTILE,"ENY");
+      modifiers.set(C5Ren.Modifiers.P_IFF_SIF_AIS,"P");
+      modifiers.set(C5Ren.Modifiers.Y_LOCATION,"Y");
+      modifiers.set(C5Ren.Modifiers.C_QUANTITY,"C");
+      modifiers.set(C5Ren.Modifiers.F_REINFORCED_REDUCED,"RD");
+      modifiers.set(C5Ren.Modifiers.L_SIGNATURE_EQUIP,"!");
+      modifiers.set(C5Ren.Modifiers.AA_SPECIAL_C2_HQ,"AA");
+      modifiers.set(C5Ren.Modifiers.G_STAFF_COMMENTS,"G");
+      modifiers.set(C5Ren.Modifiers.V_EQUIP_TYPE,"V");
+      modifiers.set(C5Ren.Modifiers.T_UNIQUE_DESIGNATION_1,"T");
+      modifiers.set(C5Ren.Modifiers.T1_UNIQUE_DESIGNATION_2,"T1");
+      modifiers.set(C5Ren.Modifiers.Z_SPEED,"999");
+
+      modifiers.set(C5Ren.Modifiers.R2_SIGNIT_MOBILITY_INDICATOR, "2");
+      modifiers.set(C5Ren.Modifiers.AD_PLATFORM_TYPE,"AD");
+      modifiers.set(C5Ren.Modifiers.AE_EQUIPMENT_TEARDOWN_TIME,"AE");
+      modifiers.set(C5Ren.Modifiers.AF_COMMON_IDENTIFIER,"AF");
+      modifiers.set(C5Ren.Modifiers.AJ_SPEED_LEADER,"700 KTS 045");
+      modifiers.set(C5Ren.Modifiers.AO_ENGAGEMENT_BAR, "AO:AOA-AO");
+      modifiers.set(C5Ren.Modifiers.AR_SPECIAL_DESIGNATOR, "AR");
+      modifiers.set(C5Ren.Modifiers.AQ_GUARDED_UNIT, "AQ");
+
+      var id = buildSymbolID(_symbolID);
+      var msInfo = C5Ren.MSLookup.getInstance().getMSLInfo(id);
+      if(msInfo != null && msInfo.getSymbolSet()==25) {
+        var drawRule = msInfo.getDrawRule();
+        if (drawRule == C5Ren.DrawRules.POINT17) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1500,1000");
+          modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "45");
+        } else if (drawRule == C5Ren.DrawRules.POINT18) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000,1500");
+          modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "45,90");
+        } else if (drawRule == C5Ren.DrawRules.CORRIDOR1) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000");
+          modifiers.set(C5Ren.Modifiers.X_ALTITUDE_DEPTH, "0,10");
+        } else if (drawRule == C5Ren.DrawRules.ELLIPSE1) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000,1500");
+          modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "45");
+        }
+        if (drawRule == C5Ren.DrawRules.RECTANGULAR1) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000");
+        } else if (drawRule == C5Ren.DrawRules.RECTANGULAR2) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000,3000");
+          modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "45");
+        } else if (drawRule == C5Ren.DrawRules.RECTANGULAR3) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000");
+        } else if (drawRule == C5Ren.DrawRules.CIRCULAR1) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "1000");
+        } else if (drawRule == C5Ren.DrawRules.CIRCULAR2) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "750,1500,1500");
+          modifiers.set(C5Ren.Modifiers.X_ALTITUDE_DEPTH, "0,10,100");
+        } else if (drawRule == C5Ren.DrawRules.ARC1) {
+          modifiers.set(C5Ren.Modifiers.AM_DISTANCE, "500,1500,2500,3500,4500");
+          modifiers.set(C5Ren.Modifiers.AN_AZIMUTH, "290,30,290,30,315,30,315,35");
+          modifiers.set(C5Ren.Modifiers.X_ALTITUDE_DEPTH, "0,10,100,200");
+        }
+      }
+
+      return modifiers;
+    }
+
+    function drawToCanvas(svg,x,y) {
+      try {
+        var canvas = document.getElementById('preview');
+        var ctx = canvas.getContext('2d');
+        var data = svg;
+        var DOMURL = window.URL || window.webkitURL || window;
+        var img1 = new Image();
+        var svgBlob = new Blob([data], {type: 'image/svg+xml'});
+        var url = DOMURL.createObjectURL(svgBlob);
+        img1.onload = function() {
+          ctx.drawImage(img1, x, y);
+          DOMURL.revokeObjectURL(url);
+        }
+        img1.src = url;
+      }
+      catch(exc) {
+        console.log(exc);
+      }
+    }
+	
+	function updateSvgPreview(symbolID) {
+		if (!symbolID) return;
+
+		var size = document.getElementById("tbSize").value;
+		var keepUnitRatio = document.getElementById("cbKeepUnitRatio").checked;
+		var showLabels = document.getElementById("cbLabels").checked;
+		var drawAsIcon = document.getElementById("cbDrawAsIcon").checked;
+		var scaleMainIcon = document.getElementById("cbScaleMainIcon").checked;
+
+		var modifiers = new Map();
+		if (showLabels === true) {
+		  modifiers = populateModifiers();
+		}
+
+		var attributes = new Map();
+		attributes.set(C5Ren.MilStdAttributes.PixelSize, String(size));
+		attributes.set(C5Ren.MilStdAttributes.DrawAsIcon, String(drawAsIcon));
+		attributes.set(C5Ren.MilStdAttributes.KeepUnitRatio, String(keepUnitRatio));
+
+		C5Ren.RendererSettings.getInstance().setScaleMainIcon(scaleMainIcon);
+		C5Ren.RendererSettings.getInstance().setSPModifierPlacement(1);
+		attributes.set(C5Ren.MilStdAttributes.ModifierPlacement, C5Ren.RendererSettings.ModifierPlacement_FLEXIBLE);
+
+		// Render icon just to get SVG/SVG data URI
+		var si = C5Ren.MilStdIconRenderer.getInstance().RenderSVG(symbolID, modifiers, attributes);
+
+		var svgImage = document.getElementById("SVGTest");
+		if (svgImage) {
+		  svgImage.width = si.getImageBounds().getWidth();
+		  svgImage.height = si.getImageBounds().getHeight();
+		  var dataURI = si.getSVGDataURI();
+		  svgImage.src = dataURI;
+    }
+
+    // If you want the raw SVG markup, re‑enable this:
+    /*
+    var contentSpan = document.getElementById("contentSpan");
+    if (contentSpan) {
+      contentSpan.innerHTML = si.getSVG();
+    }
+    */
+  }
+  
+  function refreshCurrentSymbolPreview() {
+  // If we don't have a basic 8-char ID yet, nothing to do
+  if (!_symbolID || _symbolID.length !== 8) {
+    return;
+  }
+
+  // Rebuild full SIDC from current UI state
+  var fullID = buildSymbolID(_symbolID);
+
+  // Update right-panel SVG preview
+  updateSvgPreview(fullID);
+}
+
+
+    function render(symbolID, x, y) {
+      var size = document.getElementById("tbSize").value;
+      var keepUnitRatio = document.getElementById("cbKeepUnitRatio").checked;
+      var showLabels = document.getElementById("cbLabels").checked;
+      var drawAsIcon = document.getElementById("cbDrawAsIcon").checked;
+      var scaleMainIcon = document.getElementById("cbScaleMainIcon").checked;
+      var drawOutline = document.getElementById("cbDrawOutline").checked;
+
+      var modifiers = new Map();
+      if(showLabels === true) {
+        modifiers = populateModifiers();
+      }
+
+      var attributes = new Map();
+      attributes.set(C5Ren.MilStdAttributes.PixelSize,String(size));
+      attributes.set(C5Ren.MilStdAttributes.DrawAsIcon,String(drawAsIcon));
+      attributes.set(C5Ren.MilStdAttributes.KeepUnitRatio,String(keepUnitRatio));
+
+      C5Ren.RendererSettings.getInstance().setScaleMainIcon(scaleMainIcon);
+      C5Ren.RendererSettings.getInstance().setSPModifierPlacement(1);
+      attributes.set(C5Ren.MilStdAttributes.ModifierPlacement,C5Ren.RendererSettings.ModifierPlacement_FLEXIBLE);
+
+      var si = C5Ren.MilStdIconRenderer.getInstance().RenderSVG(symbolID,modifiers,attributes);
+      var center = si.getSymbolCenterPoint();
+
+      var preview = document.getElementById("preview");
+      var ctx = preview.getContext('2d');
+
+      var svgImage = document.getElementById("SVGTest");
+      svgImage.width = si.getImageBounds().getWidth();
+      svgImage.height = si.getImageBounds().getHeight();
+      var dataURI = si.getSVGDataURI();
+      svgImage.src = dataURI;
+
+      /*var contentSpan = document.getElementById("contentSpan");
+      if (contentSpan) {
+        contentSpan.innerHTML = si.getSVG();
+      }*/
+
+      try {
+        // position origin so (x,y) is at the symbol anchor
+        x = x - center.getX();
+        y = y - center.getY();
+
+        drawToCanvas(si.getSVG(),x,y);
+
+        if (drawOutline) {
+          var bounds = si.getImageBounds();
+          bounds.setRect(x,y,bounds.getWidth(),bounds.getHeight());
+          bounds.stroke(ctx);
+        }
+
+        // draw anchor point
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.arc(x + center.getX(), y + center.getY(), 1.5, 0, 2 * Math.PI);
+        ctx.fill();
+
+      }
+      catch(err) {
+        console.log(err);
+      }
+    }
+
+    function buildSymbolID(basicID) {
+      if(basicID == null || basicID.length !== 8) {
+        if(_symbolID && _symbolID.length === 8)
+          basicID = _symbolID;
+        else
+          basicID = "00000000";
+      }
+
+      var id = document.getElementById("lbVersion").value.split("-")[0];
+      id += document.getElementById("lbContext").value.split("-")[0];
+      id += document.getElementById("lbAffiliation").value.split("-")[0];
+      id += basicID.substring(0, 2);
+      id += document.getElementById("lbStatus").value.split("-")[0];
+      id += document.getElementById("lbHQTFD").value.split("-")[0];
+      id += document.getElementById("lbAmp").value.split("-")[0];
+      id += basicID.substring(2);
+
+      var s1m = document.getElementById("lbS1Mod").value;
+      if(s1m.length == 2) {
+        id += s1m;
+      } else if(s1m.length == 3) {
+        id += s1m.substring(1);
+      } else {
+        id += "00";
+      }
+
+      var s2m = document.getElementById("lbS2Mod").value;
+      if(s2m.length == 2) {
+        id += s2m;
+      } else if(s2m.length == 3) {
+        id += s2m.substring(1);
+      } else {
+        id += "00";
+      }
+
+      id += document.getElementById("lbS1").value;
+      id += document.getElementById("lbS2").value;
+
+      var fs = document.getElementById("lbFrame").value.split("-")[0];
+
+      if(parseInt(id.substring(0,2)) >= C5Ren.SymbolID.Version_2525E)
+        id += fs + "0000";
+      else
+        id += "00000";
+
+      if(document.getElementById("cbLabels").checked)
+        id += "840";
+      else
+        id += "000";
+
+      // write provisional ID
+      document.getElementById("tbSymbolID").value = id;
+
+      // If the sector-mod lists changed, reset S1/S2 modifiers in the ID
+      if(updateSMLists()) {
+        id = C5Ren.SymbolID.setModifier1(id,0);
+        id = C5Ren.SymbolID.setModifier2(id,0);
+        // sync textbox with updated ID so UI always matches parsed ID
+        document.getElementById("tbSymbolID").value = id;
+      }            
+
+      updateSymbolDetails(id);
+
+      return id;
+    }
+
+    function updateSymbolDetails(id) {
+      var detailsEl = document.getElementById("symbolDetails");
+      if (!detailsEl) return;
+
+      try {
+        var msInfo = C5Ren.MSLookup.getInstance().getMSLInfo(id);
+        if (!msInfo) {
+          detailsEl.innerHTML = "<em>No metadata found for this symbol ID.</em>";
+          return;
+        }
+
+        var ss = msInfo.getSymbolSet();
+        var name = msInfo.getName();
+        var basic = msInfo.getBasicSymbolID();
+		var drawRule = msInfo.getDrawRule();
+        var minPts   = msInfo.getMinPointCount();
+        var maxPts   = msInfo.getMaxPointCount();
+		
+		// Get draw rule name from C5Ren.DrawRules
+		var drName = "";
+		try {
+			drName = C5Ren.DrawRules.getDrawRuleName
+			  ? C5Ren.DrawRules.getDrawRuleName(drawRule)
+			  : "";
+		} catch (e) {
+			drName = "";
+		}
+
+        var html = "";
+		html += "<div><strong>Name:</strong> " + name + "</div>";
+		html += "<div><strong>Basic ID:</strong> " + basic + "</div>";
+		html += "<div><strong>Symbol Set:</strong> " +  C5Ren.MSInfo.parseSymbolSetName(id) + " (" + ss + ")</div>";
+		  
+		  if (drawRule !== undefined && drawRule !== null) {
+        html += "<div><strong>Draw Rule:</strong> " + drName;
+        if (drName) {
+			  html += " (" + drawRule + ")";
+			}
+			html += "</div>";
+		  }
+
+		  if (minPts !== "" || maxPts !== "") {
+			html += "<div><strong>Min / Max Points:</strong> "
+				  + (minPts !== "" ? minPts : "?")
+				  + " / "
+				  + (maxPts > 100 ? "N" : maxPts)
+				  + "</div>";
+		  }
+		  
+		  detailsEl.innerHTML = html;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    function updateSMLists() {
+      var updated = false;
+      try {
+        var version = document.getElementById("lbVersion").value.split("-")[0];
+        var symbolID = document.getElementById("tbSymbolID").value;
+        var ss = C5Ren.SymbolID.getSymbolSet(symbolID);
+        var cm1 = document.getElementById("lbS1").value;
+        var cm2 = document.getElementById("lbS2").value;
+
+        var myList = document.getElementById("lbS1Mod");
+        var s1OldName = myList.name;
+        var s1NewName = version + "-S1-" + cm1 + "-" + ss;
+        if(s1OldName != s1NewName) {
+          if(cm1 > 0)
+            ss = 0;
+
+          var list = C5Ren.SectorModUtils.getInstance().getSectorModList(version,ss,1);
+
+          myList.options.length = 0;
+          list.forEach((item, index) => {
+            myList.options.add(new Option(item[0] + " - " + item[1],item[0]));
+          });
+          myList.name = s1NewName;
+          myList.selectedIndex = 0;
+          updated = true;
+        }
+
+        myList = document.getElementById("lbS2Mod");
+        var s2OldName = myList.name;
+        var s2NewName = version + "-S2-" + cm2 + "-" + ss;
+        if(s2OldName != s2NewName) {
+          if(cm2 > 0)
+            ss = 0;
+          else
+            ss = C5Ren.SymbolID.getSymbolSet(symbolID);
+
+          var list2 = C5Ren.SectorModUtils.getInstance().getSectorModList(version,ss,2);
+
+          myList.options.length = 0;
+          list2.forEach((item, index) => {
+            myList.options.add(new Option(item[0] + " - " + item[1],item[0]));
+          });
+
+          myList.name = s2NewName;
+          myList.selectedIndex = 0;
+          updated = true;
+        }
+      }
+      catch(error) {
+        console.log(error);
+      }
+      return updated;
+    }
+
+	function buildSymbolTree(version)
+	{
+		buildSymbolTreeData(version);
+		renderSymbolTree();
+	}
+
+	function buildSymbolTreeData(version) {
+		symbolTreeData = null;
+
+		var list = C5Ren.MSLookup.getInstance().getIDList(version);
+		var symbolSetMap = {};
+
+		for (var i = 0; i < list.length; i++) {
+		  var symbolID = list[i];
+		  var msi = C5Ren.MSLookup.getInstance().getMSLInfo(symbolID, version);
+		  if (!msi || msi.getDrawRule() === 0) continue;
+
+		  var ssNum = msi.getSymbolSet();
+		  var ssKey = String(ssNum);
+		  if (ssKey.length === 1) {
+			ssKey = "0" + ssKey;
+		  }
+
+		  var ec = "";
+		  try {
+			ec = (typeof msi.getEntityCode === "function") ? msi.getEntityCode() : "";
+		  } catch (e) {
+			ec = "";
+		  }
+		  var ecKey = ec || "000000";
+
+		  var basic = msi.getBasicSymbolID();
+		  var symName = msi.getName();
+
+		  var label = symName + " (" + ecKey + ")";
+
+		  if (!symbolSetMap[ssKey]) {
+			var ssName = "";
+			try {
+			  ssName = C5Ren.MSInfo.parseSymbolSetName(ssKey, version);
+			} catch (e) {
+			  ssName = "Symbol Set " + ssKey;
+			}
+
+			symbolSetMap[ssKey] = {
+			  symbolSet: ssNum,
+			  ssKey: ssKey,
+			  name: ssName,
+			  symbols: []
+			};
+		  }
+
+		  symbolSetMap[ssKey].symbols.push({
+			basicID: basic,
+			label: label,
+			entityCode: ecKey,
+			name: symName
+		  });
+		}
+
+		// Convert map to sorted array
+		var ssArr = [];
+		for (var key in symbolSetMap) {
+		  if (Object.prototype.hasOwnProperty.call(symbolSetMap, key)) {
+			ssArr.push(symbolSetMap[key]);
+		  }
+		}
+
+		ssArr.sort(function(a,b){
+		  return String(a.ssKey).localeCompare(String(b.ssKey));
+		});
+
+		// Sort symbols in each set
+		ssArr.forEach(function(setEntry){
+		  setEntry.symbols.sort(function(a,b){
+			var cmp = String(a.entityCode).localeCompare(String(b.entityCode));
+			if (cmp !== 0) return cmp;
+			return a.label.localeCompare(b.label);
+		  });
+		});
+
+		symbolTreeData = ssArr;
+		}
+		
+		function renderSymbolTree(filterText) {
+    var treeContainer = document.getElementById("symbolTree");
+    if (!treeContainer) return;
+
+    if (!symbolTreeData) {
+      treeContainer.innerHTML = "<em>No symbol data loaded.</em>";
+      return;
+    }
+
+    var versionText = document.getElementById("lbVersion").value; // e.g. "11-2525D"
+    var q = (filterText || "").trim().toLowerCase();
+
+    var html = "";
+    html += "<div class='tree-root'>";
+    html += "<div style='font-weight:600; margin-bottom:4px;'>" + versionText + "</div>";
+
+    symbolTreeData.forEach(function(setEntry) {
+      // Filter symbols in this symbol set
+      var filteredSymbols = setEntry.symbols.filter(function(sym){
+        if (!q) return true;
+        var label = sym.label.toLowerCase();
+        var name  = (sym.name || "").toLowerCase();
+        var ec    = String(sym.entityCode || "").toLowerCase();
+        var basic = String(sym.basicID || "").toLowerCase();
+        return (
+          label.indexOf(q) !== -1 ||
+          name.indexOf(q) !== -1 ||
+          ec.indexOf(q) !== -1 ||
+          basic.indexOf(q) !== -1
+        );
+      });
+
+      if (filteredSymbols.length === 0) {
+        return; // skip this symbol set entirely
+      }
+
+      html += "<details style='margin-left:4px;' open>";
+      html += "<summary style='cursor:pointer;'>" + setEntry.name + " (SS " + setEntry.ssKey + ")</summary>";
+      html += "<ul style='list-style:none; padding-left:12px; margin:4px 0;'>";
+
+      filteredSymbols.forEach(function(sym){
+        html += "<li style='margin:1px 0;'>"
+          + "<a href='#' style='text-decoration:none; color:#2563eb;' "
+          + "onclick='onSymbolSelected(\"" + sym.basicID + "\"); return false;'>"
+          + sym.label
+          + "</a>"
+          + "</li>";
+      });
+
+      html += "</ul>";
+      html += "</details>";
+    });
+
+    html += "</div>";
+    treeContainer.innerHTML = html;
+  }
+
+    
+
+    // UPDATED: on symbol click, just set _symbolID and refresh ID/details;
+    // do NOT draw to the canvas.
+    function onSymbolSelected(basicID) {
+      if (!basicID || basicID.length !== 8) {
+        alert("Invalid basic symbol ID.");
+        return;
+      }
+
+      _symbolID = basicID;
+      // rebuild full SIDC and update symbol details/SVG preview
+      var fullID = buildSymbolID(_symbolID);
+	  
+	  // Update SVG preview in the right panel immediately
+	  updateSvgPreview(fullID);
+	  
+	   // NEW: indicate if the selected symbol is multipoint-capable
+	  var btn = document.getElementById("btnDrawMP");
+	  if (btn) {
+		try {
+		  // isMultiPoint should be called with the full SIDC, not just the 8-char basic ID
+		  var isMP = C5Ren.SymbolUtilities.isMultiPoint(fullID);
+		  if (isMP) {
+			btn.classList.add("multipoint-capable");
+		  } else {
+			btn.classList.remove("multipoint-capable");
+		  }
+		} catch (e) {
+		  // In case of any lookup error, fail safe and remove highlight
+		  btn.classList.remove("multipoint-capable");
+		  console.log(e);
+		}
+	  }
+  
+      // No clearCanvas() and no render() here
+    }
+	
+	function onSymbolTreeSearchChange(text) {
+    renderSymbolTree(text);
+  }
+
+    function speedTestSVGConversion(svg) {
+      var start = new Date().getTime();
+      var count = 1000;
+      for(var i = 0; i < count; i++) {
+        encodeURIComponent(svg);
+      }
+      var end = new Date().getTime();
+      var time = end - start;
+      alert('encodeURIComponent: ' + (time/1000) + "; length: " + encodeURIComponent(svg).length);
+
+      start = new Date().getTime();
+      for(var j = 0; j < count; j++) {
+        btoa(svg);
+      }
+      end = new Date().getTime();
+      time = end - start;
+      alert('btoa: ' + (time/1000) + "; length: " + btoa(svg).length);
+
+      start = new Date().getTime();
+      for(var k = 0; k < count; k++) {
+        var temp = "data:image/svg+xml;base64," + btoa(String.fromCodePoint(...new TextEncoder().encode(svg)));
+      }
+      end = new Date().getTime();
+      time = end - start;
+      alert('SVGSymbolInfo.getSVGDataURI(): ' + (time/1000) + "; length: " + btoa(svg).length);
+    }
+
+    function speedTest(type) {
+      var start;
+      var end;
+      var modifiers;
+      var apID = buildSymbolID();
+      var dmID = buildSymbolID();
+      var plainID = buildSymbolID();
+      var id;
+      var msi = C5Ren.MilStdIconRenderer.getInstance();
+
+      if(type === 1) {
+        id = plainID;
+        modifiers = new Map();
+      }
+      else if(type === 2) {
+        id = dmID;
+        modifiers = new Map();
+      }
+      else if(type === 3) {
+        id = dmID;
+        modifiers = populateModifiers();
+      }
+
+      start = new Date().getTime();
+
+      var attrib = new Map();
+      var si;
+
+      for(var j = 0; j < 1000; j++) {
+        si = msi.RenderSVG(id,modifiers,attrib);
+      }
+
+      end = new Date().getTime();
+      var time = end - start;
+
+      var svgImage = document.getElementById("iST1");
+
+      svgImage.width = si.getImageBounds().getWidth();
+      svgImage.height = si.getImageBounds().getHeight();
+      var data = si.getSVGDataURI();
+      svgImage.src = data;
+
+      alert('Render 1k SVG symbols (just SVG generation, not browser rendering): ' + (time/1000));
+    }
+
+    function versionChange() {
+      var lbV = document.getElementById("lbVersion");
+      var ver = parseInt(lbV.value.split('-')[0]); // 10, 11, 15, 16
+
+      if(ver < 15) {
+        document.getElementById("lbS1").selectedIndex = 0;
+        document.getElementById("lbS2").selectedIndex = 0;
+      }
+
+      buildSymbolID();        // update tbSymbolID & modifier lists
+      buildSymbolTree(ver);   // rebuild full tree for new version
+	  refreshCurrentSymbolPreview(); // NEW
+    }
+
+    function clearCanvas() {
+      var preview = document.getElementById("preview");
+      preview.onclick = canvasClick;
+
+      var ctx = preview.getContext('2d');
+      ctx.clearRect(0,0,preview.width,preview.height);
+      ctx.strokeStyle="#9ca3af";
+      ctx.strokeRect(0,0,preview.width,preview.height);
+	  
+	  // Exit multi-point mode if active
+	  drawMPMode = false;
+	  mpPoints = null;
+	  mpcp = "";
+	  mpPointCount = 0;
+	  var btn = document.getElementById("btnDrawMP");
+	  if (btn) {
+		//btn.classList.remove("active");
+		btn.classList.remove("primary");
+	  }
+    }
+
+    function canvasClick(e) {
+      if(_symbolID === null) {
+        alert("Choose a symbol from the tree first.");
+        return;
+      }
+
+      var id = buildSymbolID(_symbolID);
+
+      var preview = document.getElementById("preview");
+      var rect = preview.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+
+      if(drawMPMode==false) {
+        render(id,x, y);
+      } else {
+        var msi = C5Ren.MSLookup.getInstance().getMSLInfo(id);
+        var max = Math.min(msi.getMaxPointCount(),6);
+        if(mpPoints != null && mpPointCount < max) {
+          var point = getFakeGeo(x,y);
+          if(mpPointCount >0)
+            mpcp += " ";
+          mpcp += point[0] + "," + point[1];
+          mpPointCount++;
+        }
+        if(mpPointCount >= max) {
+          renderMP(id,mpcp);
+
+          drawMPMode = false;
+          mpPoints = null;
+          mpcp = "";
+          mpPointCount = 0;
+		  
+		   // Turn button back to normal
+		  var btn = document.getElementById("btnDrawMP");
+		  if (btn) {
+			//btn.classList.remove("active");
+			btn.classList.remove("primary");
+		  }
+        }
+      }
+    }
+
+    function getFakeGeo(x,y) {
+      var preview = document.getElementById("preview");
+      var pw = preview.width;
+      var ph = preview.height;
+
+      var geoLeft = 49.9;
+      var geoRight = 50;
+      var geoTop = 20.05;
+      var geoBottom = 20;
+
+      var mx = (geoRight - geoLeft) / pw;
+      var my = (geoTop - geoBottom) / ph;
+
+      if(geoRight-geoLeft < -180) {
+        mx = (geoRight - geoLeft + 360) / pw ;
+      }
+      if(geoRight-geoLeft > 180) {
+        mx = (360 - (geoRight - geoLeft) ) / pw ;
+      }
+
+      if(geoTop < geoBottom)
+        my = -Math.abs(my);
+      else
+        my = Math.abs(my);
+
+      return [geoLeft + (x*mx),geoTop - (y*my)];
+    }
+
+    function drawMP() {
+      if (_symbolID === null) {
+        alert("Choose a symbol from the tree first.");
+        return;
+      }
+
+      var id = buildSymbolID(_symbolID);
+      if(C5Ren.SymbolUtilities.isMultiPoint(id)) {
+        var preview = document.getElementById("preview");
+        drawMPMode = true;
+        mpPoints = [];
+        mpcp = "";
+        mpPointCount = 0;
+		
+		 // Highlight button while in multi-point mode
+		var btn = document.getElementById("btnDrawMP");
+		if (btn) {
+		  //btn.classList.add("active");
+		  btn.classList.add("primary");
+		}
+	
+		if(!_drawMPAlertShown)
+		{
+			alert("Multi-point mode: click up to the maximum number of points on the canvas.");
+			_drawMPAlertShown = true;
+		}
+      } else {
+        alert("Selected symbol is not multi-point.");
+      }
+    }
+
+    function renderMP(symbolID, controlPoints) {
+      var id = "id";
+      var name = "name";
+      var description = "description";
+      var altitudeMode = "absolute";
+      var scale = 5869879.2;
+      var geoLeft = 49.9;
+      var geoRight = 50;
+      var geoTop = 20.05;
+      var geoBottom = 20;
+      var bbox = "49.9,20,50,20.05";
+
+      var modifiers = populateModifiers();
+      var attributes = new Map();
+
+      var preview = document.getElementById("preview");
+      var pw = preview.width;
+      var ph = preview.height;
+
+      try {
+        var geoSVG = C5Ren.WebRenderer.RenderSymbol2D(
+          id, name, description,
+          symbolID, controlPoints,
+          pw,ph, bbox, modifiers, attributes,
+          C5Ren.WebRenderer.OUTPUT_FORMAT_GEOSVG
+        );
+
+        var svgImage = document.getElementById("SVGTest");
+        var dataURI = "data:image/svg+xml;base64," + btoa(String.fromCodePoint(...new TextEncoder().encode(geoSVG)));
+        svgImage.src = dataURI;
+
+        if (typeof geoSVG === 'string') {
+          var start = geoSVG.toString().indexOf("<geoTL>");
+          var stop = geoSVG.toString().indexOf("</geoTL>");
+          var anchorString = geoSVG.toString().substring(start+7,stop);
+          var anchor = anchorString.split(" ");
+
+          var mx = (geoRight - geoLeft) / pw;
+          var my = (geoBottom - geoTop) / ph;
+
+          var x = parseFloat(anchor[0]);
+          var y = parseFloat(anchor[1]);
+
+          x = (x - geoLeft)/mx;
+          y = (y - geoTop)/my;
+
+          drawToCanvas(geoSVG,x,y);
+        }
+      }
+      catch(exc) {
+        console.log(exc);
+      }
+    }
+
+    function setSpeedTestImages() {
+      var msi = C5Ren.MilStdIconRenderer.getInstance();
+
+      var button = document.getElementById("btnST2");
+      button.disabled = false;
+      button.innerHTML = "Speed Test With Modifiers";
+      var button2 = document.getElementById("btnST1");
+      button2.disabled = false;
+      button2.innerHTML = "Speed Test";
+    }
+
+    function setup() {
+      document.getElementById("btnST1").disabled = true;
+
+      document.getElementById("btnST1").disabled = false;
+      preload();
+
+      C5Ren.RendererSettings.getInstance().setLabelFont("arial","bold",12);
+    }
+
+    function preload() {
+      var miBase = C5Ren.MSLookup.getInstance().getMSLInfo("10160000",13);
+      var mi = new C5Ren.MSInfo(13,"10", "Sustainment","TEST","","165700",miBase.getModifiers());
+      var si = new C5Ren.SVGInfo(
+        "10165700",
+        new C5Ren.Rectangle2D(198,365,215,64),
+        "<g id=\"10165700\"><text font-family=\"sans-serif\" fill=\"red\" font-size=\"89\" x=\"192\" y=\"428\">MWR</text></g>"
+      );
+      C5Ren.MilStdIconRenderer.getInstance().AddCustomSymbol(mi,si);
+
+      Modifiers = C5Ren.Modifiers;
+      var RendererSettings = C5Ren.RendererSettings.getInstance();
+      RendererSettings.setScaleMainIcon(true);
+
+      var lbStatus = document.getElementById("lbStatus");
+      var lbAffiliation = document.getElementById("lbAffiliation");
+
+      if (lbStatus) lbStatus.selectedIndex = 0;
+      if (lbAffiliation) lbAffiliation.selectedIndex = 3;
+
+      var lbV = document.getElementById("lbVersion");
+      var versionNum = parseInt(lbV.value.split('-')[0]);
+      buildSymbolTree(versionNum);  // initial tree build
+
+      var preview = document.getElementById("preview");
+      preview.onclick = canvasClick;
+
+      clearCanvas();
+
+      try {
+        var msInfo = C5Ren.MSLookup.getInstance().getMSLInfo("110345000016140700000000000840");
+
+        var smu = C5Ren.SectorModUtils.getInstance();
+        var name = smu.getName(11,1,1,"01");
+        var alDch1 = smu.getSectorModList(11,1,1);
+        var alAPP6D = smu.getSectorModList(10,1,1);
+        name = smu.getName(15,0,1,"100");
+        console.log(name);
+
+        var newCode = C5Ren.C2DLookup.getInstance().getDCode("GFGPDAE---**USX",true);
+        console.log(newCode);
+        newCode = C5Ren.C2DLookup.getInstance().getDCode("SFAPWMCM--**USX",true);
+        console.log(newCode);
+
+        var country = C5Ren.GENCLookup.getInstance().get3CharCode(840);
+        console.log(country);
+        country = C5Ren.GENCLookup.getInstance().get3CharCode(540);
+        console.log(country);
+        country = C5Ren.GENCLookup.getInstance().get3DigitCode("US");
+        console.log(country);
+        country = C5Ren.GENCLookup.getInstance().get3CharCode(76);
+        console.log(country);
+        country = C5Ren.GENCLookup.getInstance().get3DigitCode("BR");
+        console.log(country);
+        country = C5Ren.SymbolID.setCountryCode("000000000000000000000000000000",76);
+        C5Ren.ErrorLogger.LogMessage(country);
+        country = C5Ren.SymbolID.setCountryCode("000000000000000000000000000000","76");
+        C5Ren.ErrorLogger.LogMessage(country);
+        country = C5Ren.SymbolID.setCountryCode("000000000000000000000000000000","076");
+        C5Ren.ErrorLogger.LogMessage(country);
+      }
+      catch(e) {
+        if (e instanceof Error) {
+          console.log(e.message);
+        }
+        return false;
+      }
+    }
+  </script>
+</head>
+
+<body onload="setup();">
+  <header class="app-header">
+    <h1>MIL-STD Renderer Demo</h1>
+    <span>Single-Point & Multi-Point Symbol Rendering</span>
+  </header>
+
+  <main class="app-main">
+    <!-- LEFT: Version & symbol tree -->
+    <section class="panel panel-left">
+      <h2>Symbol Selection</h2>
+
+      <h3>Standard & Context</h3>
+      <div class="form-row">
+        <div class="form-col">
+          <label for="lbVersion">Version</label>
+          <select id="lbVersion" onchange="versionChange();">
+            <option>10-APP6D</option>
+            <option selected>11-2525D</option>
+            <option>15-2525E</option>
+            <option>16-APP6E</option>
+          </select>
+        </div>
+        <div class="form-col">
+          <label for="lbContext">Context</label>
+          <select id="lbContext" onchange="refreshCurrentSymbolPreview();">
+            <option>0-Reality</option>
+            <option>1-Exercise</option>
+            <option>2-Simulation</option>
+            <option>3-Restricted</option>
+            <option>4-No-Strike</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label for="lbAffiliation">Affiliation</label>
+          <select id="lbAffiliation" onchange="refreshCurrentSymbolPreview();">
+            <option>0-Pending</option>
+            <option>1-Unknown</option>
+            <option>2-Assumed Friend</option>
+            <option>3-Friend</option>
+            <option>4-Neutral</option>
+            <option>5-Suspect/Joker</option>
+            <option>6-Hostile/Faker</option>
+          </select>
+        </div>
+        <div class="form-col">
+          <label for="lbStatus">Status</label>
+          <select id="lbStatus" onchange="refreshCurrentSymbolPreview();">
+            <option>0-Present</option>
+            <option>1-Planned/Anticipated/Suspect</option>
+            <option>2-Fully Capable</option>
+            <option>3-Damaged</option>
+            <option>4-Destroyed</option>
+            <option>5-Full to capacity</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label for="lbHQTFD">HQ / TF / Dummy</label>
+          <select id="lbHQTFD" onchange="refreshCurrentSymbolPreview();">
+            <option>0-Unknown</option>
+            <option>1-Dummy</option>
+            <option>2-HQ</option>
+            <option>3-D/HQ</option>
+            <option>4-TF</option>
+            <option>5-D/TF</option>
+            <option>6-TF/HQ</option>
+            <option>7-D/TF/HQ</option>
+          </select>
+        </div>
+        <div class="form-col">
+          <label for="lbAmp">Amplifier</label>
+          <select id="lbAmp" onchange="refreshCurrentSymbolPreview();">
+            <option>00-Unknown</option>
+            <option>11-Team/Crew</option>
+            <option>12-Squad</option>
+            <option>13-Section</option>
+            <option>14-Platoon/detachment</option>
+            <option>15-Company/battery/troop</option>
+            <option>16-Battalion/squadron</option>
+            <option>17-Regiment/group</option>
+            <option>18-Brigade</option>
+            <option>21-Division</option>
+            <option>22-Corps/MEF</option>
+            <option>23-Army</option>
+            <option>24-Army Group/front</option>
+            <option>25-Region/Theater</option>
+            <option>26-Command</option>
+            <option>31-Wheeled Limited Cross County</option>
+            <option>32-Wheeled Cross Country</option>
+            <option>33-Tracked</option>
+            <option>34-Wheeled and Tracked</option>
+            <option>35-Towed</option>
+            <option>36-Rail</option>
+            <option>37-Pack Animals</option>
+            <option>41-Over Snow</option>
+            <option>42-Sled</option>
+            <option>51-Barge</option>
+            <option>52-Amphibious</option>
+            <option>61-Short Towed Array</option>
+            <option>62-Long Towed Array</option>
+            <option>71-Leader Individual</option>
+          </select>
+        </div>
+      </div>
+
+      <h3>Symbol Tree</h3>
+	  <div class="form-row" style="margin-bottom:4px;">
+	  <div class="form-col">
+		<input
+		  id="symbolSearch"
+		  type="text"
+		  placeholder="Search by name, code, or ID..."
+		  oninput="onSymbolTreeSearchChange(this.value);" />
+	  </div>
+	</div>
+      <div id="symbolTree"></div>
+    </section>
+
+    <!-- CENTER: Preview & core controls -->
+    <section class="panel panel-center">
+      <h2>Preview & Render Controls</h2>
+
+      <div class="preview-container">
+        <div class="preview-header">
+          1) Select a symbol from the tree on the left (right panel shows SVG & details).<br>
+          2) Click on the canvas to place the symbol.
+        </div>
+        <canvas id="preview" width="650" height="300"></canvas>
+
+        <div class="form-row" style="margin-top: 8px;">
+          <div class="form-col">
+            <label for="tbSize">Pixel Size</label>
+            <input id="tbSize" type="number" value="100" class="small-input" />
+          </div>
+          <div class="form-col">
+            <label for="lbFrame">Frame Shape</label>
+            <select id="lbFrame" onchange="refreshCurrentSymbolPreview();">
+              <option>0-Unknown</option>
+              <option>1-Space</option>
+              <option>2-Air</option>
+              <option>3-Land Unit</option>
+              <option>4-Equipment</option>
+              <option>5-Land Inst.</option>
+              <option>6-Dis. Ind.</option>
+              <option>7-Sea Sub.</option>
+              <option>8-Activity</option>
+              <option>9-Cyber</option>
+              <option>A-SeaSurface</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col">
+            <label>Common Sectors</label>
+            <div class="form-row">
+              <div class="form-col">
+                <span style="font-size:0.8rem;">Common S1</span>
+                <select id="lbS1" onchange="refreshCurrentSymbolPreview();">
+                  <option>0</option>
+                  <option>1</option>
+                </select>
+              </div>
+              <div class="form-col">
+                <span style="font-size:0.8rem;">Common S2</span>
+                <select id="lbS2" onchange="refreshCurrentSymbolPreview();">
+                  <option>0</option>
+                  <option>1</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-col">
+            <label>Sector Modifiers</label>
+            <div class="form-row">
+              <div class="form-col">
+                <span style="font-size:0.8rem;">S1 Mod</span>
+                <select name="S1-0-01" id="lbS1Mod" onchange="refreshCurrentSymbolPreview();" style="width: 100%"></select>
+              </div>
+              <div class="form-col">
+                <span style="font-size:0.8rem;">S2 Mod</span>
+                <select name="S2-0-01" id="lbS2Mod" onchange="refreshCurrentSymbolPreview();" style="width: 100%"></select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <label><input id="cbKeepUnitRatio" type="checkbox" checked  onchange="refreshCurrentSymbolPreview();" /> Keep unit ratio</label><br />
+          <label><input id="cbLabels" type="checkbox"  onchange="refreshCurrentSymbolPreview();" /> Include labels / modifiers</label><br />
+          <label><input id="cbDrawAsIcon" type="checkbox"  onchange="refreshCurrentSymbolPreview();" /> Draw as icon</label><br />
+          <label><input id="cbScaleMainIcon" type="checkbox" checked  onchange="refreshCurrentSymbolPreview();" /> Scale internal symbol</label><br />
+          <label><input id="cbDrawOutline" type="checkbox"  onchange="refreshCurrentSymbolPreview();" /> Draw outline around symbol</label>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <button id="btnDrawMP" type="button" onclick="drawMP();" >Multi‑Point Mode</button>
+          <button id="btnClear" type="button" onclick="clearCanvas();">Clear Canvas</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: SVG preview + Symbol details & advanced tools -->
+    <section class="panel panel-right">
+      <h2>Symbol Preview & Details</h2>
+
+      <h3>SVG Preview</h3>
+      <div class="svg-preview-row">
+        <div>
+          <img id="SVGTest" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==" alt="svg from datauri" height="100" width="100">
+        </div>
+        <div id="contentSpan"></div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <h3>Current Symbol</h3>
+      <div class="form-row">
+        <div class="form-col">
+          <label for="tbSymbolID">Symbol ID</label>
+          <input id="tbSymbolID" type="text" value="" maxlength="30" readonly />
+        </div>
+      </div>
+      <div id="symbolDetails" style="font-size:0.85rem; margin-top: 4px;">
+        <em>No symbol selected yet.</em>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <h3>Performance Tests</h3>
+      <p style="font-size:0.8rem; color:#4b5563;">
+        Speed test measures time to build the SVG string only (not browser render time).
+      </p>
+      <button id="btnST1" type="button" onclick="speedTest(1);">Speed Test (Plain)</button>
+      <button id="btnST2" type="button" onclick="speedTest(3);">Speed Test with Modifiers</button>
+
+      <div style="margin-top:8px;">
+        <img id="iST1" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==" alt="Speed test symbol 1" style="margin-right:10px;" />
+      </div>
+    </section>
+  </main>
+</body>
+</html>

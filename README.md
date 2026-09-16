@@ -6,7 +6,7 @@ mil-sym-ts is an TypeScript port of the [Java-based MIL-STD rendering libraries]
 
 This is a continuation of that effort and this library aims to support 2525D, 2525E and potentially more future versions.
 
-[Simple Interactive Tester](https://missioncommand.github.io/js-samples/singlePointTester3.html)  
+[Simple Interactive Tester](https://missioncommand.github.io/js-samples/singlePointTester4.html)  
 [Multipoint Web Worker Example](https://missioncommand.github.io/js-samples/MPWW.html)  
 [SinglePoint Web Worker Example](https://missioncommand.github.io/js-samples/SVGWW.html)  
 
