@@ -110,15 +110,12 @@ export class SinglePointSVGRenderer {
         let si: SVGSymbolInfo = null;
         let newSDI: SymbolDimensionInfo = null;
         try {
-            let lineColor: string = null;//SymbolUtilitiesD.getLineColorOfAffiliation(symbolID);
-            let fillColor: string = null;
-            
-            if(SymbolID.getSymbolSet(symbolID)==SymbolID.SymbolSet_MineWarfare && RendererSettings.getInstance().getSeaMineRenderMethod()==RendererSettings.SeaMineRenderMethod_MEDAL)
-            {
-                lineColor = RendererUtilities.colorToHexString(SymbolUtilities.getLineColorOfAffiliation(symbolID), false);
-                fillColor = RendererUtilities.colorToHexString(SymbolUtilities.getFillColorOfAffiliation(symbolID), true);
-            }
-            
+
+            let version = SymbolID.getVersion(symbolID);
+
+            //Set color defaults
+            let lineColor = RendererUtilities.colorToHexString(SymbolUtilities.getLineColorOfAffiliation(symbolID), false);
+            let fillColor = RendererUtilities.colorToHexString(SymbolUtilities.getFillColorOfAffiliation(symbolID), true);
             let iconColor: string = null;
 
             let alpha: float = -1;
@@ -226,8 +223,6 @@ export class SinglePointSVGRenderer {
 
             if (ii == null) //ii is always null because the above check is commented out
             {
-
-                let version: int = SymbolID.getVersion(symbolID);
                 //Get SVG pieces of symbol
                 frameID = SVGLookup.getFrameID(symbolID);
                 iconID = SVGLookup.getMainIconID(symbolID);
