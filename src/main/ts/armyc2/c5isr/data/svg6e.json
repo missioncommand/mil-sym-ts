@@ -1836,11 +1836,11 @@
   },
   {
     "id": "01110121",
-    "X": "188.486328125",
-    "Y": "350.546875",
-    "Width": "233.4140625",
-    "Height": "85.875",
-    "SVG": "<g id=\"01110121\">        <text font-family=\"sans-serif\" font-size=\"116\" text-anchor=\"middle\" x=\"305\" y=\"435\">ESM</text>    </g>"
+    "X": "208.578125",
+    "Y": "360.109375",
+    "Width": "193.171875",
+    "Height": "71.0625",
+    "SVG": "<g id=\"01110121\">        <text font-family=\"sans-serif\" font-size=\"96\" text-anchor=\"middle\" x=\"305\" y=\"430\">ESM</text>    </g>"
   },
   {
     "id": "25281701",
