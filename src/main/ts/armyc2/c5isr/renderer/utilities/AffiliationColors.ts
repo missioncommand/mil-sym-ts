@@ -49,7 +49,7 @@ export class AffiliationColors {
 	/// </summary>
 	public static UnknownGraphicFillColor: Color = new Color(255, 255, 128);//light yellow  new Color(255,255,224);//light yellow
 
-	public static SuspectGraphicFillColor: Color = new Color(255, 229, 153);
+	public static SuspectGraphicFillColor: Color = new Color(255, 229, 153);//orange-ish, just for 2525E
 
 	/// <summary>
 	/// Friendly Unit Line Color.

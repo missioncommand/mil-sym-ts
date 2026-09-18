@@ -509,7 +509,7 @@ export class SymbolUtilities {
                         }
 
                         case SymbolID.StandardIdentity_Affiliation_Suspect_Joker: {
-                            if (symStd >= SymbolID.Version_2525E) {
+                            if(symStd >= SymbolID.Version_2525E && symStd <= SymbolID.Version_2525Ech1) {
 
                                 retColor = AffiliationColors.SuspectGraphicLineColor;
                             }
@@ -558,7 +558,7 @@ export class SymbolUtilities {
                                 }
 
                                 case SymbolID.StandardIdentity_Affiliation_Suspect_Joker: {
-                                    if (symStd >= SymbolID.Version_2525E) {
+                                    if(symStd >= SymbolID.Version_2525E && symStd <= SymbolID.Version_2525Ech1) {
 
                                         retColor = AffiliationColors.SuspectUnitFillColor;
                                     }
@@ -703,7 +703,7 @@ export class SymbolUtilities {
             }
         } catch (e) {
             if (e instanceof Error) {
-                ErrorLogger.LogException("SymbolUtilities", "getFillColorOfAffiliation", e);
+                ErrorLogger.LogException("SymbolUtilities", "isTacticalGraphic", e);
             } else {
                 throw e;
             }
@@ -923,7 +923,7 @@ export class SymbolUtilities {
                     }
 
                     case SymbolID.StandardIdentity_Affiliation_Suspect_Joker: {
-                        if (SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E) {
+                        if (SymbolID.getVersion(symbolID) >= SymbolID.Version_2525E && SymbolID.getVersion(symbolID) <= SymbolID.Version_2525Ech1) {
 
                             retColor = AffiliationColors.SuspectGraphicFillColor;
                         }
