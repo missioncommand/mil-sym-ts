@@ -5417,7 +5417,7 @@ export class Modifier2 {
                 modifier += "\n" + "MIN ALT: " + tg.get_X();
                 modifier += "\n" + "MAX ALT: " + tg.get_X1();
                 modifier += "\n" + "DTG Start: " + tg.get_DTG();
-                modifier += "\n" + "DTG End: : " + tg.get_DTG1();
+                modifier += "\n" + "DTG End: " + tg.get_DTG1();
                 modifier += "\n\n" + label + " " + tg.get_Name();
                 modifier += "\n\n\n\n\n\n\n";
         }
