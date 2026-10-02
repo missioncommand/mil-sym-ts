@@ -736,7 +736,7 @@ export class clsUtility {
                 case TacticalLines.PLD:
                 case TacticalLines.PLANNED:
                 case TacticalLines.CFL:
-                case TacticalLines.FORDSITE:
+                //case TacticalLines.FORDSITE:
                 case TacticalLines.ACOUSTIC_AMB: {
                     //any shape for these symbols is dashed
                     if (shape.getShapeType() === Shape2.SHAPE_TYPE_POLYLINE) {
@@ -758,7 +758,8 @@ export class clsUtility {
 
                 case TacticalLines.FOLLA:
                 case TacticalLines.ESR1:
-                case TacticalLines.FORDIF: {
+                //case TacticalLines.FORDIF: 
+                {
                     if (shape.getShapeType() === Shape2.SHAPE_TYPE_POLYLINE) {
                         shape.setLineColor(tg.get_LineColor());
                         if (shapeStyle !== lineStyle) {
@@ -769,7 +770,29 @@ export class clsUtility {
                     }
                     break;
                 }
-
+                case TacticalLines.FORDSITE:
+                {
+                    if (shape.getShapeType() == Shape2.SHAPE_TYPE_POLYLINE) {
+                        if(tg.get_Status() !== ("A"))
+                            shape.set_Style(5 /*GraphicProperties.LINE_TYPE_DASHED*/);
+                        shape.setLineColor(tg.get_LineColor());
+                    }
+                    break;
+                }
+                case TacticalLines.FORDIF:
+                {
+                    if (shape.getShapeType() == Shape2.SHAPE_TYPE_POLYLINE) {
+                        shape.setLineColor(tg.get_LineColor());
+                        //linestyle==0 is the second shape which isn't dashed
+                        if (shapeStyle != lineStyle) {
+                            if (shapeStyle == 1 || tg.get_Status() === ("A")) {
+                                //tg.get_Status().equals("A");
+                                shape.set_Style(5);//GraphicProperties.LINE_TYPE_LONG_DASHED
+                            }
+                        }
+                    }
+                    break;//*/
+                }
                 case TacticalLines.AREA_DEFENSE: {
                     if (shape.getShapeType() == Shape2.SHAPE_TYPE_FILL) {
                         shape.setFillStyle(tg.get_FillStyle());
@@ -1094,7 +1117,7 @@ export class clsUtility {
      * Customer requested routine for setting the stroke dash pattern
      * Scales dash length with line width and DPI
      * @param width
-     * @param style
+     * @param style 0 solid, 1 dashed, 2 dotted, 3 dash dot, 4 dash dot dot, 5 long dash
      * @param cap
      * @param join
      * @return
@@ -1140,6 +1163,12 @@ export class clsUtility {
                 case 4: {//GraphicProperties.LINE_TYPE_DASHDOTDOT:
                     let dashdotdot: number[] = [dashLength, dotSpace, dotLength, dotSpace, dotLength, dotSpace];
                     stroke = new BasicStroke(width, cap, join, 4, dashdotdot, 0);
+                    break;
+                }
+
+                case 5: {//GraphicProperties.LINE_TYPE_LONG_DASH:
+                    let longdash: number[] = [dashLength * 2, dashLength];
+                    stroke = new BasicStroke(width, cap, join, 4, longdash, 0 );
                     break;
                 }
 

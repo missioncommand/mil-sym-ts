@@ -54,7 +54,7 @@
     }
 
     .panel {
-      background: #ffffff;
+      background: #f9fafb;
       border-radius: 6px;
       border: 1px solid #e5e7eb;
       box-shadow: 0 1px 2px rgba(0,0,0,0.04);
@@ -522,9 +522,10 @@
         var ss = msInfo.getSymbolSet();
         var name = msInfo.getName();
         var basic = msInfo.getBasicSymbolID();
-		var drawRule = msInfo.getDrawRule();
+		    var drawRule = msInfo.getDrawRule();
         var minPts   = msInfo.getMinPointCount();
         var maxPts   = msInfo.getMaxPointCount();
+        var modifiers = msInfo.getModifiers();
 		
 		// Get draw rule name from C5Ren.DrawRules
 		var drName = "";
@@ -556,6 +557,17 @@
 				  + (maxPts > 100 ? "N" : maxPts)
 				  + "</div>";
 		  }
+
+      if(modifiers != null)
+      {
+        html += "<div><strong>Amplifiers: </strong> ";
+
+          for(let lcv=0; lcv < modifiers.length; lcv++)
+          {
+            html += C5Ren.Modifiers.getModifierLetterCode(modifiers[lcv]) + " ";
+          }
+          html += "</div>";
+      }
 		  
 		  detailsEl.innerHTML = html;
       } catch (e) {
@@ -1001,7 +1013,7 @@
 	
 		if(!_drawMPAlertShown)
 		{
-			alert("Multi-point mode: click up to the maximum number of points on the canvas.");
+			alert("Multi-point mode: click up to the maximum number of points (up to 6) on the canvas.");
 			_drawMPAlertShown = true;
 		}
       } else {
