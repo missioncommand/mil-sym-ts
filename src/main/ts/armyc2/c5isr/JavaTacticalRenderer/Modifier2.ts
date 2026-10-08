@@ -4338,24 +4338,50 @@ export class Modifier2 {
                     locAZModifier.push(ptRight);
                     //end section
                 }
-                if (altitudes != null) {
-                    for (let k: int = 0; k < altitudes.length; k++) {
-                        if (k >= locModifier.length) {
-                            break;
+                if(!RendererSettings.getInstance().getGroupModifiers()) {
+                    if (altitudes != null) {
+                        for (let k: int = 0; k < altitudes.length; k++) {
+                            if (k >= locModifier.length) {
+                                break;
+                            }
+                            pt0 = locModifier[k];
+                            Modifier2.AddAreaModifier(tg, "ALT " + altitudes[k], Modifier2.area, -1, pt0, pt0);
                         }
-                        pt0 = locModifier[k];
-                        Modifier2.AddAreaModifier(tg, "ALT " + altitudes[k], Modifier2.area, 0, pt0, pt0);
+                    }
+
+                    if (!tg.get_HideOptionalLabels()) {
+                        for (let k: int = 0; k < numSectors; k++) {
+                            pt0 = locModifier[k];
+                            Modifier2.AddAreaModifier(tg, "RG " + Modifier2.removeDecimal(AM[k + 1]), Modifier2.area, 0, pt0, pt0);
+                            ptLeft = locAZModifier[2 * k];
+                            ptRight = locAZModifier[2 * k + 1];
+                            Modifier2.AddAreaModifier(tg, Modifier2.removeDecimal(an[2 * k]), Modifier2.area, 0, ptLeft, ptLeft);
+                            Modifier2.AddAreaModifier(tg, Modifier2.removeDecimal(an[2 * k + 1]), Modifier2.area, 0, ptRight, ptRight);
+                        }
                     }
                 }
-
-                if (!tg.get_HideOptionalLabels()) {
-                    for (let k: int = 0; k < numSectors; k++) {
-                        pt0 = locModifier[k];
-                        Modifier2.AddAreaModifier(tg, "RG " + Modifier2.removeDecimal(AM[k + 1]), Modifier2.area, -1, pt0, pt0);
-                        ptLeft = locAZModifier[2 * k];
-                        ptRight = locAZModifier[2 * k + 1];
-                        Modifier2.AddAreaModifier(tg, Modifier2.removeDecimal(an[2 * k]), Modifier2.area, 0, ptLeft, ptLeft);
-                        Modifier2.AddAreaModifier(tg, Modifier2.removeDecimal(an[2 * k + 1]), Modifier2.area, 0, ptRight, ptRight);
+                else//grouped
+                {
+                    if (!tg.get_HideOptionalLabels()) {
+                        for (let k: int = 0; k < numSectors; k++) {
+                            let label:string = "";
+                            if (!tg.get_HideOptionalLabels())
+                                label = "RG " + Modifier2.removeDecimal(AM[k + 1]) + "\n";
+                            if(altitudes != null)
+                            {
+                                label += "ALT " + altitudes[k];
+                            }
+                            else
+                                label += "ALT GL";
+                            pt0 = locModifier[k];
+                            Modifier2.AddAreaModifier(tg, label, Modifier2.area, 0, pt0, pt0);
+                            if (!tg.get_HideOptionalLabels()) {
+                                ptLeft = locAZModifier[2 * k];
+                                ptRight = locAZModifier[2 * k + 1];
+                                Modifier2.AddAreaModifier(tg, Modifier2.removeDecimal(an[2 * k]), Modifier2.area, 0, ptLeft, ptLeft);
+                                Modifier2.AddAreaModifier(tg, Modifier2.removeDecimal(an[2 * k + 1]), Modifier2.area, 0, ptRight, ptRight);
+                            }
+                        }
                     }
                 }
             } else {
@@ -5198,34 +5224,66 @@ export class Modifier2 {
                     }
 
                     case TacticalLines.RANGE_FAN: {
-                        if (tg.get_X() != null) {
-                            X = tg.get_X().split(",");
-                            for (j = 0; j < X.length; j++) {
-                                if (tg.Pixels.length > j * 102 + 25) {
-                                    pt0 = tg.Pixels[j * 102 + 25];
-                                    Modifier2.AddAreaModifier(tg, "ALT " + X[j], Modifier2.area, 0, pt0, pt0);
+                        if(!RendererSettings.getInstance().getGroupModifiers()) {
+                            if (tg.get_X() != null) {
+                                X = tg.get_X().split(",");
+                                for (j = 0; j < X.length; j++) {
+                                    if (tg.Pixels.length > j * 102 + 25) {
+                                        pt0 = tg.Pixels[j * 102 + 25];
+                                        Modifier2.AddAreaModifier(tg, "ALT " + X[j], Modifier2.area, 0, pt0, pt0);
+                                    }
                                 }
                             }
+                            if (!tg.get_HideOptionalLabels()) {
+                                let am: string[] = tg.get_AM().split(",");
+                                for (j = 0; j < am.length; j++) {
+                                    if (tg.Pixels.length > j * 102 + 25) {
+                                        pt0 = tg.Pixels[j * 102 + 25];
+                                        //AddAreaModifier(tg, "RG " + am[j], area, -1, pt0, pt0);
+                                        if (j === 0) {
+
+                                            Modifier2.AddAreaModifier(tg, "MIN RG " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
+                                        }
+
+                                        else {
+
+                                            Modifier2.AddAreaModifier(tg, "MAX RG " + "(" + j.toString() + ") " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
+                                        }
+
+                                    }
+                                }
+                            }// end if set range fan text
                         }
-                        if (!tg.get_HideOptionalLabels()) {
-                            let am: string[] = tg.get_AM().split(",");
+                        else // grouped
+                        {
+                            let am:string[]  = tg.get_AM().split(",");
+                            let crfLabel:string;
                             for (j = 0; j < am.length; j++) {
-                                if (tg.Pixels.length > j * 102 + 25) {
-                                    pt0 = tg.Pixels[j * 102 + 25];
-                                    //AddAreaModifier(tg, "RG " + am[j], area, -1, pt0, pt0);
-                                    if (j === 0) {
-
-                                        Modifier2.AddAreaModifier(tg, "MIN RG " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
+                                crfLabel = "";
+                                if (!tg.get_HideOptionalLabels()) {
+                                    if (tg.Pixels.length > j * 102 + 25) {
+                                        pt0 = tg.Pixels[j * 102 + 25];
+                                        //AddAreaModifier(tg, "RG " + am[j], area, -1, pt0, pt0);
+                                        if (j == 0)
+                                            crfLabel = "MIN RG " + Modifier2.removeDecimal(am[j]) + "\n";
+                                        else
+                                            crfLabel = "MAX RG " + "(" + j + ") "  + Modifier2.removeDecimal(am[j]) + "\n";
                                     }
-
-                                    else {
-
-                                        Modifier2.AddAreaModifier(tg, "MAX RG " + "(" + j.toString() + ") " + Modifier2.removeDecimal(am[j]), 3, -1, pt0, pt0);
-                                    }
-
                                 }
+                                if (tg.get_X() != null && tg.get_X() != "") {
+                                    X = tg.get_X().split(",");
+                                    if (tg.Pixels.length > j * 102 + 25) {
+                                        pt0 = tg.Pixels[j * 102 + 25];
+                                        if(X[j] != null && X[j] != "")
+                                            crfLabel += "ALT " + X[j];
+                                    }
+                                }
+                                else
+                                    crfLabel += "ALT GL";
+
+                                Modifier2.AddAreaModifier(tg, crfLabel, 3, 1, pt0, pt0);
                             }
-                        }// end if set range fan text
+                        }//*/
                         break;
                     }
 
