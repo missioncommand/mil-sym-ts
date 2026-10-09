@@ -210,7 +210,7 @@ export class MilStdSymbol {
         this.setSymbolID(symbolID);
 
         // Set up default line fill and text colors
-        this.setLineColor(SymbolUtilities.getDefaultLineColor(this._symbolID));
+        this._LineColor = SymbolUtilities.getDefaultLineColor(this._symbolID);
         this.setTextColor(SymbolUtilities.getLineColorOfAffiliation(symbolID));
         //if(SymbolUtilities.isWarfighting(_symbolID))
         if (SymbolUtilities.hasDefaultFill(this._symbolID)) {
@@ -667,12 +667,10 @@ export class MilStdSymbol {
      * @param value {@link Color}
      */
     public setLineColor(value: Color | null): void {
-        if (SymbolUtilities.isGreenProtectionGraphic(this.getSymbolID())) {
-            this._LineColor = AffiliationColors.ObstacleGreen;//new Color(0, 166, 81); // Green from SymbolUtilities.getLineColorOfAffiliation()
-        } else if (value != null) {
-                this._LineColor = value;
+        if(!SymbolUtilities.hasStaticLineColor(this._symbolID) && value != null)
+        {
+            this._LineColor = value;
         }
-
     }
 
     /**

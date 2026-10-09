@@ -626,16 +626,16 @@ export class SymbolUtilities {
             let version: int = SymbolID.getVersion(symbolID);
 
             if (symbolSet === SymbolID.SymbolSet_ControlMeasure) {
-                if (entityCode === 200600) {
+                if (entityCode === 200600) { //Cued Acquisition Doctrine
                     return Color.WHITE;
                 } else {
-                    if (entityCode === 200700) {
+                    if (entityCode === 200700) { //Radar Search Doctrine
                         return new Color(51, 136, 136);
                     } else {
-                        if (entityCode === 200101) {
+                        if (entityCode === 200101) { //Launch Area
                             return new Color(255, 155, 0);
                         } else {
-                            if (entityCode === 200201 || entityCode === 200202) {
+                            if (entityCode === 200201 || entityCode === 200202) { //Defended Area
                                 return new Color(85, 119, 136);
                             } else {
                                 if (version >= SymbolID.Version_2525E &&
@@ -663,6 +663,43 @@ export class SymbolUtilities {
         }
         return SymbolUtilities.getLineColorOfAffiliation(symbolID);
     }
+
+        /**
+     * METOCs and several Control measures have colors that should not change
+     * @param symbolID 20-30 character id string for symbol
+     * @return true if color should not change
+     */
+        public static hasStaticLineColor(symbolID:string):boolean
+        {
+            let ss:number = SymbolID.getSymbolSet(symbolID);
+            let version:number = SymbolID.getVersion(symbolID);
+    
+            if(ss == SymbolID.SymbolSet_ControlMeasure)
+            {
+                let ec:number = SymbolID.getEntityCode(symbolID);
+                switch (ec)
+                {
+                    case 200600: //Cued Acquisition Doctrine
+                    case 200700: //Radar Search Doctrine
+                    case 200101: //Launch Area
+                    //case 200201: //Defended Area Ellipse/Circle may be depicted as orange (RGB: 255,155,0) where, the area fill is 75% transparent.
+                    //case 200202: //Defended Area Rectangle may be depicted as gray (RGB:85,119,136) where the gray area fill is 75% transparent.
+                        return true;
+                    case 132100: //key terrain
+                    case 282001: //Tower, Low
+                    case 282002: //Tower, High
+                    case 282003: // Overhead wire
+                        return version >= SymbolID.Version_2525E;
+                    default:
+                        break;
+                }
+                return SymbolUtilities.isGreenProtectionGraphic(symbolID);
+            }
+            else
+                return ss == SymbolID.SymbolSet_Atmospheric ||
+                    ss == SymbolID.SymbolSet_Oceanographic ||
+                    ss == SymbolID.SymbolSet_MeteorologicalSpace;
+        }
 
     /**
      * Checks if a symbol should be filled by default
