@@ -228,7 +228,7 @@ export class LinePattern{
             const lwOffset = lineWidth / 2.0;
             let x = 0;
             let y = lwOffset;
-            const eRadH = (10 + (lineWidth * 2)) * multiplier;
+            const eRadH = (10 + (lineWidth)) * multiplier;
             const eRadW = eRadH * 0.6;
             const patternWidth = (eRadW * 3) + lineWidth;
     
@@ -256,7 +256,7 @@ export class LinePattern{
             const lwOffset = lineWidth / 2.0;
             let x = 0;
             let y = lwOffset;
-            const eRadH = (10 + (lineWidth * 2)) * multiplier;
+            const eRadH = (10 + (lineWidth)) * multiplier;
             const eRadW = eRadH * 0.6;
             const patternWidth = (eRadW * 3) + lineWidth;
     
@@ -283,7 +283,7 @@ export class LinePattern{
             const lwOffset = lineWidth / 2.0;
             let x = 0;
             let y = lwOffset;
-            const eRadH = (10 + (lineWidth * 2)) * multiplier;
+            const eRadH = (10 + (lineWidth)) * multiplier;
             const eRadW = eRadH * 0.6;
             const patternWidth = (eRadW * 3) + lineWidth;
     
@@ -310,7 +310,7 @@ export class LinePattern{
             const lwOffset = lineWidth / 2.0;
             let x = 0;
             let y = lwOffset;
-            const eRadH = (10 + (lineWidth * 2)) * multiplier;
+            const eRadH = (10 + (lineWidth)) * multiplier;
             const eRadW = eRadH * 0.6;
             const patternWidth = (eRadW * 2) + lineWidth;
     
@@ -339,7 +339,7 @@ export class LinePattern{
             const lwOffset = lineWidth / 2.0;
             let x = 0;
             let y = lwOffset;
-            const eRadH = (10 + (lineWidth * 2)) * multiplier;
+            const eRadH = (10 + (lineWidth)) * multiplier;
             const eRadW = eRadH * 0.6;
             const patternWidth = (eRadW * 3) + lineWidth * 2 + (eRadW * 0.6);
     

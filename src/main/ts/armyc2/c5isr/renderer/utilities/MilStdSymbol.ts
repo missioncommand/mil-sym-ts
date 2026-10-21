@@ -16,6 +16,7 @@ import { ShapeInfo } from "../../renderer/utilities/ShapeInfo"
 import { SymbolUtilities } from "../../renderer/utilities/SymbolUtilities"
 import { AffiliationColors } from "./AffiliationColors";
 import { RendererUtilities } from "./RendererUtilities";
+import { LinePattern } from "../../JavaLineArray/LinePattern";
 
 
 /**
@@ -1251,7 +1252,10 @@ export class MilStdSymbol {
                 case 341500://Isolate, most detail contained inside
                 case 342600://Cordon and Knock, most detail contained inside
                 case 342700://Cordon and Search, most detail contained inside
-                    return 2;//decoration
+                    if(this.getUseLinePattern() && LinePattern.supportsLinePattern(this._symbolID))
+                        return 0;//using pattern, don't need to refresh
+                    else
+                        return 2;//decoration
 
                 //Areas with Pattern Fill
                 case 151100://Limited Access Area
