@@ -982,7 +982,10 @@
                 country = C5Ren.SymbolID.setCountryCode("000000000000000000000000000000","76");
                 C5Ren.ErrorLogger.LogMessage(country);
                 country = C5Ren.SymbolID.setCountryCode("000000000000000000000000000000","076");
-                C5Ren.ErrorLogger.LogMessage(country);//*/
+                C5Ren.ErrorLogger.LogMessage(country);
+                newCode = C5Ren.C2DLookup.getInstance().getDCode("SFGPIMA---H----",true);
+                console.log(newCode);
+                //*/
 
                 testBasicShape();
             }

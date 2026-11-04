@@ -2918,7 +2918,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "S*G*UCDC---****",
+            "basic": "S*G*UCDC--*****",
             "ver": "11",
             "ss": "10",
             "ec": "130103",
@@ -4000,7 +4000,7 @@
             "et": "Shore Patrol"
           },
           {
-            "basic": "S*G*UUMC-------",
+            "basic": "S*G*UUMC--*****",
             "ver": "11",
             "ss": "10",
             "ec": "150200",
@@ -8114,7 +8114,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "S*G*I-----H****",
+            "basic": "S*G*I-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "000000",
@@ -8125,7 +8125,7 @@
             "et": "Installation, Unspecified"
           },
           {
-            "basic": "S*G*IMA---H****",
+            "basic": "S*G*IMA---*****",
             "ver": "11",
             "ss": "20",
             "ec": "110100",
@@ -8136,7 +8136,7 @@
             "et": "Aircraft Production/Assembly"
           },
           {
-            "basic": "S*G*IME---H****",
+            "basic": "S*G*IME---*****",
             "ver": "11",
             "ss": "20",
             "ec": "110200",
@@ -8147,7 +8147,7 @@
             "et": "Ammunition and Explosives/Assembly"
           },
           {
-            "basic": "S*G*IMG---H****",
+            "basic": "S*G*IMG---*****",
             "ver": "11",
             "ss": "20",
             "ec": "110400",
@@ -8158,7 +8158,7 @@
             "et": "Armament Production"
           },
           {
-            "basic": "S*G*IMV---H****",
+            "basic": "S*G*IMV---*****",
             "ver": "11",
             "ss": "20",
             "ec": "121306",
@@ -8180,7 +8180,7 @@
             "et": "Black List Location"
           },
           {
-            "basic": "S*G*IR----H****",
+            "basic": "S*G*IR----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120000",
@@ -8191,7 +8191,7 @@
             "et": "Installation, Raw Material Production/Storage, no match, empty installation"
           },
           {
-            "basic": "S*G*IRN---H****",
+            "basic": "S*G*IRN---*****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8205,7 +8205,7 @@
             "c2": "CBRN symbol is displayed differently"
           },
           {
-            "basic": "S*G*IRNB--H****",
+            "basic": "S*G*IRNB--*****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8219,7 +8219,7 @@
             "c2": "2525C uses the same symbol for both Bio and Chem"
           },
           {
-            "basic": "S*G*IRNC--H****",
+            "basic": "S*G*IRNC--*****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8233,7 +8233,7 @@
             "c2": "2525C uses the same symbol for both Bio and Chem"
           },
           {
-            "basic": "S*G*IRNN--H****",
+            "basic": "S*G*IRNN--*****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8245,7 +8245,7 @@
             "est": "Nuclear"
           },
           {
-            "basic": "S*G*IP----H****",
+            "basic": "S*G*IP----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120000",
@@ -8256,7 +8256,7 @@
             "et": "Installation, Processing Facility, no match, empty installation"
           },
           {
-            "basic": "S*G*IPD---H****",
+            "basic": "S*G*IPD---*****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8268,7 +8268,7 @@
             "est": "Decontamination"
           },
           {
-            "basic": "S*G*IMN---H****",
+            "basic": "S*G*IMN---*****",
             "ver": "11",
             "ss": "20",
             "ec": "110700",
@@ -8279,7 +8279,7 @@
             "et": "Engineering Equipment Production"
           },
           {
-            "basic": "S*G*IMNB--H****",
+            "basic": "S*G*IMNB--*****",
             "ver": "11",
             "ss": "20",
             "ec": "110701",
@@ -8290,7 +8290,7 @@
             "et": "Engineering Equipment Production,  Bridge"
           },
           {
-            "basic": "S*G*IMC---H****",
+            "basic": "S*G*IMC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8301,7 +8301,7 @@
             "et": "Chem & Bio Warfare Production"
           },
           {
-            "basic": "S*G*IE----H****",
+            "basic": "S*G*IE----*****",
             "ver": "11",
             "ss": "20",
             "ec": "110800",
@@ -8312,7 +8312,7 @@
             "et": "Equipment Manufacture"
           },
           {
-            "basic": "S*G*IG----H****",
+            "basic": "S*G*IG----*****",
             "ver": "11",
             "ss": "20",
             "ec": "110900",
@@ -8345,7 +8345,7 @@
             "et": "Mass Grave Site"
           },
           {
-            "basic": "S*G*IRM---H****",
+            "basic": "S*G*IRM---*****",
             "ver": "11",
             "ss": "20",
             "ec": "111300",
@@ -8356,7 +8356,7 @@
             "et": "Mine"
           },
           {
-            "basic": "S*G*IMM---H****",
+            "basic": "S*G*IMM---*****",
             "ver": "11",
             "ss": "20",
             "ec": "111400",
@@ -8367,7 +8367,7 @@
             "et": "Missile and Space System Production"
           },
           {
-            "basic": "S*G*IMF---H****",
+            "basic": "S*G*IMF---*****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8378,7 +8378,7 @@
             "et": "Nuclear (Non CBRN Defense)"
           },
           {
-            "basic": "S*G*IMFA--H****",
+            "basic": "S*G*IMFA--*****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8390,7 +8390,7 @@
             "est": "Atomic Energy Reactor"
           },
           {
-            "basic": "S*G*IMFP--H****",
+            "basic": "S*G*IMFP--*****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8402,7 +8402,7 @@
             "est": "Nuclear Material Production"
           },
           {
-            "basic": "S*G*IMFS--H****",
+            "basic": "S*G*IMFS--*****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8414,7 +8414,7 @@
             "est": "Nuclear Material Storage"
           },
           {
-            "basic": "S*G*IMFPW-H****",
+            "basic": "S*G*IMFPW-*****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8459,7 +8459,7 @@
             "et": "White List Location"
           },
           {
-            "basic": "S*G*IC----H****",
+            "basic": "S*G*IC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "111900",
@@ -8473,7 +8473,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "S*G*ICD---H****",
+            "basic": "S*G*ICD---*****",
             "ver": "11",
             "ss": "20",
             "ec": "111901",
@@ -8487,7 +8487,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "S*G*ICT---H****",
+            "basic": "S*G*ICT---*****",
             "ver": "11",
             "ss": "20",
             "ec": "111902",
@@ -8501,7 +8501,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "S*G*IW----H****",
+            "basic": "S*G*IW----*****",
             "ver": "11",
             "ss": "20",
             "ec": "112000",
@@ -8515,7 +8515,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "E*O*DC----H****",
+            "basic": "E*O*DC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "112100",
@@ -8526,7 +8526,7 @@
             "et": "Law Enforcement"
           },
           {
-            "basic": "E*O*DDC---H****",
+            "basic": "E*O*DDC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112101",
@@ -8538,7 +8538,7 @@
             "est": "Bureau of Alcohol, Tobacco, Firearms and Explosives (ATF) (Department of Justice)"
           },
           {
-            "basic": "E*O*DEC---H****",
+            "basic": "E*O*DEC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112102",
@@ -8550,7 +8550,7 @@
             "est": "Border Patrol"
           },
           {
-            "basic": "E*O*DFC---H****",
+            "basic": "E*O*DFC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112103",
@@ -8562,7 +8562,7 @@
             "est": "Customs Service"
           },
           {
-            "basic": "E*O*DGC---H****",
+            "basic": "E*O*DGC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112104",
@@ -8574,7 +8574,7 @@
             "est": "Drug Enforcement Administration (DEA)"
           },
           {
-            "basic": "E*O*DHC---H****",
+            "basic": "E*O*DHC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112105",
@@ -8586,7 +8586,7 @@
             "est": "Department of Justice (DOJ)"
           },
           {
-            "basic": "E*O*DIC---H****",
+            "basic": "E*O*DIC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112106",
@@ -8598,7 +8598,7 @@
             "est": "Federal Bureau of Investigation (FBI)"
           },
           {
-            "basic": "E*O*DJC---H****",
+            "basic": "E*O*DJC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112107",
@@ -8610,7 +8610,7 @@
             "est": "Police"
           },
           {
-            "basic": "E*O*DK----*****",
+            "basic": "E*O*DK----H****",
             "ver": "11",
             "ss": "20",
             "ec": "112108",
@@ -8622,7 +8622,7 @@
             "est": "Prison"
           },
           {
-            "basic": "E*O*DLC---H****",
+            "basic": "E*O*DLC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112109",
@@ -8634,7 +8634,7 @@
             "est": "United States Secret Service (USSS)"
           },
           {
-            "basic": "E*O*DMC---H****",
+            "basic": "E*O*DMC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112110",
@@ -8646,7 +8646,7 @@
             "est": "Transportation Security Administration (TSA)"
           },
           {
-            "basic": "E*O*DNC---H****",
+            "basic": "E*O*DNC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112111",
@@ -8658,7 +8658,7 @@
             "est": "Coast Guard"
           },
           {
-            "basic": "E*O*DOC---H****",
+            "basic": "E*O*DOC---*****",
             "ver": "11",
             "ss": "20",
             "ec": "112112",
@@ -8670,7 +8670,7 @@
             "est": "US Marshals Service"
           },
           {
-            "basic": "E*O*BC----H****",
+            "basic": "E*O*BC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "112200",
@@ -8693,7 +8693,7 @@
             "est": "Fire Station"
           },
           {
-            "basic": "E*O*AC----H****",
+            "basic": "E*O*AC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "112202",
@@ -8705,7 +8705,7 @@
             "est": "Emergency Medical Operation"
           },
           {
-            "basic": "E*F*A-----H****",
+            "basic": "E*F*A-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120100",
@@ -8716,7 +8716,7 @@
             "et": "Agriculture and Food Infrastructure"
           },
           {
-            "basic": "E*F*AA----H****",
+            "basic": "E*F*AA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120101",
@@ -8728,7 +8728,7 @@
             "est": "Agriculture Laboratory"
           },
           {
-            "basic": "E*F*AB----H****",
+            "basic": "E*F*AB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120102",
@@ -8740,7 +8740,7 @@
             "est": "Animal Feedlot"
           },
           {
-            "basic": "E*F*AC----H****",
+            "basic": "E*F*AC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120103",
@@ -8752,7 +8752,7 @@
             "est": "Commercial Food Distribution Center"
           },
           {
-            "basic": "E*F*AD----H****",
+            "basic": "E*F*AD----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120104",
@@ -8764,7 +8764,7 @@
             "est": "Farm/Ranch"
           },
           {
-            "basic": "E*O*BL----H****",
+            "basic": "E*O*BL----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120105",
@@ -8776,7 +8776,7 @@
             "est": "Food Distribution"
           },
           {
-            "basic": "E*F*AE----H****",
+            "basic": "E*F*AE----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120106",
@@ -8788,7 +8788,7 @@
             "est": "Food Production Center"
           },
           {
-            "basic": "E*F*AF----H****",
+            "basic": "E*F*AF----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120107",
@@ -8800,7 +8800,7 @@
             "est": "Food Retail"
           },
           {
-            "basic": "E*F*AG----H****",
+            "basic": "E*F*AG----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120108",
@@ -8812,7 +8812,7 @@
             "est": "Grain Storage"
           },
           {
-            "basic": "E*F*B-----H****",
+            "basic": "E*F*B-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120200",
@@ -8835,7 +8835,7 @@
             "est": "ATM"
           },
           {
-            "basic": "E*F*BB----H****",
+            "basic": "E*F*BB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120202",
@@ -8847,7 +8847,7 @@
             "est": "Bank"
           },
           {
-            "basic": "E*F*BC----H****",
+            "basic": "E*F*BC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120203",
@@ -8859,7 +8859,7 @@
             "est": "Bullion Storage"
           },
           {
-            "basic": "E*F*BD----H****",
+            "basic": "E*F*BD----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120205",
@@ -8871,7 +8871,7 @@
             "est": "Federal Reserve Bank"
           },
           {
-            "basic": "E*F*BE----H****",
+            "basic": "E*F*BE----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120206",
@@ -8883,7 +8883,7 @@
             "est": "Financial Exchange"
           },
           {
-            "basic": "E*F*BF----H****",
+            "basic": "E*F*BF----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120207",
@@ -8895,7 +8895,7 @@
             "est": "Financial Services, Other"
           },
           {
-            "basic": "E*F*C-----H****",
+            "basic": "E*F*C-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120300",
@@ -8906,7 +8906,7 @@
             "et": "Commercial Infrastructure"
           },
           {
-            "basic": "E*F*CA----H****",
+            "basic": "E*F*CA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120301",
@@ -8918,7 +8918,7 @@
             "est": "Chemical Plant"
           },
           {
-            "basic": "E*F*CB----H****",
+            "basic": "E*F*CB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120302",
@@ -8930,7 +8930,7 @@
             "est": "Firearms Manufacturer"
           },
           {
-            "basic": "E*F*CC----H****",
+            "basic": "E*F*CC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120303",
@@ -8942,7 +8942,7 @@
             "est": "Firearms Retailer"
           },
           {
-            "basic": "E*F*CD----H****",
+            "basic": "E*F*CD----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120304",
@@ -8954,7 +8954,7 @@
             "est": "Hazardous Material Production"
           },
           {
-            "basic": "E*F*CE----H****",
+            "basic": "E*F*CE----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120305",
@@ -8966,7 +8966,7 @@
             "est": "Hazardous Material Storage"
           },
           {
-            "basic": "E*F*CF----H****",
+            "basic": "E*F*CF----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120306",
@@ -8978,7 +8978,7 @@
             "est": "Industrial Site"
           },
           {
-            "basic": "E*F*CG----H****",
+            "basic": "E*F*CG----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120307",
@@ -8990,7 +8990,7 @@
             "est": "Landfill"
           },
           {
-            "basic": "E*F*CH----H****",
+            "basic": "E*F*CH----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120308",
@@ -9002,7 +9002,7 @@
             "est": "Pharmaceutical Manufacturer"
           },
           {
-            "basic": "E*F*CI----H****",
+            "basic": "E*F*CI----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120309",
@@ -9014,7 +9014,7 @@
             "est": "Contaminated Hazardous Waste Site"
           },
           {
-            "basic": "E*F*CJ----H****",
+            "basic": "E*F*CJ----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120310",
@@ -9026,7 +9026,7 @@
             "est": "Toxic Release Inventory"
           },
           {
-            "basic": "E*F*D-----H****",
+            "basic": "E*F*D-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120400",
@@ -9037,7 +9037,7 @@
             "et": "Educational Facilities Infrastructure"
           },
           {
-            "basic": "E*F*DA----H****",
+            "basic": "E*F*DA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120401",
@@ -9049,7 +9049,7 @@
             "est": "College/University"
           },
           {
-            "basic": "E*F*DB----H****",
+            "basic": "E*F*DB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120402",
@@ -9061,7 +9061,7 @@
             "est": "School"
           },
           {
-            "basic": "S*G*IU----H****",
+            "basic": "S*G*IU----*****",
             "ver": "11",
             "ss": "20",
             "ec": "000000",
@@ -9072,7 +9072,7 @@
             "et": "Service, Research, Utility Facility"
           },
           {
-            "basic": "S*G*IUR---H****",
+            "basic": "S*G*IUR---*****",
             "ver": "11",
             "ss": "20",
             "ec": "000000",
@@ -9086,7 +9086,7 @@
             "c2": "Use Parent Node"
           },
           {
-            "basic": "S*G*IUT---H****",
+            "basic": "S*G*IUT---*****",
             "ver": "11",
             "ss": "20",
             "ec": "121200",
@@ -9100,7 +9100,7 @@
             "c2": "Rough D equivalent"
           },
           {
-            "basic": "S*G*IUE---H****",
+            "basic": "S*G*IUE---*****",
             "ver": "11",
             "ss": "20",
             "ec": "120500",
@@ -9111,7 +9111,7 @@
             "et": "Electric Power Facility"
           },
           {
-            "basic": "S*G*IUED--H****",
+            "basic": "S*G*IUED--*****",
             "ver": "11",
             "ss": "20",
             "ec": "120501",
@@ -9125,7 +9125,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "S*G*IUEF--H****",
+            "basic": "S*G*IUEF--*****",
             "ver": "11",
             "ss": "20",
             "ec": "120501",
@@ -9139,7 +9139,7 @@
             "c2": "No fossil fuel modifier, can choose coal (06) or natural gas (09) for s1 mod"
           },
           {
-            "basic": "S*G*IUEN--H****",
+            "basic": "S*G*IUEN--*****",
             "ver": "11",
             "ss": "20",
             "ec": "120501",
@@ -9153,7 +9153,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "E*F*EA----H****",
+            "basic": "E*F*EA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120502",
@@ -9165,7 +9165,7 @@
             "est": "Generation Station"
           },
           {
-            "basic": "E*F*EB----H****",
+            "basic": "E*F*EB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120503",
@@ -9177,7 +9177,7 @@
             "est": "Natural Gas Facility"
           },
           {
-            "basic": "S*G*IRP---H****",
+            "basic": "S*G*IRP---*****",
             "ver": "11",
             "ss": "20",
             "ec": "120505",
@@ -9191,7 +9191,7 @@
             "c2": "2525C appears to be a full octagon icon and 2525D is a main icon"
           },
           {
-            "basic": "E*F*EE----H****",
+            "basic": "E*F*EE----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120506",
@@ -9203,7 +9203,7 @@
             "est": "Propane Facility"
           },
           {
-            "basic": "E*F*F-----H****",
+            "basic": "E*F*F-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120600",
@@ -9214,7 +9214,7 @@
             "et": "Government Site Infrastructure"
           },
           {
-            "basic": "S*G*IX----H****",
+            "basic": "S*G*IX----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120701",
@@ -9226,7 +9226,7 @@
             "est": "Medical"
           },
           {
-            "basic": "S*G*IXH---H****",
+            "basic": "S*G*IXH---*****",
             "ver": "11",
             "ss": "20",
             "ec": "120702",
@@ -9238,7 +9238,7 @@
             "est": "Medical Treatment Facility (Hospital)"
           },
           {
-            "basic": "E*F*G-----H****",
+            "basic": "E*F*G-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120800",
@@ -9249,7 +9249,7 @@
             "et": "Military Infrastructure"
           },
           {
-            "basic": "E*F*GA----H****",
+            "basic": "E*F*GA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120801",
@@ -9261,7 +9261,7 @@
             "est": "Military Armory"
           },
           {
-            "basic": "S*G*IB----H****",
+            "basic": "S*G*IB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120802",
@@ -9273,7 +9273,7 @@
             "est": "Military Base"
           },
           {
-            "basic": "E*F*H-----H****",
+            "basic": "E*F*H-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120900",
@@ -9284,7 +9284,7 @@
             "et": "Postal Services Infrastructure"
           },
           {
-            "basic": "E*F*HA----H****",
+            "basic": "E*F*HA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120901",
@@ -9296,7 +9296,7 @@
             "est": "Postal Distribution Center"
           },
           {
-            "basic": "E*F*HB----H****",
+            "basic": "E*F*HB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "120902",
@@ -9308,7 +9308,7 @@
             "est": "Post Office"
           },
           {
-            "basic": "E*F*I-----H****",
+            "basic": "E*F*I-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121000",
@@ -9319,7 +9319,7 @@
             "et": "Public Venues Infrastructure"
           },
           {
-            "basic": "E*F*IA----H****",
+            "basic": "E*F*IA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121001",
@@ -9333,7 +9333,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "E*F*IB----H****",
+            "basic": "E*F*IB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121002",
@@ -9345,7 +9345,7 @@
             "est": "Open Facility"
           },
           {
-            "basic": "E*F*IC----H****",
+            "basic": "E*F*IC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121003",
@@ -9357,7 +9357,7 @@
             "est": "Recreational Area"
           },
           {
-            "basic": "E*F*ID----H****",
+            "basic": "E*F*ID----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121004",
@@ -9369,7 +9369,7 @@
             "est": "Religious Institution"
           },
           {
-            "basic": "E*F*J-----H****",
+            "basic": "E*F*J-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121100",
@@ -9380,7 +9380,7 @@
             "et": "Special Needs Infrastructure"
           },
           {
-            "basic": "E*F*JA----H****",
+            "basic": "E*F*JA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121101",
@@ -9392,7 +9392,7 @@
             "est": "Adult Day Care"
           },
           {
-            "basic": "E*F*JB----H****",
+            "basic": "E*F*JB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121102",
@@ -9404,7 +9404,7 @@
             "est": "Child Day Care"
           },
           {
-            "basic": "E*F*JC----H****",
+            "basic": "E*F*JC----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121103",
@@ -9416,7 +9416,7 @@
             "est": "Elder Care"
           },
           {
-            "basic": "E*F*K-----H****",
+            "basic": "E*F*K-----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121200",
@@ -9427,7 +9427,7 @@
             "et": "Telecommunications Infrastructure"
           },
           {
-            "basic": "E*F*KB----H****",
+            "basic": "E*F*KB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121203",
@@ -9439,7 +9439,7 @@
             "est": "Telecommunications Tower"
           },
           {
-            "basic": "S*G*IT----H****",
+            "basic": "S*G*IT----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121300",
@@ -9450,7 +9450,7 @@
             "et": "Transportation Infrastructure"
           },
           {
-            "basic": "S*G*IBA---H****",
+            "basic": "S*G*IBA---*****",
             "ver": "11",
             "ss": "20",
             "ec": "121301",
@@ -9464,7 +9464,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "E*F*LA----H****",
+            "basic": "E*F*LA----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121302",
@@ -9476,7 +9476,7 @@
             "est": "Air Traffic Control Facility"
           },
           {
-            "basic": "E*F*LD----H****",
+            "basic": "E*F*LD----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121303",
@@ -9488,7 +9488,7 @@
             "est": "Bus Station"
           },
           {
-            "basic": "E*F*LE----H****",
+            "basic": "E*F*LE----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121304",
@@ -9500,7 +9500,7 @@
             "est": "Ferry Terminal"
           },
           {
-            "basic": "E*F*LF----H****",
+            "basic": "E*F*LF----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121305",
@@ -9512,7 +9512,7 @@
             "est": "Helicopter Landing Site"
           },
           {
-            "basic": "E*F*LH----H****",
+            "basic": "E*F*LH----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121306",
@@ -9524,7 +9524,7 @@
             "est": "Maintenance Facility"
           },
           {
-            "basic": "E*F*LJ----H****",
+            "basic": "E*F*LJ----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121307",
@@ -9536,7 +9536,7 @@
             "est": "Railhead/Railroad Station"
           },
           {
-            "basic": "E*F*LK----H****",
+            "basic": "E*F*LK----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121308",
@@ -9548,7 +9548,7 @@
             "est": "Rest Stop"
           },
           {
-            "basic": "S*G*IBN---H****",
+            "basic": "S*G*IBN---*****",
             "ver": "11",
             "ss": "20",
             "ec": "121309",
@@ -9562,7 +9562,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "S*G*IMS---H****",
+            "basic": "S*G*IMS---*****",
             "ver": "11",
             "ss": "20",
             "ec": "121310",
@@ -9574,7 +9574,7 @@
             "est": "Ship Yard"
           },
           {
-            "basic": "E*F*LM----H****",
+            "basic": "E*F*LM----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121311",
@@ -9586,7 +9586,7 @@
             "est": "Toll Facility"
           },
           {
-            "basic": "E*F*LO----H****",
+            "basic": "E*F*LO----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121312",
@@ -9598,7 +9598,7 @@
             "est": "Traffic Inspection Facility"
           },
           {
-            "basic": "E*F*LP----H****",
+            "basic": "E*F*LP----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121313",
@@ -9622,7 +9622,7 @@
             "est": "Control Valve"
           },
           {
-            "basic": "E*F*MB----H****",
+            "basic": "E*F*MB----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121402",
@@ -9646,7 +9646,7 @@
             "est": "Discharge Outfall"
           },
           {
-            "basic": "E*F*MD----H****",
+            "basic": "E*F*MD----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121404",
@@ -9658,7 +9658,7 @@
             "est": "Ground Water Well"
           },
           {
-            "basic": "E*F*ME----H****",
+            "basic": "E*F*ME----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121405",
@@ -9670,7 +9670,7 @@
             "est": "Pumping Station"
           },
           {
-            "basic": "E*F*MF----H****",
+            "basic": "E*F*MF----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121406",
@@ -9682,7 +9682,7 @@
             "est": "Reservoir"
           },
           {
-            "basic": "E*F*MG----H****",
+            "basic": "E*F*MG----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121407",
@@ -9694,7 +9694,7 @@
             "est": "Storage Tower"
           },
           {
-            "basic": "E*F*MH----H****",
+            "basic": "E*F*MH----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121408",
@@ -9706,7 +9706,7 @@
             "est": "Surface Water Intake"
           },
           {
-            "basic": "E*F*MI----H****",
+            "basic": "E*F*MI----*****",
             "ver": "11",
             "ss": "20",
             "ec": "121409",
@@ -9718,7 +9718,7 @@
             "est": "Wastewater Treatment Facility"
           },
           {
-            "basic": "S*G*IUP---H****",
+            "basic": "S*G*IUP---*****",
             "ver": "11",
             "ss": "20",
             "ec": "121410",
@@ -16687,7 +16687,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "O*L*E-----H****",
+            "basic": "O*L*E-----*****",
             "ver": "11",
             "ss": "40",
             "ec": "110502",
@@ -16989,7 +16989,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "O*L*F-----H****",
+            "basic": "O*L*F-----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131001",
@@ -17054,7 +17054,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "E*O*BE----H****",
+            "basic": "E*O*BE----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131203",
@@ -17066,7 +17066,7 @@
             "est": "Emergency Incident Command Center"
           },
           {
-            "basic": "E*O*BF----H****",
+            "basic": "E*O*BF----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131204",
@@ -17078,7 +17078,7 @@
             "est": "Emergency Operations Center"
           },
           {
-            "basic": "E*O*BG----H****",
+            "basic": "E*O*BG----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131205",
@@ -17090,7 +17090,7 @@
             "est": "Emergency Public Information Center"
           },
           {
-            "basic": "E*O*BH----H****",
+            "basic": "E*O*BH----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131206",
@@ -17102,7 +17102,7 @@
             "est": "Emergency Shelter"
           },
           {
-            "basic": "E*O*BI----H****",
+            "basic": "E*O*BI----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131207",
@@ -17114,7 +17114,7 @@
             "est": "Emergency Staging Area"
           },
           {
-            "basic": "E*O*BJ----H****",
+            "basic": "E*O*BJ----*****",
             "ver": "15",
             "ss": "40",
             "ec": "131200",
@@ -17126,7 +17126,7 @@
             "est": "Emergency Team"
           },
           {
-            "basic": "E*O*BK----H****",
+            "basic": "E*O*BK----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131208",
@@ -17149,7 +17149,7 @@
             "et": "Emergency Medical Operation"
           },
           {
-            "basic": "E*O*AD----H****",
+            "basic": "E*O*AD----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131301",
@@ -17163,7 +17163,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "E*O*AG----H****",
+            "basic": "E*O*AG----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131302",
@@ -17175,7 +17175,7 @@
             "est": "Health Department Facility"
           },
           {
-            "basic": "E*O*AJ----H****",
+            "basic": "E*O*AJ----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131303",
@@ -17187,7 +17187,7 @@
             "est": "Medical Facilities Outpatient"
           },
           {
-            "basic": "E*O*AK----H****",
+            "basic": "E*O*AK----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131304",
@@ -17199,7 +17199,7 @@
             "est": "Morgue"
           },
           {
-            "basic": "E*O*AL----H****",
+            "basic": "E*O*AL----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131305",
@@ -17211,7 +17211,7 @@
             "est": "Pharmacy"
           },
           {
-            "basic": "E*O*AM----H****",
+            "basic": "E*O*AM----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131306",
@@ -17247,7 +17247,7 @@
             "est": "Fire Station"
           },
           {
-            "basic": "E*O*CD----H****",
+            "basic": "E*O*CD----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131403",
@@ -17356,7 +17356,7 @@
             "est": "Police"
           },
           {
-            "basic": "E*O*DK----H****",
+            "basic": "E*O*DK----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131508",
@@ -17973,7 +17973,7 @@
             "c2": "Listed as unframed in 2525C and Full Octagon in 2525D"
           },
           {
-            "basic": "O*L*N-----H****",
+            "basic": "O*L*N-----*****",
             "ver": "11",
             "ss": "40",
             "ec": "170108",
