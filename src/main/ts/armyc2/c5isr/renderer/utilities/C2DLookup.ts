@@ -5,7 +5,7 @@ import json from '../../data/c2d.json';
 import { SymbolUtilities } from './SymbolUtilities';
 import { SymbolID } from './SymbolID';
 import { GENCLookup } from './GENCLookup';
-import { MSLookup } from '../../../../../../../dist-node/C5Ren.cjs';
+import { MSLookup } from './MSLookup';
 
 /**
  * Utility class that takes a 15 character 2525C symbolID and 
