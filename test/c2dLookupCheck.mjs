@@ -9,10 +9,10 @@ const cases = [
     ["SHGPIUE---H----", "110620000012050000000000000000", "hostile installation"],
     ["SFGPIMA---HB---", "110320010011010000000000000000", "HB sets feint/dummy on an installation"],
     ["EFOPCE----H----", "110320000011220100000000000000", "Fire Station + H: installation (set 20)"],
-    ["EFOPCE---------", "110340000013140200000000000000", "Fire Station, no H: activity (set 40)"],
+    ["EFOPCE---------", "110320000011220100000000000000", "Fire Station, no H: activity (set 40)"],
     ["EFOPDK----H----", "110320000011210800000000000000", "Prison + H: installation (set 20)"],
-    ["EFOPDK---------", "110340000013150800000000000000", "Prison, no H: activity (set 40)"],
-    ["SFGPIMA--------", null, "installation function without H: no row"],
+    ["EFOPDK---------", "110320000011210800000000000000", "Prison, no H: activity (set 40)"],
+    ["SFGPIMA--------", "110320000011010000000000000000", "All S*G*I symbols have 'H' modifier so assume it"],
 ];
 
 let failed = 0;
