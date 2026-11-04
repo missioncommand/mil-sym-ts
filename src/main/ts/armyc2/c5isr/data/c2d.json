@@ -2918,7 +2918,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "S*G*UCDC---****",
+            "basic": "S*G*UCDC--*****",
             "ver": "11",
             "ss": "10",
             "ec": "130103",
@@ -4000,7 +4000,7 @@
             "et": "Shore Patrol"
           },
           {
-            "basic": "S*G*UUMC-------",
+            "basic": "S*G*UUMC--*****",
             "ver": "11",
             "ss": "10",
             "ec": "150200",
@@ -8610,7 +8610,7 @@
             "est": "Police"
           },
           {
-            "basic": "E*O*DK----*****",
+            "basic": "E*O*DK----H****",
             "ver": "11",
             "ss": "20",
             "ec": "112108",
@@ -17356,7 +17356,7 @@
             "est": "Police"
           },
           {
-            "basic": "E*O*DK----H****",
+            "basic": "E*O*DK----*****",
             "ver": "11",
             "ss": "40",
             "ec": "131508",

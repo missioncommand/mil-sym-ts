@@ -17,6 +17,8 @@ export class C2DLookup {
     private static _isReady: boolean = false;
 
     private static _C2DLookup: Map<string, string[]>;
+    //keys by first 10 chars, for keys with literals in positions 11-15 (installation H, SIGINT --)
+    private static _C2DByStem: Map<string, string[]>;
     private static c2d:any;
 
 
@@ -60,9 +62,19 @@ export class C2DLookup {
             C2DLookup._C2DLookup = new Map();
             try {
                 
+                C2DLookup._C2DByStem = new Map();
                 let c2dJSON: c2dIn[] = C2DLookup.c2d["c2d"]["symbols"]
                 for (let symbolJSON of c2dJSON) {
-                    C2DLookup._C2DLookup.set(symbolJSON["basic"], [symbolJSON["ver"],symbolJSON["ss"],symbolJSON["ec"],symbolJSON["em"],symbolJSON["s1"],symbolJSON["s2"]]);
+                    let basic:string = symbolJSON["basic"];
+                    C2DLookup._C2DLookup.set(basic, [symbolJSON["ver"],symbolJSON["ss"],symbolJSON["ec"],symbolJSON["em"],symbolJSON["s1"],symbolJSON["s2"]]);
+                    if(basic.length === 15 && C2DLookup.isPatternKey(basic))
+                    {
+                        let stem:string = basic.substring(0,10);
+                        let keys:string[] = C2DLookup._C2DByStem.get(stem);
+                        if(keys == null)
+                            C2DLookup._C2DByStem.set(stem, keys = []);
+                        keys.push(basic);
+                    }
                 }
                 
             } catch (e) {
@@ -76,6 +88,52 @@ export class C2DLookup {
             C2DLookup._isReady = true;
     }
 
+    //W, B and P keys are exact codes
+    private static isPatternKey(key:string):boolean
+    {
+        let scheme:string = key.charAt(0);
+        return scheme !== 'W' && scheme !== 'B' && scheme !== 'P'
+            && key.charAt(1) === '*' && key.charAt(3) === '*';
+    }
+
+    //most specific key whose literals in positions 11-15 match the symbolID
+    private static findParts(symbolID:string):string[]
+    {
+        let basicID:string = SymbolUtilities.getBasicSymbolID2525C(symbolID);
+        if(basicID.length !== 15 || !C2DLookup.isPatternKey(basicID))
+            return C2DLookup._C2DLookup.get(basicID);
+
+        let keys:string[] = C2DLookup._C2DByStem.get(basicID.substring(0,10));
+        if(keys == null)
+            return null;
+
+        let best:string = null;
+        let bestLiterals:number = -1;
+        for (let key of keys)
+        {
+            let literals:number = 0;
+            let matches:boolean = true;
+            for (let i:number = 10; i < 15; i++)
+            {
+                let c:string = key.charAt(i);
+                if(c === '*')
+                    continue;
+                if(c !== symbolID.charAt(i))
+                {
+                    matches = false;
+                    break;
+                }
+                literals++;
+            }
+            if(matches && literals > bestLiterals)
+            {
+                best = key;
+                bestLiterals = literals;
+            }
+        }
+        return best == null ? null : C2DLookup._C2DLookup.get(best);
+    }
+
     /**
      * Take a complete 15 character 2525C symbol code and converts it to 2525D if there is a match.
      * Returns null if no match.
@@ -85,10 +143,9 @@ export class C2DLookup {
      */
     public getDCode(symbolID:string, includeCountryCode:boolean = true):string
     {
-        let basicID:string = SymbolUtilities.getBasicSymbolID2525C(symbolID);
         let newCode:string = "110000000000000000000000000000";
 
-        let parts:string[] = C2DLookup._C2DLookup.get(basicID);
+        let parts:string[] = C2DLookup.findParts(symbolID);
         if(parts==null)
             return null;
 
@@ -238,7 +295,7 @@ export class C2DLookup {
         else
         {
             if(modifier === "HB")
-                SymbolID.setHQTFD(newCode,SymbolID.HQTFD_FeintDummy);
+                newCode = SymbolID.setHQTFD(newCode,SymbolID.HQTFD_FeintDummy);
             else if(modifier.charAt(0)=='M')
             {
                 switch(modifier.charAt(1))
