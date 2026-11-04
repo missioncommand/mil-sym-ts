@@ -8114,7 +8114,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "S*G*I-----*****",
+            "basic": "S*G*I-----H****",
             "ver": "11",
             "ss": "20",
             "ec": "000000",
@@ -8125,7 +8125,7 @@
             "et": "Installation, Unspecified"
           },
           {
-            "basic": "S*G*IMA---*****",
+            "basic": "S*G*IMA---H****",
             "ver": "11",
             "ss": "20",
             "ec": "110100",
@@ -8136,7 +8136,7 @@
             "et": "Aircraft Production/Assembly"
           },
           {
-            "basic": "S*G*IME---*****",
+            "basic": "S*G*IME---H****",
             "ver": "11",
             "ss": "20",
             "ec": "110200",
@@ -8147,7 +8147,7 @@
             "et": "Ammunition and Explosives/Assembly"
           },
           {
-            "basic": "S*G*IMG---*****",
+            "basic": "S*G*IMG---H****",
             "ver": "11",
             "ss": "20",
             "ec": "110400",
@@ -8158,7 +8158,7 @@
             "et": "Armament Production"
           },
           {
-            "basic": "S*G*IMV---*****",
+            "basic": "S*G*IMV---H****",
             "ver": "11",
             "ss": "20",
             "ec": "121306",
@@ -8180,7 +8180,7 @@
             "et": "Black List Location"
           },
           {
-            "basic": "S*G*IR----*****",
+            "basic": "S*G*IR----H****",
             "ver": "11",
             "ss": "20",
             "ec": "120000",
@@ -8191,7 +8191,7 @@
             "et": "Installation, Raw Material Production/Storage, no match, empty installation"
           },
           {
-            "basic": "S*G*IRN---*****",
+            "basic": "S*G*IRN---H****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8205,7 +8205,7 @@
             "c2": "CBRN symbol is displayed differently"
           },
           {
-            "basic": "S*G*IRNB--*****",
+            "basic": "S*G*IRNB--H****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8219,7 +8219,7 @@
             "c2": "2525C uses the same symbol for both Bio and Chem"
           },
           {
-            "basic": "S*G*IRNC--*****",
+            "basic": "S*G*IRNC--H****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8233,7 +8233,7 @@
             "c2": "2525C uses the same symbol for both Bio and Chem"
           },
           {
-            "basic": "S*G*IRNN--*****",
+            "basic": "S*G*IRNN--H****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8245,7 +8245,7 @@
             "est": "Nuclear"
           },
           {
-            "basic": "S*G*IP----*****",
+            "basic": "S*G*IP----H****",
             "ver": "11",
             "ss": "20",
             "ec": "120000",
@@ -8256,7 +8256,7 @@
             "et": "Installation, Processing Facility, no match, empty installation"
           },
           {
-            "basic": "S*G*IPD---*****",
+            "basic": "S*G*IPD---H****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8268,7 +8268,7 @@
             "est": "Decontamination"
           },
           {
-            "basic": "S*G*IMN---*****",
+            "basic": "S*G*IMN---H****",
             "ver": "11",
             "ss": "20",
             "ec": "110700",
@@ -8279,7 +8279,7 @@
             "et": "Engineering Equipment Production"
           },
           {
-            "basic": "S*G*IMNB--*****",
+            "basic": "S*G*IMNB--H****",
             "ver": "11",
             "ss": "20",
             "ec": "110701",
@@ -8290,7 +8290,7 @@
             "et": "Engineering Equipment Production,  Bridge"
           },
           {
-            "basic": "S*G*IMC---*****",
+            "basic": "S*G*IMC---H****",
             "ver": "11",
             "ss": "20",
             "ec": "110600",
@@ -8301,7 +8301,7 @@
             "et": "Chem & Bio Warfare Production"
           },
           {
-            "basic": "S*G*IE----*****",
+            "basic": "S*G*IE----H****",
             "ver": "11",
             "ss": "20",
             "ec": "110800",
@@ -8312,7 +8312,7 @@
             "et": "Equipment Manufacture"
           },
           {
-            "basic": "S*G*IG----*****",
+            "basic": "S*G*IG----H****",
             "ver": "11",
             "ss": "20",
             "ec": "110900",
@@ -8345,7 +8345,7 @@
             "et": "Mass Grave Site"
           },
           {
-            "basic": "S*G*IRM---*****",
+            "basic": "S*G*IRM---H****",
             "ver": "11",
             "ss": "20",
             "ec": "111300",
@@ -8356,7 +8356,7 @@
             "et": "Mine"
           },
           {
-            "basic": "S*G*IMM---*****",
+            "basic": "S*G*IMM---H****",
             "ver": "11",
             "ss": "20",
             "ec": "111400",
@@ -8367,7 +8367,7 @@
             "et": "Missile and Space System Production"
           },
           {
-            "basic": "S*G*IMF---*****",
+            "basic": "S*G*IMF---H****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8378,7 +8378,7 @@
             "et": "Nuclear (Non CBRN Defense)"
           },
           {
-            "basic": "S*G*IMFA--*****",
+            "basic": "S*G*IMFA--H****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8390,7 +8390,7 @@
             "est": "Atomic Energy Reactor"
           },
           {
-            "basic": "S*G*IMFP--*****",
+            "basic": "S*G*IMFP--H****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8402,7 +8402,7 @@
             "est": "Nuclear Material Production"
           },
           {
-            "basic": "S*G*IMFS--*****",
+            "basic": "S*G*IMFS--H****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8414,7 +8414,7 @@
             "est": "Nuclear Material Storage"
           },
           {
-            "basic": "S*G*IMFPW-*****",
+            "basic": "S*G*IMFPW-H****",
             "ver": "11",
             "ss": "20",
             "ec": "111500",
@@ -8459,7 +8459,7 @@
             "et": "White List Location"
           },
           {
-            "basic": "S*G*IC----*****",
+            "basic": "S*G*IC----H****",
             "ver": "11",
             "ss": "20",
             "ec": "111900",
@@ -8473,7 +8473,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "S*G*ICD---*****",
+            "basic": "S*G*ICD---H****",
             "ver": "11",
             "ss": "20",
             "ec": "111901",
@@ -8487,7 +8487,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "S*G*ICT---*****",
+            "basic": "S*G*ICT---H****",
             "ver": "11",
             "ss": "20",
             "ec": "111902",
@@ -8501,7 +8501,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "S*G*IW----*****",
+            "basic": "S*G*IW----H****",
             "ver": "11",
             "ss": "20",
             "ec": "112000",
@@ -8610,7 +8610,7 @@
             "est": "Police"
           },
           {
-            "basic": "E*O*DK----H****",
+            "basic": "E*O*DK----*****",
             "ver": "11",
             "ss": "20",
             "ec": "112108",
@@ -8681,7 +8681,7 @@
             "et": "Emergency Operation"
           },
           {
-            "basic": "E*O*CE----H****",
+            "basic": "E*O*CE----*****",
             "ver": "11",
             "ss": "20",
             "ec": "112201",
@@ -9061,7 +9061,7 @@
             "est": "School"
           },
           {
-            "basic": "S*G*IU----*****",
+            "basic": "S*G*IU----H****",
             "ver": "11",
             "ss": "20",
             "ec": "000000",
@@ -9072,7 +9072,7 @@
             "et": "Service, Research, Utility Facility"
           },
           {
-            "basic": "S*G*IUR---*****",
+            "basic": "S*G*IUR---H****",
             "ver": "11",
             "ss": "20",
             "ec": "000000",
@@ -9086,7 +9086,7 @@
             "c2": "Use Parent Node"
           },
           {
-            "basic": "S*G*IUT---*****",
+            "basic": "S*G*IUT---H****",
             "ver": "11",
             "ss": "20",
             "ec": "121200",
@@ -9100,7 +9100,7 @@
             "c2": "Rough D equivalent"
           },
           {
-            "basic": "S*G*IUE---*****",
+            "basic": "S*G*IUE---H****",
             "ver": "11",
             "ss": "20",
             "ec": "120500",
@@ -9111,7 +9111,7 @@
             "et": "Electric Power Facility"
           },
           {
-            "basic": "S*G*IUED--*****",
+            "basic": "S*G*IUED--H****",
             "ver": "11",
             "ss": "20",
             "ec": "120501",
@@ -9125,7 +9125,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "S*G*IUEF--*****",
+            "basic": "S*G*IUEF--H****",
             "ver": "11",
             "ss": "20",
             "ec": "120501",
@@ -9139,7 +9139,7 @@
             "c2": "No fossil fuel modifier, can choose coal (06) or natural gas (09) for s1 mod"
           },
           {
-            "basic": "S*G*IUEN--*****",
+            "basic": "S*G*IUEN--H****",
             "ver": "11",
             "ss": "20",
             "ec": "120501",
@@ -9177,7 +9177,7 @@
             "est": "Natural Gas Facility"
           },
           {
-            "basic": "S*G*IRP---*****",
+            "basic": "S*G*IRP---H****",
             "ver": "11",
             "ss": "20",
             "ec": "120505",
@@ -9214,7 +9214,7 @@
             "et": "Government Site Infrastructure"
           },
           {
-            "basic": "S*G*IX----*****",
+            "basic": "S*G*IX----H****",
             "ver": "11",
             "ss": "20",
             "ec": "120701",
@@ -9226,7 +9226,7 @@
             "est": "Medical"
           },
           {
-            "basic": "S*G*IXH---*****",
+            "basic": "S*G*IXH---H****",
             "ver": "11",
             "ss": "20",
             "ec": "120702",
@@ -9261,7 +9261,7 @@
             "est": "Military Armory"
           },
           {
-            "basic": "S*G*IB----*****",
+            "basic": "S*G*IB----H****",
             "ver": "11",
             "ss": "20",
             "ec": "120802",
@@ -9439,7 +9439,7 @@
             "est": "Telecommunications Tower"
           },
           {
-            "basic": "S*G*IT----*****",
+            "basic": "S*G*IT----H****",
             "ver": "11",
             "ss": "20",
             "ec": "121300",
@@ -9450,7 +9450,7 @@
             "et": "Transportation Infrastructure"
           },
           {
-            "basic": "S*G*IBA---*****",
+            "basic": "S*G*IBA---H****",
             "ver": "11",
             "ss": "20",
             "ec": "121301",
@@ -9548,7 +9548,7 @@
             "est": "Rest Stop"
           },
           {
-            "basic": "S*G*IBN---*****",
+            "basic": "S*G*IBN---H****",
             "ver": "11",
             "ss": "20",
             "ec": "121309",
@@ -9562,7 +9562,7 @@
             "c2": "Symbol is displayed differently between versions"
           },
           {
-            "basic": "S*G*IMS---*****",
+            "basic": "S*G*IMS---H****",
             "ver": "11",
             "ss": "20",
             "ec": "121310",
@@ -9718,7 +9718,7 @@
             "est": "Wastewater Treatment Facility"
           },
           {
-            "basic": "S*G*IUP---*****",
+            "basic": "S*G*IUP---H****",
             "ver": "11",
             "ss": "20",
             "ec": "121410",
@@ -16687,7 +16687,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "O*L*E-----*****",
+            "basic": "O*L*E-----H****",
             "ver": "11",
             "ss": "40",
             "ec": "110502",
@@ -16989,7 +16989,7 @@
             "c2": "2525C codes approved after release of 2525C"
           },
           {
-            "basic": "O*L*F-----*****",
+            "basic": "O*L*F-----H****",
             "ver": "11",
             "ss": "40",
             "ec": "131001",
@@ -17973,7 +17973,7 @@
             "c2": "Listed as unframed in 2525C and Full Octagon in 2525D"
           },
           {
-            "basic": "O*L*N-----*****",
+            "basic": "O*L*N-----H****",
             "ver": "11",
             "ss": "40",
             "ec": "170108",
