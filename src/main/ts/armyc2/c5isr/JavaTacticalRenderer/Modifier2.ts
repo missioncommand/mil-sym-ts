@@ -4691,6 +4691,11 @@ export class Modifier2 {
                         Modifier2.AddIntegralAreaModifier(tg, Modifier2.buildAreaGroupDTGString(tg), Modifier2.toEnd, -1 * csFactor, dtgCircularPosition, new POINT2(dtgCircularPosition.x + 0.001, dtgCircularPosition.y, 0), false);
                         modifiersGrouped = true;
                         break;
+                    case TacticalLines.BDZ:
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[tg.Pixels.length / 2], 0);
+                        //center labels
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
+                        break;
                     case TacticalLines.FFA_CIRCULAR:
                     case TacticalLines.NFA_CIRCULAR:
                     case TacticalLines.RFA_CIRCULAR:
@@ -5000,6 +5005,12 @@ export class Modifier2 {
                         break;
                     }
 
+                    case TacticalLines.BDZ:
+                        ptCenter = lineutility.MidPointDouble(tg.Pixels[0], tg.Pixels[tg.Pixels.length / 2], 0);
+                        //center labels
+                        Modifier2.AddIntegralAreaModifier(tg, label, Modifier2.area, 0, ptCenter, ptCenter, false);
+                        break;
+                        
                     case TacticalLines.FFA_CIRCULAR:
                     case TacticalLines.NFA_CIRCULAR:
                     case TacticalLines.RFA_CIRCULAR: {

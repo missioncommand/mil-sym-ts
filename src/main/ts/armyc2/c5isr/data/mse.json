@@ -6714,9 +6714,9 @@
         "est": "",
         "code": "170800",
         "versions": "15,16",
-        "geometry": "Point",
-        "drawRules": "Area22",
-        "modifiers": "",
+        "geometry": "Area",
+        "drawRules": "Circular1",
+        "modifiers": "AM,X",
         "aux1": ""
       },
       {
@@ -10353,7 +10353,7 @@
         "code": "260600",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line8",
+        "drawRules": "Line1",
         "modifiers": "W,W1",
         "aux1": ""
       },
@@ -19458,7 +19458,7 @@
         "code": "120305",
         "versions": "15",
         "geometry": "Line",
-        "drawRules": "Line8",
+        "drawRules": "Line1",
         "modifiers": "000000",
         "aux1": ""
       },
