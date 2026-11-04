@@ -320,7 +320,12 @@ export class SymbolUtilities {
                 res += strSymbolID.charAt(2);
                 res += "*";
                 res += strSymbolID.substring(4, 10);
-                res += "*****";
+                if(res.startsWith("S*G*I"))//Installation
+                    res += "H****";
+                else if(res.startsWith("I"))//SIGINT
+                    res += "--***";
+                else//Warfighting and anything else
+                    res += "*****";
             } else {
                 return strSymbolID;
             }

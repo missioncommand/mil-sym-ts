@@ -76,33 +76,6 @@ export class C2DLookup {
             C2DLookup._isReady = true;
     }
 
-        /**
-     * Gets the basic Symbol ID for a 2525C symbol
-     * S*F*GPU---*****
-     * G*G*GPP---****X
-     * @param strSymbolID 15 Character string
-     * @return 15 Character string
-     */
-    private static getBasicSymbolID2525C(strSymbolID: string): string 
-    {
-        
-        let res: string = SymbolUtilities.getBasicSymbolID(strSymbolID);
-
-        if(res.startsWith("I"))
-            res = res.substring(0,10) + "--***";
-
-
-        //Exception for EMS Prison & Fire Station c2d lookup
-        if(res=="E*O*DK----*****" || res=="E*O*CE----*****")
-        {
-            if(strSymbolID.charAt(10)=="H")
-                res = res.substring(0,10) + "H****";
-        }
-
-        return res;
-        
-    }
-
     /**
      * Take a complete 15 character 2525C symbol code and converts it to a 2525D/E if there is a match.
      * Returns null if no match.
@@ -112,7 +85,7 @@ export class C2DLookup {
      */
     public getDCode(symbolID:string, includeCountryCode:boolean = true):string
     {
-        let basicID:string = C2DLookup.getBasicSymbolID2525C(symbolID);
+        let basicID:string = SymbolUtilities.getBasicSymbolID2525C(symbolID);
         let newCode:string = "110000000000000000000000000000";
 
         let parts:string[] = C2DLookup._C2DLookup.get(basicID);
