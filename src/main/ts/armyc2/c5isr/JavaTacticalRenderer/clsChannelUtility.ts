@@ -20,6 +20,7 @@ import { RendererException } from "../renderer/utilities/RendererException"
 import { SymbolID } from "../renderer/utilities/SymbolID"
 import { clsRenderer2 } from "../RenderMultipoints/clsRenderer2"
 import { clsUtility } from "./clsUtility";
+import { LinePattern } from "../JavaLineArray/LinePattern";
 
 /**
  * A class to process channel types.
@@ -420,6 +421,112 @@ export class clsChannelUtility {
             }
         }
         return pixels2;
+    }
+
+    /**
+    * Draws channel patterns, wiring LinePattern into the Shape2.
+    * Mirrors the Java DrawChannelPatterns method.
+    */
+    public static DrawChannelPatterns(
+    pixels: POINT2[],
+    tg: TGLight,
+    shapes: Shape2[]
+    ): void 
+    {
+        // getLCPixels is assumed to be available; returns updated pixels.
+        pixels = this.getLCPixels(tg, pixels);
+
+        // GeneralPath: assume you have a path / geometry class analogous to Java's GeneralPath.
+        const shape = new Shape2(Shape2.SHAPE_TYPE_POLYLINE);
+        let i = 0;
+
+        // make sure points are always clockwise for use with Line Patterns
+        if (clsUtility.isClosedPolygon(tg.get_LineType())) {
+        if (!this.isClockwise(tg)) {
+            // reverse pixel order on tg.Pixels
+            tg.Pixels.reverse();
+        }
+        }
+
+        // undo point reversals for certain lines
+        const ec = SymbolID.getEntityCode(tg.get_SymbolId());
+        switch (ec) 
+        {
+            case 290100: // Obstacle Line
+            case 290301: // Unspecified
+            case 290305: // Low Wire Fence
+            case 290306: // High Wire Fence
+            // case 290307: // Single Strand Concertina
+            case 290308: // Double Strand Concertina
+            case 290309: // Triple Strand Concertina
+                tg.Pixels.reverse();
+                break;
+        }
+
+        // Build path and shape from pixels
+        for (const p of pixels) {
+            if (i > 0) {
+                shape.lineTo(new POINT2(p.x, p.y));
+            } else {
+                shape.moveTo(new POINT2(p.x, p.y));
+            }
+            i++;
+        }
+
+        // Build line pattern
+        const lp = LinePattern.getLinePattern(
+            tg.get_SymbolId(),
+            tg.get_LineColor(),
+            tg.get_FillColor(),
+            tg.get_LineThickness());
+
+        // Assign style & pattern to shape
+        shape.setLineColor(tg.get_LineColor());
+        shape.setFillColor(tg.get_FillColor());
+        shape.setLinePattern(lp);
+
+        // Add shape to collection
+        shapes.push(shape);
+    }
+
+    /**
+     * Determines whether the polygon in tg.Pixels is clockwise.
+     * Port of the Java isClockwise(TGLight tg) method.
+     */
+    private static isClockwise(tg: TGLight): boolean {
+        const points: POINT2[] = tg.get_Pixels();
+        if (!points || points.length < 3) {
+        return false; // A polygon must have at least 3 points
+        }
+
+        let sum = 0.0;
+        let numPoints = points.length;
+
+        // If the list is already closed (last point identical to the first),
+        // ignore the last point to avoid a redundant 0-length edge.
+        if (numPoints > 1 &&
+        (points[0].x === points[numPoints - 1].x && points[0].y === points[numPoints - 1].y))
+        {
+            numPoints--;
+        }
+
+        for (let i = 0; i < numPoints; i++) {
+        const current = points[i];
+        // Wrap around to the first point if we are at the last point
+        const next = points[(i + 1) % numPoints];
+
+        // Shoelace-like calculation for the current edge
+        const dx = next.x - current.x;
+        const sumY = next.y + current.y;
+
+        sum += dx * sumY;
+        }
+
+        // In Y-down coordinates, a positive sum means Clockwise
+        // In this implementation:
+        //  - A negative sum (< 0) means Clockwise (CW)
+        //  - A positive sum (> 0) means Counter-Clockwise (CCW)
+        return sum < 0;
     }
 
     /**

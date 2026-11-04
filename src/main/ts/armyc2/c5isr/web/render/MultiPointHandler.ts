@@ -1701,6 +1701,7 @@ export class MultiPointHandler {
         let lineWidth: int = 0;
         let altMode: string = "";
         let useDashArray: boolean = symbol.getUseDashArray();
+        let UseLinePattern: boolean = symbol.getUseLinePattern();
         let usePatternFill: boolean = symbol.getUseFillPattern();
         let patternFillType: int = 0;
         let hideOptionalLabels: boolean = false;
@@ -1843,6 +1844,10 @@ export class MultiPointHandler {
                     useDashArray = saAttributes.get(MilStdAttributes.UseDashArray).toLowerCase() === 'true';
                 }
 
+                if (saAttributes.has(MilStdAttributes.UseLinePattern)) {
+                    UseLinePattern = saAttributes.get(MilStdAttributes.UseLinePattern).toLowerCase() === 'true';
+                }
+
                 if (saAttributes.has(MilStdAttributes.UsePatternFill)) {
                     usePatternFill = saAttributes.get(MilStdAttributes.UsePatternFill).toLowerCase() === 'true';
                 }
@@ -1921,6 +1926,7 @@ export class MultiPointHandler {
             }
 
             symbol.setUseDashArray(useDashArray);
+            symbol.setUseLinePattern(UseLinePattern);
             symbol.setUseFillPattern(usePatternFill);
             symbol.setHideOptionalLabels(hideOptionalLabels);
             symbol.setAltitudeUnit(altitudeUnit);

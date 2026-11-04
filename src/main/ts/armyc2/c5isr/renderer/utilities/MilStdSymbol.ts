@@ -16,6 +16,7 @@ import { ShapeInfo } from "../../renderer/utilities/ShapeInfo"
 import { SymbolUtilities } from "../../renderer/utilities/SymbolUtilities"
 import { AffiliationColors } from "./AffiliationColors";
 import { RendererUtilities } from "./RendererUtilities";
+import { LinePattern } from "../../JavaLineArray/LinePattern";
 
 
 /**
@@ -82,6 +83,8 @@ export class MilStdSymbol {
     private static _DistanceUnit: DistanceUnit;
 
     private static _useDashArray: boolean = true;
+
+    private static _useLinePattern: boolean = false;
 
     private static _hideOptionalLabels: boolean = false;
 
@@ -208,7 +211,7 @@ export class MilStdSymbol {
         this.setSymbolID(symbolID);
 
         // Set up default line fill and text colors
-        this.setLineColor(SymbolUtilities.getDefaultLineColor(this._symbolID));
+        this._LineColor = SymbolUtilities.getDefaultLineColor(this._symbolID);
         this.setTextColor(SymbolUtilities.getLineColorOfAffiliation(symbolID));
         //if(SymbolUtilities.isWarfighting(_symbolID))
         if (SymbolUtilities.hasDefaultFill(this._symbolID)) {
@@ -290,6 +293,14 @@ export class MilStdSymbol {
 
     public setUseDashArray(value: boolean): void {
         MilStdSymbol._useDashArray = value;
+    }
+
+    public getUseLinePattern(): boolean {
+        return MilStdSymbol._useLinePattern;
+    }
+
+    public setUseLinePattern(value: boolean): void {
+        MilStdSymbol._useLinePattern = value;
     }
 
     public getHideOptionalLabels(): boolean {
@@ -657,12 +668,10 @@ export class MilStdSymbol {
      * @param value {@link Color}
      */
     public setLineColor(value: Color | null): void {
-        if (SymbolUtilities.isGreenProtectionGraphic(this.getSymbolID())) {
-            this._LineColor = AffiliationColors.ObstacleGreen;//new Color(0, 166, 81); // Green from SymbolUtilities.getLineColorOfAffiliation()
-        } else if (value != null) {
-                this._LineColor = value;
+        if(!SymbolUtilities.hasStaticLineColor(this._symbolID) && value != null)
+        {
+            this._LineColor = value;
         }
-
     }
 
     /**
@@ -1243,7 +1252,10 @@ export class MilStdSymbol {
                 case 341500://Isolate, most detail contained inside
                 case 342600://Cordon and Knock, most detail contained inside
                 case 342700://Cordon and Search, most detail contained inside
-                    return 2;//decoration
+                    if(this.getUseLinePattern() && LinePattern.supportsLinePattern(this._symbolID))
+                        return 0;//using pattern, don't need to refresh
+                    else
+                        return 2;//decoration
 
                 //Areas with Pattern Fill
                 case 151100://Limited Access Area

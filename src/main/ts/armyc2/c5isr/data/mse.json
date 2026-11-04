@@ -8736,7 +8736,7 @@
         "code": "220100",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8748,7 +8748,7 @@
         "code": "220101",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8760,7 +8760,7 @@
         "code": "220102",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8772,7 +8772,7 @@
         "code": "220103",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8784,7 +8784,7 @@
         "code": "220104",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8796,7 +8796,7 @@
         "code": "220105",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8808,7 +8808,7 @@
         "code": "220106",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8820,7 +8820,7 @@
         "code": "220107",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8832,7 +8832,7 @@
         "code": "220108",
         "versions": "15,16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "H",
         "aux1": ""
       },
@@ -8840,11 +8840,11 @@
         "ss": "",
         "e": "",
         "et": "",
-        "est": "Navigationl Rhumb Line",
+        "est": "Navigational Rhumb Line",
         "code": "220109",
         "versions": "16",
         "geometry": "Line",
-        "drawRules": "Line1",
+        "drawRules": "Line5",
         "modifiers": "T,AN",
         "aux1": ""
       },

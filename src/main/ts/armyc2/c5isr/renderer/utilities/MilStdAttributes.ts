@@ -112,6 +112,11 @@ export class MilStdAttributes {
     public static readonly PatternFillType: string = "PATTERNFILLTYPE";
 
     /**
+     * Experimental feature only for use with MilStdSymbol Rendering at this time
+     */
+    public static readonly UseLinePattern: string = "USELINEPATTERN";
+
+    /**
      * The conversion factor and the label that you want all distances to display in. The conversion factor
      * is converting from meters. The default unit is meters.<br><br>
      *

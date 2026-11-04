@@ -601,6 +601,15 @@ export class TGLight {
         this._useHatchFill = value;
     }
 
+    protected _useLinePattern: boolean = false;
+    public get_UseLinePattern(): boolean {
+        return this._useLinePattern;
+    }
+
+    public set_UseLinePattern(value: boolean): void {
+        this._useLinePattern = value;
+    }
+
     //    boolean _usePatternFill = false;    
     //    public boolean get_UsePatternFill() {
     //        return _usePatternFill;
