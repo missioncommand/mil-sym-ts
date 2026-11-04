@@ -5,6 +5,7 @@ import json from '../../data/c2d.json';
 import { SymbolUtilities } from './SymbolUtilities';
 import { SymbolID } from './SymbolID';
 import { GENCLookup } from './GENCLookup';
+import { MSLookup } from '../../../../../../../dist-node/C5Ren.cjs';
 
 /**
  * Utility class that takes a 15 character 2525C symbolID and 
@@ -242,8 +243,17 @@ export class C2DLookup {
             {
                 if(SymbolID.getSymbolSet(newCode)!=SymbolID.SymbolSet_LandInstallation)
                 {
-                    newCode = SymbolID.setVersion(newCode, SymbolID.Version_2525Ech1);
-                    newCode = SymbolID.setFrameShape(newCode, SymbolID.FrameShape_LandInstallation);
+                    //If there's an attempt to add the installation modifier to something that isn't normally an installation,
+                    //change version to 2525E and leverage the frame shape modifier.  If code isn't in 2525E, leave it be.
+                    let cs:string = symbolID.charAt(0);
+                    if(cs=="S" || cs=="O" || cs=="E")
+                    {
+                        let temp:string = newCode;
+                        temp = SymbolID.setVersion(temp, SymbolID.Version_2525Ech1);
+                        temp = SymbolID.setFrameShape(temp, SymbolID.FrameShape_LandInstallation);
+                        if(MSLookup.getInstance().getMSLInfo(temp) != null)
+                            newCode = temp;
+                    }
                 }
 
                 if(modifier === "HB")
