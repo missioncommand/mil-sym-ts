@@ -650,7 +650,7 @@ export class RendererUtilities {
 
     public static calculateOutlineWidth():number
     {
-        return RendererSettings.getInstance().getDeviceDPI()>100 ? RendererSettings.getInstance().getDeviceDPI()/96 * 3 : 3;
+        return RendererSettings.getInstance().getDeviceDPI()>240 ? (RendererSettings.getInstance().getDeviceDPI()/240 * 2) + 1 : 3;
     }
 
     public static scaleIcon(symbolID:string, icon:SVGInfo):SVGInfo
