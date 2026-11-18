@@ -155,8 +155,8 @@ export class SymbolID2 {
      * Attempts to resolve a bad symbol ID into a value that can be found in {@link MSLookup}.
      * If it fails, it will return the symbol code for an invalid symbol which is displayed as
      * an inverted question mark (110098000010000000000000000000)
-     * @param symbolID 30 character {@link String}
-     * @return 30 character {@link String} representing the resolved symbol ID.
+     * @param symbolID 30 character string
+     * @return 30 character string representing the resolved symbol ID.
      * @deprecated See {@link SymbolUtilities#reconcileSymbolID(string)}
      */
     public static reconcileSymbolID(symbolID: string): string {
@@ -165,8 +165,8 @@ export class SymbolID2 {
 
     /**
      * Gets the version number from the Symbol ID at positions 1-2
-     * @param symbolID 30 character {@link String}
-     * @return {@link String} like {@link SymbolID2#Version_2525Dch1} (11)
+     * @param symbolID 30 character string
+     * @return string like {@link SymbolID2#Version_2525Dch1} (11)
      */
     public static getVersion(symbolID: string): string {
         return symbolID.substring(0, 2);
@@ -174,9 +174,9 @@ export class SymbolID2 {
 
     /**
      * Sets the version number of the Symbol ID at positions 1-2
-     * @param symbolID 30 character {@link String}
-     * @param ver {@link String} like {@link SymbolID2#Version_2525Dch1} (11)
-     * @return updated 30 character {@link String} symbol ID
+     * @param symbolID 30 character string
+     * @param ver string like {@link SymbolID2#Version_2525Dch1} (11)
+     * @return updated 30 character string symbol ID
      */
     public static setVersion(symbolID: string, ver: string): string {
         if (symbolID !== null && symbolID.length >= 20 && ver !== null && ver.length === 2) {
@@ -189,8 +189,8 @@ export class SymbolID2 {
     /**
      * Get Context (Reality (0), Exercise (1), Simulation (2)) at position 3
      * Higher values are NATO only
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String} (represented as a string in TS since there is no char type)
+     * @param symbolID 30 Character string
+     * @return string (represented as a string in TS since there is no char type)
      */
     public static getContext(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -202,9 +202,9 @@ export class SymbolID2 {
 
     /**
      * Set Context (Reality (0), Exercise (1), Simulation (2)) at position 3
-     * @param symbolID 30 Character {@link String}
-     * @param context {@link String}
-     * @return {@link String} updated Symbol ID.
+     * @param symbolID 30 Character string
+     * @param context string
+     * @return string updated Symbol ID.
      */
     public static setContext(symbolID: string, context: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -216,8 +216,8 @@ export class SymbolID2 {
 
     /**
      * Get Affiliation from position 4
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String} like {@link SymbolID2#StandardIdentity_Affiliation_Friend}
+     * @param symbolID 30 Character string
+     * @return string like {@link SymbolID2#StandardIdentity_Affiliation_Friend}
      */
     public static getAffiliation(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -229,9 +229,9 @@ export class SymbolID2 {
 
     /**
      * Set Affiliation at position 4
-     * @param symbolID 30 Character {@link String}
+     * @param symbolID 30 Character string
      * @param affiliation like {@link SymbolID2#StandardIdentity_Affiliation_Friend}
-     * @return {@link String} updated Symbol ID.
+     * @return string updated Symbol ID.
      */
     public static setAffiliation(symbolID: string, affiliation: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -243,8 +243,8 @@ export class SymbolID2 {
 
     /**
      * Get Symbol Set from positions 5-6
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String} like {@link SymbolID2#SymbolSet_LandCivilianUnit_Organization}
+     * @param symbolID 30 Character string
+     * @return string like {@link SymbolID2#SymbolSet_LandCivilianUnit_Organization}
      */
     public static getSymbolSet(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -256,9 +256,9 @@ export class SymbolID2 {
 
     /**
      * Set Symbol Set at positions 5-6
-     * @param symbolID 30 Character {@link String}
+     * @param symbolID 30 Character string
      * @param ss like {@link SymbolID2#SymbolSet_LandCivilianUnit_Organization}
-     * @return {@link String} updated Symbol ID.
+     * @return string updated Symbol ID.
      */
     public static setSymbolSet(symbolID: string, ss: string): string {
         if (symbolID !== null && symbolID.length >= 20 && ss !== null && ss.length === 2) {
@@ -270,8 +270,8 @@ export class SymbolID2 {
 
     /**
      * Get Status from position 7
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String} like {@link SymbolID2#Status_Present}
+     * @param symbolID 30 Character string
+     * @return string like {@link SymbolID2#Status_Present}
      */
     public static getStatus(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -283,9 +283,9 @@ export class SymbolID2 {
 
     /**
      * Set Status at position 7
-     * @param symbolID 30 Character {@link String}
+     * @param symbolID 30 Character string
      * @param status like {@link SymbolID2#Status_Present}
-     * @return {@link String} updated Symbol ID.
+     * @return string updated Symbol ID.
      */
     public static setStatus(symbolID: string, status: string): string {
         return symbolID.substring(0, 6) + status + symbolID.substring(7);
@@ -293,8 +293,8 @@ export class SymbolID2 {
 
     /**
      * Get HQTFDU from position 8
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String} like {@link SymbolID2#HQTFDU_Headquarters}
+     * @param symbolID 30 Character string
+     * @return string like {@link SymbolID2#HQTFDU_Headquarters}
      */
     public static getHQTFDU(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -306,9 +306,9 @@ export class SymbolID2 {
 
     /**
      * Set HQTFDU at position 8
-     * @param symbolID 30 Character {@link String}
+     * @param symbolID 30 Character string
      * @param hqtfdu like {@link SymbolID2#HQTFDU_Headquarters}
-     * @return {@link String} updated Symbol ID.
+     * @return string updated Symbol ID.
      */
     public static setHQTFDU(symbolID: string, hqtfdu: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -321,8 +321,8 @@ export class SymbolID2 {
     /**
      * Get Amplifier Descriptor which can describe things like
      * Echelon / Mobility / Towed Array / Leadership Indicator from positions 9-10
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getAmplifierDescriptor(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -335,9 +335,9 @@ export class SymbolID2 {
     /**
      * Set Amplifier Descriptor which can describe things like
      * Echelon / Mobility / Towed Array / Leadership Indicator at positions 9-10
-     * @param symbolID 30 Character {@link String}
-     * @param ad {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @param ad string
+     * @return string
      */
     public static setAmplifierDescriptor(symbolID: string, ad: string): string {
         if (symbolID !== null && symbolID.length >= 20 && ad !== null && ad.length === 2) {
@@ -350,8 +350,8 @@ export class SymbolID2 {
     /**
      * Get Entity Code from positions 11-16.
      * These six digits identify a unique symbol within a symbol set.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getEntityCode(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -364,9 +364,9 @@ export class SymbolID2 {
     /**
      * Set Entity Code at positions 11-16.
      * These six digits identify a unique symbol within a symbol set.
-     * @param symbolID 30 Character {@link String}
-     * @param entityCode {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @param entityCode string
+     * @return string
      */
     public static setEntityCode(symbolID: string, entityCode: string): string {
         if (symbolID !== null && symbolID.length >= 20 && entityCode !== null && entityCode.length === 6) {
@@ -378,8 +378,8 @@ export class SymbolID2 {
 
     /**
      * Get Entity from positions 11-12.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getEntity(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -391,8 +391,8 @@ export class SymbolID2 {
 
     /**
      * Get Entity Type from positions 13-14.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getEntityType(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -404,8 +404,8 @@ export class SymbolID2 {
 
     /**
      * Get Entity Subtype from positions 15-16.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getEntitySubtype(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -417,8 +417,8 @@ export class SymbolID2 {
 
     /**
      * Get Sector 1 Modifier from positions 17-18.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getModifier1(String: string): string {
         if (String !== null && String.length >= 20) {
@@ -430,9 +430,9 @@ export class SymbolID2 {
 
     /**
      * Get Sector 1 Modifier to positions 17-18.
-     * @param symbolID 30 Character {@link String}
-     * @param mod1 {@link String} hex string from "00" to "FF"
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @param mod1 string hex string from "00" to "FF"
+     * @return string
      */
     public static setModifier1(symbolID: string, mod1: string): string {
         let newID = symbolID;
@@ -450,8 +450,8 @@ export class SymbolID2 {
 
     /**
      * Get Common Sector 1 Modifier from position 21.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getCommonModifier1(symbolID: string): string {
         if (symbolID !== null && symbolID.length === 30) {
@@ -463,9 +463,9 @@ export class SymbolID2 {
 
     /**
      * Set Common Sector 1 Modifier at position 21.
-     * @param symbolID 30 Character {@link String}
-     * @param mod1I {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @param mod1I string
+     * @return string
      */
     public static setCommonModifier1(symbolID: string, mod1I: string): string {
         if (symbolID !== null && symbolID.length === 30) {
@@ -477,8 +477,8 @@ export class SymbolID2 {
 
     /**
      * Get Sector 2 Modifier from positions 17-18.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getModifier2(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 20) {
@@ -490,9 +490,9 @@ export class SymbolID2 {
 
     /**
      * Set Sector 2 Modifier to positions 17-18.
-     * @param symbolID 30 Character {@link String}
-     * @param mod2 {@link String} hex string from "00" to "FF"
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @param mod2 string hex string from "00" to "FF"
+     * @return string
      */
     public static setModifier2(symbolID: string, mod2: string): string {
         let newID = symbolID;
@@ -510,8 +510,8 @@ export class SymbolID2 {
 
     /**
      * Get Common Sector 2 Modifier from position 22.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getCommonModifier2(symbolID: string): string {
         if (symbolID !== null && symbolID.length === 30) {
@@ -523,9 +523,9 @@ export class SymbolID2 {
 
     /**
      * Set Common Sector 2 Modifier at position 22.
-     * @param symbolID 30 Character {@link String}
-     * @param mod2I {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @param mod2I string
+     * @return string
      */
     public static setCommonModifier2(symbolID: string, mod2I: string): string {
         if (symbolID !== null && symbolID.length === 30) {
@@ -539,8 +539,8 @@ export class SymbolID2 {
      * In 2525E, position 23 of the symbol code has the Frame Shape modifier.
      * This lets a user force a different frame shape than what a symbol would normally have.
      * This function returns the frame shape value for what the default frame would be for a specific symbol set.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getDefaultFrameShape(symbolID: string): string {
         return SymbolID.getDefaultFrameShape(symbolID);
@@ -561,8 +561,8 @@ export class SymbolID2 {
 
     /**
      * Gets the Frame Shape override from position 23.
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getFrameShape(symbolID: string): string {
         if (symbolID !== null && symbolID.length >= 23) {
@@ -574,8 +574,8 @@ export class SymbolID2 {
 
     /**
      * Gets the 3 digit country code from positions 28-30
-     * @param symbolID 30 Character {@link String}
-     * @return {@link String}
+     * @param symbolID 30 Character string
+     * @return string
      */
     public static getCountryCode(symbolID: string): string {
         if (symbolID !== null && symbolID.length === 30) {
