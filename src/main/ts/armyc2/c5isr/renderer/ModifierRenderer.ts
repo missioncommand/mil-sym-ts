@@ -43,6 +43,7 @@ import { SVGLookup } from "./utilities/SVGLookup";
 import { SVGInfo } from "./utilities/SVGInfo";
 import { ErrorLogger } from "./utilities/ErrorLogger";
 import { Modifier } from "./utilities/Modifier";
+import { P } from "tsdown/index-BQZ2CZuJ";
 
 
 /**
@@ -1132,6 +1133,101 @@ export class ModifierRenderer implements SettingsEventListener {
         }
         // </editor-fold>
 
+        // <editor-fold defaultstate="collapsed" desc="Build Unmanned Indicator">
+        let umBounds:Rectangle2D = null;
+        let umCircle:Ellipse = null;
+        let umSVG:string = null;
+        let umStrokeWidth:number = 2;
+        if(pixelSize <= 50)
+            umStrokeWidth = 1;
+        if(hqtfd == SymbolID.HQTFD_Unmanned_Marker ||
+                hqtfd == SymbolID.HQTFD_Unmanned_Marker_Autonomous ||
+                hqtfd == SymbolID.HQTFD_Unmanned_Marker_Remotely_Piloted ||
+                hqtfd == SymbolID.HQTFD_Unmanned_Marker_FeintDummy ||
+                hqtfd == SymbolID.HQTFD_Unmanned_Marker_Autonomous_FeintDummy ||
+                hqtfd == SymbolID.HQTFD_Unmanned_Marker_Remotely_Piloted_FeintDummy)
+        {
+            //octagon~182.08058166503906~272.0794677734375~245.8407440185547~244.85235595703125
+            //umIndicator~174~280~63~61
+            umBounds = new Rectangle2D(174,280,63,61);
+            let umStroke:string = "#000000";
+            let umFill:string = "#FFFFFF";
+            if(hqtfd == SymbolID.HQTFD_Unmanned_Marker_Autonomous || hqtfd == SymbolID.HQTFD_Unmanned_Marker_Autonomous_FeintDummy)
+            {
+                umStroke = "#FFFFFF";
+                umFill = "#000000";
+            }
+
+            let xOffset:number = 0;
+            let yOffset:number = 0;
+
+            let fs:string = SymbolID.getFrameShape(symbolID);
+            if(fs == "0")
+                fs = SymbolID.getDefaultFrameShape(symbolID);
+
+
+            let octagonBounds:Rectangle2D = RectUtilities.roundRect(new Rectangle2D(182.08058166503906,272.0794677734375,245.8407440185547,244.85235595703125));
+            let half:number = octagonBounds.getWidth()/2;
+            let affiliation:number = SymbolID.getAffiliation(symbolID);
+
+            if(fs == SymbolID.FrameShape_SeaSubsurface || affiliation == SymbolID.StandardIdentity_Affiliation_Neutral ||
+                    (affiliation == SymbolID.StandardIdentity_Affiliation_Friend &&
+                            (ss == SymbolID.SymbolSet_LandUnit ||
+                                    ss == SymbolID.SymbolSet_LandInstallation ||
+                                    ss == SymbolID.SymbolSet_Activities ||
+                                    ss == SymbolID.SymbolSet_CyberSpace
+                            )))
+            {
+                //indicator just sits on the left side of the symbol
+                let frameID:string = SVGLookup.getFrameID(symbolID);
+                let siFrame:SVGInfo = SVGLookup.getInstance().getSVGLInfo(frameID,SymbolID.getVersion(symbolID));
+                //um indicator anchor - frame left + 1/2 outline width to center indicator on outline of frame
+                //xOffset = -96f;
+                //xOffset = -123.9f;//126.1 is the x value for the rectangle friendly land unit frame.  205 - 123.9 = 126.1
+                let lineWidthAdjustment:number = 9;
+                xOffset = (205 -  siFrame.getBbox().getX() - lineWidthAdjustment) * -1;
+                //xOffset = -305 * ratio;//((octagonBounds.getWidth() * 1.3) - half) * -1;
+            }
+            else if(affiliation == SymbolID.StandardIdentity_Affiliation_Unknown &&
+                    ss == SymbolID.SymbolSet_SeaSubsurface)
+            {
+                let frameID:string = SVGLookup.getFrameID(symbolID);
+                let siFrame:SVGInfo = SVGLookup.getInstance().getSVGLInfo(frameID,SymbolID.getVersion(symbolID));
+                xOffset = (205 -  140) * -1;
+                let lineWidthAdjustment:number = 9;
+                xOffset = ((205 -  siFrame.getBbox().getX()) * 0.75) * -1;
+                //xOffset = ((octagonBounds.getWidth() * 1.2) - half) * -1;
+            }
+            else//else, rest can use default position of x=205
+            {
+                yOffset = -20;
+            }
+
+            let starStart:Point2D = new Point2D(205,343.841);
+            let circlePoint:Point2D = new Point2D(205,310);
+
+            //adjust start points and bounds with offset.
+            starStart.x = starStart.x + xOffset;
+            starStart.y = starStart.y + yOffset;
+            circlePoint.x = circlePoint.x + xOffset;
+            circlePoint.y = circlePoint.y + yOffset;
+            RectUtilities.shift(umBounds,xOffset,yOffset);
+ 
+            umSVG = "<g id=\"UM\">\n\t";
+            umSVG += "<path stroke=\"" + umStroke + "\" fill=\"" + umFill + "\" stroke-width=\"" + umStrokeWidth + "\" d=\"M" + starStart.x + "," + starStart.y + "c-3.207,-5.299,-5.694,-10.540,-9.796,-15.138c-1.306,-1.614,-2.681,-3.184,-4.121,-4.691c-5.808,-5.497,-12.601,-11.068,-20.332,-13.823c7.731,-2.755,14.524,-8.326,20.332,-13.823c1.440,-1.508,2.816,-3.077,4.121,-4.691c4.102,-4.598,6.590,-9.840,9.796,-15.138c3.207,5.299,5.694,10.540,9.796,15.138c1.306,1.614,2.681,3.184,4.121,4.691c5.808,5.497,12.601,11.068,20.332,13.823c-7.731,2.755,-14.524,8.326,-20.332,13.823c-1.440,1.508,-2.816,3.077,-4.121,4.691c-4.102,4.598,-6.590,9.840,-9.796,15.138z\"/>";
+            if(hqtfd == SymbolID.HQTFD_Unmanned_Marker || hqtfd == SymbolID.HQTFD_Unmanned_Marker_FeintDummy)
+                umSVG += "\n\t" + "<circle r=\"7\" cx=\"" + circlePoint.x + "\" cy=\"" + circlePoint.y + "\" fill=\"black\" />";
+            umSVG += "\n</g>";
+
+            /*<g id="UM">
+                <path stroke="black" fill="white" stroke-width="2" d="M205.000,343.841c-3.207,-5.299,-5.694,-10.540,-9.796,-15.138c-1.306,-1.614,-2.681,-3.184,-4.121,-4.691c-5.808,-5.497,-12.601,-11.068,-20.332,-13.823c7.731,-2.755,14.524,-8.326,20.332,-13.823c1.440,-1.508,2.816,-3.077,4.121,-4.691c4.102,-4.598,6.590,-9.840,9.796,-15.138c3.207,5.299,5.694,10.540,9.796,15.138c1.306,1.614,2.681,3.184,4.121,4.691c5.808,5.497,12.601,11.068,20.332,13.823c-7.731,2.755,-14.524,8.326,-20.332,13.823c-1.440,1.508,-2.816,3.077,-4.121,4.691c-4.102,4.598,-6.590,9.840,-9.796,15.138z"/>
+                <circle r="7" cx="205" cy="310" fill="black" />
+            </g>*/
+
+            imageBounds = imageBounds.createUnion(umBounds);
+        }
+        // </editor-fold>
+
         //
         // <editor-fold defaultstate="collapsed" desc="Shift Modifiers">
         //adjust points if necessary
@@ -1350,6 +1446,11 @@ export class ModifierRenderer implements SettingsEventListener {
                 noStrikeGroup += nsLine.toSVGElement("black",nsStrokeWidth,null);
                 noStrikeGroup += "</g>";
                 sbSVG += noStrikeGroup;
+            }
+
+            if(umBounds != null)
+            {
+                sbSVG += sbSVG.substring(0,sbSVG.length-4) + umSVG + "</g>";
             }
 
             newsdi = new SVGSymbolInfo(sbSVG.toString().valueOf(), new Point2D(centerPoint.x, centerPoint.y), symbolBounds, imageBounds);
