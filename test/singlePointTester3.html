@@ -985,6 +985,11 @@
                 C5Ren.ErrorLogger.LogMessage(country);
                 newCode = C5Ren.C2DLookup.getInstance().getDCode("SFGPIMA---H----",true);
                 console.log(newCode);
+
+                newCode = C5Ren.SymbolID.setHQTFD("000000000000000000000000000000",C5Ren.SymbolID.HQTFD_Unmanned_Marker_Remotely_Piloted);
+                console.log(newCode);
+                console.log("Int Value: " + C5Ren.SymbolID.getHQTFD(newCode));
+                console.log("Char Value: " + C5Ren.SymbolID2.getHQTFDU(newCode));
                 //*/
 
                 testBasicShape();

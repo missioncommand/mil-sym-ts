@@ -347,21 +347,26 @@
 		// Render icon just to get SVG/SVG data URI
 		var si = C5Ren.MilStdIconRenderer.getInstance().RenderSVG(symbolID, modifiers, attributes);
 
-		var svgImage = document.getElementById("SVGTest");
+		/*var svgImage = document.getElementById("SVGTest");
 		if (svgImage) {
 		  svgImage.width = si.getImageBounds().getWidth();
 		  svgImage.height = si.getImageBounds().getHeight();
 		  var dataURI = si.getSVGDataURI();
 		  svgImage.src = dataURI;
-    }
+    }//*/
 
+    var svgPreviewDOM = document.getElementById("SVGPreview");
+    if(svgPreviewDOM)
+    {
+      svgPreviewDOM.innerHTML = si.getSVG();
+    }
     // If you want the raw SVG markup, re‑enable this:
-    /*
-    var contentSpan = document.getElementById("contentSpan");
+    
+    /*var contentSpan = document.getElementById("contentSpan");
     if (contentSpan) {
       contentSpan.innerHTML = si.getSVG();
     }
-    */
+    //*/
   }
   
   function refreshCurrentSymbolPreview() {
@@ -406,11 +411,21 @@
       var preview = document.getElementById("preview");
       var ctx = preview.getContext('2d');
 
-      var svgImage = document.getElementById("SVGTest");
+      /*var svgImage = document.getElementById("SVGTest");
       svgImage.width = si.getImageBounds().getWidth();
       svgImage.height = si.getImageBounds().getHeight();
       var dataURI = si.getSVGDataURI();
-      svgImage.src = dataURI;
+      svgImage.src = dataURI;//*/
+
+      var svgPreviewDOM = document.getElementById("SVGPreview");
+      if(svgPreviewDOM)
+      {
+        svgPreviewDOM.style.width = si.getImageBounds().getWidth();
+        svgPreviewDOM.style.height = si.getImageBounds().getHeight();
+        svgPreviewDOM.setAttribute('width',si.getImageBounds().getWidth());
+        svgPreviewDOM.setAttribute('height',si.getImageBounds().getHeight());
+        svgPreviewDOM.innerHTML = si.getSVG();
+      }
 
       /*var contentSpan = document.getElementById("contentSpan");
       if (contentSpan) {
@@ -574,6 +589,183 @@
         console.log(e);
       }
     }
+
+    function exportCurrentSVG() {
+      var svgPreviewDOM = document.getElementById("SVGPreview");
+    if (!svgPreviewDOM.innerHTML) {
+      alert("No active SVG preview available to export. Choose a symbol from the tree first.");
+      return;
+    }
+    
+    var currentSVGMarkup = svgPreviewDOM.innerHTML;
+    var blob = new Blob([currentSVGMarkup], {type: "image/svg+xml;charset=utf-8"});
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+
+    // Automatically name the file based on the selected Symbol SIDC (SIDC.svg)
+    var filename = "symbol.svg";
+    var sidcInput = document.getElementById("tbSymbolID");
+    if (sidcInput && sidcInput.value) {
+      filename = sidcInput.value + ".svg";
+    }
+
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function copySVGToClipboard(btn) {
+    var svgPreviewDOM = document.getElementById("SVGPreview");
+    if (!svgPreviewDOM.innerHTML) {
+      alert("No active SVG preview available to export. Choose a symbol from the tree first.");
+      return;
+    }
+
+    var currentSVGMarkup = svgPreviewDOM.innerHTML;
+    navigator.clipboard.writeText(currentSVGMarkup).then(function() {
+      var originalText = btn.innerText;
+      btn.innerText = "Copied!";
+      var originalColor = btn.style.backgroundColor;
+      btn.style.backgroundColor = "#10b981"; // transition to green feedback
+      btn.style.borderColor = "#10b981";
+      setTimeout(function() {
+        btn.innerText = originalText;
+        btn.style.backgroundColor = originalColor;
+        btn.style.borderColor = "";
+      }, 1500);
+    }, function(err) {
+      alert("Could not copy text: " + err);
+    });
+  }
+
+  function exportCurrentAsPNG() {
+    var svgPreviewDOM = document.getElementById("SVGPreview");
+    if (!svgPreviewDOM.innerHTML) {
+      alert("No active SVG preview available to export. Choose a symbol from the tree first.");
+      return;
+    }
+
+    // Create temporary Image and Canvas to rasterize SVG client-side
+    var img = new Image();
+    var currentSVGMarkup = svgPreviewDOM.innerHTML;
+    var svgBlob = new Blob([currentSVGMarkup], {type: "image/svg+xml;charset=utf-8"});
+    var url = URL.createObjectURL(svgBlob);
+
+    img.onload = function() {
+      var canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth || 256;
+      canvas.height = img.naturalHeight || 256;
+
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+
+      try {
+        var pngUrl = canvas.toDataURL("image/png");
+        var link = document.createElement("a");
+
+        // Dynamically name the file based on the SIDC (e.g. SIDC.png)
+        var filename = "symbol.png";
+        var sidcInput = document.getElementById("tbSymbolID");
+        if (sidcInput && sidcInput.value) {
+          filename = sidcInput.value + ".png";
+        }
+
+        link.href = pngUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        alert("Failed to export as PNG: " + err.message);
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    };
+
+    img.onerror = function() {
+      URL.revokeObjectURL(url);
+      alert("Error parsing SVG for PNG generation.");
+    };
+
+    img.src = url;
+  }
+
+  function copyPNGToClipboard(btn) {
+    var svgPreviewDOM = document.getElementById("SVGPreview");
+    if (!svgPreviewDOM.innerHTML) {
+      alert("No active SVG preview available to export. Choose a symbol from the tree first.");
+      return;
+    }
+    
+    var img = new Image();
+    var currentSVGMarkup = svgPreviewDOM.innerHTML;
+    var svgBlob = new Blob([currentSVGMarkup], {type: "image/svg+xml;charset=utf-8"});
+    var url = URL.createObjectURL(svgBlob);
+    
+    img.onload = function() {
+      var canvas = document.createElement("canvas");
+      
+      // Get device pixel ratio (default to 2x for clean pasting if DPR is 1)
+      var dpr = window.devicePixelRatio || 2; 
+      var baseWidth = img.naturalWidth || 256;
+      var baseHeight = img.naturalHeight || 256;
+
+      // Scale up the physical canvas size by the DPR
+      canvas.width = baseWidth * dpr;
+      canvas.height = baseHeight * dpr;
+      
+      var ctx = canvas.getContext("2d");
+      
+      // Ensure the drawing context scales all assets up to match the canvas size
+      ctx.scale(dpr, dpr);
+      ctx.drawImage(img, 0, 0);
+      
+      canvas.toBlob(function(pngBlob) {
+        if (!pngBlob) {
+          alert("Failed to generate PNG blob.");
+          URL.revokeObjectURL(url);
+          return;
+        }
+        
+        try {
+          navigator.clipboard.write([
+            new ClipboardItem({
+              "image/png": pngBlob
+            })
+          ]).then(function() {
+            var originalText = btn.innerText;
+            btn.innerText = "Copied PNG!";
+            var originalColor = btn.style.backgroundColor;
+            btn.style.backgroundColor = "#10b981";
+            btn.style.borderColor = "#10b981";
+            setTimeout(function() {
+              btn.innerText = originalText;
+              btn.style.backgroundColor = originalColor;
+              btn.style.borderColor = "";
+            }, 1500);
+          }, function(err) {
+            alert("Failed to copy image to clipboard: " + err);
+          });
+        } catch (err) {
+          alert("ClipboardItem is not supported or failed: " + err.message);
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      }, "image/png");
+    };
+    
+    img.onerror = function() {
+      URL.revokeObjectURL(url);
+      alert("Error parsing SVG for PNG clipboard generation.");
+    };
+    
+    img.src = url;
+  }
+
+  
 
     function updateSMLists() {
       var updated = false;
@@ -1048,9 +1240,15 @@
           C5Ren.WebRenderer.OUTPUT_FORMAT_GEOSVG
         );
 
-        var svgImage = document.getElementById("SVGTest");
-        var dataURI = "data:image/svg+xml;base64," + btoa(String.fromCodePoint(...new TextEncoder().encode(geoSVG)));
-        svgImage.src = dataURI;
+        //var svgImage = document.getElementById("SVGTest");
+        //var dataURI = "data:image/svg+xml;base64," + btoa(String.fromCodePoint(...new TextEncoder().encode(geoSVG)));
+        //svgImage.src = dataURI;
+
+        var svgPreviewDOM = document.getElementById("SVGPreview");
+        if(svgPreviewDOM)
+        {
+          svgPreviewDOM.innerHTML = geoSVG;
+        }
 
         if (typeof geoSVG === 'string') {
           var start = geoSVG.toString().indexOf("<geoTL>");
@@ -1238,6 +1436,12 @@
             <option>5-D/TF</option>
             <option>6-TF/HQ</option>
             <option>7-D/TF/HQ</option>
+            <option>8-UM</option>
+            <option>9-UM-A</option>
+            <option>A-UM-RP</option>
+            <option>B-UM/D</option>
+            <option>C-UM-A/D</option>
+            <option>D-UM-RP/D</option>
           </select>
         </div>
         <div class="form-col">
@@ -1366,7 +1570,7 @@
           <label><input id="cbDrawOutline" type="checkbox"  onchange="refreshCurrentSymbolPreview();" /> Draw outline around symbol</label>
         </div>
 
-        <div style="margin-top: 10px;">
+        <div style="margin-top: 10px; ">
           <button id="btnDrawMP" type="button" onclick="drawMP();" >Multi‑Point Mode</button>
           <button id="btnClear" type="button" onclick="clearCanvas();">Clear Canvas</button>
         </div>
@@ -1378,9 +1582,31 @@
       <h2>Symbol Preview & Details</h2>
 
       <h3>SVG Preview</h3>
-      <div class="svg-preview-row">
+      <!-- <div class="svg-preview-row">
         <div>
-          <img id="SVGTest" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==" alt="svg from datauri" height="100" width="100">
+          <svg id="SVGPreview" xmlns="http://www.w3.org/2000/svg" width="600" height="300" ></svg>
+          <button type="button" onclick="exportCurrentSVG();" style="margin-right: 0">Export SVG</button>
+          <button type="button" onclick="copySVGToClipboard(this);" style="margin-right: 0">SVG to clipboard</button>
+          <button type="button" onclick="exportCurrentAsPNG();" style="margin-right: 0">Export PNG</button>
+        </div>
+
+        <div id="contentSpan"></div>
+      </div> -->
+      <div class="svg-preview-row" style="align-items: right;">
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; width: 140px;">
+          <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
+            <div style="display: flex; gap: 6px; width: 100%;height: 100%"></div>
+              <svg id="SVGPreview" xmlns="http://www.w3.org/2000/svg" width="600" height="300" ></svg>
+            </div>
+            <div style="display: flex; gap: 6px; width: 100%;">
+              <button type="button" onclick="exportCurrentSVG();" style="flex: 1; margin-right: 0; padding: 5px 4px; font-size: 0.7rem;">Save SVG</button>
+              <button type="button" onclick="exportCurrentAsPNG();"  style="flex: 1; margin-right: 0; padding: 5px 4px; font-size: 0.7rem; ">Save PNG</button>
+            </div>
+            <div style="display: flex; gap: 6px; width: 100%;">
+              <button type="button" onclick="copySVGToClipboard(this);" style="flex: 1; margin-right: 0; padding: 5px 4px; font-size: 0.7rem;">Copy SVG</button>
+              <button type="button" onclick="copyPNGToClipboard(this);" style="flex: 1; margin-right: 0; padding: 5px 4px; font-size: 0.7rem;">Copy PNG</button>
+            </div>
+          </div>
         </div>
         <div id="contentSpan"></div>
       </div>

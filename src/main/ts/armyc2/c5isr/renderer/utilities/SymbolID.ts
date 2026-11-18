@@ -5,109 +5,9 @@ import { SymbolUtilities } from "./SymbolUtilities";
 
 /**
  * Utility class for helping to parse out parts of the symbol ID.
- *
+ * Integer interactions based interactions vs SymbolID2 which focuses more on String and Char based interactions
  */
 export class SymbolID {
-    /*
-        //Version, 1-2
-    
-        //Standard Identity, First Digit (3)
-        public static final char StandardIdentity_Context_Reality = '0';
-        public static final char StandardIdentity_Context_Exercise = '1';
-        public static final char StandardIdentity_Context_Simulation = '2';
-    
-        //Standard Identity, Second Digit (4)
-        public static final char StandardIdentity_Affiliation_Pending = '0';
-        public static final char StandardIdentity_Affiliation_Unknown = '1';
-        public static final char StandardIdentity_Affiliation_AssumedFriend = '2';
-        public static final char StandardIdentity_Affiliation_Friend = '3';
-        public static final char StandardIdentity_Affiliation_Neutral = '4';
-        public static final char StandardIdentity_Affiliation_Suspect_Joker = '5';
-        public static final char StandardIdentity_Affiliation_Hostile_Faker = '6';
-    
-        //Symbol Set, 2 Digits (5-6)
-        public static final String SymbolSet_Unknown = "00";
-        public static final String SymbolSet_Air = "01";
-        public static final String SymbolSet_AirMissile = "02";
-        public static final String SymbolSet_Space = "05";
-        public static final String SymbolSet_SpaceMissile = "06";
-        public static final String SymbolSet_LandUnit = "10";
-        public static final String SymbolSet_LandCivilianUnit_Organization = "11";
-        public static final String SymbolSet_LandEquipment = "15";
-        public static final String SymbolSet_LandInstallation = "20";
-        public static final String SymbolSet_ControlMeasure = "25";
-        public static final String SymbolSet_SeaSurface = "30";
-        public static final String SymbolSet_SeaSubsurface = "35";
-        public static final String SymbolSet_MineWarfare = "36";
-        public static final String SymbolSet_Activities = "40";
-        public static final String SymbolSet_Atmospheric = "45";
-        public static final String SymbolSet_Oceanographic = "46";
-        public static final String SymbolSet_MeteorologicalSpace = "47";
-        public static final String SymbolSet_SignalsIntelligence_Space = "50";
-        public static final String SymbolSet_SignalsIntelligence_Air = "51";
-        public static final String SymbolSet_SignalsIntelligence_Land = "52";
-        public static final String SymbolSet_SignalsIntelligence_Surface = "53";
-        public static final String SymbolSet_SignalsIntelligence_Subsurface = "54";
-        public static final String SymbolSet_CyberSpace = "60";
-        public static final String SymbolSet_VersionExtensionFlag = "99";
-    
-        //Status, 1 Digit
-        public static final char Status_Present = '0';
-        public static final char Status_Planned_Anticipated_Suspect = '1';
-        public static final char Status_Present_FullyCapable = '2';
-        public static final char Status_Present_Damaged = '3';
-        public static final char Status_Present_Destroyed = '4';
-        public static final char Status_Present_FullToCapacity = '5';
-        public static final char Status_Present_VersionExtensionFlag = '9';
-    
-        //Headquarters/Task Force/Dummy
-        public static final char HQTFD_Unknown = '0';
-        public static final char HQTFD_FeintDummy = '1';
-        public static final char HQTFD_Headquarters = '2';
-        public static final char HQTFD_FeintDummy_Headquarters = '3';
-        public static final char HQTFD_TaskForce = '4';
-        public static final char HQTFD_FeintDummy_TaskForce = '5';
-        public static final char HQTFD_TaskForce_Headquarters = '6';
-        public static final char HQTFD_FeintDummy_TaskForce_Headquarters = '7';
-        public static final char HQTFD_VersionExtensionFlag = '9';
-    
-        //Echelon/Mobility/Towed Array Amplifier
-        public static final String Echelon_Unknown = "00";
-        public static final String Echelon_Team_Crew = "11";
-        public static final String Echelon_Squad = "12";
-        public static final String Echelon_Section = "13";
-        public static final String Echelon_Platoon_Detachment = "14";
-        public static final String Echelon_Company_Battery_Troop = "15";
-        public static final String Echelon_Battalion_Squadron = "16";
-        public static final String Echelon_Regiment_Group = "17";
-        public static final String Echelon_Brigade = "18";
-        public static final String Echelon_VersionExtensionFlag = "19";
-        public static final String Echelon_Division = "21";
-        public static final String Echelon_Corps_MEF = "22";
-        public static final String Echelon_Army = "23";
-        public static final String Echelon_ArmyGroup_Front = "24";
-        public static final String Echelon_Region_Theater = "25";
-        public static final String Echelon_Region_Command = "26";
-        public static final String Echelon_VersionExtensionFlag2 = "29";
-    
-        public static final String Mobility_Unknown = "00";
-        //equipment mobility on land
-        public static final String Mobility_WheeledLimitedCrossCountry = "31";
-        public static final String Mobility_WheeledCrossCountry = "32";
-        public static final String Mobility_Tracked = "33";
-        public static final String Mobility_Wheeled_Tracked = "34";
-        public static final String Mobility_Towed = "35";
-        public static final String Mobility_Rail = "36";
-        public static final String Mobility_PackAnimals = "37";
-        //equipment mobility on snow
-        public static final String Mobility_OverSnow = "41";
-        public static final String Mobility_Sled = "42";
-        //equipment mobility on water
-        public static final String Mobility_Barge = "51";
-        public static final String Mobility_Amphibious = "52";
-        //naval towed array
-        public static final String Mobility_ShortTowedArray = "61";
-        public static final String Mobility_LongTowedArray = "62";//*/
 
 
     //Version, 1-2 (Can't start with zero, will be 10 at a minimum)
@@ -122,12 +22,12 @@ export class SymbolID {
      * @deprecated withdrawn from standard
      */
     public static readonly Version_APP6Dch2: number = 12;
-    /**
+    /**E
      * @deprecated use 2525Ech1
      */
     public static readonly Version_2525E: number = 13;
     /**
-     * @deprecated use APP6EEch2
+     * @deprecated use APP6Ech2
      */
     public static readonly Version_APP6Ech1: number = 14;
     public static readonly Version_2525Ech1: number = 15;
@@ -223,7 +123,12 @@ export class SymbolID {
     public static readonly HQTFD_FeintDummy_TaskForce: number = 5;
     public static readonly HQTFD_TaskForce_Headquarters: number = 6;
     public static readonly HQTFD_FeintDummy_TaskForce_Headquarters: number = 7;
-    public static readonly HQTFD_VersionExtensionFlag: number = 9;
+    public static readonly HQTFD_Unmanned_Marker: number = 8;
+    public static readonly HQTFD_Unmanned_Marker_Autonomous: number = 9;
+    public static readonly HQTFD_Unmanned_Marker_Remotely_Piloted: number = 10;//A
+    public static readonly HQTFD_Unmanned_Marker_FeintDummy: number = 11;//B
+    public static readonly HQTFD_Unmanned_Marker_Autonomous_FeintDummy: number = 12;//C
+    public static readonly HQTFD_Unmanned_Marker_Remotely_Piloted_FeintDummy: number = 13;//D
 
     //Echelon/Mobility/Towed Array Amplifier
     public static readonly Echelon_Unknown: number = 0;
@@ -330,7 +235,7 @@ export class SymbolID {
 
 
     /**
-     * Gets the version number from the Symbol ID at positions 3-4.
+     * Gets the Standard Identity from the Symbol ID at positions 3-4.
      * Restricted and No-Strike values are NATO only.
      * @param symbolID 30 character string
      * @return number, number will not be padded if it starts with a '0'
@@ -345,7 +250,7 @@ export class SymbolID {
     }
 
     /**
-     * Sets the version number of the Symbol ID at positions 3-4
+     * Sets the Standard Identity of the Symbol ID at positions 3-4
      * @param symbolID 30 character string
      * @param si number If number is a single digit, will pad with a '0' before inserting into symbol ID
      * @return updated 30 character string symbol ID
@@ -469,7 +374,7 @@ export class SymbolID {
     }
 
     /**
-     * Get Symbol Set from position 7
+     * Get Status from position 7
      * @param symbolID 30 Character string
      * @return number like {@link SymbolID.Status_Present}
      */
@@ -483,7 +388,7 @@ export class SymbolID {
     }
 
     /**
-     * Set Symbol Set at position 7
+     * Set Status at position 7
      * @param symbolID 30 Character string
      * @param status like {@link SymbolID.Status_Present}
      * @return string updated Symbol ID.
@@ -500,34 +405,37 @@ export class SymbolID {
     }
 
     /**
-     * Get Symbol Set from position 8
+     * Get HQTFD from position 8
      * @param symbolID 30 Character string
      * @return number like {@link SymbolID.HQTFD_Headquarters}
      */
     public static getHQTFD(symbolID: string): number {
-        if (symbolID != null && symbolID.length >= 20) {
-            return parseInt(symbolID.substring(7, 8));
+        if (symbolID !== null && symbolID !== undefined && symbolID.length >= 20) {
+            const hqtfd: string = symbolID.charAt(7);
+            const value: number = parseInt(hqtfd, 16);
+    
+            // If parseInt fails (e.g. character was outside 0-9, A-F), it returns NaN
+            return isNaN(value) ? 0 : value;
         }
-        else {
-            return 0;
-        }
+        return 0;
     }
 
     /**
-     * Set Symbol Set at position 8
+     * Set HQTFD at position 8
      * @param symbolID 30 Character string
      * @param HQTFD like {@link SymbolID.HQTFD_Headquarters}
      * @return string updated Symbol ID.
      */
     public static setHQTFD(symbolID: string, HQTFD: number): string {
-        let strHQTFD: string = HQTFD.toString();
-
-        if (symbolID != null && symbolID.length >= 20 && strHQTFD.length === 1) {
-            return symbolID.substring(0, 7) + strHQTFD + symbolID.substring(8);
+        if (symbolID !== null && symbolID !== undefined && symbolID.length >= 20) {
+            // Ensure the input is within the valid single-digit hexadecimal bounds (0-15)
+            if (HQTFD >= 0 && HQTFD <= 15) {
+                // Convert to hex string and force uppercase (e.g., 10 -> "A")
+                const hexChar: string = HQTFD.toString(16).toUpperCase();
+                return symbolID.substring(0, 7) + hexChar + symbolID.substring(8);
+            }
         }
-        else {
-            return symbolID;
-        }
+        return symbolID;
     }
 
     /**
@@ -735,12 +643,12 @@ export class SymbolID {
      * @return string
      */
     public static setCommonModifier1(symbolID: string, mod1I: number): string {
-        let newID: string = symbolID.toString();
         let mod: string = mod1I.toString();
         if (symbolID != null && symbolID.length === 30) {
-            newID = newID.substring(0, 20) + mod + newID.substring(21);
+            return symbolID.substring(0, 20) + mod + symbolID.substring(21);
         }
-        return newID;
+        else
+            return symbolID;
     }
 
     /**
@@ -833,175 +741,14 @@ export class SymbolID {
      * @return string
      */
     public static setCommonModifier2(symbolID: string, mod1I: number): string {
-        let newID: string = symbolID.toString();
         let mod: string = mod1I.toString();
         if (symbolID != null && symbolID.length === 30) {
-            newID = newID.substring(0, 21) + mod + newID.substring(22);
-        }
-        return newID;
-    }
-
-    /*
-    public static String getStandardIdentity(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(2, 4);
+            return symbolID.substring(0, 21) + mod + symbolID.substring(22);
         }
         else
-        {
-            return "00";
-        }
+            return symbolID;
     }
 
-    public static char getContext(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.charAt(3);
-        }
-        else
-        {
-            return '0';
-        }
-    }
-
-    public static char getAffiliation(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.charAt(4);
-        }
-        else
-        {
-            return '0';
-        }
-    }
-
-    public static String getSymbolSet(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(4, 6);
-        }
-        else
-        {
-            return "00";
-        }
-    }
-
-    public static char getStatus(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.charAt(6);
-        }
-        else
-        {
-            return '0';
-        }
-    }
-
-    public static char getHQTFD(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.charAt(7);
-        }
-        else
-        {
-            return '0';
-        }
-    }
-
-
-    //  get Echelon / Mobility / Towed Array
-    //  @param symbolID
-    //  @return
-
-    public static String getAmplifierDescriptor(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(8, 10);
-        }
-        else
-        {
-            return "00";
-        }
-    }
-
-    public static String getEntityCode(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(10, 16);
-        }
-        else
-        {
-            return "000000";
-        }
-    }
-
-    public static String getEntity(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(10, 12);
-        }
-        else
-        {
-            return "00";
-        }
-    }
-
-    public static String getEntityType(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(12, 14);
-        }
-        else
-        {
-            return "00";
-        }
-    }
-
-    public static String getEntitySubtype(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(14, 16);
-        }
-        else
-        {
-            return "00";
-        }
-    }
-
-    public static String getModifier1(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(16, 18);
-        }
-        else
-        {
-            return "00";
-        }
-    }
-
-    public static String getModifier2(String symbolID)
-    {
-        if(symbolID != null && symbolID.length >= 20)
-        {
-            return symbolID.substring(18, 20);
-        }
-        else
-        {
-            return "00";
-        }
-    }//*/
 
     /**
      * Returns true is symbol is of the Meteorological variety.
@@ -1199,5 +946,3 @@ export class SymbolID {
             return "0";
     }
 }
-
-
