@@ -1147,6 +1147,24 @@ export class ModifierRenderer implements SettingsEventListener {
                 hqtfd == SymbolID.HQTFD_Unmanned_Marker_Autonomous_FeintDummy ||
                 hqtfd == SymbolID.HQTFD_Unmanned_Marker_Remotely_Piloted_FeintDummy)
         {
+            let nsTx:number = 0;
+            let nsTy:number = 0;
+            let ratio:number = 1;
+            let si:SVGInfo = SVGLookup.getInstance().getSVGLInfo(SVGLookup.getFrameID(symbolID),SymbolID.getVersion(symbolID));
+            if(symbolBounds.getHeight() > symbolBounds.getWidth())
+            {
+                let sHeight:number = si.getBbox().getHeight();
+                ratio = symbolBounds.getHeight() / sHeight;
+            }
+            else
+            {
+                let sWidth:number = si.getBbox().getWidth();
+                ratio = symbolBounds.getWidth() / sWidth;
+            }
+
+            nsTx = (si.getBbox().getX() * ratio) * -1;
+            nsTy = (si.getBbox().getY() * ratio) * -1;
+
             //octagon~182.08058166503906~272.0794677734375~245.8407440185547~244.85235595703125
             //umIndicator~174~280~63~61
             umBounds = new Rectangle2D(174,280,63,61);
@@ -1212,6 +1230,10 @@ export class ModifierRenderer implements SettingsEventListener {
             circlePoint.x = circlePoint.x + xOffset;
             circlePoint.y = circlePoint.y + yOffset;
             RectUtilities.shift(umBounds,xOffset,yOffset);
+
+            umBounds = new Rectangle2D(umBounds.getX() * ratio, umBounds.getY() * ratio, umBounds.getWidth() * ratio, umBounds.getHeight() * ratio );
+            
+            RectUtilities.shift(umBounds,nsTx,nsTy);
  
             umSVG = "<g id=\"UM\">\n\t";
             umSVG += "<path stroke=\"" + umStroke + "\" fill=\"" + umFill + "\" stroke-width=\"" + umStrokeWidth + "\" d=\"M" + starStart.x + "," + starStart.y + "c-3.207,-5.299,-5.694,-10.540,-9.796,-15.138c-1.306,-1.614,-2.681,-3.184,-4.121,-4.691c-5.808,-5.497,-12.601,-11.068,-20.332,-13.823c7.731,-2.755,14.524,-8.326,20.332,-13.823c1.440,-1.508,2.816,-3.077,4.121,-4.691c4.102,-4.598,6.590,-9.840,9.796,-15.138c3.207,5.299,5.694,10.540,9.796,15.138c1.306,1.614,2.681,3.184,4.121,4.691c5.808,5.497,12.601,11.068,20.332,13.823c-7.731,2.755,-14.524,8.326,-20.332,13.823c-1.440,1.508,-2.816,3.077,-4.121,4.691c-4.102,4.598,-6.590,9.840,-9.796,15.138z\"/>";
