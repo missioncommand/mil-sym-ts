@@ -2549,7 +2549,7 @@ export class ModifierRenderer implements SettingsEventListener {
             }
         }
 
-        if (modifiers.has(Modifiers.AA_SPECIAL_C2_HQ) && SymbolUtilities.hasModifier(symbolID, Modifiers.AA_SPECIAL_C2_HQ)) {
+        if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ) && SymbolUtilities.hasModifier(symbolID, Modifiers.AA_SPECIAL_C2_HQ)) {
             modifierValue = modifiers.get(Modifiers.AA_SPECIAL_C2_HQ);
 
             if (modifierValue != null) {
@@ -4652,7 +4652,7 @@ export class ModifierRenderer implements SettingsEventListener {
             {
 
                 //Only Command & Control has AA; ec.equals("110000").  Always in the middle of the unit.
-                if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ))
+                if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ) && SymbolUtilities.hasModifier(symbolID, Modifiers.AA_SPECIAL_C2_HQ))
                 {
                     temp = modifiers.get(Modifiers.AA_SPECIAL_C2_HQ);
                     if(temp != null && temp !== "")
@@ -5580,7 +5580,7 @@ export class ModifierRenderer implements SettingsEventListener {
                     (ss == SymbolID.SymbolSet_SignalsIntelligence && fs == SymbolID.FrameShape_LandUnit))
             {
                 //Only Command & Control has AA; ec.equals("110000").  Always in the middle of the unit.
-                if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ))
+                if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ) && SymbolUtilities.hasModifier(symbolID, Modifiers.AA_SPECIAL_C2_HQ))
                 {
                     temp = modifiers.get(Modifiers.AA_SPECIAL_C2_HQ);
                     if(temp != null && temp !== "")
@@ -6787,7 +6787,7 @@ export class ModifierRenderer implements SettingsEventListener {
                 {
     
                     //Only Command & Control has AA; ec.equals("110000").  Always in the middle of the unit.
-                    if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ))
+                    if(modifiers.has(Modifiers.AA_SPECIAL_C2_HQ) && SymbolUtilities.hasModifier(symbolID, Modifiers.AA_SPECIAL_C2_HQ))
                     {
                         temp = modifiers.get(Modifiers.AA_SPECIAL_C2_HQ);
                         if(temp != null && temp !== "")
