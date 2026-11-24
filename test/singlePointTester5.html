@@ -1369,6 +1369,10 @@
           svgPreviewDOM.style.height = h + "px";
           svgPreviewDOM.setAttribute('width',w);
           svgPreviewDOM.setAttribute('height',h);
+
+          // Also add a responsive viewBox to allow flexible browser-scaling if container is small
+          svgPreviewDOM.setAttribute('viewBox', "0 0 " + w + " " + h);
+
           svgPreviewDOM.innerHTML = geoSVG;
         }
 
