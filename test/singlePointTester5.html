@@ -255,8 +255,8 @@
 
 	// Global block list of short modifier codes to suppress
 	var BLOCKED_MODIFIERS = [
-	  "A", "B", "D", "E", "R", "R2", "S", "S2", 
-	  "AB", "AG", "AH", "AI", "AK", "AL", "AS", "AV", "AW", "AX", "AY"
+		"A", "B", "D", "E", "R", "R2", "S", "S2", 
+		"AB", "AG", "AH", "AI", "AK", "AL", "AS", "AV", "AW", "AX", "AY"
 	];
 	
 	// Example placeholders for MIL-STD modifiers
@@ -269,8 +269,8 @@
 		"AO": "A:BBB-CC",
 		"J": "A1",
 		"K": "FO",
-    "AM": "500,1000,1500",
-    "AN": "325,45"
+		"AM": "500,1000,1500",
+		"AN": "325,45"
 	};
 
 	// Global map to hold currently typed manual modifier values
@@ -437,6 +437,10 @@
         svgPreviewDOM.style.height = h + "px";
         svgPreviewDOM.setAttribute('width',w);
         svgPreviewDOM.setAttribute('height',h);
+
+        // Also add a responsive viewBox to allow flexible browser-scaling if container is small
+        svgPreviewDOM.setAttribute('viewBox', "0 0 " + w + " " + h);
+
         svgPreviewDOM.innerHTML = si.getSVG();
     }
   }
