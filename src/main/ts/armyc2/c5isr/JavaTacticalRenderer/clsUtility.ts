@@ -200,8 +200,7 @@ export class clsUtility {
             case TacticalLines.MOBILE_DEFENSE:
             case TacticalLines.DEMONSTRATE:
             case TacticalLines.GAP:
-            case TacticalLines.ASLTXING:
-            case TacticalLines.MSDZ: {
+            case TacticalLines.ASLTXING: {
                 result = 4;
                 break;
             }
@@ -253,6 +252,7 @@ export class clsUtility {
             case TacticalLines.BYIMP:
             case TacticalLines.FORDSITE:
             case TacticalLines.FORDIF:
+            case TacticalLines.MSDZ:
             //METOCs
             case TacticalLines.IFR:
             case TacticalLines.MVFR:

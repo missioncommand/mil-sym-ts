@@ -411,7 +411,7 @@ export class countsupport {
                 }
 
                 case TacticalLines.MSDZ: {
-                    count = 300;
+                    count = 200;
                     break;
                 }
 
